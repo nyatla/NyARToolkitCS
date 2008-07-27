@@ -21,6 +21,8 @@ namespace SimpleLiteDirect3d
 
     public partial class SimpleLiteD3d : IDisposable, CaptureListener
     {
+        private const int SCREEN_WIDTH=320;
+        private const int SCREEN_HEIGHT=240;
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         //DirectShowからのキャプチャ
@@ -29,10 +31,9 @@ namespace SimpleLiteDirect3d
         private D3dSingleDetectMarker m_ar;
         private DsXRGB32Raster m_raster;
         //背景テクスチャ
-        private NyARTexture_XRGB32 m_texture;
+        private NyARSurface_XRGB32 m_surface;
         /// Direct3D デバイス
         private Device _device = null;
-        private Sprite _sprite = null;
         // 頂点バッファ/インデックスバッファ/インデックスバッファの各頂点番号配列
         private VertexBuffer _vertexBuffer = null;
         private IndexBuffer _indexBuffer = null;
@@ -53,7 +54,7 @@ namespace SimpleLiteDirect3d
                 this.m_raster.setBuffer(i_buffer);
 
                 //テクスチャ内容を更新
-                this.m_texture.CopyFromXRGB32(this.m_raster);
+                this.m_surface.CopyFromXRGB32(this.m_raster);
             }
             return;
         }
@@ -80,7 +81,9 @@ namespace SimpleLiteDirect3d
             // ウインドウモードなら true、フルスクリーンモードなら false を指定
             pp.Windowed = true;
             // スワップとりあえずDiscardを指定。
-            pp.SwapEffect = SwapEffect.Discard;
+            pp.SwapEffect = SwapEffect.Flip;
+            pp.BackBufferFormat = Format.X8R8G8B8;
+            pp.BackBufferCount = 1;
             CreateFlags fl_base = CreateFlags.FpuPreserve;
 
             try{
@@ -102,9 +105,9 @@ namespace SimpleLiteDirect3d
         }
         public bool InitializeApplication(Form1 topLevelForm,CaptureDevice i_cap_device)
         {
-            //キャプチャを作る(QVGAでフレームレートは15)
+            //キャプチャを作る(QVGAでフレームレートは30)
             i_cap_device.SetCaptureListener(this);
-            i_cap_device.PrepareCapture(320, 240,15);
+            i_cap_device.PrepareCapture(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
             this.m_cap = i_cap_device;
             
             //ARの設定
@@ -115,7 +118,7 @@ namespace SimpleLiteDirect3d
             //AR用カメラパラメタファイルをロードして設定
             D3dARParam ap = new D3dARParam();
             ap.loadFromARFile(AR_CAMERA_FILE);
-            ap.changeSize(320, 240);
+            ap.changeSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
@@ -184,14 +187,11 @@ namespace SimpleLiteDirect3d
             // ライトを無効
             this._device.RenderState.Lighting = false;
 
-            //背景用のスプライト
-            this._sprite = new Sprite(this._device);
-
             // カリングを無効にしてポリゴンの裏も描画する
             //this._device.RenderState.CullMode = Cull.None;
 
-            //背景テクスチャを作成
-            this.m_texture = new NyARTexture_XRGB32(this._device, 320, 240);
+            //背景サーフェイスを作成
+            this.m_surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             return true;
         }
@@ -211,48 +211,46 @@ namespace SimpleLiteDirect3d
                     //あればMatrixを計算
                     this.m_ar.getD3dMatrix(out trans_matrix);
                 }
+
+                // 背景サーフェイスを直接描画
+                Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
+                Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                this._device.StretchRectangle(this.m_surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
+
+                // 3Dオブジェクトの描画はここから
+                this._device.BeginScene();
+
+
+                //マーカーが見つかっていて、0.4より一致してたら描画する。
+                if (is_marker_enable && this.m_ar.getConfidence()>0.4)
+                {
+                    // 頂点バッファをデバイスのデータストリームにバインド
+                    this._device.SetStreamSource(0, this._vertexBuffer, 0);
+
+                    // 描画する頂点のフォーマットをセット
+                    this._device.VertexFormat = CustomVertex.PositionColored.Format;
+
+                    // インデックスバッファをセット
+                    this._device.Indices = this._indexBuffer;
+
+                    //立方体を20mm上（マーカーの上）にずらしておく
+                    Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
+
+                    //変換行列を掛ける
+                    transform_mat2 *= trans_matrix;
+                    // 計算したマトリックスで座標変換
+                    this._device.SetTransform(TransformType.World, transform_mat2);
+
+                    // レンダリング（描画）
+                    this._device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
+                }
+
+                // 描画はここまで
+                this._device.EndScene();
+
+                // 実際のディスプレイに描画
+                this._device.Present();
             }
-            // 描画内容を単色でクリア
-            this._device.Clear(ClearFlags.Target, Color.DarkBlue, 1.0f, 0);
-
-            // 3Dオブジェクトの描画はここから
-            this._device.BeginScene();
-
-            // 背景テクスチャスプライトで描画
-            this._sprite.Begin(SpriteFlags.None);
-            this._sprite.Draw(this.m_texture.d3d_texture, Rectangle.Empty, Vector3.Empty, Vector3.Empty, Color.White);
-            this._sprite.End();
-
-
-            //マーカーが見つかっていて、0.4より一致してたら描画する。
-            if (is_marker_enable && this.m_ar.getConfidence()>0.4)
-            {
-                // 頂点バッファをデバイスのデータストリームにバインド
-                this._device.SetStreamSource(0, this._vertexBuffer, 0);
-
-                // 描画する頂点のフォーマットをセット
-                this._device.VertexFormat = CustomVertex.PositionColored.Format;
-
-                // インデックスバッファをセット
-                this._device.Indices = this._indexBuffer;
-
-                //立方体を20mm上（マーカーの上）にずらしておく
-                Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
-
-                //変換行列を掛ける
-                transform_mat2 *= trans_matrix;
-                // 計算したマトリックスで座標変換
-                this._device.SetTransform(TransformType.World, transform_mat2);
-
-                // レンダリング（描画）
-                this._device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
-            }
-
-            // 描画はここまで
-            this._device.EndScene();
-
-            // 実際のディスプレイに描画
-            this._device.Present();
             
         }
 

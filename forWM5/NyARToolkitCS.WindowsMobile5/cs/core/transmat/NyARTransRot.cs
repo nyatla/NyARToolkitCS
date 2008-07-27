@@ -401,7 +401,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param c
          * @param o_rot
          */
-        protected static void arGetRot( double a, double b, double c,double[] o_rot)
+        protected virtual void arGetRot(double a, double b, double c, double[] o_rot)
         {
 	        double   sina, sinb, sinc;
 	        double   cosa, cosb, cosc;

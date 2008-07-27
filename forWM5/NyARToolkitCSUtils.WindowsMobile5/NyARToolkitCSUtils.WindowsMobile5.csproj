@@ -14,7 +14,7 @@
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.1</OSVersion>
     <DeployDirSuffix>NyARToolkitCSUtils.WindowsMobile5</DeployDirSuffix>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Direct3d\NyARSurface_RGB565.cs" />
     <Compile Include="Direct3d\NyARTexture_RGB565.cs" />
     <Compile Include="NyAR\D3dARParam.cs" />
     <Compile Include="NyAR\D3dDetectMarker.cs" />

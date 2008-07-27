@@ -83,7 +83,7 @@ namespace NyARToolkitCSUtils.Raster
             {
                 for (int i = i_num - 1; i >= 0; i--)
                 {
-                    int idx = (this.m_height - i_y[i]) * this.m_stride + i_x[i] * 2;
+                    int idx = (this.m_height - i_y[i]-1) * this.m_stride + i_x[i] * 2;
                     uint pixcel = (uint)(this.m_rgb_buf[idx + 1] << 8) | (uint)this.m_rgb_buf[idx];
                     o_rgb[i * 3 + 0] = (int)((pixcel & 0xf800) >> 8);//R
                     o_rgb[i * 3 + 1] = (int)((pixcel & 0x07e0) >> 3);//G

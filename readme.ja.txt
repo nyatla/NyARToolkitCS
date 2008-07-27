@@ -1,7 +1,7 @@
 ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008 R.Iizuka
 
-version 1.1.0.20080721
+version 1.1.1.20080727
 
 http://nyatla.jp/
 airmail(at)ebony.plala.or.jp
@@ -35,7 +35,7 @@ NyARToolkitCS
  コンパイルには、VisualC# 2008 Express Edition以上が必要です。
 
 NyARToolkitCSforWM5
- .Net Compact Framework 2.0 SP2 以上が必要です。
+ .Net Compact Framework 3.5 以上が必要です。
  コンパイルには、VisualC# 2008 Professional Edition以上が必要です。
  ※Compact Frameworkで開発すれば、Express Editionでもコンパイル自体は出来ます。
  
@@ -111,7 +111,7 @@ SimpleLiteDirect3d (./sample/SimpleLiteDirect3d)
 
 ・forWM5
 
-.Net Compact Framework 2.0 SP2以降で動作するように設定した
+.Net Compact Framework 3.5以降で動作するように設定した
 プロジェクト群です。
 
 ※.Net Compact Frameworkを使うように設定したプロジェクトファイル
@@ -194,4 +194,4 @@ NyARToolkitは、特にソースに表記の無い限り、GPLライセンスで
 
 
 
-2008.07.21 R.Iizuka
+2008.07.27 R.Iizuka

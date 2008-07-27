@@ -41,8 +41,12 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 }
                 using (SimpleLiteD3d sample = new SimpleLiteD3d())
                 {
-
-                    dev_adapter.Init(frm.ClientSize, sample);
+                    try{
+                        dev_adapter.Init(frm.ClientSize, sample);
+                    }catch (Exception e){
+                        MessageBox.Show(e.Message,"失敗しちゃった☆");
+                        return;
+                    }
 
                     // アプリケーションの初期化
                     if (sample.InitializeApplication(frm, dev_adapter))
