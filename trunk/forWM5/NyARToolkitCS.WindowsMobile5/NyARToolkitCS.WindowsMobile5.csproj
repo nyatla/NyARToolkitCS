@@ -14,7 +14,7 @@
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.1</OSVersion>
     <DeployDirSuffix>NyARToolkitCS.WindowsMobile5</DeployDirSuffix>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
@@ -63,12 +63,13 @@
     <Compile Include="cs\core\NyARParam.cs" />
     <Compile Include="cs\core\NyARSquare.cs" />
     <Compile Include="cs\core\NyARSquareList.cs" />
-    <Compile Include="cs\core\NyARTransMat.cs" />
-    <Compile Include="cs\core\NyARTransMatResult.cs" />
-    <Compile Include="cs\core\NyARTransMat_O2.cs" />
-    <Compile Include="cs\core\NyARTransRot.cs" />
     <Compile Include="cs\core\NyARVec.cs" />
     <Compile Include="cs\core\NyARVersion.cs" />
+    <Compile Include="cs\core\transmat\NyARTransMat.cs" />
+    <Compile Include="cs\core\transmat\NyARTransMatResult.cs" />
+    <Compile Include="cs\core\transmat\NyARTransMat_O2.cs" />
+    <Compile Include="cs\core\transmat\NyARTransRot.cs" />
+    <Compile Include="cs\core\transmat\NyARTransRot_Mobile.cs" />
     <Compile Include="cs\detector\NyARDetectMarker.cs" />
     <Compile Include="cs\detector\NyARSingleDetectMarker.cs" />
     <Compile Include="cs\match\NyARMatchPatt.cs" />
@@ -76,8 +77,8 @@
     <Compile Include="cs\NyARException.cs" />
     <Compile Include="cs\raster\NyARRaster.cs" />
     <Compile Include="cs\raster\NyARRaster_BGRA.cs" />
-    <Compile Include="cs\sample\RawFileTest.cs" />
     <Compile Include="cs\utils\DoubleValue.cs" />
+    <Compile Include="cs\utils\NySinTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

@@ -59,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public NyARTransMat_O2(NyARParam i_param)
         {
 	        param=i_param;
-	        transrot=new NyARTransRot_O3(i_param,NUMBER_OF_VERTEX);
+	        transrot=new NyARTransRot_Mobile(i_param,NUMBER_OF_VERTEX);
         }
         public void setCenter(double i_x,double i_y)
         {

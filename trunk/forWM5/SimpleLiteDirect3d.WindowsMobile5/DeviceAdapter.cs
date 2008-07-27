@@ -42,7 +42,6 @@ namespace SimpleLiteDirect3d.WindowsMobile5
     public abstract class DeviceAdapter
     {
         //派生クラスのInitでここのメンバ変数を初期化する。
-        protected Matrix       m_raster_mat;
         protected Viewport     m_viewport;
         protected Size         m_capture_size;
         protected INyWMCapture m_capture;
@@ -62,11 +61,6 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         public INyWMCapture CaptureIf
         {
             get{return (INyWMCapture)this.m_capture;}
-        }
-        //ラスタ表示用マトリクスを返す
-        public Matrix RasterMat
-        {
-            get{return this.m_raster_mat;}
         }
         //キャプチャデータが反転しているかのフラグ値
         public bool IsTurnCapVertical
@@ -123,17 +117,24 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             //スクリーンサイズと倍率を決定
             this.m_viewport=InitViewPort(i_client_size, this.m_capture_size, out scale);
 
-            //ラスタの変換行列の決定
-            Vector2 scale_vec = new Vector2(-scale, scale);
-            this.m_raster_mat = Matrix.Transformation2D(new Vector2(160, 0), 0.0f, scale_vec, new Vector2(240, 320), (float)Math.PI, new Vector2(this.m_viewport.X, this.m_viewport.Y));
-
             //キャプチャ作る。
             NyWMCapture cap = new NyWMCapture();
             INyWMCapture cap_if = (INyWMCapture)cap;
             int hr;
             hr = cap_if.SetCallBack(i_sample_cb);//これInitializeの前にやらないといけないのよね。
+            if(hr!=0){
+                throw new Exception("cap_if.SetCallBack");
+            }
             hr = cap_if.SetSize(this.m_capture_size.Width, this.m_capture_size.Height);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.SetSize");
+            }
             hr = cap_if.Initialize(NyWMCapture.DeviceId_WM5, NyWMCapture.MediaSubType_RGB565, NyWMCapture.PinCategory_PREVIEW);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.Initialize");
+            }
             this.m_capture = cap_if;
             return;
         }
@@ -151,19 +152,64 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             //スクリーンサイズと倍率を決定
             this.m_viewport = InitViewPort(i_client_size, this.m_capture_size, out scale);
 
-            //ラスタの変換行列の決定
-            Vector2 scale_vec = new Vector2(scale, scale);
-            this.m_raster_mat = Matrix.Transformation2D(Vector2.Empty, 0.0f, scale_vec, Vector2.Empty, (float)0, new Vector2(this.m_viewport.X, this.m_viewport.Y));
+            //キャプチャ作る。
+            NyWMCapture cap = new NyWMCapture();
+            INyWMCapture cap_if = (INyWMCapture)cap;
+            int hr;
+            hr = cap_if.SetCallBack(i_sample_cb);//これInitializeの前にやらないといけないのよね。
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.SetCallBack");
+            }
+            hr = cap_if.SetSize(this.m_capture_size.Width, this.m_capture_size.Height);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.SetSize");
+            }
+            hr = cap_if.Initialize(NyWMCapture.DeviceId_WM5, NyWMCapture.MediaSubType_RGB565, NyWMCapture.PinCategory_PREVIEW);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.Initialize");
+            }
+            this.m_capture = cap_if;
+            return;
+        }
+    }
+    /*ES
+     */
+    public class DeviceAdapter_240x320 : DeviceAdapter
+    {
+        public override void Init(Size i_client_size, INySampleCB i_sample_cb)
+        {
+            float scale;
+            this.m_is_turn_vertical = true;
+            //キャプチャサイズの決定(カメラに渡すパラメタは320ｘ240)
+            this.m_capture_size = new Size(240,320);
+            //スクリーンサイズと倍率を決定
+            this.m_viewport = InitViewPort(i_client_size, this.m_capture_size, out scale);
 
             //キャプチャ作る。
             NyWMCapture cap = new NyWMCapture();
             INyWMCapture cap_if = (INyWMCapture)cap;
             int hr;
             hr = cap_if.SetCallBack(i_sample_cb);//これInitializeの前にやらないといけないのよね。
-            hr = cap_if.SetSize(this.m_capture_size.Width, this.m_capture_size.Height);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.SetCallBack");
+            }
+            hr = cap_if.SetSize(240,320);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.SetSize");
+            }
             hr = cap_if.Initialize(NyWMCapture.DeviceId_WM5, NyWMCapture.MediaSubType_RGB565, NyWMCapture.PinCategory_PREVIEW);
+            if (hr != 0)
+            {
+                throw new Exception("cap_if.Initialize");
+            }
             this.m_capture = cap_if;
             return;
         }
     }
+
 }

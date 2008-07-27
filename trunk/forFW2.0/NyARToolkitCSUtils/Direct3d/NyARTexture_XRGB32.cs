@@ -84,8 +84,7 @@ namespace NyARToolkitCSUtils.Direct3d
                 byte[] buf = i_raster.buffer;
                 // テクスチャをロックする
                 texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
-                //テクスチャのピッチって何？それって美味しいの？
-                //※良く判らないんで誰か教えてくださいorz
+                //テクスチャのピッチって何？
                 int cp_size = this.m_width * 4;
                 int sk_size = (this.m_texture_width - this.m_width) * 4;
                 for (int r = this.m_height - 1; r >= 0; r--)

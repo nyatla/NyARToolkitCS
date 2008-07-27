@@ -37,7 +37,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             {
                 case 0: return new DeviceAdapter_S01SH();
                 case 1: return new DeviceAdapter_WS007SH();
-                default:return null;
+                case 2: return new DeviceAdapter_S01SH();
+                default: return null;
             }
         }
         public Form2()
@@ -50,7 +51,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             ListBox dev_list_box=new ListBox();
             dev_list_box.Items.Add("S01SH(emobile)");
             dev_list_box.Items.Add("WS007SH(willcom)");
-            dev_list_box.Size = new Size(this.ClientSize.Width,this.ClientSize.Width/3);
+            dev_list_box.Items.Add("WS011SH(willcom)");
+            dev_list_box.Size = new Size(this.ClientSize.Width, this.ClientSize.Width / 3);
             this.Controls.Add(dev_list_box);
             this.m_dev_list=dev_list_box;
 

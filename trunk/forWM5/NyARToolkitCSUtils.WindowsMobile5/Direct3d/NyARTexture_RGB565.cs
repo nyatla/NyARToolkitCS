@@ -73,11 +73,12 @@ namespace NyARToolkitCSUtils.Direct3d
             this.m_texture_height = GetSquareSize(i_height);
             this.m_texture_width = GetSquareSize(i_width);
 
-            this.m_bitmap     = new Bitmap(i_width, i_height);
+            this.m_bitmap     = new Bitmap(i_width, i_height,PixelFormat.Format16bppRgb565);
             this.m_bmp_surface = new Surface(this.m_ref_dev, this.m_bitmap, Pool.SystemMemory);
 
             //テクスチャを作るよ！
-            this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height, 1, Usage.None, Format.R5G6B5, Pool.SystemMemory);
+            this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height,1, Usage.Lockable, Format.R5G6B5, Pool.SystemMemory);
+
             //OK、完成だ。
             return;
         }
@@ -104,12 +105,12 @@ namespace NyARToolkitCSUtils.Direct3d
 
             //転送先の準備
             Surface dest_su = this.m_texture.GetSurfaceLevel(0);
-
             //コピー
             this.m_ref_dev.CopyRects(this.m_bmp_surface,rect, dest_su, new Point(0, 0));
             dest_su = null;
             bd = null;
             return;
         }
+
     }
 }
