@@ -91,8 +91,11 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             // ウインドウモードなら true、フルスクリーンモードなら false を指定
             pp.Windowed = true;
             // スワップとりあえずDiscardを指定。
-            pp.SwapEffect = SwapEffect.Flip;
-            //pp.BackBufferCount = 1;
+            pp.SwapEffect = SwapEffect.Discard;
+            pp.EnableAutoDepthStencil = true;
+            pp.AutoDepthStencilFormat = DepthFormat.D16;
+            pp.BackBufferCount = 1;
+            pp.BackBufferFormat = Format.R5G6B5;
 
             return new Device(0, DeviceType.Default, i_window.Handle,CreateFlags.None, pp);
         }
@@ -208,7 +211,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                     //あればMatrixを計算
                     this.m_ar.getD3dMatrix(out trans_matrix);
                 }
-                
+                this._device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
                 //背景描画
                 Surface dest_surface=this._device.GetBackBuffer(0, BackBufferType.Mono);
                 this._device.StretchRectangle(this.m_surface.d3d_surface, this.m_surface.d3d_surface_rect, dest_surface, this.m_dest_rect, TextureFilter.Point);
