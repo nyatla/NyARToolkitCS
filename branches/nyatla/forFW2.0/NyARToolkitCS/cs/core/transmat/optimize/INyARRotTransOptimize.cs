@@ -29,10 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.types.stack
+namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
 {
-    public class DoubleValue
+    public interface INyARRotTransOptimize
     {
-        public double value;
+        public double optimize(NyARRotMatrix io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator);
     }
 }

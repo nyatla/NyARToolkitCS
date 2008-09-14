@@ -29,10 +29,12 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.types.stack
+namespace jp.nyatla.nyartoolkit.cs.core.types
 {
-    public class DoubleValue
+    public class NyARLinear
     {
-        public double value;
+        public double rise;//y軸の増加量
+        public double run;//x軸の増加量
+        public double intercept;//切片
     }
 }

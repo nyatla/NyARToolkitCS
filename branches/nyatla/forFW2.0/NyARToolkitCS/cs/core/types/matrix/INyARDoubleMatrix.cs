@@ -29,49 +29,23 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core.types.matrix
 {
 
-    /**
-     * NyARTransMat戻り値専用のNyARMat
-     * 
-     */
-    public class NyARTransMatResult : NyARDoubleMatrix34
+    public interface INyARDoubleMatrix
     {
-        private boolean has_value = false;
-
-
         /**
-         * パラメータで変換行列を更新します。
-         * 
-         * @param i_rot
-         * @param i_off
-         * @param i_trans
+         * 配列の内容を行列に設定する。
+         * 遅いので余り使わないでね。
+         * @param o_value
          */
-        public void updateMatrixValue(NyARRotMatrix i_rot, NyARDoublePoint3d i_off, NyARDoublePoint3d i_trans)
-        {
-            this.m00 = i_rot.m00;
-            this.m01 = i_rot.m01;
-            this.m02 = i_rot.m02;
-            this.m03 = i_rot.m00 * i_off.x + i_rot.m01 * i_off.y + i_rot.m02 * i_off.z + i_trans.x;
+        public void setValue(double[] i_value);
+        /**
+         * 行列の内容を配列に返す。
+         * 遅いので余り使わないでね。
+         * @param o_value
+         */
+        public void getValue(double[] o_value);
 
-            this.m10 = i_rot.m10;
-            this.m11 = i_rot.m11;
-            this.m12 = i_rot.m12;
-            this.m13 = i_rot.m10 * i_off.x + i_rot.m11 * i_off.y + i_rot.m12 * i_off.z + i_trans.y;
-
-            this.m20 = i_rot.m20;
-            this.m21 = i_rot.m21;
-            this.m22 = i_rot.m22;
-            this.m23 = i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z + i_trans.z;
-
-            this.has_value = true;
-            return;
-        }
-
-        public boolean hasValue()
-        {
-            return this.has_value;
-        }
     }
 }

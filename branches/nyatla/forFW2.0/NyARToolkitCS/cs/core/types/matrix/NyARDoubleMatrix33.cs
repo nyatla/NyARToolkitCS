@@ -29,49 +29,51 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core.types.matrix
 {
 
-    /**
-     * NyARTransMat戻り値専用のNyARMat
-     * 
-     */
-    public class NyARTransMatResult : NyARDoubleMatrix34
+    public class NyARDoubleMatrix33 : INyARDoubleMatrix
     {
-        private boolean has_value = false;
-
-
+        public double m00;
+        public double m01;
+        public double m02;
+        public double m10;
+        public double m11;
+        public double m12;
+        public double m20;
+        public double m21;
+        public double m22;
         /**
-         * パラメータで変換行列を更新します。
-         * 
-         * @param i_rot
-         * @param i_off
-         * @param i_trans
+         * 遅いからあんまり使わないでね。
          */
-        public void updateMatrixValue(NyARRotMatrix i_rot, NyARDoublePoint3d i_off, NyARDoublePoint3d i_trans)
+        public void setValue(double[] i_value)
         {
-            this.m00 = i_rot.m00;
-            this.m01 = i_rot.m01;
-            this.m02 = i_rot.m02;
-            this.m03 = i_rot.m00 * i_off.x + i_rot.m01 * i_off.y + i_rot.m02 * i_off.z + i_trans.x;
-
-            this.m10 = i_rot.m10;
-            this.m11 = i_rot.m11;
-            this.m12 = i_rot.m12;
-            this.m13 = i_rot.m10 * i_off.x + i_rot.m11 * i_off.y + i_rot.m12 * i_off.z + i_trans.y;
-
-            this.m20 = i_rot.m20;
-            this.m21 = i_rot.m21;
-            this.m22 = i_rot.m22;
-            this.m23 = i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z + i_trans.z;
-
-            this.has_value = true;
+            this.m00 = i_value[0];
+            this.m01 = i_value[1];
+            this.m02 = i_value[2];
+            this.m10 = i_value[3];
+            this.m11 = i_value[4];
+            this.m12 = i_value[5];
+            this.m20 = i_value[6];
+            this.m21 = i_value[7];
+            this.m22 = i_value[8];
             return;
         }
-
-        public boolean hasValue()
+        /**
+         * 遅いからあんまり使わないでね。
+         */
+        public void getValue(double[] o_value)
         {
-            return this.has_value;
+            o_value[0] = this.m00;
+            o_value[1] = this.m01;
+            o_value[2] = this.m02;
+            o_value[3] = this.m10;
+            o_value[4] = this.m11;
+            o_value[5] = this.m12;
+            o_value[6] = this.m20;
+            o_value[7] = this.m21;
+            o_value[8] = this.m22;
+            return;
         }
     }
 }
