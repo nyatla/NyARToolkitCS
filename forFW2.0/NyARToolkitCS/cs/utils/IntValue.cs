@@ -31,8 +31,8 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core.types.stack
 {
-    public class DoubleValue
+    public class IntValue
     {
-        public double value;
+        public int value;
     }
 }

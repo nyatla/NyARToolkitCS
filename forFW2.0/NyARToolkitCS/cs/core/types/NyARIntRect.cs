@@ -29,10 +29,16 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.types.stack
+namespace jp.nyatla.nyartoolkit.cs.core.types
 {
-    public class DoubleValue
+    public class NyARIntRect
     {
-        public double value;
+        public int x;
+
+        public int y;
+
+        public int w;
+
+        public int h;
     }
 }

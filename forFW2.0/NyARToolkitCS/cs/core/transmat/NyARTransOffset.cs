@@ -32,46 +32,43 @@
 namespace jp.nyatla.nyartoolkit.cs.core.transmat
 {
 
-    /**
-     * NyARTransMat戻り値専用のNyARMat
-     * 
-     */
-    public class NyARTransMatResult : NyARDoubleMatrix34
+
+    public class NyARTransOffset
     {
-        private boolean has_value = false;
-
-
+        public NyARDoublePoint3d[] vertex = NyARDoublePoint3d.createArray(4);
+        public NyARDoublePoint3d point = new NyARDoublePoint3d();
         /**
-         * パラメータで変換行列を更新します。
-         * 
-         * @param i_rot
-         * @param i_off
-         * @param i_trans
+         * 中心位置と辺長から、オフセット情報を作成して設定する。
+         * @param i_width
+         * @param i_center
          */
-        public void updateMatrixValue(NyARRotMatrix i_rot, NyARDoublePoint3d i_off, NyARDoublePoint3d i_trans)
+        public void setSquare(double i_width, NyARDoublePoint2d i_center)
         {
-            this.m00 = i_rot.m00;
-            this.m01 = i_rot.m01;
-            this.m02 = i_rot.m02;
-            this.m03 = i_rot.m00 * i_off.x + i_rot.m01 * i_off.y + i_rot.m02 * i_off.z + i_trans.x;
+            const double w_2 = i_width / 2.0;
 
-            this.m10 = i_rot.m10;
-            this.m11 = i_rot.m11;
-            this.m12 = i_rot.m12;
-            this.m13 = i_rot.m10 * i_off.x + i_rot.m11 * i_off.y + i_rot.m12 * i_off.z + i_trans.y;
+            NyARDoublePoint3d vertex3d_ptr;
+            vertex3d_ptr = this.vertex[0];
+            vertex3d_ptr.x = -w_2;
+            vertex3d_ptr.y = w_2;
+            vertex3d_ptr.z = 0.0;
+            vertex3d_ptr = this.vertex[1];
+            vertex3d_ptr.x = w_2;
+            vertex3d_ptr.y = w_2;
+            vertex3d_ptr.z = 0.0;
+            vertex3d_ptr = this.vertex[2];
+            vertex3d_ptr.x = w_2;
+            vertex3d_ptr.y = -w_2;
+            vertex3d_ptr.z = 0.0;
+            vertex3d_ptr = this.vertex[3];
+            vertex3d_ptr.x = -w_2;
+            vertex3d_ptr.y = -w_2;
+            vertex3d_ptr.z = 0.0;
 
-            this.m20 = i_rot.m20;
-            this.m21 = i_rot.m21;
-            this.m22 = i_rot.m22;
-            this.m23 = i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z + i_trans.z;
-
-            this.has_value = true;
+            this.point.x = -i_center.x;
+            this.point.y = -i_center.y;
+            this.point.z = 0;
             return;
-        }
 
-        public boolean hasValue()
-        {
-            return this.has_value;
         }
     }
 }
