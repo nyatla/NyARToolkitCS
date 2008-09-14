@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,36 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
 {
-    /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
-     */
-    public class NyARSquare
+
+    public class NyARRgbRaster_RGB : NyARRgbRaster_BasicClass
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
+        protected byte[] _ref_buf;
+
+        private NyARRgbPixelReader_RGB24 _reader;
+        private INyARBufferReader _buffer_reader;
+
+        public static NyARRgbRaster_RGB wrap(byte[] i_buffer, int i_width, int i_height)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
+            return new NyARRgbRaster_RGB(i_buffer, i_width, i_height);
+        }
+
+        private NyARRgbRaster_RGB(byte[] i_buffer, int i_width, int i_height)
+        {
+            super(new NyARIntSize(i_width, i_height));
+            this._ref_buf = i_buffer;
+            this._reader = new NyARRgbPixelReader_RGB24(i_buffer, this._size);
+            this._buffer_reader = new NyARBufferReader(i_buffer, INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24);
+            return;
+        }
+        public INyARRgbPixelReader getRgbPixelReader()
+        {
+            return this._reader;
+        }
+        public INyARBufferReader getBufferReader()
+        {
+            return this._buffer_reader;
         }
     }
 }

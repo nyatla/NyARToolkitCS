@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,35 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
 {
     /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
+     * R8G8B8でピクセルを読み出すインタフェイス
      * 
      */
-    public class NyARSquare
+    public interface INyARRgbPixelReader
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
-        }
+        /**
+         * 1ピクセルをint配列にして返します。
+         * 
+         * @param i_x
+         * @param i_y
+         * @param i_rgb
+         */
+        public void getPixel(int i_x, int i_y, int[] i_rgb);
+
+        /**
+         * 複数のピクセル値をi_rgbへ返します。
+         * 
+         * @param i_x
+         * xのインデックス配列
+         * @param i_y
+         * yのインデックス配列
+         * @param i_num
+         * 返すピクセル値の数
+         * @param i_rgb
+         * ピクセル値を返すバッファ
+         */
+        public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_rgb);
     }
 }

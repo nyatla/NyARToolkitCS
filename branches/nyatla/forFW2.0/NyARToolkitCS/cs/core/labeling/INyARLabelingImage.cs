@@ -1,5 +1,5 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# version NyARToolkit class library.
+ * The NyARToolkit is Java version ARToolkit class library.
  * Copyright (C)2008 R.Iizuka
  *
  * This program is free software; you can redistribute it and/or
@@ -29,35 +29,12 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-
-namespace jp.nyatla.nyartoolkit.cs.raster
+namespace jp.nyatla.nyartoolkit.cs.core.labeling
 {
-    public interface NyARRaster{
-        //RGBの合計値を返す
-        int getPixelTotal(int i_x,int i_y);
-        /**
-         * 一行単位でi_row番目の合計値配列を計算して返す。
-         * @param i_row
-         * @param o_line
-         * getWidth()の戻り値以上のサイズが必要。
-         */
-        void getPixelTotalRowLine(int i_row,int[] o_line);
-        int getWidth();
-        int getHeight();
-        void getPixel(int i_x,int i_y,int[] i_rgb);
-        /**
-         * 複数のピクセル値をi_rgbへ返します。
-         * @param i_x
-         * xのインデックス配列
-         * @param i_y
-         * yのインデックス配列
-         * @param i_num
-         * 返すピクセル値の数
-         * @param i_rgb
-         * ピクセル値を返すバッファ
-         */
-        void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb);
+    public interface INyARLabelingImage : INyARRaster
+    {
+        public int[] getIndexArray();
+        public NyARLabelingLabelStack getLabelStack();
+        public void reset(boolean i_label_index_enable);
     }
 }

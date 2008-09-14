@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,24 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
 {
+
     /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
+     * NyARRasterインタフェイスの基本関数/メンバを実装したクラス
+     * 
      * 
      */
-    public class NyARSquare
+    public abstract class NyARRgbRaster_BasicClass : NyARRaster_BasicClass, INyARRgbRaster
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
+        protected NyARRgbRaster_BasicClass(NyARIntSize i_size)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
+            base(i_size);
+        }
+        public INyARRgbPixelReader getRgbPixcelReader()
+        {
+            NyARException.notImplement();
+            return null;
         }
     }
 }

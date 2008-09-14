@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,37 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
-     */
-    public class NyARSquare
+    public class NyARSquareStack : NyObjectStack
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
+        public NyARSquareStack(int i_length)
         {
-            for (int i = 0; i < 4; i++)
+            base(new NyARSquare[i_length]);
+
+        }
+
+        protected void onReservRequest(int i_start, int i_end, Object[] i_buffer)
+        {
+            for (int i = i_start; i < i_end; i++)
             {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
+                i_buffer[i] = new NyARSquare();
             }
+        }
+
+        public NyARSquare[] getArray()
+        {
+            return (NyARSquare[])this._items;
+        }
+        public NyARSquare getItem(int i_index)
+        {
+            return (NyARSquare)this._items[i_index];
+        }
+
+        public NyARSquare prePush()
+        {
+            return (NyARSquare)super.prePush();
         }
     }
 }
