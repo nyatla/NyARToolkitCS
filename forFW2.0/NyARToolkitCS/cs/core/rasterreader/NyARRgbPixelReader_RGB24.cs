@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,24 +29,47 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
 {
+
     /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
+     * byte[]配列に、パディング無しの8bit画素値が、RGBRGBの順で並んでいる
+     * バッファに使用できるピクセルリーダー
+     *
      */
-    public class NyARSquare
+    public class NyARRgbPixelReader_RGB24 : INyARRgbPixelReader
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
+        protected byte[] _ref_buf;
+
+        private NyARIntSize _size;
+
+        public NyARRgbPixelReader_RGB24(byte[] i_buf, NyARIntSize i_size)
         {
-            for (int i = 0; i < 4; i++)
+            this._ref_buf = i_buf;
+            this._size = i_size;
+        }
+
+        public void getPixel(int i_x, int i_y, int[] o_rgb)
+        {
+            byte[] ref_buf = this._ref_buf;
+            int bp = (i_x + i_y * this._size.w) * 3;
+            o_rgb[0] = ref_buf[bp + 0];// R
+            o_rgb[1] = ref_buf[bp + 1];// G
+            o_rgb[2] = ref_buf[bp + 2];// B
+            return;
+        }
+
+        public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
+        {
+            int width = this._size.w;
+            byte[] ref_buf = this._ref_buf;
+            int bp;
+            for (int i = i_num - 1; i >= 0; i--)
             {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
+                bp = (i_x[i] + i_y[i] * width) * 3;
+                o_rgb[i * 3 + 0] = ref_buf[bp + 0];// R
+                o_rgb[i * 3 + 1] = ref_buf[bp + 1];// G
+                o_rgb[i * 3 + 2] = ref_buf[bp + 2];// B
             }
         }
     }

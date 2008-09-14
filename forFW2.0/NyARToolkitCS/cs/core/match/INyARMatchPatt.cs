@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,22 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.match
 {
+
     /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
+     * ARColorPattのマッチング計算をするインタフェイスです。 基準Patに対して、計算済みのARCodeデータとの間で比較演算をします。
+     * pattern_match関数を分解した３種類のパターン検出クラスを定義します。
      * 
      */
-    public class NyARSquare
+    public interface INyARMatchPatt
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
-        }
+        public double getConfidence();
+
+        public int getDirection();
+
+        public void evaluate(NyARCode i_code);
+
+        public boolean setPatt(INyARColorPatt i_target_patt);
     }
 }

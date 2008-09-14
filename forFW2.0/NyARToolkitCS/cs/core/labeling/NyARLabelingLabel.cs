@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,18 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.labeling
 {
-    /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
-     */
-    public class NyARSquare
+
+    public class NyARLabelingLabel
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
-        }
+        public int id;
+        public int area;
+        public int clip_r;// 0
+        public int clip_l;// 1
+        public int clip_b;// 2
+        public int clip_t;// 3
+        public double pos_x;
+        public double pos_y;
     }
 }

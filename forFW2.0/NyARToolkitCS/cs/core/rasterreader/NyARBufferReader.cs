@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,25 +29,29 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
 {
-    /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
-     */
-    public class NyARSquare
+
+    public class NyARBufferReader : INyARBufferReader
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
-        public NyARSquare()
+        protected Object _buffer;
+        protected int _buffer_type;
+        public NyARBufferReader(Object i_buffer, int i_buffer_type)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
-                this.line[i] = new NyARLinear();
-            }
+            this._buffer = i_buffer;
+            this._buffer_type = i_buffer_type;
+        }
+        public Object getBuffer()
+        {
+            return this._buffer;
+        }
+        public int getBufferType()
+        {
+            return _buffer_type;
+        }
+        public boolean isEqualBufferType(int i_type_value)
+        {
+            return this._buffer_type == i_type_value;
         }
     }
 }
