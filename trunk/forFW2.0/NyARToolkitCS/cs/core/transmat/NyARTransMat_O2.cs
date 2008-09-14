@@ -215,7 +215,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	        }
 	        //値を保存
 	        io_result_conv.updateMatrixValue(this.transrot,off,trans);
-        	
 	        //エラー値が許容範囲でなければTransMatをやり直し
 	        if(err1>AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR) {
 	            NyARTransMatResult result2=this.wk_transMatContinue_result;
