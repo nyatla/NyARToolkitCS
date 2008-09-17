@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.match
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -39,12 +39,12 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
      */
     public interface INyARMatchPatt
     {
-        public double getConfidence();
+        double getConfidence();
 
-        public int getDirection();
+        int getDirection();
 
-        public void evaluate(NyARCode i_code);
+        void evaluate(NyARCode i_code);
 
-        public boolean setPatt(INyARColorPatt i_target_patt);
+        bool setPatt(INyARColorPatt i_target_patt);
     }
 }

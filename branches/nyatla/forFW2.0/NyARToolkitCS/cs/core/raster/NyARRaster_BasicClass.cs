@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public abstract class NyARRaster_BasicClass : INyARRaster
     {
@@ -53,5 +53,6 @@ namespace jp.nyatla.nyartoolkit.cs.core.raster
         {
             return this._size;
         }
+        public abstract INyARBufferReader getBufferReader();
     }
 }

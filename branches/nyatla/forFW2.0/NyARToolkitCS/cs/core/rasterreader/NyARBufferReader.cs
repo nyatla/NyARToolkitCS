@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,27 +29,27 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public class NyARBufferReader : INyARBufferReader
     {
-        protected Object _buffer;
+        protected object _buffer;
         protected int _buffer_type;
-        public NyARBufferReader(Object i_buffer, int i_buffer_type)
+        public NyARBufferReader(object i_buffer, int i_buffer_type)
         {
             this._buffer = i_buffer;
             this._buffer_type = i_buffer_type;
         }
-        public Object getBuffer()
+        override public object getBuffer()
         {
             return this._buffer;
         }
-        public int getBufferType()
+        override public int getBufferType()
         {
             return _buffer_type;
         }
-        public boolean isEqualBufferType(int i_type_value)
+        override public bool isEqualBufferType(int i_type_value)
         {
             return this._buffer_type == i_type_value;
         }

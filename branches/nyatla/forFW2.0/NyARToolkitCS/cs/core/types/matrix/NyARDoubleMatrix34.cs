@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.types.matrix
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public class NyARDoubleMatrix34 : INyARDoubleMatrix

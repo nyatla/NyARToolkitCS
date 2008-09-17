@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.labeling
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * ARToolKit互換のラベリングクラスです。 ARToolKitと同一な評価結果を返します。
@@ -37,15 +37,15 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
      */
     public class NyARLabeling_ARToolKit : INyARLabeling
     {
-        private static const int WORK_SIZE = 1024 * 32;// #define WORK_SIZE 1024*32
-        private const NyARWorkHolder work_holder = new NyARWorkHolder(WORK_SIZE);
+        private const int WORK_SIZE = 1024 * 32;// #define WORK_SIZE 1024*32
+        private NyARWorkHolder work_holder = new NyARWorkHolder(WORK_SIZE);
         private NyARIntSize _dest_size;
         private INyARLabelingImage _out_image;
 
         public void attachDestination(INyARLabelingImage i_destination_image)
         {
             // サイズチェック
-            const NyARIntSize size = i_destination_image.getSize();
+            NyARIntSize size = i_destination_image.getSize();
             this._out_image = i_destination_image;
 
             // NyLabelingImageのイメージ初期化(枠書き)
@@ -85,8 +85,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
             NyARIntSize in_size = i_raster.getSize();
             this._dest_size.isEqualSize(in_size);
 
-            const int lxsize = in_size.w;// lxsize = arUtil_c.arImXsize;
-            const int lysize = in_size.h;// lysize = arUtil_c.arImYsize;
+            int lxsize = in_size.w;// lxsize = arUtil_c.arImXsize;
+            int lysize = in_size.h;// lysize = arUtil_c.arImYsize;
             int[][] label_img = (int[][])out_image.getBufferReader().getBuffer();
 
             // 枠作成はインスタンスを作った直後にやってしまう。
@@ -103,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
             int[][] raster_buf = (int[][])i_raster.getBufferReader().getBuffer();
             int[] line_ptr;
             int[][] work2 = this.work_holder.work2;
-            int[] label_img_pt0, label_img_pt1;
+            int[] label_img_pt0,label_img_pt1;
             for (j = 1; j < lysize - 1; j++)
             {// for (int j = 1; j < lysize - 1;j++, pnt += poff*2, pnt2 += 2) {
                 line_ptr = raster_buf[j];
@@ -351,7 +351,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
      */
     class NyARWorkHolder
     {
-        private static const int ARRAY_APPEND_STEP = 256;
+        private const int ARRAY_APPEND_STEP = 256;
 
         public int[][] work2;
 
@@ -382,15 +382,15 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
                 return;
             }
             // 要求されたインデクスは範囲外
-            if (i_index >= this.work2.length)
+            if (i_index >= this.work2.Length)
             {
                 throw new NyARException();
             }
             // 追加アロケート範囲を計算
             int range = i_index + ARRAY_APPEND_STEP;
-            if (range >= this.work2.length)
+            if (range >= this.work2.Length)
             {
-                range = this.work2.length;
+                range = this.work2.Length;
             }
             // アロケート
             for (int i = this.allocate_size; i < range; i++)

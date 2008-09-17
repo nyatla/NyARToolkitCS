@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 平行移動量を計算するクラス
@@ -40,9 +40,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
      */
     public class NyARFitVecCalculator
     {
-        private const NyARMat _mat_b = new NyARMat(3, 8);//3,NUMBER_OF_VERTEX*2
-        private const NyARMat _mat_a = new NyARMat(8, 3);/*NUMBER_OF_VERTEX,3*/
-        private const NyARMat _mat_d = new NyARMat(3, 3);
+        private NyARMat _mat_b = new NyARMat(3, 8);//3,NUMBER_OF_VERTEX*2
+        private NyARMat _mat_a = new NyARMat(8, 3);/*NUMBER_OF_VERTEX,3*/
+        private NyARMat _mat_d = new NyARMat(3, 3);
         private NyARPerspectiveProjectionMatrix _projection_mat;
         private NyARCameraDistortionFactor _distortionfactor;
 
@@ -51,13 +51,13 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
         public NyARFitVecCalculator(NyARPerspectiveProjectionMatrix i_projection_mat_ref, NyARCameraDistortionFactor i_distortion_ref)
         {
             // 変換マトリクスdとbの準備(arGetTransMatSubの一部)
-            const double[][] a_array = this._mat_a.getArray();
-            const double[][] b_array = this._mat_b.getArray();
+            double[][] a_array = this._mat_a.getArray();
+            double[][] b_array = this._mat_b.getArray();
 
             //変換用行列のcpara固定値の部分を先に初期化してしまう。
             for (int i = 0; i < 4; i++)
             {
-                const int x2 = i * 2;
+                int x2 = i * 2;
                 a_array[x2][0] = b_array[0][x2] = i_projection_mat_ref.m00;// mat_a->m[j*6+0]=mat_b->m[num*0+j*2] =cpara[0][0];
                 a_array[x2][1] = b_array[1][x2] = i_projection_mat_ref.m01;// mat_a->m[j*6+1]=mat_b->m[num*2+j*2]=cpara[0][1];
                 //a_array[x2][2] = b_array[2][x2] = cpara[0 * 4 + 2] - o_marker_vertex_2d[i].x;// mat_a->m[j*6+2]=mat_b->m[num*4+j*2]=cpara[0][2]-pos2d[j][0];
@@ -69,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
             this._distortionfactor = i_distortion_ref;
             return;
         }
-        private const NyARDoublePoint2d[] _fitsquare_vertex = NyARDoublePoint2d.createArray(4);
+        private NyARDoublePoint2d[] _fitsquare_vertex = NyARDoublePoint2d.createArray(4);
         private NyARTransOffset _offset_square;
         public void setOffsetSquare(NyARTransOffset i_offset)
         {
@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
          */
         public void setFittedSquare(NyARDoublePoint2d[] i_square_vertex)
         {
-            const NyARDoublePoint2d[] vertex = _fitsquare_vertex;
+            NyARDoublePoint2d[] vertex = _fitsquare_vertex;
             //		int i;
             //		if (arFittingMode == AR_FITTING_TO_INPUT) {
             //			// arParamIdeal2Observをバッチ処理
@@ -105,16 +105,17 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
             //		}		
 
 
-            const double cpara02 = this._projection_mat.m02;
-            const double cpara12 = this._projection_mat.m12;
-            const NyARMat mat_d = _mat_d;
-            const NyARMat mat_a = this._mat_a;
-            const NyARMat mat_b = this._mat_b;
-            const double[][] a_array = mat_a.getArray();
-            const double[][] b_array = mat_b.getArray();
+            double cpara02 = this._projection_mat.m02;
+            double cpara12 = this._projection_mat.m12;
+            NyARMat mat_d = _mat_d;
+            NyARMat mat_a = this._mat_a;
+            NyARMat mat_b = this._mat_b;
+            double[][] a_array = mat_a.getArray();
+            double[][] b_array = mat_b.getArray();
+            int x2;
             for (int i = 0; i < 4; i++)
             {
-                const int x2 = i * 2;
+                x2 = i * 2;
                 a_array[x2][2] = b_array[2][x2] = cpara02 - vertex[i].x;// mat_a->m[j*6+2]=mat_b->m[num*4+j*2]=cpara[0][2]-pos2d[j][0];
                 a_array[x2 + 1][2] = b_array[2][x2 + 1] = cpara12 - vertex[i].y;// mat_a->m[j*6+5]=mat_b->m[num*4+j*2+1]=cpara[1][2]-pos2d[j][1];
             }
@@ -123,10 +124,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
             mat_d.matrixSelfInv();
             return;
         }
-        private const NyARMat _mat_e = new NyARMat(3, 1);
-        private const NyARMat _mat_f = new NyARMat(3, 1);
-        private const NyARMat __calculateTransferVec_mat_c = new NyARMat(8, 1);//NUMBER_OF_VERTEX * 2, 1
-        private const NyARDoublePoint3d[] __calculateTransfer_point3d = NyARDoublePoint3d.createArray(4);
+        private NyARMat _mat_e = new NyARMat(3, 1);
+        private NyARMat _mat_f = new NyARMat(3, 1);
+        private NyARMat __calculateTransferVec_mat_c = new NyARMat(8, 1);//NUMBER_OF_VERTEX * 2, 1
+        private NyARDoublePoint3d[] __calculateTransfer_point3d = NyARDoublePoint3d.createArray(4);
 
         /**
          * 現在のオフセット矩形、適合先矩形と、回転行列から、平行移動量を計算します。
@@ -136,28 +137,29 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.fitveccalc
          */
         public void calculateTransfer(NyARRotMatrix i_rotation, NyARDoublePoint3d o_transfer)
         {
-            assert(this._offset_square != null);
-            const double cpara00 = this._projection_mat.m00;
-            const double cpara01 = this._projection_mat.m01;
-            const double cpara02 = this._projection_mat.m02;
-            const double cpara11 = this._projection_mat.m11;
-            const double cpara12 = this._projection_mat.m12;
+            //assert(this._offset_square != null);
+            double cpara00 = this._projection_mat.m00;
+            double cpara01 = this._projection_mat.m01;
+            double cpara02 = this._projection_mat.m02;
+            double cpara11 = this._projection_mat.m11;
+            double cpara12 = this._projection_mat.m12;
 
-            const NyARDoublePoint3d[] point3d = this.__calculateTransfer_point3d;
-            const NyARDoublePoint3d[] vertex3d = this._offset_square.vertex;
-            const NyARDoublePoint2d[] vertex2d = this._fitsquare_vertex;
-            const NyARMat mat_c = this.__calculateTransferVec_mat_c;// 次処理で値をもらうので、初期化の必要は無い。
+            NyARDoublePoint3d[] point3d = this.__calculateTransfer_point3d;
+            NyARDoublePoint3d[] vertex3d = this._offset_square.vertex;
+            NyARDoublePoint2d[] vertex2d = this._fitsquare_vertex;
+            NyARMat mat_c = this.__calculateTransferVec_mat_c;// 次処理で値をもらうので、初期化の必要は無い。
 
-            const double[][] f_array = this._mat_f.getArray();
-            const double[][] c_array = mat_c.getArray();
+            double[][] f_array = this._mat_f.getArray();
+            double[][] c_array = mat_c.getArray();
 
 
             //（3D座標？）を一括請求
+            int x2;
             i_rotation.getPoint3dBatch(vertex3d, point3d, 4);
             for (int i = 0; i < 4; i++)
             {
-                const int x2 = i + i;
-                const NyARDoublePoint3d point3d_ptr = point3d[i];
+                x2 = i + i;
+                NyARDoublePoint3d point3d_ptr = point3d[i];
                 //			i_rotation.getPoint3d(vertex3d[i],point3d);
                 //透視変換？
                 c_array[x2][0] = point3d_ptr.z * vertex2d[i].x - cpara00 * point3d_ptr.x - cpara01 * point3d_ptr.y - cpara02 * point3d_ptr.z;// mat_c->m[j*2+0] = wz*pos2d[j][0]-cpara[0][0]*wx-cpara[0][1]*wy-cpara[0][2]*wz;

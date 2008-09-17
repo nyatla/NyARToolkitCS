@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,6 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using jp.nyatla.nyartoolkit.cs.core;
+
 namespace jp.nyatla.nyartoolkit.cs.detector
 {
 
@@ -54,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public void reservHolder(int i_reserve_size)
         {
-            if (i_reserve_size >= result_array.length)
+            if (i_reserve_size >= result_array.Length)
             {
                 int new_size = i_reserve_size + 5;
                 result_array = new NyARDetectMarkerResult[new_size];
@@ -72,15 +74,15 @@ namespace jp.nyatla.nyartoolkit.cs.detector
      */
     public class NyARDetectMarker
     {
-        private static const int AR_SQUARE_MAX = 300;
+        private const int AR_SQUARE_MAX = 300;
 
-        private boolean _is_continue = false;
+        private bool _is_continue = false;
 
         private NyARMatchPatt_Color_WITHOUT_PCA _match_patt;
 
         private INyARSquareDetector _square_detect;
 
-        private const NyARSquareStack _square_list = new NyARSquareStack(AR_SQUARE_MAX);
+        private NyARSquareStack _square_list = new NyARSquareStack(AR_SQUARE_MAX);
 
         private NyARCode[] _codes;
 
@@ -111,15 +113,15 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public NyARDetectMarker(NyARParam i_param, NyARCode[] i_code, double[] i_marker_width, int i_number_of_code)
         {
-            const NyARIntSize scr_size = i_param.getScreenSize();
+            NyARIntSize scr_size = i_param.getScreenSize();
             // 解析オブジェクトを作る
             this._square_detect = new NyARSquareDetector(i_param.getDistortionFactor(), scr_size);
             this._transmat = new NyARTransMat(i_param);
             // 比較コードを保存
             this._codes = i_code;
             // 比較コードの解像度は全部同じかな？（違うとパターンを複数種つくらないといけないから）
-            const int cw = i_code[0].getWidth();
-            const int ch = i_code[0].getHeight();
+            int cw = i_code[0].getWidth();
+            int ch = i_code[0].getHeight();
             for (int i = 1; i < i_number_of_code; i++)
             {
                 if (cw != i_code[i].getWidth() || ch != i_code[i].getHeight())
@@ -169,7 +171,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             // スクエアコードを探す
             this._square_detect.detectMarker(this._bin_raster, l_square_list);
 
-            const int number_of_square = l_square_list.getLength();
+            int number_of_square = l_square_list.getLength();
             // コードは見つかった？
             if (number_of_square < 1)
             {
@@ -215,7 +217,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                     confidence = c2;
                 }
                 // i番目のパターン情報を保存する。
-                const NyARDetectMarkerResult result = this._result_holder.result_array[i];
+                NyARDetectMarkerResult result = this._result_holder.result_array[i];
                 result.arcode_id = code_index;
                 result.confidence = confidence;
                 result.direction = direction;
@@ -235,7 +237,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public void getTransmationMatrix(int i_index, NyARTransMatResult o_result)
         {
-            const NyARDetectMarkerResult result = this._result_holder.result_array[i_index];
+            NyARDetectMarkerResult result = this._result_holder.result_array[i_index];
             // 一番一致したマーカーの位置とかその辺を計算
             if (_is_continue)
             {
@@ -291,7 +293,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * @param i_is_continue
          * TRUEなら、transMatContinueを使用します。 FALSEなら、transMatを使用します。
          */
-        public void setContinueMode(boolean i_is_continue)
+        public void setContinueMode(bool i_is_continue)
         {
             this._is_continue = i_is_continue;
         }

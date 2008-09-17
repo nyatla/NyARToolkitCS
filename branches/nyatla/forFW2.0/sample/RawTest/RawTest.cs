@@ -1,20 +1,34 @@
-﻿/**
- * Capture Test NyARToolkitCSサンプルプログラム
- * 
- * このサンプルプログラムは、NyARToolkitのRawFileTestサンプルを実行します。
- * マーカーを1000回検出し、変換行列を計算するためにかかった時間を表示します。
- * 
- * (c)2008 A虎＠nyatla.jp
+﻿/* 
+ * PROJECT: Capture Test NyARToolkitCSサンプルプログラム
+ * --------------------------------------------------------------------------------
+ * The MIT License
+ * Copyright (c) 2008 nyatla
  * airmail(at)ebony.plala.or.jp
- * http://nyatla.jp/
+ * http://nyatla.jp/nyartoolkit/
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
  */
 using System;
 using System.IO;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.match;
-using jp.nyatla.nyartoolkit.cs.raster;
 using jp.nyatla.nyartoolkit.cs.detector;
 
 namespace ConsoleApplication1
@@ -36,18 +50,18 @@ namespace ConsoleApplication1
         {
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadFromARFile(camera_file);
-            ap.changeSize(320, 240);
+            ap.loadARParamFromFile(camera_file);
+            ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadFromARFile(code_file);
+            code.loadARPattFromFile(code_file);
 
             //試験イメージの読み出し(320x240 BGRAのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
-            NyARRaster_BGRA ra = NyARRaster_BGRA.wrap(raw, 320, 240);
+            NyARRgbRaster_BGRA ra = NyARRgbRaster_BGRA.wrap(raw, 320, 240);
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
@@ -68,6 +82,7 @@ namespace ConsoleApplication1
             }
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds + "[ms]");
+            return;
         }
         public static void main(String[] args)
         {

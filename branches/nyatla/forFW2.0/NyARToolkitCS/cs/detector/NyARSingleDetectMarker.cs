@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,6 +29,9 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using jp.nyatla.nyartoolkit.cs.core;
+
+
 namespace jp.nyatla.nyartoolkit.cs.detector
 {
 
@@ -38,13 +41,13 @@ namespace jp.nyatla.nyartoolkit.cs.detector
      */
     public class NyARSingleDetectMarker
     {
-        private static const int AR_SQUARE_MAX = 100;
+        private const int AR_SQUARE_MAX = 100;
 
-        private boolean _is_continue = false;
+        private bool _is_continue = false;
         private NyARMatchPatt_Color_WITHOUT_PCA _match_patt;
         private INyARSquareDetector _square_detect;
 
-        private const NyARSquareStack _square_list = new NyARSquareStack(AR_SQUARE_MAX);
+        private NyARSquareStack _square_list = new NyARSquareStack(AR_SQUARE_MAX);
 
         private NyARCode _code;
 
@@ -74,7 +77,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public NyARSingleDetectMarker(NyARParam i_param, NyARCode i_code, double i_marker_width)
         {
-            const NyARIntSize scr_size = i_param.getScreenSize();
+            NyARIntSize scr_size = i_param.getScreenSize();
             // 解析オブジェクトを作る
             this._square_detect = new NyARSquareDetector(i_param.getDistortionFactor(), scr_size);
             this._transmat = new NyARTransMat(i_param);
@@ -101,7 +104,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * @return マーカーが検出できたかを真偽値で返します。
          * @throws NyARException
          */
-        public boolean detectMarkerLite(INyARRgbRaster i_raster, int i_threshold)
+        public bool detectMarkerLite(INyARRgbRaster i_raster, int i_threshold)
         {
             //サイズチェック
             if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize()))
@@ -218,7 +221,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * @param i_is_continue
          * TRUEなら、transMatCont互換の計算をします。 FALSEなら、transMat互換の計算をします。
          */
-        public void setContinueMode(boolean i_is_continue)
+        public void setContinueMode(bool i_is_continue)
         {
             this._is_continue = i_is_continue;
         }

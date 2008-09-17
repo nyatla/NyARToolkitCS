@@ -1,4 +1,30 @@
-﻿using System;
+﻿/* 
+ * Capture Test NyARToolkitCSサンプルプログラム
+ * --------------------------------------------------------------------------------
+ * The MIT License
+ * Copyright (c) 2008 nyatla
+ * airmail(at)ebony.plala.or.jp
+ * http://nyatla.jp/nyartoolkit/
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ */
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +39,6 @@ using NyARToolkitCSUtils.Direct3d;
 using NyARToolkitCSUtils.NyAR;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.raster;
 using jp.nyatla.nyartoolkit.cs.detector;
 
 namespace SimpleLiteDirect3d
@@ -117,12 +142,12 @@ namespace SimpleLiteDirect3d
 
             //AR用カメラパラメタファイルをロードして設定
             D3dARParam ap = new D3dARParam();
-            ap.loadFromARFile(AR_CAMERA_FILE);
-            ap.changeSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadFromARFile(AR_CODE_FILE);
+            code.loadARPattFromFile(AR_CODE_FILE);
 
             //１パターンのみを追跡するクラスを作成
             this.m_ar = new D3dSingleDetectMarker(ap, code, 80.0);

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,10 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public class NyARRgbRaster_BGRA : NyARRgbRaster_BasicClass, INyARRgbRaster
+    public class NyARRgbRaster_BGRA : NyARRgbRaster_BasicClass
     {
         private class PixelReader : INyARRgbPixelReader
         {
@@ -77,19 +77,18 @@ namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
             return new NyARRgbRaster_BGRA(i_buffer, i_width, i_height);
         }
 
-        private NyARRgbRaster_BGRA(byte[] i_buffer, int i_width, int i_height)
+        private NyARRgbRaster_BGRA(byte[] i_buffer, int i_width, int i_height): base(new NyARIntSize(i_width, i_height))
         {
-            super(new NyARIntSize(i_width, i_height));
             this._ref_buf = i_buffer;
             this._rgb_reader = new PixelReader(this);
             this._buffer_reader = new NyARBufferReader(i_buffer, INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32);
             return;
         }
-        public INyARRgbPixelReader getRgbPixelReader()
+        public override INyARRgbPixelReader getRgbPixelReader()
         {
             return this._rgb_reader;
         }
-        public INyARBufferReader getBufferReader()
+        public override INyARBufferReader getBufferReader()
         {
             return this._buffer_reader;
         }

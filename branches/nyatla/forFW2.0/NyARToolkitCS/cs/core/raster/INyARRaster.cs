@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,16 +29,16 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public interface INyARRaster
     {
-        public int getWidth();
+        int getWidth();
 
-        public int getHeight();
+        int getHeight();
 
-        public NyARIntSize getSize();
-        public INyARBufferReader getBufferReader();
+        NyARIntSize getSize();
+        INyARBufferReader getBufferReader();
     }
 }

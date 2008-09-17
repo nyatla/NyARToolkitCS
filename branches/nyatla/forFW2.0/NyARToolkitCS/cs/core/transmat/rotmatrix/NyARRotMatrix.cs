@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 回転行列計算用の、3x3行列
@@ -73,8 +74,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
 
         public void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
         {
-            const NyARRotVector vec1 = this.__initRot_vec1;
-            const NyARRotVector vec2 = this.__initRot_vec2;
+            NyARRotVector vec1 = this.__initRot_vec1;
+            NyARRotVector vec2 = this.__initRot_vec2;
 
             //向かい合った辺から、２本のベクトルを計算
 
@@ -97,10 +98,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             this.m21 = vec2.v3;
 
             //最後の軸を計算
-            const double w02 = vec1.v2 * vec2.v3 - vec1.v3 * vec2.v2;
-            const double w12 = vec1.v3 * vec2.v1 - vec1.v1 * vec2.v3;
-            const double w22 = vec1.v1 * vec2.v2 - vec1.v2 * vec2.v1;
-            const double w = Math.sqrt(w02 * w02 + w12 * w12 + w22 * w22);
+            double w02 = vec1.v2 * vec2.v3 - vec1.v3 * vec2.v2;
+            double w12 = vec1.v3 * vec2.v1 - vec1.v1 * vec2.v3;
+            double w22 = vec1.v1 * vec2.v2 - vec1.v2 * vec2.v1;
+            double w = Math.Sqrt(w02 * w02 + w12 * w12 + w22 * w22);
             this.m02 = w02 / w;
             this.m12 = w12 / w;
             this.m22 = w22 / w;
@@ -130,10 +131,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                 this.m22 = -1.0;// <Optimize/>rot[2][2] = -1.0;
             }
             cosb = this.m22;// <Optimize/>cosb = rot[2][2];
-            b = Math.acos(cosb);
-            sinb = Math.sin(b);
-            const double rot02 = this.m02;
-            const double rot12 = this.m12;
+            b = Math.Acos(cosb);
+            sinb = Math.Sin(b);
+            double rot02 = this.m02;
+            double rot12 = this.m12;
             if (b >= 0.000001 || b <= -0.000001)
             {
                 cosa = rot02 / sinb;// <Optimize/>cosa = rot[0][2] / sinb;
@@ -162,7 +163,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                     sina = -1.0;
                     cosa = 0.0;
                 }
-                a = Math.acos(cosa);
+                a = Math.Acos(cosa);
                 if (sina < 0)
                 {
                     a = -a;
@@ -170,7 +171,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                 // <Optimize>
                 // sinc = (rot[2][1]*rot[0][2]-rot[2][0]*rot[1][2])/(rot[0][2]*rot[0][2]+rot[1][2]*rot[1][2]);
                 // cosc = -(rot[0][2]*rot[2][0]+rot[1][2]*rot[2][1])/(rot[0][2]*rot[0][2]+rot[1][2]*rot[1][2]);
-                const double tmp = (rot02 * rot02 + rot12 * rot12);
+                double tmp = (rot02 * rot02 + rot12 * rot12);
                 sinc = (this.m21 * rot02 - this.m20 * rot12) / tmp;
                 cosc = -(rot02 * this.m20 + rot12 * this.m21) / tmp;
                 // </Optimize>
@@ -199,7 +200,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                     sinc = -1.0;
                     cosc = 0.0;
                 }
-                c = Math.acos(cosc);
+                c = Math.Acos(cosc);
                 if (sinc < 0)
                 {
                     c = -c;
@@ -236,7 +237,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                     sinc = -1.0;
                     cosc = 0.0;
                 }
-                c = Math.acos(cosc);
+                c = Math.Acos(cosc);
                 if (sinc < 0)
                 {
                     c = -c;
@@ -255,19 +256,19 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
          */
         public void setAngle(double i_x, double i_y, double i_z)
         {
-            const double sina = Math.sin(i_x);
-            const double cosa = Math.cos(i_x);
-            const double sinb = Math.sin(i_y);
-            const double cosb = Math.cos(i_y);
-            const double sinc = Math.sin(i_z);
-            const double cosc = Math.cos(i_z);
+            double sina = Math.Sin(i_x);
+            double cosa = Math.Cos(i_x);
+            double sinb = Math.Sin(i_y);
+            double cosb = Math.Cos(i_y);
+            double sinc = Math.Sin(i_z);
+            double cosc = Math.Cos(i_z);
             // Optimize
-            const double CACA = cosa * cosa;
-            const double SASA = sina * sina;
-            const double SACA = sina * cosa;
-            const double SASB = sina * sinb;
-            const double CASB = cosa * sinb;
-            const double SACACB = SACA * cosb;
+            double CACA = cosa * cosa;
+            double SASA = sina * sina;
+            double SACA = sina * cosa;
+            double SASB = sina * sinb;
+            double CASB = cosa * sinb;
+            double SACACB = SACA * cosb;
 
             this.m00 = CACA * cosb * cosc + SASA * cosc + SACACB * sinc - SACA * sinc;
             this.m01 = -CACA * cosb * sinc - SASA * sinc + SACACB * cosc - SACA * cosc;
@@ -287,9 +288,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
          */
         public void getPoint3d(NyARDoublePoint3d i_in_point, NyARDoublePoint3d i_out_point)
         {
-            const double x = i_in_point.x;
-            const double y = i_in_point.y;
-            const double z = i_in_point.z;
+            double x = i_in_point.x;
+            double y = i_in_point.y;
+            double z = i_in_point.z;
             i_out_point.x = this.m00 * x + this.m01 * y + this.m02 * z;
             i_out_point.y = this.m10 * x + this.m11 * y + this.m12 * z;
             i_out_point.z = this.m20 * x + this.m21 * y + this.m22 * z;
@@ -303,13 +304,15 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
          */
         public void getPoint3dBatch(NyARDoublePoint3d[] i_in_point, NyARDoublePoint3d[] i_out_point, int i_number_of_vertex)
         {
+            NyARDoublePoint3d out_ptr;
+            NyARDoublePoint3d in_ptr;
             for (int i = i_number_of_vertex - 1; i >= 0; i--)
             {
-                const NyARDoublePoint3d out_ptr = i_out_point[i];
-                const NyARDoublePoint3d in_ptr = i_in_point[i];
-                const double x = in_ptr.x;
-                const double y = in_ptr.y;
-                const double z = in_ptr.z;
+                out_ptr = i_out_point[i];
+                in_ptr = i_in_point[i];
+                double x = in_ptr.x;
+                double y = in_ptr.y;
+                double z = in_ptr.z;
                 out_ptr.x = this.m00 * x + this.m01 * y + this.m02 * z;
                 out_ptr.y = this.m10 * x + this.m11 * y + this.m12 * z;
                 out_ptr.z = this.m20 * x + this.m21 * y + this.m22 * z;

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,10 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public interface INyARBufferReader
+    public abstract class INyARBufferReader
     {
         /**
          * RGB24フォーマットで、全ての画素が0
@@ -69,8 +69,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
          */
         public const int BUFFERFORMAT_INT2D_BIN_8 = 0x00020002;
 
-        public Object getBuffer();
-        public int getBufferType();
-        public boolean isEqualBufferType(int i_type_value);
+        public abstract object getBuffer();
+        public abstract int getBufferType();
+        public abstract bool isEqualBufferType(int i_type_value);
     }
 }

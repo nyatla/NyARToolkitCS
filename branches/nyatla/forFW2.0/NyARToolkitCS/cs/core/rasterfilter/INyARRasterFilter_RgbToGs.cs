@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -38,6 +38,6 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter
      */
     public interface INyARRasterFilter_RgbToGs
     {
-        public void doFilter(INyARRgbRaster i_input, NyARGlayscaleRaster i_output);
+        void doFilter(INyARRgbRaster i_input, NyARGlayscaleRaster i_output);
     }
 }

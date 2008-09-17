@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,9 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.param
+using jp.nyatla.nyartoolkit.cs.utils;
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -44,7 +46,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
      */
     public class NyARCameraDistortionFactor
     {
-        private static const int PD_LOOP = 3;
+        private const int PD_LOOP = 3;
         private double _f0;//x0
         private double _f1;//y0
         private double _f2;//100000000.0*ｆ
@@ -86,8 +88,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
          */
         public void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
         {
-            const double x = (i_in.x - this._f0) * this._f3;
-            const double y = (i_in.y - this._f1) * this._f3;
+            double x = (i_in.x - this._f0) * this._f3;
+            double y = (i_in.y - this._f1) * this._f3;
             if (x == 0.0 && y == 0.0)
             {
                 o_out.x = this._f0;
@@ -95,7 +97,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
             }
             else
             {
-                const double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
                 o_out.x = x * d + this._f0;
                 o_out.y = y * d + this._f1;
             }
@@ -110,10 +112,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
         public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             double x, y;
-            const double d0 = this._f0;
-            const double d1 = this._f1;
-            const double d3 = this._f3;
-            const double d2_w = this._f2 / 100000000.0;
+            double d0 = this._f0;
+            double d1 = this._f1;
+            double d3 = this._f3;
+            double d2_w = this._f2 / 100000000.0;
             for (int i = 0; i < i_size; i++)
             {
                 x = (i_in[i].x - d0) * d3;
@@ -125,7 +127,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
                 }
                 else
                 {
-                    const double d = 1.0 - d2_w * (x * x + y * y);
+                    double d = 1.0 - d2_w * (x * x + y * y);
                     o_out[i].x = x * d + d0;
                     o_out[i].y = y * d + d1;
                 }
@@ -145,14 +147,14 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
         public void observ2Ideal(double ox, double oy, DoubleValue ix, DoubleValue iy)
         {
             double z02, z0, p, q, z, px, py, opttmp_1;
-            const double d0 = this._f0;
-            const double d1 = this._f1;
+            double d0 = this._f0;
+            double d1 = this._f1;
 
             px = ox - d0;
             py = oy - d1;
             p = this._f2 / 100000000.0;
             z02 = px * px + py * py;
-            q = z0 = Math.sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
+            q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
 
             for (int i = 1; ; i++)
             {
@@ -175,7 +177,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
                     break;
                 }
                 z02 = px * px + py * py;
-                z0 = Math.sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
+                z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
             }
             ix.value = px / this._f3 + d0;
             iy.value = py / this._f3 + d1;
@@ -197,10 +199,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
         public void observ2IdealBatch(int[] i_x_coord, int[] i_y_coord, int i_start, int i_num, double[][] o_ideal)
         {
             double z02, z0, q, z, px, py, opttmp_1;
-            const double d0 = this._f0;
-            const double d1 = this._f1;
-            const double d3 = this._f3;
-            const double p = this._f2 / 100000000.0;
+            double d0 = this._f0;
+            double d1 = this._f1;
+            double d3 = this._f3;
+            double p = this._f2 / 100000000.0;
             for (int j = 0; j < i_num; j++)
             {
 
@@ -208,7 +210,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
                 py = i_y_coord[i_start + j] - d1;
 
                 z02 = px * px + py * py;
-                q = z0 = Math.sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+py*py);
+                q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+py*py);
 
                 for (int i = 1; ; i++)
                 {
@@ -231,7 +233,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
                         break;
                     }
                     z02 = px * px + py * py;
-                    z0 = Math.sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
+                    z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
                 }
                 o_ideal[j][0] = px / d3 + d0;
                 o_ideal[j][1] = py / d3 + d1;

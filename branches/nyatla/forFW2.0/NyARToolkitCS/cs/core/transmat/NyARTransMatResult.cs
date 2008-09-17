@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -38,7 +38,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
      */
     public class NyARTransMatResult : NyARDoubleMatrix34
     {
-        private boolean has_value = false;
+        private bool has_value = false;
 
 
         /**
@@ -69,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
             return;
         }
 
-        public boolean hasValue()
+        public bool hasValue()
         {
             return this.has_value;
         }

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.param
+using System.IO;
+using System;
+using System.Collections.Generic;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -40,7 +43,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
     public class NyARParam
     {
         protected NyARIntSize _screen_size = new NyARIntSize();
-        private static const int SIZE_OF_PARAM_SET = 4 + 4 + (3 * 4 * 8) + (4 * 8);
+        private int SIZE_OF_PARAM_SET = 4 + 4 + (3 * 4 * 8) + (4 * 8);
         private NyARCameraDistortionFactor _dist = new NyARCameraDistortionFactor();
         private NyARPerspectiveProjectionMatrix _projection_matrix = new NyARPerspectiveProjectionMatrix();
 
@@ -64,11 +67,11 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
          * @param i_filename
          * @throws NyARException
          */
-        public void loadARParamFromFile(String i_filename)
+        public void loadARParamFromFile(string i_filename)
         {
             try
             {
-                loadARParam(new FileInputStream(i_filename));
+                loadARParam(new StreamReader(i_filename));
             }
             catch (Exception e)
             {
@@ -87,7 +90,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
          */
         public void changeScreenSize(int i_xsize, int i_ysize)
         {
-            const double scale = (double)i_xsize / (double)(this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
+            double scale = (double)i_xsize / (double)(this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
             //スケールを変更
             this._dist.changeScale(scale);
             this._projection_matrix.changeScale(scale);
@@ -111,30 +114,28 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
          * @param i_stream
          * @throws Exception
          */
-        public void loadARParam(InputStream i_stream)
+        public void loadARParam(StreamReader i_stream)
         {
             try
             {
                 byte[] buf = new byte[SIZE_OF_PARAM_SET];
-                i_stream.read(buf);
+                BinaryReader br=new BinaryReader(i_stream.BaseStream);
                 double[] tmp = new double[12];
 
                 // バッファを加工
-                ByteBuffer bb = ByteBuffer.wrap(buf);
-                bb.order(ByteOrder.BIG_ENDIAN);
-                this._screen_size.w = bb.getInt();
-                this._screen_size.h = bb.getInt();
+                this._screen_size.w = endianConv(br.ReadInt32());
+                this._screen_size.h = endianConv(br.ReadInt32());
                 //double値を12個読み込む
                 for (int i = 0; i < 12; i++)
                 {
-                    tmp[i] = bb.getDouble();
+                    tmp[i] =endianConv(br.ReadDouble());
                 }
                 //Projectionオブジェクトにセット
                 this._projection_matrix.setValue(tmp);
                 //double値を4個読み込む
                 for (int i = 0; i < 4; i++)
                 {
-                    tmp[i] = bb.getDouble();
+                    tmp[i] = endianConv(br.ReadDouble());
                 }
                 //Factorオブジェクトにセット
                 this._dist.setValue(tmp);
@@ -146,10 +147,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
             return;
         }
 
-        public void saveARParam(OutputStream i_stream)
+        public void saveARParam(StreamWriter i_stream)
         {
             NyARException.trap("未チェックの関数");
-            byte[] buf = new byte[SIZE_OF_PARAM_SET];
+/*            byte[] buf = new byte[SIZE_OF_PARAM_SET];
             // バッファをラップ
             ByteBuffer bb = ByteBuffer.wrap(buf);
             bb.order(ByteOrder.BIG_ENDIAN);
@@ -174,6 +175,27 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
             }
             i_stream.write(buf);
             return;
+ */
+        }
+        private static double endianConv(double i_val)
+        {
+            if (!BitConverter.IsLittleEndian)
+            {
+                return i_val;
+            }
+            byte[] ba = BitConverter.GetBytes(i_val);
+            Array.Reverse(ba);
+            return BitConverter.ToDouble(ba, 0);
+        }
+        private static int endianConv(int i_val)
+        {
+            if (!BitConverter.IsLittleEndian)
+            {
+                return i_val;
+            }
+            byte[] ba = BitConverter.GetBytes(i_val);
+            Array.Reverse(ba);
+            return BitConverter.ToInt32(ba, 0);
         }
     }
 }

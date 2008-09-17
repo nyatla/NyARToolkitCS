@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,18 +29,19 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARSquareStack : NyObjectStack
     {
-        public NyARSquareStack(int i_length)
+        public NyARSquareStack(int i_length): base(new NyARSquare[i_length])
         {
-            base(new NyARSquare[i_length]);
+           
 
         }
 
-        protected void onReservRequest(int i_start, int i_end, Object[] i_buffer)
+        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
         {
             for (int i = i_start; i < i_end; i++)
             {
@@ -48,18 +49,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
         }
 
-        public NyARSquare[] getArray()
+        new public NyARSquare[] getArray()
         {
             return (NyARSquare[])this._items;
         }
-        public NyARSquare getItem(int i_index)
+        new public NyARSquare getItem(int i_index)
         {
             return (NyARSquare)this._items[i_index];
         }
 
-        public NyARSquare prePush()
+        new public NyARSquare prePush()
         {
-            return (NyARSquare)super.prePush();
+            return (NyARSquare)base.prePush();
         }
     }
 }

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,14 +29,15 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.labeling
+
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public interface INyARLabeling
     {
-        public void attachDestination(INyARLabelingImage i_destination_image);
-        public INyARLabelingImage getAttachedDestination();
+        void attachDestination(INyARLabelingImage i_destination_image);
+        INyARLabelingImage getAttachedDestination();
 
-        public void labeling(NyARBinRaster i_raster);
+        void labeling(NyARBinRaster i_raster);
     }
 }

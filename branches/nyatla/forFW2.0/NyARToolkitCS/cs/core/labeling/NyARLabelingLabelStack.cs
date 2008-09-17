@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,9 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.labeling
+using jp.nyatla.nyartoolkit.cs.utils;
+
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -39,32 +41,32 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
     public class NyARLabelingLabelStack : NyObjectStack
     {
         protected NyARLabelingLabelStack(NyARLabelingLabel[] i_label_array)
+            : base(i_label_array)
         {
-            super(i_label_array);
         }
         public NyARLabelingLabelStack(int i_max_array_size)
+            : base(new NyARLabelingLabel[i_max_array_size])
         {
-            super(new NyARLabelingLabel[i_max_array_size]);
         }
 
-        protected void onReservRequest(int i_start, int i_end, Object[] i_buffer)
+        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
         {
             for (int i = i_start; i < i_end; i++)
             {
                 i_buffer[i] = new NyARLabelingLabel();
             }
         }
-        public NyARLabelingLabel[] getArray()
+        new public NyARLabelingLabel[] getArray()
         {
             return (NyARLabelingLabel[])this._items;
         }
-        public NyARLabelingLabel getItem(int i_index)
+        new public NyARLabelingLabel getItem(int i_index)
         {
             return (NyARLabelingLabel)this._items[i_index];
         }
-        public NyARLabelingLabel prePush()
+        new public NyARLabelingLabel prePush()
         {
-            return (NyARLabelingLabel)super.prePush();
+            return (NyARLabelingLabel)base.prePush();
         }
         /**
          * エリアの大きい順にラベルをソートします。
@@ -74,14 +76,16 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
             int len = this._length;
             int h = len * 13 / 10;
             NyARLabelingLabel[] item = (NyARLabelingLabel[])this._items;
+            int swaps;
+            int i;
             for (; ; )
             {
-                int swaps = 0;
-                for (int i = 0; i + h < len; i++)
+                swaps = 0;
+                for (i = 0; i + h < len; i++)
                 {
                     if (item[i + h].area > item[i].area)
                     {
-                        const NyARLabelingLabel temp = item[i + h];
+                        NyARLabelingLabel temp = item[i + h];
                         item[i + h] = item[i];
                         item[i] = temp;
                         swaps++;

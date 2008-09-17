@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 基本姿勢と実画像を一致するように、角度を微調整→平行移動量を再計算
@@ -49,8 +50,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
 
         public double optimize(NyARRotMatrix io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator)
         {
-            const NyARDoublePoint2d[] fit_vertex = i_calculator.getFitSquare();
-            const NyARDoublePoint3d[] offset_square = i_calculator.getOffsetVertex().vertex;
+            NyARDoublePoint2d[] fit_vertex = i_calculator.getFitSquare();
+            NyARDoublePoint3d[] offset_square = i_calculator.getOffsetVertex().vertex;
 
             double err = -1;
             /*ループを抜けるタイミングをARToolKitと合わせるために変なことしてます。*/
@@ -70,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             return err;
         }
 
-        private const double[][] __modifyMatrix_double1D = new double[8][]{
+        private double[][] __modifyMatrix_double1D = new double[8][]{
             new double[3],
             new double[3],
             new double[3],
@@ -80,7 +81,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             new double[3],
             new double[3]
         };
-        private const NyARDoublePoint3d __modifyMatrix_angle = new NyARDoublePoint3d();
+        private NyARDoublePoint3d __modifyMatrix_angle = new NyARDoublePoint3d();
         /**
          * arGetRot計算を階層化したModifyMatrix 896
          * 
@@ -142,7 +143,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             d_pt2 = i_vertex2d[3];
             P2D30 = d_pt2.x;
             P2D31 = d_pt2.y;
-            const NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
+            NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
             double CP0, CP1, CP2, CP4, CP5, CP6, CP8, CP9, CP10;
             CP0 = prjmat.m00;
             CP1 = prjmat.m01;
@@ -159,17 +160,17 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             double CACA, SASA, SACA, CA, SA;
             double CACACB, SACACB, SASACB, CASB, SASB;
             double SACASC, SACACBSC, SACACBCC, SACACC;
-            const double[][] double1D = this.__modifyMatrix_double1D;
+            double[][] double1D = this.__modifyMatrix_double1D;
 
-            const NyARDoublePoint3d angle = this.__modifyMatrix_angle;
+            NyARDoublePoint3d angle = this.__modifyMatrix_angle;
 
-            const double[] a_factor = double1D[1];
-            const double[] sinb = double1D[2];
-            const double[] cosb = double1D[3];
-            const double[] b_factor = double1D[4];
-            const double[] sinc = double1D[5];
-            const double[] cosc = double1D[6];
-            const double[] c_factor = double1D[7];
+            double[] a_factor = double1D[1];
+            double[] sinb = double1D[2];
+            double[] cosb = double1D[3];
+            double[] b_factor = double1D[4];
+            double[] sinc = double1D[5];
+            double[] cosc = double1D[6];
+            double[] c_factor = double1D[7];
             double w, w2;
             double wsin, wcos;
 
@@ -177,31 +178,32 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             a2 = angle.x;
             b2 = angle.y;
             c2 = angle.z;
+            int i, j;
 
             // comboの3行目を先に計算
-            for (int i = 0; i < 10; i++)
+            for (i = 0; i < 10; i++)
             {
                 minerr = 1000000000.0;
                 // sin-cosテーブルを計算(これが外に出せるとは…。)
-                for (int j = 0; j < 3; j++)
+                for (j = 0; j < 3; j++)
                 {
                     w2 = factor * (j - 1);
                     w = a2 + w2;
                     a_factor[j] = w;
                     w = b2 + w2;
                     b_factor[j] = w;
-                    sinb[j] = Math.sin(w);
-                    cosb[j] = Math.cos(w);
+                    sinb[j] = Math.Sin(w);
+                    cosb[j] = Math.Cos(w);
                     w = c2 + w2;
                     c_factor[j] = w;
-                    sinc[j] = Math.sin(w);
-                    cosc[j] = Math.cos(w);
+                    sinc[j] = Math.Sin(w);
+                    cosc[j] = Math.Cos(w);
                 }
                 //
                 for (t1 = 0; t1 < 3; t1++)
                 {
-                    SA = Math.sin(a_factor[t1]);
-                    CA = Math.cos(a_factor[t1]);
+                    SA = Math.Sin(a_factor[t1]);
+                    CA = Math.Cos(a_factor[t1]);
                     // Optimize
                     CACA = CA * CA;
                     SASA = SA * SA;

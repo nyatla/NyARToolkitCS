@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,20 +29,21 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster
+using jp.nyatla.nyartoolkit.cs.utils;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARBinRaster : NyARRaster_BasicClass
     {
         private INyARBufferReader _buffer_reader;
-        protected int[,] _ref_buf;
+        protected int[][] _ref_buf;
 
         public NyARBinRaster(int i_width, int i_height)
+            : base(new NyARIntSize(i_width, i_height))
         {
-            super(new NyARIntSize(i_width, i_height));
-            this._ref_buf = new int[i_height, i_width];
+            this._ref_buf = ArrayUtils.newInt2dArray(i_height,i_width);
             this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_INT2D_BIN_8);
         }
-        public INyARBufferReader getBufferReader()
+        public override INyARBufferReader getBufferReader()
         {
             return this._buffer_reader;
         }
