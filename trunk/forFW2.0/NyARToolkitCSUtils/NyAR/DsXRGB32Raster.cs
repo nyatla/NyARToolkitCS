@@ -19,8 +19,8 @@ namespace NyARToolkitCSUtils.Raster
      */
     public class DsXRGB32Raster : NyARRaster
     {
-        private const int INDEX_R = 0;
-        private const int INDEX_G = 0;
+        private const int INDEX_R = 2;
+        private const int INDEX_G = 1;
         private const int INDEX_B = 0;
         private int m_stride;
         private int m_width;
