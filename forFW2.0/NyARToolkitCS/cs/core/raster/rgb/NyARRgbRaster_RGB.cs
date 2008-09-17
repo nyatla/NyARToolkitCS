@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public class NyARRgbRaster_RGB : NyARRgbRaster_BasicClass
@@ -45,18 +45,18 @@ namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
         }
 
         private NyARRgbRaster_RGB(byte[] i_buffer, int i_width, int i_height)
+            : base(new NyARIntSize(i_width, i_height))
         {
-            super(new NyARIntSize(i_width, i_height));
             this._ref_buf = i_buffer;
             this._reader = new NyARRgbPixelReader_RGB24(i_buffer, this._size);
             this._buffer_reader = new NyARBufferReader(i_buffer, INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24);
             return;
         }
-        public INyARRgbPixelReader getRgbPixelReader()
+        public override INyARRgbPixelReader getRgbPixelReader()
         {
             return this._reader;
         }
-        public INyARBufferReader getBufferReader()
+        public override INyARBufferReader getBufferReader()
         {
             return this._buffer_reader;
         }

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -29,23 +29,32 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core
-{
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-    public interface INyARDoubleMatrix
+namespace jp.nyatla.nyartoolkit.cs.utils
+{
+    class ArrayUtils
     {
-        /**
-         * 配列の内容を行列に設定する。
-         * 遅いので余り使わないでね。
-         * @param o_value
-         */
-        void setValue(double[] i_value);
-        /**
-         * 行列の内容を配列に返す。
-         * 遅いので余り使わないでね。
-         * @param o_value
-         */
-        void getValue(double[] o_value);
+        public static double[][] newDouble2dArray(int i_r, int i_c)
+        {
+            double[][] d = new double[i_r][];
+            for (int i = 0; i < i_r; i++)
+            {
+                d[i] = new double[i_c];
+            }
+            return d;
+        }
+        public static int[][] newInt2dArray(int i_r, int i_c)
+        {
+            int[][] d = new int[i_r][];
+            for (int i = 0; i < i_r; i++)
+            {
+                d[i] = new int[i_c];
+            }
+            return d;
+        }
 
     }
 }

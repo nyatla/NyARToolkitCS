@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter.rgb2bin
+using System.Diagnostics;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 定数閾値による2値化をする。
@@ -54,9 +55,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter.rgb2bin
             INyARBufferReader out_buffer_reader = i_output.getBufferReader();
             int in_buf_type = in_buffer_reader.getBufferType();
 
-            assert(out_buffer_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT2D_BIN_8));
-            assert(checkInputType(in_buf_type) == true);
-            assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
+            Debug.Assert(out_buffer_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT2D_BIN_8));
+            Debug.Assert(checkInputType(in_buf_type) == true);
+            Debug.Assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
 
             int[][] out_buf = (int[][])out_buffer_reader.getBuffer();
             byte[] in_buf = (byte[])in_buffer_reader.getBuffer();
@@ -79,47 +80,48 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter.rgb2bin
 
         private void convert24BitRgb(byte[] i_in, int[][] i_out, NyARIntSize i_size)
         {
-            const int size_w = i_size.w;
-            const int x_mod_end = size_w - (size_w % 8);
-            const int th = this._threshold * 3;
+            int size_w = i_size.w;
+            int x_mod_end = size_w - (size_w % 8);
+            int th = this._threshold * 3;
             int bp = (size_w * i_size.h - 1) * 3;
             int w;
             int x;
             for (int y = i_size.h - 1; y >= 0; y--)
             {
+                int[] row_ptr=i_out[y];
                 //端数分
                 for (x = size_w - 1; x >= x_mod_end; x--)
                 {
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x] = w <= th ? 0 : 1;
+                    row_ptr[x] = w <= th ? 0 : 1;
                     bp -= 3;
                 }
                 //タイリング		
                 for (; x >= 0; x -= 8)
                 {
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x] = w <= th ? 0 : 1;
+                    row_ptr[x] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 1] = w <= th ? 0 : 1;
+                    row_ptr[x - 1] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 2] = w <= th ? 0 : 1;
+                    row_ptr[x - 2] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 3] = w <= th ? 0 : 1;
+                    row_ptr[x - 3] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 4] = w <= th ? 0 : 1;
+                    row_ptr[x - 4] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 5] = w <= th ? 0 : 1;
+                    row_ptr[x - 5] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 6] = w <= th ? 0 : 1;
+                    row_ptr[x - 6] = w <= th ? 0 : 1;
                     bp -= 3;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 7] = w <= th ? 0 : 1;
+                    row_ptr[x - 7] = w <= th ? 0 : 1;
                     bp -= 3;
                 }
             }
@@ -127,54 +129,56 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter.rgb2bin
         }
         private void convert32BitRgbx(byte[] i_in, int[][] i_out, NyARIntSize i_size)
         {
-            const int size_w = i_size.w;
-            const int x_mod_end = size_w - (size_w % 8);
-            const int th = this._threshold * 3;
+            int size_w = i_size.w;
+            int x_mod_end = size_w - (size_w % 8);
+            int th = this._threshold * 3;
             int bp = (size_w * i_size.h - 1) * 4;
             int w;
             int x;
             for (int y = i_size.h - 1; y >= 0; y--)
             {
+                int[] row_ptr = i_out[y];
+
                 //端数分
                 for (x = size_w - 1; x >= x_mod_end; x--)
                 {
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x] = w <= th ? 0 : 1;
+                    row_ptr[x] = w <= th ? 0 : 1;
                     bp -= 4;
                 }
                 //タイリング
                 for (; x >= 0; x -= 8)
                 {
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x] = w <= th ? 0 : 1;
+                    row_ptr[x] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 1] = w <= th ? 0 : 1;
+                    row_ptr[x - 1] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 2] = w <= th ? 0 : 1;
+                    row_ptr[x - 2] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 3] = w <= th ? 0 : 1;
+                    row_ptr[x - 3] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 4] = w <= th ? 0 : 1;
+                    row_ptr[x - 4] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 5] = w <= th ? 0 : 1;
+                    row_ptr[x - 5] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 6] = w <= th ? 0 : 1;
+                    row_ptr[x - 6] = w <= th ? 0 : 1;
                     bp -= 4;
                     w = ((i_in[bp] & 0xff) + (i_in[bp + 1] & 0xff) + (i_in[bp + 2] & 0xff));
-                    i_out[y][x - 7] = w <= th ? 0 : 1;
+                    row_ptr[x - 7] = w <= th ? 0 : 1;
                     bp -= 4;
                 }
             }
             return;
         }
 
-        private boolean checkInputType(int i_input_type)
+        private bool checkInputType(int i_input_type)
         {
             switch (i_input_type)
             {

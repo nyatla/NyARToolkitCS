@@ -1,12 +1,34 @@
-﻿/*
- * NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
- * 
- * (c)2008 A虎＠nyatla.jp
+﻿/* 
+ * PROJECT: NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
+ * --------------------------------------------------------------------------------
+ * The MIT License
+ * Copyright (c) 2008 nyatla
  * airmail(at)ebony.plala.or.jp
- * http://nyatla.jp/
+ * http://nyatla.jp/nyartoolkit/
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.core;
+
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NyARToolkitCSUtils.Raster;
@@ -78,10 +100,12 @@ namespace NyARToolkitCSUtils.Direct3d
          */
         public void CopyFromXRGB32(DsXRGB32Raster i_raster)
         {
+            //BUFFERFORMAT_BYTE1D_B8G8R8X8_32しか受けられません。
+            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32));
             GraphicsStream texture_rect;
             try
             {
-                byte[] buf = i_raster.buffer;
+                byte[] buf =(byte[])i_raster.getBufferReader().getBuffer();
                 // テクスチャをロックする
                 texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
                 //テクスチャのピッチって何？

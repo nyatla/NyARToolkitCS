@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -37,16 +37,13 @@ namespace jp.nyatla.nyartoolkit.cs.core.raster.rgb
      * 
      * 
      */
-    public abstract class NyARRgbRaster_BasicClass : NyARRaster_BasicClass, INyARRgbRaster
+    public abstract class NyARRgbRaster_BasicClass : NyARRaster_BasicClass,INyARRgbRaster
     {
         protected NyARRgbRaster_BasicClass(NyARIntSize i_size)
+            : base(i_size)
         {
-            base(i_size);
         }
-        public INyARRgbPixelReader getRgbPixcelReader()
-        {
-            NyARException.notImplement();
-            return null;
-        }
+ 
+        public abstract INyARRgbPixelReader getRgbPixelReader();
     }
 }

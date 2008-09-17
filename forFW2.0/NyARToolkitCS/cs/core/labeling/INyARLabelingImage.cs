@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,12 +29,12 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.labeling
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARLabelingImage : INyARRaster
     {
-        public int[] getIndexArray();
-        public NyARLabelingLabelStack getLabelStack();
-        public void reset(boolean i_label_index_enable);
+        int[] getIndexArray();
+        NyARLabelingLabelStack getLabelStack();
+        void reset(bool i_label_index_enable);
     }
 }

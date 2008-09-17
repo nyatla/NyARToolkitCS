@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -31,6 +31,7 @@
  */
 
 using System;
+using jp.nyatla.nyartoolkit.cs.utils;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -39,15 +40,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARMat
     {
-        private double[][] new2dArray(int i_r, int i_c)
-        {
-            double[][] d = new double[i_r][];
-            for (int i = 0; i < i_r; i++)
-            {
-                d[i] = new double[i_c];
-            }
-            return d;
-        }
         /**
          * 配列サイズと行列サイズは必ずしも一致しないことに注意 返された配列のサイズを行列の大きさとして使わないこと！
          * 
@@ -68,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         public NyARMat(int i_row, int i_clm)
         {
-            m = this.new2dArray(i_row, i_clm);
+            m = ArrayUtils.newDouble2dArray(i_row, i_clm);
             clm = i_clm;
             row = i_row;
         }
@@ -81,14 +73,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void realloc(int i_row, int i_clm)
         {
-            if (i_row <= this.m.length && i_clm <= this.m[0].length)
+            if (i_row <= this.m.Length && i_clm <= this.m[0].Length)
             {
                 // 十分な配列があれば何もしない。
             }
             else
             {
                 // 不十分なら取り直す。
-                m = this.new2dArray(i_row, i_clm);
+                m = ArrayUtils.newDouble2dArray(i_row, i_clm);
             }
             this.clm = i_clm;
             this.row = i_row;
@@ -197,7 +189,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 
          * @throws NyARException
          */
-        public boolean matrixSelfInv()
+        public bool matrixSelfInv()
         {
             double[][] ap = this.m;
             int dimen = this.row;
@@ -236,7 +228,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 {// for(i = n, wap = wcp, p =
                     // 0.0; i < dimen ; i++, wap +=
                     // rowa)
-                    if (p < (pbuf = Math.abs(ap[i][0])))
+                    if (p < (pbuf = Math.Abs(ap[i][0])))
                     {
                         p = pbuf;
                         ip = i;
@@ -478,11 +470,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return 0;
         }
 
-        private static const double PCA_EPS = 1e-6; // #define EPS 1e-6
+        private const double PCA_EPS = 1e-6; // #define EPS 1e-6
 
-        private static const int PCA_MAX_ITER = 100; // #define MAX_ITER 100
+        private const int PCA_MAX_ITER = 100; // #define MAX_ITER 100
 
-        private static const double PCA_VZERO = 1e-16; // #define VZERO 1e-16
+        private const double PCA_VZERO = 1e-16; // #define VZERO 1e-16
 
         /**
          * static int EX( ARMat *input, ARVec *mean )の代替関数 Optimize:STEP:[144->110]
@@ -510,7 +502,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             // double[] mean_array=mean.getArray();
             // mean.zeroClear();
-            const double[] mean_array = mean.getArray();
+            double[] mean_array = mean.getArray();
             double w;
             // For順変更禁止
             for (i2 = 0; i2 < lclm; i2++)
@@ -577,6 +569,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             im_i[j] -= v[j];
                         }
                     }
+                    break;
             }
             return;
         }
@@ -642,37 +635,44 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_output
          * @throws NyARException
          */
-        private static void PCA_xt_by_x(NyARMat input, NyARMat i_output)
-	{
-		double[] in;
-		int row, clm;
+        private static void PCA_xt_by_x(NyARMat i_input, NyARMat i_output)
+        {
+            double[] in_;
+            int row, clm;
 
-		row = input.row;
-		clm = input.clm;
-		if (i_output.row != clm || i_output.clm != clm) {
-			throw new NyARException();
-		}
+            row = i_input.row;
+            clm = i_input.clm;
+            if (i_output.row != clm || i_output.clm != clm)
+            {
+                throw new NyARException();
+            }
 
-		int k, j;
-		double[][] out_m = i_output.m;
-		double w;
-		for (int i = 0; i < clm; i++) {
-			for (j = 0; j < clm; j++) {
-				if (j < i) {
-					out_m[i][j] = out_m[j][i];// *out = output->m[j*clm+i];
-				} else {
-					w = 0.0;// *out = 0.0;
-					for (k = 0; k < row; k++) {
-						in = input.m[k];// in=input.getRowArray(k);
-						w += (in[i] * in[j]);// *out += *in1 * *in2;
-					}
-					out_m[i][j] = w;
-				}
-			}
-		}
-	}
+            int k, j;
+            double[][] out_m = i_output.m;
+            double w;
+            for (int i = 0; i < clm; i++)
+            {
+                for (j = 0; j < clm; j++)
+                {
+                    if (j < i)
+                    {
+                        out_m[i][j] = out_m[j][i];// *out = output->m[j*clm+i];
+                    }
+                    else
+                    {
+                        w = 0.0;// *out = 0.0;
+                        for (k = 0; k < row; k++)
+                        {
+                            in_ = i_input.m[k];// in=input.getRowArray(k);
+                            w += (in_[i] * in_[j]);// *out += *in1 * *in2;
+                        }
+                        out_m[i][j] = w;
+                    }
+                }
+            }
+        }
 
-        private const NyARVec wk_PCA_QRM_ev = new NyARVec(1);
+        private NyARVec wk_PCA_QRM_ev = new NyARVec(1);
 
         /**
          * static int QRM( ARMat *a, ARVec *dv )の代替関数
@@ -704,14 +704,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 throw new NyARException();
             }
-            const double[][] L_m = this.m;
+            double[][] L_m = this.m;
             this.vecTridiagonalize(dv, ev, 1);
 
             ev_array[0] = 0.0;// ev->v[0] = 0.0;
             for (int h = dim - 1; h > 0; h--)
             {
                 int j = h;
-                while (j > 0 && Math.abs(ev_array[j]) > PCA_EPS * (Math.abs(dv_array[j - 1]) + Math.abs(dv_array[j])))
+                while (j > 0 && Math.Abs(ev_array[j]) > PCA_EPS * (Math.Abs(dv_array[j - 1]) + Math.Abs(dv_array[j])))
                 {// while(j>0 && fabs(ev->v[j]) >EPS*(fabs(dv->v[j-1])+fabs(dv->v[j])))
                     // j--;
                     j--;
@@ -730,7 +730,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     }
                     w = (dv_array[h - 1] - dv_array[h]) / 2;// w = (dv->v[h-1] -dv->v[h]) / 2;//ここ？
                     t = ev_array[h] * ev_array[h];// t = ev->v[h] * ev->v[h];
-                    s = Math.sqrt(w * w + t);
+                    s = Math.Sqrt(w * w + t);
                     if (w < 0)
                     {
                         s = -s;
@@ -739,12 +739,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     y = ev_array[j + 1];// y = ev->v[j+1];
                     for (int k = j; k < h; k++)
                     {
-                        if (Math.abs(x) >= Math.abs(y))
+                        if (Math.Abs(x) >= Math.Abs(y))
                         {
-                            if (Math.abs(x) > PCA_VZERO)
+                            if (Math.Abs(x) > PCA_VZERO)
                             {
                                 t = -y / x;
-                                c = 1 / Math.sqrt(t * t + 1);
+                                c = 1 / Math.Sqrt(t * t + 1);
                                 s = t * c;
                             }
                             else
@@ -756,7 +756,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         else
                         {
                             t = -x / y;
-                            s = 1.0 / Math.sqrt(t * t + 1);
+                            s = 1.0 / Math.Sqrt(t * t + 1);
                             c = t * s;
                         }
                         w = dv_array[k] - dv_array[k + 1];// w = dv->v[k] -dv->v[k+1];
@@ -789,8 +789,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             }
                         }
                     }
-                } while (Math.abs(ev_array[h]) > PCA_EPS
-                        * (Math.abs(dv_array[h - 1]) + Math.abs(dv_array[h])));
+                } while (Math.Abs(ev_array[h]) > PCA_EPS
+                        * (Math.Abs(dv_array[h - 1]) + Math.Abs(dv_array[h])));
             }
             for (int k = 0; k < dim - 1; k++)
             {
@@ -839,12 +839,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param ev
          * @throws NyARException
          */
-        private static void PCA_EV_create(NyARMat input, NyARMat u, NyARMat output, NyARVec ev)
+        private static void PCA_EV_create(NyARMat i_input, NyARMat u, NyARMat output, NyARVec ev)
         {
             NyARException.trap("未チェックのパス");
             int row, clm;
-            row = input.row;// row = input->row;
-            clm = input.clm;// clm = input->clm;
+            row = i_input.row;// row = input->row;
+            clm = i_input.clm;// clm = input->clm;
             if (row <= 0 || clm <= 0)
             {
                 throw new NyARException();
@@ -861,13 +861,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {// if( ev->clm != row ){
                 throw new NyARException();
             }
-            double[][] m, input;
+            double[][] m, in_;
             double[] m1, ev_array;
             double sum, work;
 
             NyARException.trap("未チェックのパス");
             m = output.m;// m = output->m;
-            input = input.m;
+            in_ = i_input.m;
             int i;
             ev_array = ev.getArray();
             for (i = 0; i < row; i++)
@@ -878,7 +878,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     break;
                 }
                 NyARException.trap("未チェックのパス");
-                work = 1 / Math.sqrt(Math.abs(ev_array[i]));// work = 1 /
+                work = 1 / Math.Sqrt(Math.Abs(ev_array[i]));// work = 1 /
                 // sqrt(fabs(ev->v[i]));
                 for (int j = 0; j < clm; j++)
                 {
@@ -887,7 +887,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     // m2=input.getPointer(j);//m2 = &(input->m[j]);
                     for (int k = 0; k < row; k++)
                     {
-                        sum += m1[k] + input[k][j];// sum += *m1 * *m2;
+                        sum += m1[k] + in_[k][j];// sum += *m1 * *m2;
                         // m1.incPtr(); //m1++;
                         // m2.addPtr(clm);//m2 += clm;
                     }
@@ -1057,7 +1057,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 // arMatrixAllocDup( input );
             }
 
-            srow = Math.sqrt((double)l_row);
+            srow = Math.Sqrt((double)l_row);
             work.PCA_EX(mean);
 
             PCA_CENTER(work, mean);
@@ -1151,7 +1151,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		NyARException.trap("動作未チェック/配列化未チェック");
 		double det = 1.0;
 		double work;
-		int is = 0;
+        int is_ = 0;
 		int mmax;
 
 		for (int k = 0; k < dimen - 1; k++) {
@@ -1159,7 +1159,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 			for (int i = k + 1; i < dimen; i++) {
 				// if (Math.abs(arMatrixDet_MATRIX_get(ap, i, k, rowa)) >
 				// Math.abs(arMatrixDet_MATRIX_get(ap, mmax, k, rowa))){
-				if (Math.abs(ap[i][k]) > Math.abs(ap[mmax][k])) {
+				if (Math.Abs(ap[i][k]) > Math.Abs(ap[mmax][k])) {
 					mmax = i;
 				}
 			}
@@ -1169,7 +1169,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 					ap[k][j] = ap[mmax][j];// MATRIX(ap, k, j, rowa) =MATRIX(ap, mmax, j, rowa);
 					ap[mmax][j] = work;// MATRIX(ap, mmax, j, rowa) = work;
 				}
-				is++;
+				is_++;
 			}
 			for (int i = k + 1; i < dimen; i++) {
 				work = ap[i][k] / ap[k][k];// work = arMatrixDet_MATRIX_get(ap,i, k, rowa) /arMatrixDet_MATRIX_get(ap, k, k,rowa);
@@ -1182,7 +1182,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		for (int i = 0; i < dimen; i++) {
 			det = ap[i][i];// det *= MATRIX(ap, i, i, rowa);
 		}
-		for (int i = 0; i < is; i++) {
+		for (int i = 0; i < is_; i++) {
 			det *= -1.0;
 		}
 		return det;
@@ -1199,9 +1199,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return Det_mdet(m.getArray(), m.row, m.clm);// return mdet(m->m, m->row,m->row);
         }
 
-        private const NyARVec wk_vecTridiagonalize_vec = new NyARVec(0);
+        private NyARVec wk_vecTridiagonalize_vec = new NyARVec(0);
 
-        private const NyARVec wk_vecTridiagonalize_vec2 = new NyARVec(0);
+        private NyARVec wk_vecTridiagonalize_vec2 = new NyARVec(0);
 
         /**
          * arVecTridiagonalize関数の代替品 a,d,e間で演算をしてる。何をどうしているかはさっぱりさっぱり

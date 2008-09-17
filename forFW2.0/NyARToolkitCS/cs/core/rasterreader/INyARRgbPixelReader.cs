@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * R8G8B8でピクセルを読み出すインタフェイス
@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
          * @param i_y
          * @param i_rgb
          */
-        public void getPixel(int i_x, int i_y, int[] i_rgb);
+        void getPixel(int i_x, int i_y, int[] i_rgb);
 
         /**
          * 複数のピクセル値をi_rgbへ返します。
@@ -58,6 +58,6 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
          * @param i_rgb
          * ピクセル値を返すバッファ
          */
-        public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_rgb);
+        void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_rgb);
     }
 }

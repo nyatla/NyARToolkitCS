@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
 
@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
          */
         public void setSquare(double i_width, NyARDoublePoint2d i_center)
         {
-            const double w_2 = i_width / 2.0;
+            double w_2 = i_width / 2.0;
 
             NyARDoublePoint3d vertex3d_ptr;
             vertex3d_ptr = this.vertex[0];

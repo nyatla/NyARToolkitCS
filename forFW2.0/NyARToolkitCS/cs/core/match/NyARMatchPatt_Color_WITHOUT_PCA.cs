@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.match
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -68,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
          */
         private void reallocInputArray(int i_width, int i_height)
         {
-            if (this.input.length < i_height || this.input[0].length < i_width)
+            if(this.input.Length<i_height*i_width*3)
             {
                 // 配列が十分なサイズでなければ取り直す
                 this.input = new int[i_height, i_width, 3];
@@ -77,7 +78,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
             this.width = i_width;
         }
 
-        public boolean setPatt(INyARColorPatt i_target_patt)
+        public bool setPatt(INyARColorPatt i_target_patt)
         {
             int i, k;
             int[, ,] data, linput;
@@ -137,7 +138,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
                     // </Optimize>
                 }
             }
-            datapow = Math.sqrt((double)sum);
+            datapow = Math.Sqrt((double)sum);
             if (datapow == 0.0)
             {
                 return false;// throw new NyARException();
@@ -166,15 +167,18 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
             int l_width = this.width;
             int l_height = this.height;
             linput = this.input;
+            int sum;
+            int i, k;
+            double sum2;
             for (int j = 0; j < 4; j++)
             {
-                int sum = 0;
+                sum = 0;
 //                pat_j = pat[j];
-                for (int i = l_height - 1; i >= 0; i--)
+                for (i = l_height - 1; i >= 0; i--)
                 {// for(int i=0;i<Config.AR_PATT_SIZE_Y;i++){
 //                    input_i = linput[i];
 //                    pat_j_i = pat_j[i];
-                    for (int k = l_width - 1; k >= 0; k--)
+                    for (k = l_width - 1; k >= 0; k--)
                     {
 //                        pat_j_i_k = pat_j_i[k];
 //                        input_i_k = input_i[k];
@@ -185,7 +189,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.match
                         // }
                     }
                 }
-                double sum2 = sum / patpow[j] / datapow;// sum2 = sum / patpow[k][j]/ datapow;
+                sum2 = sum / patpow[j] / datapow;// sum2 = sum / patpow[k][j]/ datapow;
                 if (sum2 > max)
                 {
                     max = sum2;

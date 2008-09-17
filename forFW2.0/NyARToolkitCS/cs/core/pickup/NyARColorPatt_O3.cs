@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.pickup
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 24ビットカラーのマーカーを保持するために使うクラスです。 このクラスは、ARToolkitのパターンと、ラスタから取得したパターンを保持します。
@@ -84,9 +84,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
             return height;
         }
 
-        private const NyARMat wk_get_cpara_a = new NyARMat(8, 8);
+        private NyARMat wk_get_cpara_a = new NyARMat(8, 8);
 
-        private const NyARMat wk_get_cpara_b = new NyARMat(8, 1);
+        private NyARMat wk_get_cpara_b = new NyARMat(8, 1);
 
         /**
          * @param world
@@ -94,38 +94,37 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
          * @param o_para
          * @throws NyARException
          */
-        private boolean get_cpara(NyARIntPoint[] i_vertex, NyARMat o_para)
+        private bool get_cpara(NyARIntPoint[] i_vertex, NyARMat o_para)
         {
-            int[, ,] world = this.wk_pickFromRaster_world;
+            int[, ] world = this.wk_pickFromRaster_world;
             NyARMat a = wk_get_cpara_a;// 次処理で値を設定するので、初期化不要// new NyARMat( 8, 8 );
             double[][] a_array = a.getArray();
             NyARMat b = wk_get_cpara_b;// 次処理で値を設定するので、初期化不要// new NyARMat( 8, 1 );
             double[][] b_array = b.getArray();
             double[] a_pt0, a_pt1;
-            int[] world_pti;
 
             for (int i = 0; i < 4; i++)
             {
                 a_pt0 = a_array[i * 2];
                 a_pt1 = a_array[i * 2 + 1];
-                world_pti = world[i];
 
-                a_pt0[0] = (double)world_pti[0];// a->m[i*16+0] = world[i][0];
-                a_pt0[1] = (double)world_pti[1];// a->m[i*16+1] = world[i][1];
+
+                a_pt0[0] = (double)world[i, 0];// a->m[i*16+0] = world[i][0];
+                a_pt0[1] = (double)world[i, 1];// a->m[i*16+1] = world[i][1];
                 a_pt0[2] = 1.0;// a->m[i*16+2] = 1.0;
                 a_pt0[3] = 0.0;// a->m[i*16+3] = 0.0;
                 a_pt0[4] = 0.0;// a->m[i*16+4] = 0.0;
                 a_pt0[5] = 0.0;// a->m[i*16+5] = 0.0;
-                a_pt0[6] = (double)(-world_pti[0] * i_vertex[i].x);// a->m[i*16+6]= -world[i][0]*vertex[i][0];
-                a_pt0[7] = (double)(-world_pti[1] * i_vertex[i].x);// a->m[i*16+7]=-world[i][1]*vertex[i][0];
+                a_pt0[6] = (double)(-world[i, 0] * i_vertex[i].x);// a->m[i*16+6]= -world[i][0]*vertex[i][0];
+                a_pt0[7] = (double)(-world[i, 1] * i_vertex[i].x);// a->m[i*16+7]=-world[i][1]*vertex[i][0];
                 a_pt1[0] = 0.0;// a->m[i*16+8] = 0.0;
                 a_pt1[1] = 0.0;// a->m[i*16+9] = 0.0;
                 a_pt1[2] = 0.0;// a->m[i*16+10] = 0.0;
-                a_pt1[3] = (double)world_pti[0];// a->m[i*16+11] = world[i][0];
-                a_pt1[4] = (double)world_pti[1];// a->m[i*16+12] = world[i][1];
+                a_pt1[3] = (double)world[i, 0];// a->m[i*16+11] = world[i][0];
+                a_pt1[4] = (double)world[i, 1];// a->m[i*16+12] = world[i][1];
                 a_pt1[5] = 1.0;// a->m[i*16+13] = 1.0;
-                a_pt1[6] = (double)(-world_pti[0] * i_vertex[i].y);// a->m[i*16+14]=-world[i][0]*vertex[i][1];
-                a_pt1[7] = (double)(-world_pti[1] * i_vertex[i].y);// a->m[i*16+15]=-world[i][1]*vertex[i][1];
+                a_pt1[6] = (double)(-world[i, 0] * i_vertex[i].y);// a->m[i*16+14]=-world[i][0]*vertex[i][1];
+                a_pt1[7] = (double)(-world[i, 1] * i_vertex[i].y);// a->m[i*16+15]=-world[i][1]*vertex[i][1];
                 b_array[i * 2 + 0][0] = (double)i_vertex[i].x;// b->m[i*2+0] =vertex[i][0];
                 b_array[i * 2 + 1][0] = (double)i_vertex[i].y;// b->m[i*2+1] =vertex[i][1];
             }
@@ -139,32 +138,28 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
         }
 
         // private final double[] wk_pickFromRaster_para=new double[9];//[3][3];
-        private const int[, ,] wk_pickFromRaster_world = {// double world[4][2];
+        private int[, ] wk_pickFromRaster_world = {// double world[4][2];
 	{ 100, 100 }, { 100 + 10, 100 }, { 100 + 10, 100 + 10 }, { 100, 100 + 10 } };
 
         /**
          * pickFromRaster関数から使う変数です。
          * 
          */
-        private static void initValue_wk_pickFromRaster_ext_pat2(int[][][] i_ext_pat2, int i_width, int i_height)
+        private static void initValue_wk_pickFromRaster_ext_pat2(int[,,] i_ext_pat2, int i_width, int i_height)
         {
             int i, i2;
-            int[][] pt2;
-            int[] pt1;
             for (i = i_height - 1; i >= 0; i--)
             {
-                pt2 = i_ext_pat2[i];
                 for (i2 = i_width - 1; i2 >= 0; i2--)
                 {
-                    pt1 = pt2[i2];
-                    pt1[0] = 0;
-                    pt1[1] = 0;
-                    pt1[2] = 0;
+                    i_ext_pat2[i, i2, 0] = 0;
+                    i_ext_pat2[i, i2, 1] = 0;
+                    i_ext_pat2[i, i2, 2] = 0;
                 }
             }
         }
 
-        private const NyARMat wk_pickFromRaster_cpara = new NyARMat(8, 1);
+        private NyARMat wk_pickFromRaster_cpara = new NyARMat(8, 1);
 
         /**
          * imageから、i_markerの位置にあるパターンを切り出して、保持します。 Optimize:STEP[769->750]
@@ -173,10 +168,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
          * @param i_marker
          * @throws Exception
          */
-        public boolean pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
+        public bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
         {
-            const NyARMat cpara = this.wk_pickFromRaster_cpara;
-            const NyARIntPoint[] local = i_square.imvertex;
+            NyARMat cpara = this.wk_pickFromRaster_cpara;
+            NyARIntPoint[] local = i_square.imvertex;
             // //localの計算
             // int[] local_0=wk_pickFromRaster_local[0];//double local[4][2];
             // int[] local_1=wk_pickFromRaster_local[1];//double local[4][2];
@@ -287,9 +282,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
         {
             int img_x = image.getWidth();
             int img_y = image.getHeight();
-            const int[,,] L_extpat = this.extpat;
-            const int L_WIDTH = this.width;
-            const int L_HEIGHT = this.height;
+            int[,,] L_extpat = this.extpat;
+            int L_WIDTH = this.width;
+            int L_HEIGHT = this.height;
             /* wk_pickFromRaster_ext_pat2ワーク変数を初期化する。 */
             // int[][][] ext_pat2=wk_pickFromRaster_ext_pat2;//ARUint32
             // ext_pat2[AR_PATT_SIZE_Y][AR_PATT_SIZE_X][3];

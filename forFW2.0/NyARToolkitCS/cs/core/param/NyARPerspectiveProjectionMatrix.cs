@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.param
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 透視変換行列を格納します。
@@ -50,7 +51,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.param
         /* static double norm( double a, double b, double c ) */
         private static double norm(double a, double b, double c)
         {
-            return Math.sqrt(a * a + b * b + c * c);
+            return Math.Sqrt(a * a + b * b + c * c);
         }
 
         /**

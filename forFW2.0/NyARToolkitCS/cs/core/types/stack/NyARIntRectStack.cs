@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -31,17 +31,16 @@
  */
 using jp.nyatla.nyartoolkit.cs.utils;
 
-namespace jp.nyatla.nyartoolkit.cs.core.types.stack
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARIntRectStack : NyObjectStack
     {
-        public NyARIntRectStack(int i_length)
+        public NyARIntRectStack(int i_length): base(new NyARIntRect[i_length])
         {
-            super(new NyARIntRect[i_length]);
 
         }
 
-        protected void onReservRequest(int i_start, int i_end, Object[] i_buffer)
+        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
         {
             for (int i = i_start; i < i_end; i++)
             {
@@ -49,14 +48,14 @@ namespace jp.nyatla.nyartoolkit.cs.core.types.stack
             }
         }
 
-        public NyARIntRect[] getArray()
+        new public NyARIntRect[] getArray()
         {
             return (NyARIntRect[])this._items;
         }
 
-        public NyARIntRect prePush()
+        new public NyARIntRect prePush()
         {
-            return (NyARIntRect)super.prePush();
+            return (NyARIntRect)base.prePush();
         }
     }
 }

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public class NyARRotVector
@@ -77,15 +78,15 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
         public void exteriorProductFromLinear(NyARLinear i_linear1, NyARLinear i_linear2)
         {
             //1行目
-            const NyARPerspectiveProjectionMatrix cmat = this._projection_mat_ref;
-            const double w1 = i_linear1.run * i_linear2.rise - i_linear2.run * i_linear1.rise;
-            const double w2 = i_linear1.rise * i_linear2.intercept - i_linear2.rise * i_linear1.intercept;
-            const double w3 = i_linear1.intercept * i_linear2.run - i_linear2.intercept * i_linear1.run;
+            NyARPerspectiveProjectionMatrix cmat = this._projection_mat_ref;
+            double w1 = i_linear1.run * i_linear2.rise - i_linear2.run * i_linear1.rise;
+            double w2 = i_linear1.rise * i_linear2.intercept - i_linear2.rise * i_linear1.intercept;
+            double w3 = i_linear1.intercept * i_linear2.run - i_linear2.intercept * i_linear1.run;
 
-            const double m0 = w1 * (cmat.m01 * cmat.m12 - cmat.m02 * cmat.m11) + w2 * cmat.m11 - w3 * cmat.m01;//w1 * (cpara[0 * 4 + 1] * cpara[1 * 4 + 2] - cpara[0 * 4 + 2] * cpara[1 * 4 + 1]) + w2 * cpara[1 * 4 + 1] - w3 * cpara[0 * 4 + 1];
-            const double m1 = -w1 * cmat.m00 * cmat.m12 + w3 * cmat.m00;//-w1 * cpara[0 * 4 + 0] * cpara[1 * 4 + 2] + w3 * cpara[0 * 4 + 0];
-            const double m2 = w1 * cmat.m00 * cmat.m11;//w1 * cpara[0 * 4 + 0] * cpara[1 * 4 + 1];
-            const double w = Math.sqrt(m0 * m0 + m1 * m1 + m2 * m2);
+            double m0 = w1 * (cmat.m01 * cmat.m12 - cmat.m02 * cmat.m11) + w2 * cmat.m11 - w3 * cmat.m01;//w1 * (cpara[0 * 4 + 1] * cpara[1 * 4 + 2] - cpara[0 * 4 + 2] * cpara[1 * 4 + 1]) + w2 * cpara[1 * 4 + 1] - w3 * cpara[0 * 4 + 1];
+            double m1 = -w1 * cmat.m00 * cmat.m12 + w3 * cmat.m00;//-w1 * cpara[0 * 4 + 0] * cpara[1 * 4 + 2] + w3 * cpara[0 * 4 + 0];
+            double m2 = w1 * cmat.m00 * cmat.m11;//w1 * cpara[0 * 4 + 0] * cpara[1 * 4 + 1];
+            double w = Math.Sqrt(m0 * m0 + m1 * m1 + m2 * m2);
             this.v1 = m0 / w;
             this.v2 = m1 / w;
             this.v3 = m2 / w;
@@ -102,18 +103,18 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
         public void checkVectorByVertex(NyARDoublePoint2d i_start_vertex, NyARDoublePoint2d i_end_vertex)
         {
             double h;
-            const double[][] inv_cpara = this._inv_cpara_array_ref;
+            double[][] inv_cpara = this._inv_cpara_array_ref;
             //final double[] world = __checkVectorByVertex_world;// [2][3];
-            const double world0 = inv_cpara[0][0] * i_start_vertex.x * 10.0 + inv_cpara[0][1] * i_start_vertex.y * 10.0 + inv_cpara[0][2] * 10.0;// mat_a->m[0]*st[0]*10.0+
-            const double world1 = inv_cpara[1][0] * i_start_vertex.x * 10.0 + inv_cpara[1][1] * i_start_vertex.y * 10.0 + inv_cpara[1][2] * 10.0;// mat_a->m[3]*st[0]*10.0+
-            const double world2 = inv_cpara[2][0] * i_start_vertex.x * 10.0 + inv_cpara[2][1] * i_start_vertex.y * 10.0 + inv_cpara[2][2] * 10.0;// mat_a->m[6]*st[0]*10.0+
-            const double world3 = world0 + this.v1;
-            const double world4 = world1 + this.v2;
-            const double world5 = world2 + this.v3;
+            double world0 = inv_cpara[0][0] * i_start_vertex.x * 10.0 + inv_cpara[0][1] * i_start_vertex.y * 10.0 + inv_cpara[0][2] * 10.0;// mat_a->m[0]*st[0]*10.0+
+            double world1 = inv_cpara[1][0] * i_start_vertex.x * 10.0 + inv_cpara[1][1] * i_start_vertex.y * 10.0 + inv_cpara[1][2] * 10.0;// mat_a->m[3]*st[0]*10.0+
+            double world2 = inv_cpara[2][0] * i_start_vertex.x * 10.0 + inv_cpara[2][1] * i_start_vertex.y * 10.0 + inv_cpara[2][2] * 10.0;// mat_a->m[6]*st[0]*10.0+
+            double world3 = world0 + this.v1;
+            double world4 = world1 + this.v2;
+            double world5 = world2 + this.v3;
             // </Optimize>
 
             //final double[] camera = __checkVectorByVertex_camera;// [2][2];
-            const NyARPerspectiveProjectionMatrix cmat = this._projection_mat_ref;
+            NyARPerspectiveProjectionMatrix cmat = this._projection_mat_ref;
             //h = cpara[2 * 4 + 0] * world0 + cpara[2 * 4 + 1] * world1 + cpara[2 * 4 + 2] * world2;
             h = cmat.m20 * world0 + cmat.m21 * world1 + cmat.m22 * world2;
             if (h == 0.0)
@@ -122,8 +123,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             }
             //final double camera0 = (cpara[0 * 4 + 0] * world0 + cpara[0 * 4 + 1] * world1 + cpara[0 * 4 + 2] * world2) / h;
             //final double camera1 = (cpara[1 * 4 + 0] * world0 + cpara[1 * 4 + 1] * world1 + cpara[1 * 4 + 2] * world2) / h;
-            const double camera0 = (cmat.m00 * world0 + cmat.m01 * world1 + cmat.m02 * world2) / h;
-            const double camera1 = (cmat.m10 * world0 + cmat.m11 * world1 + cmat.m12 * world2) / h;
+            double camera0 = (cmat.m00 * world0 + cmat.m01 * world1 + cmat.m02 * world2) / h;
+            double camera1 = (cmat.m10 * world0 + cmat.m11 * world1 + cmat.m12 * world2) / h;
 
             //h = cpara[2 * 4 + 0] * world3 + cpara[2 * 4 + 1] * world4 + cpara[2 * 4 + 2] * world5;
             h = cmat.m20 * world3 + cmat.m21 * world4 + cmat.m22 * world5;
@@ -133,10 +134,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             }
             //final double camera2 = (cpara[0 * 4 + 0] * world3 + cpara[0 * 4 + 1] * world4 + cpara[0 * 4 + 2] * world5) / h;
             //final double camera3 = (cpara[1 * 4 + 0] * world3 + cpara[1 * 4 + 1] * world4 + cpara[1 * 4 + 2] * world5) / h;
-            const double camera2 = (cmat.m00 * world3 + cmat.m01 * world4 + cmat.m02 * world5) / h;
-            const double camera3 = (cmat.m10 * world3 + cmat.m11 * world4 + cmat.m12 * world5) / h;
+            double camera2 = (cmat.m00 * world3 + cmat.m01 * world4 + cmat.m02 * world5) / h;
+            double camera3 = (cmat.m10 * world3 + cmat.m11 * world4 + cmat.m12 * world5) / h;
 
-            const double v = (i_end_vertex.x - i_start_vertex.x) * (camera2 - camera0) + (i_end_vertex.y - i_start_vertex.y) * (camera3 - camera1);
+            double v = (i_end_vertex.x - i_start_vertex.x) * (camera2 - camera0) + (i_end_vertex.y - i_start_vertex.y) * (camera3 - camera1);
             if (v < 0)
             {
                 this.v1 = -this.v1;
@@ -166,7 +167,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             double vec30 = vec11 * vec22 - vec12 * vec21;
             double vec31 = vec12 * vec20 - vec10 * vec22;
             double vec32 = vec10 * vec21 - vec11 * vec20;
-            w = Math.sqrt(vec30 * vec30 + vec31 * vec31 + vec32 * vec32);
+            w = Math.Sqrt(vec30 * vec30 + vec31 * vec31 + vec32 * vec32);
             if (w == 0.0)
             {
                 throw new NyARException();
@@ -180,7 +181,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             {
                 cb = -cb;//cb *= -1.0;			
             }
-            const double ca = (Math.sqrt(cb + 1.0) + Math.sqrt(1.0 - cb)) * 0.5;
+            double ca = (Math.Sqrt(cb + 1.0) + Math.Sqrt(1.0 - cb)) * 0.5;
 
             if (vec31 * vec10 - vec11 * vec30 != 0.0)
             {
@@ -228,10 +229,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             {
                 throw new NyARException();
             }
-            r1 = (-b + Math.sqrt(d)) / a;
+            r1 = (-b + Math.Sqrt(d)) / a;
             p1 = k1 * r1 + k2;
             q1 = k3 * r1 + k4;
-            r2 = (-b - Math.sqrt(d)) / a;
+            r2 = (-b - Math.Sqrt(d)) / a;
             p2 = k1 * r2 + k2;
             q2 = k3 * r2 + k4;
             if (f == 1)
@@ -288,10 +289,10 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             {
                 throw new NyARException();
             }
-            r3 = (-b + Math.sqrt(d)) / a;
+            r3 = (-b + Math.Sqrt(d)) / a;
             p3 = k1 * r3 + k2;
             q3 = k3 * r3 + k4;
-            r4 = (-b - Math.sqrt(d)) / a;
+            r4 = (-b - Math.Sqrt(d)) / a;
             p4 = k1 * r4 + k2;
             q4 = k3 * r4 + k4;
             if (f == 1)

@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,9 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.labeling
+using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.utils;
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -37,16 +39,16 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
      */
     public class NyARLabelingImage : NyARRaster_BasicClass, INyARLabelingImage
     {
-        private static const int MAX_LABELS = 1024 * 32;
-        protected int[,] _ref_buf;
+        private const int MAX_LABELS = 1024 * 32;
+        protected int[][] _ref_buf;
         private INyARBufferReader _buffer_reader;
         protected NyARLabelingLabelStack _label_list;
         protected int[] _index_table;
-        protected boolean _is_index_table_enable;
+        protected bool _is_index_table_enable;
         public NyARLabelingImage(int i_width, int i_height)
+            : base(new NyARIntSize(i_width, i_height))
         {
-            super(new NyARIntSize(i_width, i_height));
-            this._ref_buf = new int[i_height, i_width];
+            this._ref_buf = ArrayUtils.newInt2dArray(i_height, i_width);
             this._label_list = new NyARLabelingLabelStack(MAX_LABELS);
             this._index_table = new int[MAX_LABELS];
             this._is_index_table_enable = false;
@@ -54,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
 
             return;
         }
-        public INyARBufferReader getBufferReader()
+        public override INyARBufferReader getBufferReader()
         {
             return this._buffer_reader;
         }
@@ -80,16 +82,16 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
         {
             return this._label_list;
         }
-        public void reset(boolean i_label_index_enable)
+        public void reset(bool i_label_index_enable)
         {
-            assert(i_label_index_enable == true);//非ラベルモードは未実装
+            Debug.Assert(i_label_index_enable == true);//非ラベルモードは未実装
             this._label_list.clear();
             this._is_index_table_enable = i_label_index_enable;
             return;
         }
 
-        protected const int[] _getContour_xdir = { 0, 1, 1, 1, 0, -1, -1, -1 };
-        protected const int[] _getContour_ydir = { -1, -1, 0, 1, 1, 1, 0, -1 };
+        protected int[] _getContour_xdir = { 0, 1, 1, 1, 0, -1, -1, -1 };
+        protected int[] _getContour_ydir = { -1, -1, 0, 1, 1, 1, 0, -1 };
         /**
          * i_labelのラベルの、クリップ領域が上辺に接しているx座標を返します。
          * @param i_index
@@ -100,12 +102,13 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
             int w;
             int i_label_id = i_label.id;
             int[] index_table = this._index_table;
-            const int limage_j_idx = i_label.clip_t;
-            const int clip1 = i_label.clip_r;
+            int[] limage_j = this._ref_buf[i_label.clip_t];
+            int clip1 = i_label.clip_r;
+            int[][] limage = this._ref_buf;
             // p1=ShortPointer.wrap(limage,j*xsize+clip.get());//p1 =&(limage[j*xsize+clip[0]]);
             for (int i = i_label.clip_l; i <= clip1; i++)
             {// for( i = clip[0]; i <=clip[1]; i++, p1++ ) {
-                w = limage_j[limage_j_idx,i];
+                w = limage_j[i];
                 if (w > 0 && index_table[w - 1] == i_label_id)
                 {
                     return i;
@@ -126,9 +129,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
          */
         public int getContour(int i_index, int i_array_size, int[] o_coord_x, int[] o_coord_y)
         {
-            const int[] xdir = this._getContour_xdir;// static int xdir[8] = { 0,1, 1, 1, 0,-1,-1,-1};
-            const int[] ydir = this._getContour_ydir;// static int ydir[8] = {-1,-1,0, 1, 1, 1, 0,-1};
-            const NyARLabelingLabel label = this._label_list.getItem(i_index);
+            int[] xdir = this._getContour_xdir;// static int xdir[8] = { 0,1, 1, 1, 0,-1,-1,-1};
+            int[] ydir = this._getContour_ydir;// static int ydir[8] = {-1,-1,0, 1, 1, 1, 0,-1};
+            NyARLabelingLabel label = this._label_list.getItem(i_index);
             int i;
             //クリップ領域の上端に接しているポイントを得る。
             int sx = getTopClipTangentX(label);
@@ -147,7 +150,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.labeling
                 dir = (dir + 5) % 8;
                 for (i = 0; i < 8; i++)
                 {
-                    if (limage[r + ydir[dir],c + xdir[dir]] > 0)
+                    if (limage[r + ydir[dir]][c + xdir[dir]] > 0)
                     {// if(
                         // p1[ydir[dir]*xsize+xdir[dir]] > 0 ){
                         break;

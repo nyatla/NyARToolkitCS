@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,12 +29,12 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.rasterfilter.rgb2bin
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public interface INyARRasterFilter_RgbToBin
     {
-        public void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output);
+        void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output);
     }
 }
 

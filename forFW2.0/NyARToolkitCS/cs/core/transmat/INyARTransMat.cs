@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -38,8 +38,8 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
      */
     public interface INyARTransMat
     {
-        public void setCenter(double i_x, double i_y);
-        public void transMat(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult o_result);
-        public void transMatContinue(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult io_result_conv);
+        void setCenter(double i_x, double i_y);
+        void transMat(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult o_result);
+        void transMatContinue(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult io_result_conv);
     }
 }

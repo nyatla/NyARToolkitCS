@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,10 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARRotTransOptimize
     {
-        public double optimize(NyARRotMatrix io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator);
+        double optimize(NyARRotMatrix io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator);
     }
 }

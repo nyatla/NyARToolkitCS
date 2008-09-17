@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,7 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.core.transmat
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
 
@@ -43,16 +43,16 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
         private const double AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR = 1.0;
 
         private NyARRotMatrix _rotmatrix;
-        private const NyARDoublePoint2d _center = new NyARDoublePoint2d(0, 0);
+        private NyARDoublePoint2d _center = new NyARDoublePoint2d(0, 0);
         private NyARFitVecCalculator _calculator;
-        private const NyARTransOffset _offset = new NyARTransOffset();
-        private NyARRotTransOptimize _mat_optimize;
+        private NyARTransOffset _offset = new NyARTransOffset();
+        private INyARRotTransOptimize _mat_optimize;
 
 
         public NyARTransMat(NyARParam i_param)
         {
-            const NyARCameraDistortionFactor dist = i_param.getDistortionFactor();
-            const NyARPerspectiveProjectionMatrix pmat = i_param.getPerspectiveProjectionMatrix();
+            NyARCameraDistortionFactor dist = i_param.getDistortionFactor();
+            NyARPerspectiveProjectionMatrix pmat = i_param.getPerspectiveProjectionMatrix();
             this._calculator = new NyARFitVecCalculator(pmat, dist);
             this._rotmatrix = new NyARRotMatrix(pmat);
             this._mat_optimize = new NyARRotTransOptimize(pmat);
@@ -89,9 +89,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
         }
 
 
-        private const NyARDoublePoint2d[] __transMat_sqvertex_ref = new NyARDoublePoint2d[4];
-        private const NyARLinear[] __transMat_linear_ref = new NyARLinear[4];
-        private const NyARDoublePoint3d __transMat_trans = new NyARDoublePoint3d();
+        private NyARDoublePoint2d[] __transMat_sqvertex_ref = new NyARDoublePoint2d[4];
+        private NyARLinear[] __transMat_linear_ref = new NyARLinear[4];
+        private NyARDoublePoint3d __transMat_trans = new NyARDoublePoint3d();
         /**
          * double arGetTransMat( ARMarkerInfo *marker_info,double center[2], double width, double conv[3][4] )
          * 
@@ -104,9 +104,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
          */
         public void transMat(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult o_result_conv)
         {
-            const NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
-            const NyARLinear[] linear_ref = __transMat_linear_ref;
-            const NyARDoublePoint3d trans = this.__transMat_trans;
+            NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
+            NyARLinear[] linear_ref = __transMat_linear_ref;
+            NyARDoublePoint3d trans = this.__transMat_trans;
 
             //計算用に頂点情報を初期化（順番調整）
             initVertexOrder(i_square, i_direction, sqvertex_ref, linear_ref);
@@ -147,9 +147,9 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
          */
         public void transMatContinue(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult io_result_conv)
         {
-            const NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
-            const NyARLinear[] linear_ref = __transMat_linear_ref;
-            const NyARDoublePoint3d trans = this.__transMat_trans;
+            NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
+            NyARLinear[] linear_ref = __transMat_linear_ref;
+            NyARDoublePoint3d trans = this.__transMat_trans;
 
             // io_result_convが初期値なら、transMatで計算する。
             if (!io_result_conv.hasValue())
@@ -174,11 +174,11 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
             this._calculator.calculateTransfer(this._rotmatrix, trans);
 
             //計算結果の最適化(this._rotmatrix,trans)
-            const double err = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
+            double err = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
 
             //計算結果を保存
             io_result_conv.updateMatrixValue(this._rotmatrix, this._offset.point, trans);
-
+            double err2;
             // エラー値が許容範囲でなければTransMatをやり直し
             if (err > AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR)
             {
@@ -187,7 +187,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat
                 //回転行列の平行移動量の計算
                 this._calculator.calculateTransfer(this._rotmatrix, trans);
                 //計算結果の最適化(this._rotmatrix,trans)
-                const double err2 = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
+                err2 = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
                 //エラー値が低かったら値を差換え
                 if (err2 < err)
                 {

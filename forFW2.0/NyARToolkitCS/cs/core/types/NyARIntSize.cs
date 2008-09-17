@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,9 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-using jp.nyatla.nyartoolkit.cs;
-
-namespace jp.nyatla.nyartoolkit.cs.core.types
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARIntSize
     {
@@ -61,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.types
          * @return
          * @throws NyARException
          */
-        public boolean isEqualSize(int i_width, int i_height)
+        public bool isEqualSize(int i_width, int i_height)
         {
             if (i_width == this.w && i_height == this.h)
             {
@@ -78,7 +76,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.types
          * @return
          * @throws NyARException
          */
-        public boolean isEqualSize(NyARIntSize i_size)
+        public bool isEqualSize(NyARIntSize i_size)
         {
             if (i_size.w == this.w && i_size.h == this.h)
             {

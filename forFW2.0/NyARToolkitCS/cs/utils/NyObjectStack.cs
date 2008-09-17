@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
     {
         private const int ARRAY_APPEND_STEP = 64;
 
-        protected Object[] _items;
+        protected object[] _items;
 
         private int _allocated_size;
 
@@ -50,7 +50,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 
          * @param i_array
          */
-        public NyObjectStack(Object[] i_array)
+        public NyObjectStack(object[] i_array)
         {
             // ポインタだけははじめに確保しておく
             this._items = i_array;
@@ -63,28 +63,28 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * ポインタを1進めて、その要素を予約し、その要素へのポインタを返します。
          * 特定型に依存させるときには、継承したクラスでこの関数をオーバーライドしてください。
          */
-        public Object prePush()
+        virtual public object prePush()
         {
             // 必要に応じてアロケート
             if (this._length >= this._allocated_size)
             {
                 // 要求されたインデクスは範囲外
-                if (this._length >= this._items.length)
+                if (this._length >= this._items.Length)
                 {
                     throw new NyARException();
                 }
                 // 追加アロケート範囲を計算
                 int range = this._length + ARRAY_APPEND_STEP;
-                if (range >= this._items.length)
+                if (range >= this._items.Length)
                 {
-                    range = this._items.length;
+                    range = this._items.Length;
                 }
                 // アロケート
                 this.onReservRequest(this._allocated_size, range, this._items);
                 this._allocated_size = range;
             }
             // 使用領域を+1して、予約した領域を返す。
-            Object ret = this._items[this._length];
+            object ret = this._items[this._length];
             this._length++;
             return ret;
         }
@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 見かけ上の要素数を1減らして、最後尾のアイテムを返します。
          * @return
          */
-        public Object pop()
+        virtual public object pop()
         {
             if (this._length < 1)
             {
@@ -106,21 +106,21 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 予約すると、見かけ上の要素数は0にリセットされます。
          * @param i_number_of_reserv
          */
-        public void reserv(int i_number_of_item)
+        virtual public void reserv(int i_number_of_item)
         {
             // 必要に応じてアロケート
             if (i_number_of_item >= this._allocated_size)
             {
                 // 要求されたインデクスは範囲外
-                if (i_number_of_item >= this._items.length)
+                if (i_number_of_item >= this._items.Length)
                 {
                     throw new NyARException();
                 }
                 // 追加アロケート範囲を計算
                 int range = i_number_of_item + ARRAY_APPEND_STEP;
-                if (range >= this._items.length)
+                if (range >= this._items.Length)
                 {
-                    range = this._items.length;
+                    range = this._items.Length;
                 }
                 // アロケート
                 this.onReservRequest(this._allocated_size, range, this._items);
@@ -136,11 +136,11 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 
          * @return
          */
-        protected Object[] getArray()
+        virtual protected object[] getArray()
         {
             return this._items;
         }
-        protected Object getItem(int i_index)
+        virtual protected object getItem(int i_index)
         {
             return this._items[i_index];
         }
@@ -153,7 +153,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * @param i_end
          * @param i_buffer
          */
-        protected abstract void onReservRequest(int i_start, int i_end, Object[] i_buffer);
+        protected abstract void onReservRequest(int i_start, int i_end, object[] i_buffer);
 
         /**
          * 配列の見かけ上の要素数を返却します。

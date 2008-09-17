@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -33,6 +33,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARSquareDetector
     {
-        public void detectMarker(NyARBinRaster i_raster, NyARSquareStack o_square_stack);
+        void detectMarker(NyARBinRaster i_raster, NyARSquareStack o_square_stack);
     }
 }

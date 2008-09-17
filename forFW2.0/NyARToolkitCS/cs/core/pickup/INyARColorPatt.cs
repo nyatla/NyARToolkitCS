@@ -1,5 +1,5 @@
 /* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
  *   Hirokazu Kato
@@ -29,12 +29,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using jp.nyatla.nyartoolkit.cs;
-using jp.nyatla.nyartoolkit.cs.raster;
-
-namespace jp.nyatla.nyartoolkit.cs.core.pickup
+namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     public interface INyARColorPatt
@@ -44,14 +39,14 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
          * 
          * @return
          */
-        public int getWidth();
+        int getWidth();
 
         /**
          * カラーパターンの高さをピクセル値で返します。
          * 
          * @return
          */
-        public int getHeight();
+        int getHeight();
         /**
          * カメラパターンを格納した配列への参照値を返します。 配列は最低でも[height][wight][3]のサイズを持ちますが、
          * 配列のlengthとwidth,heightの数は一致しないことがあります。
@@ -59,7 +54,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
          * 
          * @return
          */
-        public int[,,] getPatArray();
+        int[,,] getPatArray();
 
         /**
          * ラスタイメージからi_square部分のカラーパターンを抽出して、保持します。
@@ -69,6 +64,6 @@ namespace jp.nyatla.nyartoolkit.cs.core.pickup
          * @return ラスターの取得に成功するとTRUE/失敗するとFALSE
          * @throws NyARException
          */
-        public boolean pickFromRaster(INyARRgbRaster image, NyARSquare i_square);
+        bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square);
     }
 }
