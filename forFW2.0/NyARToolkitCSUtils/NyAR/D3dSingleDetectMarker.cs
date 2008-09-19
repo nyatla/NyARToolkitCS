@@ -24,11 +24,18 @@
  * THE SOFTWARE.
  * 
  */
+//CFWでコンパイルするときはNyartoolkitCS_FRAMEWORK_CFWをアクティブにしてください。
+//#define NyartoolkitCS_FRAMEWORK_CFW
 using System;
 using System.Collections.Generic;
-using Microsoft.DirectX;
-using jp.nyatla.nyartoolkit.cs.detector;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.detector;
+#if NyartoolkitCS_FRAMEWORK_CFW
+using Microsoft.WindowsMobile.DirectX.Direct3D;
+using Microsoft.WindowsMobile.DirectX;
+#else
+using Microsoft.DirectX;
+#endif
 
 namespace NyARToolkitCSUtils.NyAR
 {

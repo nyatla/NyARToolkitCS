@@ -30,7 +30,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs;
 using System.IO;
 
-namespace NyARToolkitCSUtils.Raster
+namespace NyARToolkitCSUtils.NyAR
 {
     public class DsRGB565Raster : NyARRgbRaster_BasicClass
     {
@@ -64,14 +64,14 @@ namespace NyARToolkitCSUtils.Raster
                 byte[] buf = this._parent._ref_buf;
                 int height = this._parent._size.h;
 
-                    for (int i = i_num - 1; i >= 0; i--)
-                    {
-                        int idx = i_y[i] * stride + i_x[i] * 2;
+                for (int i = i_num - 1; i >= 0; i--)
+                {
+                    int idx = i_y[i] * stride + i_x[i] * 2;
 
-                        uint pixcel = (uint)(buf[idx + 1] << 8) | (uint)buf[idx];
-                        i_rgb[i * 3 + 0] = (int)((pixcel & 0xf800) >> 8);//R
-                        i_rgb[i * 3 + 1] = (int)((pixcel & 0x07e0) >> 3);//G
-                        i_rgb[i * 3 + 2] = (int)((pixcel & 0x001f) << 3);//B
+                    uint pixcel = (uint)(buf[idx + 1] << 8) | (uint)buf[idx];
+                    i_rgb[i * 3 + 0] = (int)((pixcel & 0xf800) >> 8);//R
+                    i_rgb[i * 3 + 1] = (int)((pixcel & 0x07e0) >> 3);//G
+                    i_rgb[i * 3 + 2] = (int)((pixcel & 0x001f) << 3);//B
                 }
             }
         }
@@ -104,16 +104,18 @@ namespace NyARToolkitCSUtils.Raster
             {
                 //上下を反転させない。
                 Marshal.Copy(i_buf, this._ref_buf, 0, this._ref_buf.Length);
-            }else{
+            }
+            else
+            {
                 //上下反転させる
                 int w = this._size.w * 2;
                 int st = w * (this._size.h - 1);
                 int et = 0;
                 for (int i = this._size.h - 1; i >= 0; i--)
                 {
-                    Marshal.Copy((IntPtr)((int)i_buf+et), this._ref_buf, st, w);
+                    Marshal.Copy((IntPtr)((int)i_buf + et), this._ref_buf, st, w);
                     st -= w;
-                    et+=w;
+                    et += w;
                 }
             }
             return;

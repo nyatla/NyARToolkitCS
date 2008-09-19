@@ -1,9 +1,28 @@
-﻿/*
- * NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
- * 
- * (c)2008 A虎＠nyatla.jp
+﻿/* 
+ * PROJECT: NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
+ * --------------------------------------------------------------------------------
+ * The MIT License
+ * Copyright (c) 2008 nyatla
  * airmail(at)ebony.plala.or.jp
- * http://nyatla.jp/
+ * http://nyatla.jp/nyartoolkit/
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
  */
 using System;
 using System.Drawing;
@@ -14,6 +33,7 @@ using Microsoft.WindowsMobile.DirectX.Direct3D;
 using NyARToolkitCSUtils.Raster;
 using System.Runtime.InteropServices;
 using jp.nyatla.cs.NyWMCapture;
+
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -54,24 +74,26 @@ namespace NyARToolkitCSUtils.Direct3d
             //OK、完成だ。
             return;
         }
-        /* DsXRGB32Rasterの内容を保持しているサーフェイスにコピーします。
+        /* ISampleの内容を保持しているサーフェイスにコピーします。
+         * i_is_top_to_botommは、i_sampleが上下反転画像(Y軸が下から上に向かって増加する)かを指定します。
          */
-        public void CopyFromIntPtr(INySample i_sample,bool i_is_turn)
+        public void CopyFromIntPtr(INySample i_sample,bool i_is_top_to_botomm)
         {
             int pitch;
             GraphicsStream gs = this.m_surface.LockRectangle(this.m_src_rect, LockFlags.None, out pitch);
-            if (i_is_turn)
+            if (i_is_top_to_botomm)
             {
-                i_sample.CopyToBuffer(gs.InternalData, 0, this.m_width * this.m_height * 2);
-            }else{
                 int st = this.m_width * 2;
-                int s_idx=0;
-                int d_idx = (this.m_height-1) * st;
-                for(int i=this.m_height-1;i>=0;i--){
-                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData+d_idx), s_idx, st);
+                int s_idx = 0;
+                int d_idx = (this.m_height - 1) * st;
+                for (int i = this.m_height - 1; i >= 0; i--)
+                {
+                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
                     s_idx += st;
                     d_idx -= st;
                 }
+            }else{
+                i_sample.CopyToBuffer(gs.InternalData, 0, this.m_width * this.m_height * 2);
             }
             this.m_surface.UnlockRectangle();
 

@@ -7,6 +7,7 @@
  * http://nyatla.jp/
  */
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -55,12 +56,13 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                         frm.Show();
                         //キャプチャ開始
                         sample.StartCap();
+                        Stopwatch sw = new Stopwatch();
                         // フォームにフォーカスがある間はループし続ける
                         while (frm.Focused)
                         {
+                            sw.Start();
                             // メインループ処理を行う
                             sample.MainLoop();
-
                             //スレッドスイッチ
                             Thread.Sleep(0);
 
@@ -68,6 +70,10 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
                             // イベントがある場合はその処理する
                             Application.DoEvents();
+                            sw.Stop();
+                            sample.fps_x_100 = (int)(1000 * 100 / sw.ElapsedMilliseconds);
+                            sw.Reset();
+
                         }
                         //キャプチャの停止
                         sample.StopCap();

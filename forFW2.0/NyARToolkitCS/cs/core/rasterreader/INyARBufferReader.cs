@@ -53,7 +53,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * byte[]で、R8G8B8X8の32ビットで画素が格納されている。
          */
         public const int BUFFERFORMAT_BYTE1D_B8G8R8X8_32 = 0x00010101;
-
+        /**
+         * byte[]で、RGB565の16ビット(LittleEndian)で画素が格納されている。
+         */
+        public const int BUFFERFORMAT_BYTE1D_R5G6B5_16LE = 0x00010201;
         /**
          * int[][]で特に値範囲を定めない
          */
@@ -63,7 +66,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * int[][]で0-255のグレイスケール画像
          */
         public const int BUFFERFORMAT_INT2D_GLAY_8 = 0x00020001;
-
         /**
          * int[][]で0/1の2値画像
          */
