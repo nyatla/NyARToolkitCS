@@ -1,7 +1,7 @@
-ARToolkit C# class library NyARToolkitCS.
+﻿ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008 R.Iizuka
 
-version 1.1.2
+version 2.0.0
 
 http://nyatla.jp/
 airmail(at)ebony.plala.or.jp
@@ -13,8 +13,11 @@ airmail(at)ebony.plala.or.jp
 NyARToolkitCSは、純粋なC#のみで実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 1.2.0.20080511
+ARToolkit 2.72.1及び、NyARToolkit version 2.0.0
 をベースにしています。
+
+※NyARToolkitのcore2パッケージの一部は実装されていません。
+　今後徐々に実装していきく予定です。
 
 
 ARToolkitは加藤博一先生とHuman Interface Technology Labにより
@@ -181,8 +184,6 @@ SimpleLiteDirect3d.WindowsMobile5
 NyARToolkitのクラス構造・演算結果に互換性があります。
 システムクラスについては、.NETとjavaでそれぞれ異なったものを使用しています。
 
-演算性能は、Java版NyARToolkitより数％遅いか、同じ程度です。
-
 
 
 ・ライセンス
@@ -190,8 +191,3 @@ extlib以下のものは、各モジュールのライセンスに従ってく�
 NyARToolkitは、特にソースに表記の無い限り、GPLライセンスです。
 詳しくはLICENCE.txtをみてください。
 
-
-
-
-
-2008.07.27 R.Iizuka

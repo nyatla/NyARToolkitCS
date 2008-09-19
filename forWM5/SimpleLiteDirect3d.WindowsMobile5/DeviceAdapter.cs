@@ -111,7 +111,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         public override void Init(Size i_client_size,INySampleCB i_sample_cb)
         {
             float scale;
-            this.m_is_turn_vertical=false;
+            this.m_is_turn_vertical=true;
             //キャプチャサイズの決定
             this.m_capture_size = new Size(240, 320);
             //スクリーンサイズと倍率を決定
@@ -146,7 +146,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         public override void Init(Size i_client_size, INySampleCB i_sample_cb)
         {
             float scale;
-            this.m_is_turn_vertical = true;
+            this.m_is_turn_vertical = false;
             //キャプチャサイズの決定
             this.m_capture_size = new Size(240, 320);
             //スクリーンサイズと倍率を決定

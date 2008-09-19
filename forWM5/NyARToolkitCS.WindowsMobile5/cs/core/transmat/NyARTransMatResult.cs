@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# version NyARToolkit class library.
+ * The NyARToolkit is Java version ARToolkit class library.
  * Copyright (C)2008 R.Iizuka
  *
  * This program is free software; you can redistribute it and/or
@@ -29,73 +29,49 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-
-
 namespace jp.nyatla.nyartoolkit.cs.core
 {
+
     /**
      * NyARTransMat戻り値専用のNyARMat
-     *
+     * 
      */
-    public class NyARTransMatResult : NyARMat
+    public class NyARTransMatResult : NyARDoubleMatrix34
     {
-        private bool has_value=false;
-        public NyARTransMatResult():base(3,4)
-        {
-        }
-        /**
-         * この関数は使えません。
-         * @param i_row
-         * @param i_clm
-         * @throws NyARException
-         */
-        public NyARTransMatResult(int i_row,int i_clm):base()
-        {
-            //ここで例外発生
-        }
+        private bool has_value = false;
+
+
         /**
          * パラメータで変換行列を更新します。
+         * 
          * @param i_rot
          * @param i_off
          * @param i_trans
          */
-        public void updateMatrixValue(NyARTransRot i_rot,double[] i_off,double[] i_trans)
+        public void updateMatrixValue(NyARRotMatrix i_rot, NyARDoublePoint3d i_off, NyARDoublePoint3d i_trans)
         {
-	        double[] pa;
-	        double[] rot=i_rot.getArray();
+            this.m00 = i_rot.m00;
+            this.m01 = i_rot.m01;
+            this.m02 = i_rot.m02;
+            this.m03 = i_rot.m00 * i_off.x + i_rot.m01 * i_off.y + i_rot.m02 * i_off.z + i_trans.x;
 
-	        pa=this.m[0];
-            pa[0] = rot[0*3+0];
-            pa[1] = rot[0 * 3 + 1];
-            pa[2] = rot[0 * 3 + 2];
-            pa[3] = rot[0 * 3 + 0] * i_off[0] + rot[0 * 3 + 1] * i_off[1] + rot[0 * 3 + 2] * i_off[2] + i_trans[0];
+            this.m10 = i_rot.m10;
+            this.m11 = i_rot.m11;
+            this.m12 = i_rot.m12;
+            this.m13 = i_rot.m10 * i_off.x + i_rot.m11 * i_off.y + i_rot.m12 * i_off.z + i_trans.y;
 
-            pa=this.m[1];
-            pa[0] = rot[1 * 3 + 0];
-            pa[1] = rot[1 * 3 + 1];
-            pa[2] = rot[1 * 3 + 2];
-            pa[3] = rot[1 * 3 + 0] * i_off[0] + rot[1 * 3 + 1] * i_off[1] + rot[1 * 3 + 2] * i_off[2] + i_trans[1];
+            this.m20 = i_rot.m20;
+            this.m21 = i_rot.m21;
+            this.m22 = i_rot.m22;
+            this.m23 = i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z + i_trans.z;
 
-            pa=this.m[2];
-            pa[0] = rot[2*3+0];
-            pa[1] = rot[2 * 3 + 1];
-            pa[2] = rot[2 * 3 + 2];
-            pa[3] = rot[2 * 3 + 0] * i_off[0] + rot[2 * 3 + 1] * i_off[1] + rot[2 * 3 + 2] * i_off[2] + i_trans[2];
-
-
-            this.has_value=true;
+            this.has_value = true;
             return;
         }
-        public void copyFrom(NyARTransMatResult i_from)
-        {
-            base.copyFrom(i_from);
-            this.has_value=i_from.has_value;
-        }
+
         public bool hasValue()
         {
-    	    return this.has_value;
+            return this.has_value;
         }
     }
 }

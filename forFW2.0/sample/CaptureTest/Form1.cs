@@ -8,8 +8,6 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.match;
-using jp.nyatla.nyartoolkit.cs.raster;
 using jp.nyatla.nyartoolkit.cs.detector;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Raster;
@@ -29,12 +27,12 @@ namespace CaptureTest
             //ARの設定
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadFromARFile(AR_CAMERA_FILE);
-            ap.changeSize(320, 240);
+            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadFromARFile(AR_CODE_FILE);
+            code.loadARPattFromFile(AR_CODE_FILE);
 
             //１パターンのみを追跡するクラスを作成
             this.m_ar = new NyARSingleDetectMarker(ap, code, 80.0);
@@ -44,7 +42,7 @@ namespace CaptureTest
             //キャプチャを作る
 			/**************************************************
 			このコードは、0番目（一番初めに見つかったキャプチャデバイス）
-			を使用するようにハードコーディングされています。
+			を使用するようにされています。
 			複数のキャプチャデバイスを持つシステムの場合、うまく動作しないかもしれません。
 			n番目のデバイスを使いたいときには、CaptureDevice cap=cl[0];←ここの0を変えてください。
 			手動で選択させる方法は、SimpleLiteDirect3Dを参考にしてください。
@@ -82,18 +80,18 @@ namespace CaptureTest
                 {
                     label1.Text = this.m_ar.getConfidence().ToString();
                     label2.Text = this.m_ar.getDirection().ToString();
-                    label3.Text = result_mat.getArray()[0][0].ToString();
-                    label4.Text = result_mat.getArray()[0][1].ToString();
-                    label5.Text = result_mat.getArray()[0][2].ToString();
-                    label6.Text = result_mat.getArray()[0][3].ToString();
-                    label7.Text = result_mat.getArray()[1][0].ToString();
-                    label8.Text = result_mat.getArray()[1][1].ToString();
-                    label9.Text = result_mat.getArray()[1][2].ToString();
-                    label10.Text = result_mat.getArray()[1][3].ToString();
-                    label11.Text = result_mat.getArray()[2][0].ToString();
-                    label12.Text = result_mat.getArray()[2][1].ToString();
-                    label13.Text = result_mat.getArray()[2][2].ToString();
-                    label14.Text = result_mat.getArray()[2][3].ToString();
+                    label3.Text = result_mat.m00.ToString();
+                    label4.Text = result_mat.m01.ToString();
+                    label5.Text = result_mat.m02.ToString();
+                    label6.Text = result_mat.m03.ToString();
+                    label7.Text = result_mat.m10.ToString();
+                    label8.Text = result_mat.m11.ToString();
+                    label9.Text = result_mat.m12.ToString();
+                    label10.Text = result_mat.m13.ToString();
+                    label11.Text = result_mat.m20.ToString();
+                    label12.Text = result_mat.m21.ToString();
+                    label13.Text = result_mat.m22.ToString();
+                    label14.Text = result_mat.m23.ToString();
                 }
                 );
             }else{

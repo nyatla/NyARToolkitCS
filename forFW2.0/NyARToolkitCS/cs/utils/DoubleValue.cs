@@ -1,9 +1,13 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
+ * This work is based on the original ARToolKit developed by
+ *   Hirokazu Kato
+ *   Mark Billinghurst
+ *   HITLab, University of Washington, Seattle
+ * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# version NyARToolkit class library.
- * 
+ * The NyARToolkit is Java version ARToolkit class library.
  * Copyright (C)2008 R.Iizuka
  *
  * This program is free software; you can redistribute it and/or
@@ -25,9 +29,6 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-
 namespace jp.nyatla.nyartoolkit.cs.utils
 {
     public class DoubleValue
