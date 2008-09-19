@@ -53,6 +53,7 @@
     <Compile Include="NyAR\D3dARParam.cs" />
     <Compile Include="NyAR\D3dSingleDetectMarker.cs" />
     <Compile Include="NyAR\DsBGRX32Raster.cs" />
+    <Compile Include="NyAR\DsRGB565Raster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -118,7 +118,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             try
             {
                 string s = i_stream.ReadToEnd();
-                string[] dt = s.Split(new Char[] { ' ', '\r', '\n' }, 10000, StringSplitOptions.RemoveEmptyEntries);
+                String[] dt = s.Split(new Char[] { ' ', '\r', '\n' });
                 int idx = 0;
                 //パターンデータはGBRAで並んでる。
                 for (int h = 0; h < 4; h++)
@@ -130,8 +130,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         {
                             for (int i1 = 0; i1 < width; i1++)
                             {
-                                //数値のみ読み出す
-                                short j = (short)(255 - int.Parse(dt[idx]));//j = 255-j;
+                                short j;
+                                //数値のみ読み出す(空文字は読み飛ばし！)
+
+                                for (; ; )
+                                {
+                                    if (dt[idx].Length > 0)
+                                    {
+                                        break;
+                                    }
+                                    idx++;
+                                }
+                                j = (short)(255 - int.Parse(dt[idx]));//j = 255-j;
                                 idx++;
                                 //標準ファイルのパターンはBGRでならんでるからRGBに並べなおす
                                 switch (i3)

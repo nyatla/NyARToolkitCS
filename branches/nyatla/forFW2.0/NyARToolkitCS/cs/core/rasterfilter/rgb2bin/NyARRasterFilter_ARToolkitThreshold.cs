@@ -72,12 +72,73 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
                     convert32BitRgbx(in_buf, out_buf, size);
                     break;
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R5G6B5_16LE:
+                    convert16BitRgb565(in_buf, out_buf, size);
+                    break;
                 default:
                     throw new NyARException();
             }
             return;
         }
-
+        private void convert16BitRgb565(byte[] i_in, int[][] i_out, NyARIntSize i_size)
+        {
+            int size_w = i_size.w;
+            int x_mod_end = size_w - (size_w % 8);
+            int th = this._threshold * 3;
+            int bp = (size_w * i_size.h - 1) * 2;
+            int w;
+            int x;
+            uint px;
+            for (int y = i_size.h - 1; y >= 0; y--)
+            {
+                int[] row_ptr = i_out[y];
+                //端数分
+                for (x = size_w - 1; x >= x_mod_end; x--)
+                {
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x] = w <= th ? 0 : 1;
+                    bp -= 2;
+                }
+                //タイリング		
+                for (; x >= 0; x -= 8)
+                {
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 1] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 2] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 3] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 4] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 5] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 6] = w <= th ? 0 : 1;
+                    bp -= 2;
+                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
+                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    row_ptr[x - 7] = w <= th ? 0 : 1;
+                    bp -= 2;
+                }
+            }
+            return;
+        }
         private void convert24BitRgb(byte[] i_in, int[][] i_out, NyARIntSize i_size)
         {
             int size_w = i_size.w;
@@ -88,7 +149,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int x;
             for (int y = i_size.h - 1; y >= 0; y--)
             {
-                int[] row_ptr=i_out[y];
+                int[] row_ptr = i_out[y];
                 //端数分
                 for (x = size_w - 1; x >= x_mod_end; x--)
                 {
@@ -185,6 +246,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R5G6B5_16LE:
                     return true;
                 default:
                     return false;
