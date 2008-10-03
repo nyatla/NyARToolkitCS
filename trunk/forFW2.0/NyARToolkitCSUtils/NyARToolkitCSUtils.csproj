@@ -49,9 +49,7 @@
     <Compile Include="Capture\CaptureListener.cs" />
     <Compile Include="Direct3d\NyARSurface_XRGB32.cs" />
     <Compile Include="Direct3d\NyARTexture_XRGB32.cs" />
-    <Compile Include="NyAR\D3dDetectMarker.cs" />
-    <Compile Include="NyAR\D3dARParam.cs" />
-    <Compile Include="NyAR\D3dSingleDetectMarker.cs" />
+    <Compile Include="NyAR\NyARD3dUtil.cs" />
     <Compile Include="NyAR\DsBGRX32Raster.cs" />
     <Compile Include="NyAR\DsRGB565Raster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

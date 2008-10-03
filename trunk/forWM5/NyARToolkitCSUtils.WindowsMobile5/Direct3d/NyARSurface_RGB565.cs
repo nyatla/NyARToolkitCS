@@ -30,7 +30,6 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using Microsoft.WindowsMobile.DirectX;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
-using NyARToolkitCSUtils.Raster;
 using System.Runtime.InteropServices;
 using jp.nyatla.cs.NyWMCapture;
 

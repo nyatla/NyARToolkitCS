@@ -36,6 +36,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public int x;
 
         public int y;
-
+        public static NyARIntPoint[] createArray(int i_number)
+        {
+            NyARIntPoint[] ret = new NyARIntPoint[i_number];
+            for (int i = 0; i < i_number; i++)
+            {
+                ret[i] = new NyARIntPoint();
+            }
+            return ret;
+        }
     }
 }

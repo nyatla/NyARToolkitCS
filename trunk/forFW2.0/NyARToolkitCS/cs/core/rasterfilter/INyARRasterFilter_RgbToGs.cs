@@ -38,6 +38,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public interface INyARRasterFilter_RgbToGs
     {
-        void doFilter(INyARRgbRaster i_input, NyARGlayscaleRaster i_output);
+        void doFilter(INyARRgbRaster i_input, NyARGrayscaleRaster i_output);
     }
 }

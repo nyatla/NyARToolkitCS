@@ -90,6 +90,10 @@
       <Project>{1E0E5B5A-7B06-4B6A-AE42-383CCB83F746}</Project>
       <Name>NyWMCaptureCS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NyARToolkitCS.WindowsMobile5.sandbox\NyARToolkitCS.WindowsMobile5.sandbox.csproj">
+      <Project>{FB375AEC-0E88-40C3-B8C0-FDE9323BC22D}</Project>
+      <Name>NyARToolkitCS.WindowsMobile5.sandbox</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS.WindowsMobile5\NyARToolkitCS.WindowsMobile5.csproj">
       <Project>{EF09E3D5-B9D3-417B-9A94-C35B87FE5634}</Project>
       <Name>NyARToolkitCS.WindowsMobile5</Name>
