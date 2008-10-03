@@ -35,7 +35,7 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.utils
 {
-    class ArrayUtils
+    public class ArrayUtils
     {
         public static double[][] newDouble2dArray(int i_r, int i_c)
         {

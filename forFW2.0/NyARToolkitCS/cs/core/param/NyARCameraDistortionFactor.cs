@@ -51,6 +51,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private double _f1;//y0
         private double _f2;//100000000.0*ｆ
         private double _f3;//s
+        public void copyFrom(NyARCameraDistortionFactor i_ref)
+        {
+            this._f0 = i_ref._f0;
+            this._f1 = i_ref._f1;
+            this._f2 = i_ref._f2;
+            this._f3 = i_ref._f3;
+            return;
+        }
         /**
          * 配列の値をファクタ値としてセットする。
          * @param i_factor
@@ -183,10 +191,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             iy.value = py / this._f3 + d1;
             return;
         }
-
         /**
          * 指定範囲のobserv2Idealをまとめて実行して、結果をo_idealに格納します。
-         * 
          * @param i_x_coord
          * @param i_y_coord
          * @param i_start
@@ -196,7 +202,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_ideal
          *            出力バッファ[i_num][2]であること。
          */
-        public void observ2IdealBatch(int[] i_x_coord, int[] i_y_coord, int i_start, int i_num, double[][] o_ideal)
+        public void observ2IdealBatch(int[] i_x_coord, int[] i_y_coord, int i_start, int i_num, double[] o_x_coord, double[] o_y_coord)
         {
             double z02, z0, q, z, px, py, opttmp_1;
             double d0 = this._f0;
@@ -235,8 +241,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     z02 = px * px + py * py;
                     z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
                 }
-                o_ideal[j][0] = px / d3 + d0;
-                o_ideal[j][1] = py / d3 + d1;
+                o_x_coord[j] = px / d3 + d0;
+                o_y_coord[j] = py / d3 + d1;
             }
             return;
         }

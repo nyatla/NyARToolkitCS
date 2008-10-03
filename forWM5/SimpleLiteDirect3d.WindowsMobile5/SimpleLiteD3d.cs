@@ -34,12 +34,12 @@ using System.Windows.Forms;
 using System.Reflection;
 using Microsoft.WindowsMobile.DirectX;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
-using NyARToolkitCSUtils.Raster;
 using NyARToolkitCSUtils.NyAR;
 using NyARToolkitCSUtils.Direct3d;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
+using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
 using jp.nyatla.cs.NyWMCapture;
 
 
@@ -57,8 +57,9 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private const String AR_CAMERA_FILE = "data\\camera_para.dat";
 
         //NyAR
-        private D3dSingleDetectMarker m_ar;
+        private NyARSingleDetectMarker_Quad m_ar;
         private DsRGB565Raster m_raster;
+        private NyARD3dUtil _utils;
         //背景テクスチャ
         private NyARSurface_RGB565 m_surface;
         //変数作りおき
@@ -132,7 +133,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             //ARの設定
 
             //AR用カメラパラメタファイルをロードして設定
-            D3dARParam ap = new D3dARParam();
+            NyARParam ap = new NyARParam();
             ap.loadARParamFromFile(current_path + "\\" + AR_CAMERA_FILE);
             ap.changeScreenSize(cap_size.Width,cap_size.Height);
 
@@ -141,8 +142,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             code.loadARPattFromFile(current_path+"\\"+AR_CODE_FILE);
 
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new D3dSingleDetectMarker(ap, code, 80.0);
-
+            this.m_ar = new NyARSingleDetectMarker_Quad(ap, code, 80.0);
+            this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);
 
@@ -156,7 +157,9 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this.m_dest_rect = new Rectangle(vp.X, vp.Y, vp.Width, vp.Height);
 
             //カメラProjectionの設定
-            this._device.Transform.Projection = ap.getCameraFrustumRH();
+            Matrix tmp = new Matrix();
+            this._utils.toCameraFrustumRH(ap, ref tmp);
+            this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)
             // 0,0,0から、Z+方向を向いて、上方向がY軸
@@ -217,14 +220,17 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this.m_surface = new NyARSurface_RGB565(this._device, cap_size.Width, cap_size.Height);
             return true;
         }
+        private Matrix __MainLoop_trans_matrix = new Matrix();
+        private NyARTransMatResult __MainLoop_nyar_transmat = new NyARTransMatResult();
 
         //メインループ処理
         public void MainLoop()
         {
 
             //ARの計算
-            Matrix trans_matrix = new Matrix();
-            bool is_marker_enable;
+            Matrix trans_matrix = this.__MainLoop_trans_matrix;
+            NyARTransMatResult trans_result = this.__MainLoop_nyar_transmat;
+            bool is_marker_enable=false;
             lock (this)
             {
                 //マーカーは見つかったかな？
@@ -232,7 +238,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 if (is_marker_enable)
                 {
                     //あればMatrixを計算
-                    this.m_ar.getD3dMatrix(out trans_matrix);
+                    this.m_ar.getTransmationMatrix(trans_result);
+                    this._utils.toD3dMatrix(trans_result, ref trans_matrix);
                 }
                 this._device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
                 //背景描画
@@ -242,8 +249,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 this._device.BeginScene();
 
 
-                //マーカーが見つかっていて、0.4より一致してたら描画する。
-                if (is_marker_enable && this.m_ar.getConfidence() > 0.4)
+                //マーカーが見つかっていて、0.3より一致してたら描画する。
+                if (is_marker_enable && this.m_ar.getConfidence() > 0.3)
                 {
                     // 頂点バッファをデバイスのデータストリームにバインド
                     this._device.SetStreamSource(0, this._vertexBuffer, 0);

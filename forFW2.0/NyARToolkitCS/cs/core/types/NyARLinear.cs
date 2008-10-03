@@ -36,5 +36,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public double rise;//y軸の増加量
         public double run;//x軸の増加量
         public double intercept;//切片
+        public void copyFrom(NyARLinear i_source)
+        {
+            this.rise = i_source.rise;
+            this.run = i_source.run;
+            this.intercept = i_source.intercept;
+            return;
+        }
     }
 }

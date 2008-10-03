@@ -60,33 +60,32 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
 
             int[][] out_buf = (int[][])out_buffer_reader.getBuffer();
-            byte[] in_buf = (byte[])in_buffer_reader.getBuffer();
 
             NyARIntSize size = i_output.getSize();
             switch (in_buffer_reader.getBufferType())
             {
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
-                    convert24BitRgb(in_buf, out_buf, size);
+                    convert24BitRgb((byte[])i_input.getBufferReader().getBuffer(), out_buf, size);
                     break;
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
-                    convert32BitRgbx(in_buf, out_buf, size);
+                    convert32BitRgbx((byte[])i_input.getBufferReader().getBuffer(), out_buf, size);
                     break;
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R5G6B5_16LE:
-                    convert16BitRgb565(in_buf, out_buf, size);
+                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
+                    convert16BitRgb565word((short[])i_input.getBufferReader().getBuffer(), out_buf, size);
                     break;
                 default:
                     throw new NyARException();
             }
             return;
         }
-        private void convert16BitRgb565(byte[] i_in, int[][] i_out, NyARIntSize i_size)
+        private void convert16BitRgb565word(short[] i_in, int[][] i_out, NyARIntSize i_size)
         {
             int size_w = i_size.w;
             int x_mod_end = size_w - (size_w % 8);
             int th = this._threshold * 3;
-            int bp = (size_w * i_size.h - 1) * 2;
-            int w;
+            int bp = (size_w * i_size.h - 1);
+            uint w=0;
             int x;
             uint px;
             for (int y = i_size.h - 1; y >= 0; y--)
@@ -95,50 +94,52 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //端数分
                 for (x = size_w - 1; x >= x_mod_end; x--)
                 {
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    px =(uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x] = w <= th ? 0 : 1;
-                    bp -= 2;
+                    bp--;
                 }
                 //タイリング		
                 for (; x >= 0; x -= 8)
                 {
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    px =(uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 1] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 2] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 3] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 4] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 5] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 6] = w <= th ? 0 : 1;
-                    bp -= 2;
-                    px = (uint)(i_in[bp + 1] << 8) | (uint)i_in[bp];
-                    w = (int)((px & 0xf800) >> 8) + (int)((px & 0x07e0) >> 3) + (int)((px & 0x001f) << 3);
+                    bp--;
+                    px = (uint)i_in[bp];
+                    w = ((px & 0xf800) >> 8) + ((px & 0x07e0) >> 3) + ((px & 0x001f) << 3);
                     row_ptr[x - 7] = w <= th ? 0 : 1;
-                    bp -= 2;
+                    bp--;
                 }
             }
             return;
         }
+
+
         private void convert24BitRgb(byte[] i_in, int[][] i_out, NyARIntSize i_size)
         {
             int size_w = i_size.w;
@@ -246,7 +247,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R5G6B5_16LE:
+                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
                     return true;
                 default:
                     return false;

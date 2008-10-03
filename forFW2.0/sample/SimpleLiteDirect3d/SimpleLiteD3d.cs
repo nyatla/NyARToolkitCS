@@ -51,12 +51,13 @@ namespace SimpleLiteDirect3d
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         //DirectShowからのキャプチャ
-        private CaptureDevice  m_cap;
+        private CaptureDevice  _cap;
         //NyAR
-        private D3dSingleDetectMarker m_ar;
-        private DsXRGB32Raster m_raster;
+        private NyARSingleDetectMarker _ar;
+        private DsXRGB32Raster _raster;
+        private NyARD3dUtil _utils;
         //背景テクスチャ
-        private NyARSurface_XRGB32 m_surface;
+        private NyARSurface_XRGB32 _surface;
         /// Direct3D デバイス
         private Device _device = null;
         // 頂点バッファ/インデックスバッファ/インデックスバッファの各頂点番号配列
@@ -76,10 +77,10 @@ namespace SimpleLiteDirect3d
             lock (this)
             {
                 //カメラ映像をARのバッファにコピー
-                this.m_raster.setBuffer(i_buffer);
+                this._raster.setBuffer(i_buffer);
 
                 //テクスチャ内容を更新
-                this.m_surface.CopyFromXRGB32(this.m_raster);
+                this._surface.CopyFromXRGB32(this._raster);
             }
             return;
         }
@@ -87,13 +88,13 @@ namespace SimpleLiteDirect3d
          */
         public void StartCap()
         {
-            this.m_cap.StartCapture();
+            this._cap.StartCapture();
         }
         /* キャプチャを停止する関数
          */
         public void StopCap()
         {
-            this.m_cap.StopCapture();
+            this._cap.StopCapture();
         }
 
 
@@ -133,15 +134,15 @@ namespace SimpleLiteDirect3d
             //キャプチャを作る(QVGAでフレームレートは30)
             i_cap_device.SetCaptureListener(this);
             i_cap_device.PrepareCapture(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
-            this.m_cap = i_cap_device;
+            this._cap = i_cap_device;
             
             //ARの設定
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this.m_raster = new DsXRGB32Raster(i_cap_device.video_width, i_cap_device.video_height, i_cap_device.video_width * i_cap_device.video_bit_count / 8);
+            this._raster = new DsXRGB32Raster(i_cap_device.video_width, i_cap_device.video_height, i_cap_device.video_width * i_cap_device.video_bit_count / 8);
 
             //AR用カメラパラメタファイルをロードして設定
-            D3dARParam ap = new D3dARParam();
+            NyARParam ap = new NyARParam();
             ap.loadARParamFromFile(AR_CAMERA_FILE);
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -150,17 +151,21 @@ namespace SimpleLiteDirect3d
             code.loadARPattFromFile(AR_CODE_FILE);
 
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new D3dSingleDetectMarker(ap, code, 80.0);
+            this._ar = new NyARSingleDetectMarker(ap, code, 80.0);
+            
+            //Direct3d用のユーティリティ準備
+            this._utils = new NyARD3dUtil();
 
             //計算モードの設定
-            this.m_ar.setContinueMode(false);
-
+            this._ar.setContinueMode(false);
 
             //3dデバイスを準備する
             this._device = PrepareD3dDevice(topLevelForm);
 
             //カメラProjectionの設定
-            this._device.Transform.Projection = ap.getCameraFrustumRH();
+            Matrix tmp = new Matrix();
+            this._utils.toCameraFrustumRH(ap, ref tmp);
+            this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)
             // 0,0,0から、Z+方向を向いて、上方向がY軸
@@ -216,38 +221,41 @@ namespace SimpleLiteDirect3d
             //this._device.RenderState.CullMode = Cull.None;
 
             //背景サーフェイスを作成
-            this.m_surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
+            this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             return true;
         }
-
+        private Matrix __MainLoop_trans_matrix = new Matrix();
+        private NyARTransMatResult __MainLoop_nyar_transmat = new NyARTransMatResult();
         //メインループ処理
         public void MainLoop()
         {
             //ARの計算
-            Matrix trans_matrix = new Matrix();
+            Matrix trans_matrix = this.__MainLoop_trans_matrix;
+            NyARTransMatResult trans_result = this.__MainLoop_nyar_transmat;
             bool is_marker_enable;
             lock (this)
             {
                 //マーカーは見つかったかな？
-                is_marker_enable = this.m_ar.detectMarkerLite(this.m_raster, 110);
+                is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
                 if (is_marker_enable)
                 {
                     //あればMatrixを計算
-                    this.m_ar.getD3dMatrix(out trans_matrix);
+                    this._ar.getTransmationMatrix(trans_result);
+                    this._utils.toD3dMatrix(trans_result,ref trans_matrix);
                 }
 
                 // 背景サーフェイスを直接描画
                 Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
                 Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                this._device.StretchRectangle(this.m_surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
+                this._device.StretchRectangle(this._surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
 
                 // 3Dオブジェクトの描画はここから
                 this._device.BeginScene();
 
 
                 //マーカーが見つかっていて、0.4より一致してたら描画する。
-                if (is_marker_enable && this.m_ar.getConfidence()>0.4)
+                if (is_marker_enable && this._ar.getConfidence()>0.4)
                 {
                     // 頂点バッファをデバイスのデータストリームにバインド
                     this._device.SetStreamSource(0, this._vertexBuffer, 0);

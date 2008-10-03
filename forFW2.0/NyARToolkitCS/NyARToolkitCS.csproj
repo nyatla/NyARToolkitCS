@@ -8,7 +8,7 @@
     <ProjectGuid>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NyARToolkitCS</RootNamespace>
+    <RootNamespace>jp.nyatla.nyartoolkit.cs.core</RootNamespace>
     <AssemblyName>NyARToolkitCS</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +53,9 @@
     <Compile Include="cs\core\param\NyARCameraDistortionFactor.cs" />
     <Compile Include="cs\core\param\NyARParam.cs" />
     <Compile Include="cs\core\param\NyARPerspectiveProjectionMatrix.cs" />
+    <Compile Include="cs\core\pca2d\NyARPca2d_MatrixPCA_O2.cs" />
+    <Compile Include="cs\core\pca2d\INyARPca2d.cs" />
+    <Compile Include="cs\core\pca2d\NyARPca2d_MatrixPCA.cs" />
     <Compile Include="cs\core\pickup\INyARColorPatt.cs" />
     <Compile Include="cs\core\pickup\NyARColorPatt_O3.cs" />
     <Compile Include="cs\core\rasterfilter\INyARRasterFilter.cs" />
@@ -64,7 +69,7 @@
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_RGB24.cs" />
     <Compile Include="cs\core\raster\INyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARBinRaster.cs" />
-    <Compile Include="cs\core\raster\NyARGlayscaleRaster.cs" />
+    <Compile Include="cs\core\raster\NyARGrayscaleRaster.cs" />
     <Compile Include="cs\core\raster\NyARRaster_BasicClass.cs" />
     <Compile Include="cs\core\raster\rgb\INyARRgbRaster.cs" />
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_BasicClass.cs" />
@@ -79,8 +84,10 @@
     <Compile Include="cs\core\transmat\optimize\INyARRotTransOptimize.cs" />
     <Compile Include="cs\core\transmat\optimize\NyARRotTransOptimize.cs" />
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotMatrix.cs" />
+    <Compile Include="cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs" />
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotVector.cs" />
     <Compile Include="cs\core\types\matrix\INyARDoubleMatrix.cs" />
+    <Compile Include="cs\core\types\matrix\NyARDoubleMatrix22.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix33.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix34.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint2d.cs" />
@@ -98,6 +105,7 @@
     <Compile Include="cs\core\NyARVec.cs" />
     <Compile Include="cs\detector\NyARDetectMarker.cs" />
     <Compile Include="cs\detector\NyARSingleDetectMarker.cs" />
+    <Compile Include="cs\core\NyARVertexCounter.cs" />
     <Compile Include="cs\utils.cs\ArrayUtils.cs" />
     <Compile Include="cs\utils\IntValue.cs" />
     <Compile Include="cs\utils\NyObjectStack.cs" />
@@ -126,6 +134,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cs\core2\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

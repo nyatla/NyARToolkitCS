@@ -107,7 +107,109 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 throw new NyARException(e);
             }
         }
+#if NyartoolkitCS_FRAMEWORK_CFW
+        /**
+         * 
+         * @param i_stream
+         * @throws NyARException
+         */
+        public void loadARPatt(StreamReader i_stream)
+        {
+            try
+            {
+                string s = i_stream.ReadToEnd();
+                String[] dt = s.Split(new Char[] { ' ', '\r', '\n' });
+                int idx = 0;
+                //パターンデータはGBRAで並んでる。
+                for (int h = 0; h < 4; h++)
+                {
+                    int l = 0;
+                    for (int i3 = 0; i3 < 3; i3++)
+                    {
+                        for (int i2 = 0; i2 < height; i2++)
+                        {
+                            for (int i1 = 0; i1 < width; i1++)
+                            {
+                                short j;
+                                //数値のみ読み出す(空文字は読み飛ばし！)
 
+                                for (; ; )
+                                {
+                                    if (dt[idx].Length > 0)
+                                    {
+                                        break;
+                                    }
+                                    idx++;
+                                }
+                                j = (short)(255 - int.Parse(dt[idx]));//j = 255-j;
+                                idx++;
+                                //標準ファイルのパターンはBGRでならんでるからRGBに並べなおす
+                                switch (i3)
+                                {
+                                    case 0: pat[h, i2, i1, 2] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+2] = j;break;
+                                    case 1: pat[h, i2, i1, 1] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+1] = j;break;
+                                    case 2: pat[h, i2, i1, 0] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+0] = j;break;
+                                }
+                                //pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+i3] = j;
+                                if (i3 == 0)
+                                {
+                                    patBW[h, i2, i1] = j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1]  = j;
+                                }
+                                else
+                                {
+                                    patBW[h, i2, i1] += j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] += j;
+                                }
+                                if (i3 == 2)
+                                {
+                                    patBW[h, i2, i1] /= 3;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] /= 3;
+                                }
+                                l += j;
+                            }
+                        }
+                    }
+
+                    l /= (height * width * 3);
+
+                    int m = 0;
+                    for (int i = 0; i < height; i++)
+                    {//for( i = 0; i < AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3; i++ ) {
+                        for (int i2 = 0; i2 < width; i2++)
+                        {
+                            for (int i3 = 0; i3 < 3; i3++)
+                            {
+                                pat[h, i, i2, i3] -= l;
+                                m += (pat[h, i, i2, i3] * pat[h, i, i2, i3]);
+                            }
+                        }
+                    }
+                    patpow[h] = Math.Sqrt((double)m);
+                    if (patpow[h] == 0.0)
+                    {
+                        patpow[h] = 0.0000001;
+                    }
+
+                    m = 0;
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int i2 = 0; i2 < width; i2++)
+                        {
+                            patBW[h, i, i2] -= (short)l;
+                            m += (patBW[h, i, i2] * patBW[h, i, i2]);
+                        }
+                    }
+                    patpowBW[h] = Math.Sqrt((double)m);
+                    if (patpowBW[h] == 0.0)
+                    {
+                        patpowBW[h] = 0.0000001;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new NyARException(e);
+            }
+        }
+#else
         /**
          * 
          * @param i_stream
@@ -199,5 +301,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 throw new NyARException(e);
             }
         }
+#endif
     }
 }

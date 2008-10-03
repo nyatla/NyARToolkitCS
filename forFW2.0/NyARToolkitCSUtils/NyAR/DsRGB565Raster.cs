@@ -42,15 +42,15 @@ namespace NyARToolkitCSUtils.NyAR
             public PixelReader(DsRGB565Raster i_parent)
             {
                 this._parent = i_parent;
-                this._stride = i_parent._size.w * 2;
+                this._stride = i_parent._size.w;
             }
 
             public void getPixel(int i_x, int i_y, int[] i_rgb)
             {
-                byte[] buf = this._parent._ref_buf;
+                short[] buf = this._parent._ref_buf;
                 int y = i_y;
-                int idx = y * this._stride + i_x * 2;
-                uint pixcel = (uint)(buf[idx + 1] << 8) | (uint)buf[idx];
+                int idx = y * this._stride + i_x;
+                uint pixcel =(uint)buf[idx];
 
                 i_rgb[0] = (int)((pixcel & 0xf800) >> 8);//R
                 i_rgb[1] = (int)((pixcel & 0x07e0) >> 3);//G
@@ -61,14 +61,14 @@ namespace NyARToolkitCSUtils.NyAR
             public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_rgb)
             {
                 int stride = this._stride;
-                byte[] buf = this._parent._ref_buf;
+                short[] buf = this._parent._ref_buf;
                 int height = this._parent._size.h;
 
                 for (int i = i_num - 1; i >= 0; i--)
                 {
-                    int idx = i_y[i] * stride + i_x[i] * 2;
+                    int idx = i_y[i] * stride + i_x[i];
 
-                    uint pixcel = (uint)(buf[idx + 1] << 8) | (uint)buf[idx];
+                    uint pixcel =(uint)buf[idx];
                     i_rgb[i * 3 + 0] = (int)((pixcel & 0xf800) >> 8);//R
                     i_rgb[i * 3 + 1] = (int)((pixcel & 0x07e0) >> 3);//G
                     i_rgb[i * 3 + 2] = (int)((pixcel & 0x001f) << 3);//B
@@ -77,7 +77,7 @@ namespace NyARToolkitCSUtils.NyAR
         }
         private INyARRgbPixelReader _rgb_reader;
         private INyARBufferReader _buffer_reader;
-        private byte[] _ref_buf;
+        private short[] _ref_buf;
         public DsRGB565Raster(int i_width, int i_height)
             : base(new NyARIntSize(i_width, i_height))
         {
@@ -85,9 +85,9 @@ namespace NyARToolkitCSUtils.NyAR
             {
                 throw new NyARException();
             }
-            this._ref_buf = new byte[i_height * i_width * 2];
+            this._ref_buf = new short[i_height * i_width];
             this._rgb_reader = new PixelReader(this);
-            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_BYTE1D_R5G6B5_16LE);
+            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE);
             return;
         }
         public override INyARRgbPixelReader getRgbPixelReader()
@@ -108,23 +108,16 @@ namespace NyARToolkitCSUtils.NyAR
             else
             {
                 //上下反転させる
-                int w = this._size.w * 2;
+                int w = this._size.w;
                 int st = w * (this._size.h - 1);
                 int et = 0;
                 for (int i = this._size.h - 1; i >= 0; i--)
                 {
-                    Marshal.Copy((IntPtr)((int)i_buf + et), this._ref_buf, st, w);
+                    Marshal.Copy((IntPtr)((int)i_buf + et*2), this._ref_buf, st, w);
                     st -= w;
                     et += w;
                 }
             }
-            return;
-        }
-        public void SaveToFile(String i_file_name)
-        {
-            FileStream fs = new FileStream(i_file_name, FileMode.Create);
-            fs.Write(this._ref_buf, 0, this._ref_buf.Length);
-            fs.Close();
             return;
         }
 

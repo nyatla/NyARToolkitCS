@@ -55,10 +55,8 @@
   <ItemGroup>
     <Compile Include="Direct3d\NyARSurface_RGB565.cs" />
     <Compile Include="Direct3d\NyARTexture_RGB565.cs" />
-    <Compile Include="NyAR\D3dARParam.cs" />
-    <Compile Include="NyAR\D3dDetectMarker.cs" />
-    <Compile Include="NyAR\D3dSingleDetectMarker.cs" />
-    <Compile Include="Raster\DsRGB565Raster.cs" />
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\DsRGB565Raster.cs" ><Link>NyAR\DsRGB565Raster.cs</Link></Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\NyARD3dUtil.cs" ><Link>NyAR\D3dARParam.cs</Link></Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

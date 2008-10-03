@@ -42,19 +42,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         private const double AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR = 1.0;
 
-        private NyARRotMatrix _rotmatrix;
         private NyARDoublePoint2d _center = new NyARDoublePoint2d(0, 0);
-        private NyARFitVecCalculator _calculator;
         private NyARTransOffset _offset = new NyARTransOffset();
-        private INyARRotTransOptimize _mat_optimize;
+        protected NyARRotMatrix _rotmatrix;
+        protected NyARFitVecCalculator _calculator;
+        protected INyARRotTransOptimize _mat_optimize;
 
-
+        /**
+         * 派生クラスで自分でメンバオブジェクトを指定したい場合はこちらを使う。
+         *
+         */
+        protected NyARTransMat()
+        {
+            //_calculator,_rotmatrix,_mat_optimizeをコンストラクタの終了後に
+            //作成して割り当ててください。
+            return;
+        }
         public NyARTransMat(NyARParam i_param)
         {
             NyARCameraDistortionFactor dist = i_param.getDistortionFactor();
             NyARPerspectiveProjectionMatrix pmat = i_param.getPerspectiveProjectionMatrix();
             this._calculator = new NyARFitVecCalculator(pmat, dist);
-            this._rotmatrix = new NyARRotMatrix(pmat);
+            this._rotmatrix = new NyARRotMatrix_ARToolKit(pmat);
             this._mat_optimize = new NyARRotTransOptimize(pmat);
         }
 
