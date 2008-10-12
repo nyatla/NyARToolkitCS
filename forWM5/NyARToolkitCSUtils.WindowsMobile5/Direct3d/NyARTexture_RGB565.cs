@@ -77,7 +77,7 @@ namespace NyARToolkitCSUtils.Direct3d
             this.m_bmp_surface = new Surface(this.m_ref_dev, this.m_bitmap, Pool.SystemMemory);
 
             //テクスチャを作るよ！
-            this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height, 1, Usage.None, Format.R5G6B5, Pool.SystemMemory);
+            this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height, 1, Usage.None, Format.R5G6B5, Pool.Managed);
             //OK、完成だ。
             return;
         }
