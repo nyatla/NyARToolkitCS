@@ -39,6 +39,7 @@ namespace NyARToolkitCSUtils.Direct3d
 {
     /* DsRGB556Rasterのラスタデータを取り込むことが出来るTextureです。
      * このテクスチャはそのままARToolKitの背景描画に使います。
+     * 動くか判りません。
      */
     public class NyARTexture_RGB565
     {
@@ -47,12 +48,9 @@ namespace NyARToolkitCSUtils.Direct3d
         private int m_texture_width;
         private int m_texture_height;
         private Microsoft.WindowsMobile.DirectX.Direct3D.Device m_ref_dev;
-        private Texture m_texture;
-        private Bitmap m_bitmap;
-        private Surface m_bmp_surface;
+        private Texture _texture;
 
         /* i_valueを超える最も小さい2のべき乗の値を返します。
-         * 
          */
         private int GetSquareSize(int i_value)
         {
@@ -74,7 +72,7 @@ namespace NyARToolkitCSUtils.Direct3d
         }
         public Texture d3d_texture
         {
-            get { return this.m_texture; }
+            get { return this._texture; }
         }
 
         /* i_width x i_heightのテクスチャを格納するインスタンスを生成します。
@@ -93,11 +91,8 @@ namespace NyARToolkitCSUtils.Direct3d
             this.m_texture_height = GetSquareSize(i_height);
             this.m_texture_width = GetSquareSize(i_width);
 
-            this.m_bitmap     = new Bitmap(i_width, i_height,PixelFormat.Format16bppRgb565);
-            this.m_bmp_surface = new Surface(this.m_ref_dev, this.m_bitmap, Pool.SystemMemory);
-
             //テクスチャを作るよ！
-            this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height,1, Usage.Lockable, Format.R5G6B5, Pool.SystemMemory);
+            this._texture = new Texture(i_dev, this.m_texture_width ,this.m_texture_height, 0, Usage.None | Usage.Lockable, Format.R5G6B5, Pool.Managed);
 
             //OK、完成だ。
             return;
@@ -108,29 +103,32 @@ namespace NyARToolkitCSUtils.Direct3d
          */
         public void CopyFromIntPtr(INySample i_sample)
         {
-            //いまいち納得いかないビットマップ転送()GC経由
-            Rectangle rect = new Rectangle(0, 0, this.m_width, this.m_height);
-            
-            //転送元の準備
-            BitmapData bd = this.m_bitmap.LockBits(
-                rect,
-                ImageLockMode.WriteOnly,
-                PixelFormat.Format16bppRgb565);
-            //
-            i_sample.CopyToBuffer(bd.Scan0, 0, this.m_width * this.m_height * 2);
-            this.m_bitmap.UnlockBits(bd);
-            //
-            this.m_bmp_surface.GetGraphics().DrawImage(this.m_bitmap, 0, 0);
-            this.m_bmp_surface.ReleaseGraphics();
-
-            //転送先の準備
-            Surface dest_su = this.m_texture.GetSurfaceLevel(0);
-            //コピー
-            this.m_ref_dev.CopyRects(this.m_bmp_surface,rect, dest_su, new Point(0, 0));
-            dest_su = null;
-            bd = null;
+            int pi;
+            GraphicsStream gs = this._texture.LockRectangle(0, LockFlags.None, out pi);
+//            if (i_is_top_to_botomm)
+//            {
+                int st = this.m_width * 2;
+                int s_idx = 0;
+                int d_idx = (this.m_height - 1) * pi;
+                for (int i = this.m_height - 1; i >= 0; i--)
+                {
+                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
+                    s_idx += st;
+                    d_idx -= pi;
+                }
+//            }else{
+//                i_sample.CopyToBuffer(gs.InternalData, 0, this.m_width * this.m_height * 2);
+//            }
+            this._texture.UnlockRectangle(0);
             return;
         }
-
+        public void Dispose()
+        {
+            if (this._texture != null)
+            {
+                this._texture.Dispose();
+            }
+            return;
+        }
     }
 }

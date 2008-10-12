@@ -35,6 +35,7 @@ using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.utils;
 using jp.nyatla.nyartoolkit.cs.sandbox.x2;
+using jp.nyatla.nyartoolkit.cs.core2;
 
 namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
 {
@@ -45,6 +46,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
      */
     public class NyARSquareDetector_Quad : INyARSquareDetector
     {
+        private const int PCA_LENGTH = 20;
         private const double VERTEX_FACTOR = 1.0;// 線検出のファクタ
 
         private const int AR_AREA_MAX = 25000;// #define AR_AREA_MAX 100000
@@ -58,8 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
         private NyARLabelingImage _limage;
 
         private OverlapChecker _overlap_checker = new OverlapChecker();
-        private NyARCameraDistortionFactor _dist_factor = new NyARCameraDistortionFactor();
-
+        private NyARFixedFloatObserv2IdealMap _dist_factor;
         /**
          * 最大i_squre_max個のマーカーを検出するクラスを作成する。
          * 
@@ -80,11 +81,16 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
             this._max_coord = number_of_coord;
             this._xcoord = new int[number_of_coord * 2];
             this._ycoord = new int[number_of_coord * 2];
+
+            //1/4サイズの歪みマップを作る
+            NyARCameraDistortionFactor quadfactor = new NyARCameraDistortionFactor();
+            quadfactor.copyFrom(i_dist_factor_ref);
+            quadfactor.changeScale(0.5);
+            this._dist_factor = new NyARFixedFloatObserv2IdealMap(quadfactor, i_size);
             //PCA
-            this._pca = new NyARPca2d_SamplingPCA(16);
-            //内部的に1/4のサイズで取り扱う
-            this._dist_factor.copyFrom(i_dist_factor_ref);
-            this._dist_factor.changeScale(0.5);
+            this._pca = new NyARFixedFloatPca2d();
+            this._xpos = new int[PCA_LENGTH];//最大辺長はthis._width+this._height
+            this._ypos = new int[PCA_LENGTH];//最大辺長はthis._width+this._height
 
         }
 
@@ -112,105 +118,116 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
          * @throws NyARException
          */
         public void detectMarker(NyARBinRaster i_raster, NyARSquareStack o_square_stack)
-	{
-		INyARLabeling labeling_proc = this._labeling;
-		NyARLabelingImage limage = this._limage;
+        {
+            INyARLabeling labeling_proc = this._labeling;
+            NyARLabelingImage limage = this._limage;
 
-		// 初期化
+            // 初期化
 
-		// マーカーホルダをリセット
-		o_square_stack.clear();
+            // マーカーホルダをリセット
+            o_square_stack.clear();
 
-		// ラベリング
-		labeling_proc.labeling(i_raster);
+            // ラベリング
+            labeling_proc.labeling(i_raster);
 
-		// ラベル数が0ならここまで
-		int label_num = limage.getLabelStack().getLength();
-		if (label_num < 1) {
-			return;
-		}
+            // ラベル数が0ならここまで
+            int label_num = limage.getLabelStack().getLength();
+            if (label_num < 1)
+            {
+                return;
+            }
 
-		NyARLabelingLabelStack stack = limage.getLabelStack();
-		NyARLabelingLabel[] labels = (NyARLabelingLabel[])stack.getArray();
-		
-		
-		// ラベルを大きい順に整列
-		stack.sortByArea();
+            NyARLabelingLabelStack stack = limage.getLabelStack();
+            NyARLabelingLabel[] labels = (NyARLabelingLabel[])stack.getArray();
 
-		// デカいラベルを読み飛ばし
-		int i;
-		for (i = 0; i < label_num; i++) {
-			// 検査対象内のラベルサイズになるまで無視
-			if (labels[i].area <= AR_AREA_MAX) {
-				break;
-			}
-		}
 
-		int xsize = this._width;
-		int ysize = this._height;
-		int[] xcoord = this._xcoord;
-		int[] ycoord = this._ycoord;
-		int coord_max = this._max_coord;
-		int[] mkvertex = this.__detectMarker_mkvertex;
-		OverlapChecker overlap = this._overlap_checker;
-		int coord_num;
-		int label_area;
-		NyARLabelingLabel label_pt;
+            // ラベルを大きい順に整列
+            stack.sortByArea();
 
-		//重なりチェッカの最大数を設定
-		overlap.reset(label_num);
+            // デカいラベルを読み飛ばし
+            int i;
+            for (i = 0; i < label_num; i++)
+            {
+                // 検査対象内のラベルサイズになるまで無視
+                if (labels[i].area <= AR_AREA_MAX)
+                {
+                    break;
+                }
+            }
 
-		for (; i < label_num; i++) {
-			label_pt = labels[i];
-			label_area = label_pt.area;
-			// 検査対象サイズよりも小さくなったら終了
-			if (label_area < AR_AREA_MIN) {
-				break;
-			}
-			// クリップ領域が画面の枠に接していれば除外
-			if (label_pt.clip_l == 1 || label_pt.clip_r == xsize - 2) {// if(wclip[i*4+0] == 1 || wclip[i*4+1] ==xsize-2){
-				continue;
-			}
-			if (label_pt.clip_t == 1 || label_pt.clip_b == ysize - 2) {// if( wclip[i*4+2] == 1 || wclip[i*4+3] ==ysize-2){
-				continue;
-			}
-			// 既に検出された矩形との重なりを確認
-			if (!overlap.check(label_pt)) {
-				// 重なっているようだ。
-				continue;
-			}
+            int xsize = this._width;
+            int ysize = this._height;
+            int[] xcoord = this._xcoord;
+            int[] ycoord = this._ycoord;
+            int coord_max = this._max_coord;
+            int[] mkvertex = this.__detectMarker_mkvertex;
+            OverlapChecker overlap = this._overlap_checker;
+            int coord_num;
+            int label_area;
+            NyARLabelingLabel label_pt;
 
-			// 輪郭を取得
-			coord_num = limage.getContour(i, coord_max, xcoord, ycoord);
-			if (coord_num == coord_max) {
-				// 輪郭が大きすぎる。
-				continue;
-			}
-			//頂点候補のインデクスを取得
-			int vertex1 = scanVertex(xcoord, ycoord, coord_num);
+            //重なりチェッカの最大数を設定
+            overlap.reset(label_num);
 
-			// 頂点候補(vertex1)を先頭に並べなおした配列を作成する。
-			normalizeCoord(xcoord, ycoord, vertex1, coord_num);
+            for (; i < label_num; i++)
+            {
+                label_pt = labels[i];
+                label_area = label_pt.area;
+                // 検査対象サイズよりも小さくなったら終了
+                if (label_area < AR_AREA_MIN)
+                {
+                    break;
+                }
+                // クリップ領域が画面の枠に接していれば除外
+                if (label_pt.clip_l == 1 || label_pt.clip_r == xsize - 2)
+                {// if(wclip[i*4+0] == 1 || wclip[i*4+1] ==xsize-2){
+                    continue;
+                }
+                if (label_pt.clip_t == 1 || label_pt.clip_b == ysize - 2)
+                {// if( wclip[i*4+2] == 1 || wclip[i*4+3] ==ysize-2){
+                    continue;
+                }
+                // 既に検出された矩形との重なりを確認
+                if (!overlap.check(label_pt))
+                {
+                    // 重なっているようだ。
+                    continue;
+                }
 
-			// 領域を準備する。
-			NyARSquare square_ptr = (NyARSquare)o_square_stack.prePush();
+                // 輪郭を取得
+                coord_num = limage.getContour(i, coord_max, xcoord, ycoord);
+                if (coord_num == coord_max)
+                {
+                    // 輪郭が大きすぎる。
+                    continue;
+                }
+                //頂点候補のインデクスを取得
+                int vertex1 = scanVertex(xcoord, ycoord, coord_num);
 
-			// 頂点情報を取得
-			if (!getSquareVertex(xcoord, ycoord, vertex1, coord_num, label_area, mkvertex)) {
-				o_square_stack.pop();// 頂点の取得が出来なかったので破棄
-				continue;
-			}
-			// マーカーを検出
-			if (!getSquareLine(mkvertex, xcoord, ycoord, square_ptr)) {
-				// 矩形が成立しなかった。
-				o_square_stack.pop();
-				continue;
-			}
-			// 検出済の矩形の属したラベルを重なりチェックに追加する。
-			overlap.push(label_pt);
-		}	
-		return;
-	}
+                // 頂点候補(vertex1)を先頭に並べなおした配列を作成する。
+                normalizeCoord(xcoord, ycoord, vertex1, coord_num);
+
+                // 領域を準備する。
+                NyARSquare square_ptr = (NyARSquare)o_square_stack.prePush();
+
+                // 頂点情報を取得
+                if (!getSquareVertex(xcoord, ycoord, vertex1, coord_num, label_area, mkvertex))
+                {
+                    o_square_stack.pop();// 頂点の取得が出来なかったので破棄
+                    continue;
+                }
+                // マーカーを検出
+                if (!getSquareLine(mkvertex, xcoord, ycoord, square_ptr))
+                {
+                    // 矩形が成立しなかった。
+                    o_square_stack.pop();
+                    continue;
+                }
+                // 検出済の矩形の属したラベルを重なりチェックに追加する。
+                overlap.push(label_pt);
+            }
+            return;
+        }
 
         /**
          * 辺からの対角線が最長になる点を対角線候補として返す。
@@ -353,11 +370,13 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
             o_vertex[4] = end_of_coord;
             return true;
         }
-
-        private INyARPca2d _pca;
-        private NyARDoubleMatrix22 __getSquareLine_evec = new NyARDoubleMatrix22();
-        private NyARDoublePoint2d __getSquareLine_mean = new NyARDoublePoint2d();
-        private NyARDoublePoint2d __getSquareLine_ev = new NyARDoublePoint2d();
+        private int[] _xpos;
+        private int[] _ypos;
+        private NyARFixedFloatPca2d _pca;
+        private NyARI64Matrix22 __getSquareLine_evec = new NyARI64Matrix22();
+        private NyARI64Point2d __getSquareLine_mean = new NyARI64Point2d();
+        private NyARI64Point2d __getSquareLine_ev = new NyARI64Point2d();
+        private NyARI64Linear[] __getSquareLine_i64liner = NyARI64Linear.createArray(4);
         /**
          * arGetLine(int x_coord[], int y_coord[], int coord_num,int vertex[], double line[4][3], double v[4][2]) arGetLine2(int x_coord[], int y_coord[], int
          * coord_num,int vertex[], double line[4][3], double v[4][2], double *dist_factor) の２関数の合成品です。 マーカーのvertex,lineを計算して、結果をo_squareに保管します。
@@ -370,10 +389,10 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
         private bool getSquareLine(int[] i_mkvertex, int[] i_xcoord, int[] i_ycoord, NyARSquare o_square)
         {
             NyARLinear[] l_line = o_square.line;
-            NyARCameraDistortionFactor dist_factor = this._dist_factor;
-            NyARDoubleMatrix22 evec = this.__getSquareLine_evec;
-            NyARDoublePoint2d mean = this.__getSquareLine_mean;
-            NyARDoublePoint2d ev = this.__getSquareLine_ev;
+            NyARI64Matrix22 evec = this.__getSquareLine_evec;
+            NyARI64Point2d mean = this.__getSquareLine_mean;
+            NyARI64Point2d ev = this.__getSquareLine_ev;
+            NyARI64Linear[] i64liner = this.__getSquareLine_i64liner;
 
 
             for (int i = 0; i < 4; i++)
@@ -387,30 +406,36 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
                     // nが2以下でmatrix.PCAを計算することはできないので、エラー
                     return false;
                 }
+                //配列作成
+                n = this._dist_factor.observ2IdealSampling(i_xcoord, i_ycoord, st, n, this._xpos, this._ypos, PCA_LENGTH);
+
                 //主成分分析する。
-                this._pca.pcaWithDistortionFactor(i_xcoord, i_ycoord, st, n, dist_factor, evec, ev, mean);
-                NyARLinear l_line_i = l_line[i];
+                this._pca.pcaF16(this._xpos, this._ypos, n, evec, ev, mean);
+                NyARI64Linear l_line_i = i64liner[i];
                 l_line_i.run = evec.m01;// line[i][0] = evec->m[1];
                 l_line_i.rise = -evec.m00;// line[i][1] = -evec->m[0];
-                l_line_i.intercept = -(l_line_i.run * mean.x + l_line_i.rise * mean.y) * 2;// line[i][2] = -(line[i][0]*mean->v[0] + line[i][1]*mean->v[1]);
+                l_line_i.intercept = -((l_line_i.run * mean.x + l_line_i.rise * mean.y) >> 16);// line[i][2] = -(line[i][0]*mean->v[0] + line[i][1]*mean->v[1]);
             }
 
             NyARDoublePoint2d[] l_sqvertex = o_square.sqvertex;
             NyARIntPoint[] l_imvertex = o_square.imvertex;
             for (int i = 0; i < 4; i++)
             {
-                NyARLinear l_line_i = l_line[i];
-                NyARLinear l_line_2 = l_line[(i + 3) % 4];
-                double w1 = l_line_2.run * l_line_i.rise - l_line_i.run * l_line_2.rise;
-                if (w1 == 0.0)
+                NyARI64Linear l_line_i = i64liner[i];
+                NyARI64Linear l_line_2 = i64liner[(i + 3) % 4];
+                long w1 = (l_line_2.run * l_line_i.rise - l_line_i.run * l_line_2.rise) >> 16;
+                if (w1 == 0)
                 {
                     return false;
                 }
-                l_sqvertex[i].x = (l_line_2.rise * l_line_i.intercept - l_line_i.rise * l_line_2.intercept) / w1;
-                l_sqvertex[i].y = (l_line_i.run * l_line_2.intercept - l_line_2.run * l_line_i.intercept) / w1;
+                l_sqvertex[i].x = (double)((l_line_2.rise * l_line_i.intercept - l_line_i.rise * l_line_2.intercept) / w1) *2/ 65536.0;
+                l_sqvertex[i].y = (double)((l_line_i.run * l_line_2.intercept - l_line_2.run * l_line_i.intercept) / w1) *2/ 65536.0;
                 // 頂点インデクスから頂点座標を得て保存
-                l_imvertex[i].x = i_xcoord[i_mkvertex[i]] * 2;
-                l_imvertex[i].y = i_ycoord[i_mkvertex[i]] * 2;
+                l_imvertex[i].x = i_xcoord[i_mkvertex[i]]*2;
+                l_imvertex[i].y = i_ycoord[i_mkvertex[i]]*2;
+                l_line[i].run = (double)l_line_i.run / 65536.0;
+                l_line[i].rise = (double)l_line_i.rise / 65536.0;
+                l_line[i].intercept = (double)l_line_i.intercept*2 / 65536.0;
             }
             return true;
         }

@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * p=(1-fd^2)
      * xd=px+x0,yd=py+y0
      */
-    public class NyARCameraDistortionFactor
+    public class NyARCameraDistortionFactor : INyARCameraDistortionFactor
     {
         private const int PD_LOOP = 3;
         private double _f0;//x0
@@ -152,14 +152,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param iy
          * @return
          */
-        public void observ2Ideal(double ox, double oy, DoubleValue ix, DoubleValue iy)
+        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             double z02, z0, p, q, z, px, py, opttmp_1;
             double d0 = this._f0;
             double d1 = this._f1;
 
-            px = ox - d0;
-            py = oy - d1;
+            px = ix - d0;
+            py = iy - d1;
             p = this._f2 / 100000000.0;
             z02 = px * px + py * py;
             q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
@@ -187,8 +187,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 z02 = px * px + py * py;
                 z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
             }
-            ix.value = px / this._f3 + d0;
-            iy.value = py / this._f3 + d1;
+            o_point.x = px / this._f3 + d0;
+            o_point.y = py / this._f3 + d1;
             return;
         }
         /**

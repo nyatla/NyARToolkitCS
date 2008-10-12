@@ -8,7 +8,7 @@
     <ProjectGuid>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jp.nyatla.nyartoolkit.cs.core</RootNamespace>
+    <RootNamespace>jp.nyatla.nyartoolkit.cs</RootNamespace>
     <AssemblyName>NyARToolkitCS</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -38,6 +38,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\core2\types\matrix\NyARFixedFloat16Matrix33.cs" />
+    <Compile Include="cs\core2\types\matrix\NyARFixedFloat24Matrix33.cs" />
+    <Compile Include="cs\core2\types\matrix\NyARI64Matrix22.cs" />
+    <Compile Include="cs\core2\types\matrix\NyARI64Matrix33.cs" />
+    <Compile Include="cs\core2\types\NyARFixedFloat16Point2d.cs" />
+    <Compile Include="cs\core2\types\NyARFixedFloat16Point3d.cs" />
+    <Compile Include="cs\core2\types\NyARI64Linear.cs" />
+    <Compile Include="cs\core2\types\NyARI64Point2d.cs" />
+    <Compile Include="cs\core2\types\NyARI64Point3d.cs" />
     <Compile Include="cs\core\INyARSquareDetector.cs" />
     <Compile Include="cs\core\labeling\INyARLabeling.cs" />
     <Compile Include="cs\core\labeling\INyARLabelingImage.cs" />
@@ -50,7 +59,9 @@
     <Compile Include="cs\core\NyARCode.cs" />
     <Compile Include="cs\core\NyARSquareDetector.cs" />
     <Compile Include="cs\core\NyARSquareStack.cs" />
+    <Compile Include="cs\core\param\INyARCameraDistortionFactor.cs" />
     <Compile Include="cs\core\param\NyARCameraDistortionFactor.cs" />
+    <Compile Include="cs\core\param\NyARObserv2IdealMap.cs" />
     <Compile Include="cs\core\param\NyARParam.cs" />
     <Compile Include="cs\core\param\NyARPerspectiveProjectionMatrix.cs" />
     <Compile Include="cs\core\pca2d\NyARPca2d_MatrixPCA_O2.cs" />
@@ -134,9 +145,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="cs\core2\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -43,6 +43,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public double m20;
         public double m21;
         public double m22;
+        public static NyARDoubleMatrix33[] createArray(int i_number)
+        {
+            NyARDoubleMatrix33[] ret = new NyARDoubleMatrix33[i_number];
+            for (int i = 0; i < i_number; i++)
+            {
+                ret[i] = new NyARDoubleMatrix33();
+            }
+            return ret;
+        }
         /**
          * 遅いからあんまり使わないでね。
          */

@@ -93,11 +93,17 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\NyARCameraDistortionFactor.cs">
       <Link>cs\core\param\NyARCameraDistortionFactor.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\NyARObserv2IdealMap.cs">
+      <Link>cs\core\param\NyARObserv2IdealMap.cs</Link>
+    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\NyARParam.cs">
       <Link>cs\core\param\NyARParam.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\NyARPerspectiveProjectionMatrix.cs">
       <Link>cs\core\param\NyARPerspectiveProjectionMatrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\INyARCameraDistortionFactor.cs">
+      <Link>cs\core\param\INyARCameraDistortionFactor.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pca2d\NyARPca2d_MatrixPCA_O2.cs">
       <Link>cs\core\pca2d\NyARPca2d_MatrixPCA_O2.cs</Link>
@@ -266,6 +272,33 @@
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\utils\NyObjectStack.cs">
       <Link>cs\utils\NyObjectStack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\matrix\NyARFixedFloat16Matrix33.cs">
+      <Link>cs\core2\types\matrix\NyARFixedFloat16Matrix33.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\matrix\NyARFixedFloat24Matrix33.cs">
+      <Link>cs\core2\types\matrix\NyARFixedFloat24Matrix33.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\matrix\NyARI64Matrix22.cs">
+      <Link>cs\core2\types\matrix\NyARI64Matrix22.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\matrix\NyARI64Matrix33.cs">
+      <Link>cs\core2\types\matrix\NyARI64Matrix33.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARFixedFloat16Point2d.cs">
+      <Link>cs\core2\types\NyARFixedFloat16Point2d.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARFixedFloat16Point3d.cs">
+      <Link>cs\core2\types\NyARFixedFloat16Point3d.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARI64Linear.cs">
+      <Link>cs\core2\types\NyARI64Linear.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARI64Point2d.cs">
+      <Link>cs\core2\types\NyARI64Point2d.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARI64Point3d.cs">
+      <Link>cs\core2\types\NyARI64Point3d.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

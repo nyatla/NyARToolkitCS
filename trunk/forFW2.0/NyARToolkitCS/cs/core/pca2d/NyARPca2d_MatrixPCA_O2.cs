@@ -34,32 +34,13 @@ using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-    /**
-     * ARToolkitのPCA関数を二次元に特化させて単純化したもの
-     *
-     */
     public class NyARPca2d_MatrixPCA_O2 : INyARPca2d
     {
-        private double[] _x;
-
-        private double[] _y;
-
-        private int _number_of_data;
-
         private const double PCA_EPS = 1e-6; // #define EPS 1e-6
 
         private const int PCA_MAX_ITER = 100; // #define MAX_ITER 100
 
         private const double PCA_VZERO = 1e-16; // #define VZERO 1e-16
-        public NyARPca2d_MatrixPCA_O2(int i_max_points)
-        {
-            this._x = new double[i_max_points];
-            this._y = new double[i_max_points];
-            this._number_of_data = 0;
-            return;
-        }
-
 
         /**
          * static int QRM( ARMat *a, ARVec *dv )の代替関数
@@ -178,7 +159,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_ev
          * @throws NyARException
          */
-        private void PCA_PCA(NyARDoubleMatrix22 o_matrix, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
+        private void PCA_PCA(double[] i_x, double[] i_y, int i_number_of_data, NyARDoubleMatrix22 o_matrix, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
         {
             // double[] mean_array=mean.getArray();
             // mean.zeroClear();
@@ -186,24 +167,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //PCA_EXの処理
             double sx = 0;
             double sy = 0;
-            int number_of_data = this._number_of_data;
-            for (int i = 0; i < number_of_data; i++)
+            for (int i = 0; i < i_number_of_data; i++)
             {
-                sx += this._x[i];
-                sy += this._y[i];
+                sx += i_x[i];
+                sy += i_y[i];
             }
-            sx = sx / number_of_data;
-            sy = sy / number_of_data;
+            sx = sx / i_number_of_data;
+            sy = sy / i_number_of_data;
 
             //PCA_CENTERとPCA_xt_by_xを一緒に処理
-            double srow = Math.Sqrt((double)this._number_of_data);
+            double srow = Math.Sqrt((double)i_number_of_data);
             double w00, w11, w10;
             w00 = w11 = w10 = 0.0;// *out = 0.0;
-            double x, y;
-            for (int i = 0; i < number_of_data; i++)
+            for (int i = 0; i < i_number_of_data; i++)
             {
-                x = (this._x[i] - sx) / srow;
-                y = (this._y[i] - sy) / srow;
+                double x = (i_x[i] - sx) / srow;
+                double y = (i_y[i] - sy) / srow;
                 w00 += (x * x);// *out += *in1 * *in2;
                 w10 += (x * y);// *out += *in1 * *in2;
                 w11 += (y * y);// *out += *in1 * *in2;
@@ -233,30 +212,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // }
             return;
         }
-        public void pca(double[] i_x, double[] i_y, int i_start, int i_number_of_point, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
+        public void pca(double[] i_x, double[] i_y, int i_number_of_point, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
         {
-            NyARException.trap("未チェックの関数");
-            Debug.Assert(this._x.Length> i_number_of_point);
-            this._number_of_data = i_number_of_point;
-            Array.Copy(i_x, 0, this._x, i_start, i_number_of_point);
-            Array.Copy(i_y, 0, this._y, i_start, i_number_of_point);
-
-            PCA_PCA(o_evec, o_ev, o_mean);
-
-            double sum = o_ev.x + o_ev.y;
-            // For順変更禁止
-            o_ev.x /= sum;// ev->v[i] /= sum;
-            o_ev.y /= sum;// ev->v[i] /= sum;
-            return;
-        }
-
-        public void pcaWithDistortionFactor(int[] i_x, int[] i_y, int i_start, int i_number_of_point, NyARCameraDistortionFactor i_factor, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
-        {
-            Debug.Assert(this._x.Length > i_number_of_point);
-            this._number_of_data = i_number_of_point;
-            i_factor.observ2IdealBatch(i_x, i_y, i_start, i_number_of_point, this._x, this._y);
-
-            PCA_PCA(o_evec, o_ev, o_mean);
+            PCA_PCA(i_x, i_y, i_number_of_point, o_evec, o_ev, o_mean);
 
             double sum = o_ev.x + o_ev.y;
             // For順変更禁止

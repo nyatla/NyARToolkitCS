@@ -55,6 +55,14 @@ namespace jp.nyatla.nyartoolkit.cs.utils
             }
             return d;
         }
-
+        public static long[][] newLong2dArray(int i_r, int i_c)
+        {
+            long[][] d = new long[i_r][];
+            for (int i = 0; i < i_r; i++)
+            {
+                d[i] = new long[i_c];
+            }
+            return d;
+        }
     }
 }
