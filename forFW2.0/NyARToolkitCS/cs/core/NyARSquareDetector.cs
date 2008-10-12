@@ -30,6 +30,7 @@
  * 
  */
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -53,7 +54,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private NyARLabelingImage _limage;
 
         private OverlapChecker _overlap_checker = new OverlapChecker();
-        private NyARCameraDistortionFactor _dist_factor_ref;
+        private NyARObserv2IdealMap _dist_factor;
+	    private double[] _xpos;
+	    private double[] _ypos;
 
         /**
          * 最大i_squre_max個のマーカーを検出するクラスを作成する。
@@ -64,7 +67,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._width = i_size.w;
             this._height = i_size.h;
-            this._dist_factor_ref = i_dist_factor_ref;
+            //歪み計算テーブルを作ると、8*width/height*2の領域を消費します。
+            //領域を取りたくない場合は、i_dist_factor_refの値をそのまま使ってください。
+            this._dist_factor = new NyARObserv2IdealMap(i_dist_factor_ref, i_size); 
             this._labeling = new NyARLabeling_ARToolKit();
             this._limage = new NyARLabelingImage(this._width, this._height);
             this._labeling.attachDestination(this._limage);
@@ -77,8 +82,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._xcoord = new int[number_of_coord * 2];
             this._ycoord = new int[number_of_coord * 2];
             //PCA(最大頂点数は対角線長さ以上)
-            this._pca = new NyARPca2d_MatrixPCA_O2(this._width + this._height);
-
+            this._pca = new NyARPca2d_MatrixPCA_O2();
+            this._xpos = new double[this._width + this._height];//最大辺長はthis._width+this._height
+            this._ypos = new double[this._width + this._height];//最大辺長はthis._width+this._height
+            return;
         }
 
         private int _max_coord;
@@ -203,7 +210,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     o_square_stack.pop();// 頂点の取得が出来なかったので破棄
                     continue;
                 }
-
                 if (!getSquareLine(mkvertex, xcoord, ycoord, square_ptr))
                 {
                     // 矩形が成立しなかった。
@@ -376,7 +382,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private bool getSquareLine(int[] i_mkvertex, int[] i_xcoord, int[] i_ycoord, NyARSquare o_square)
         {
             NyARLinear[] l_line = o_square.line;
-            NyARCameraDistortionFactor dist_factor = this._dist_factor_ref;
+            NyARObserv2IdealMap dist_factor = this._dist_factor;
             NyARDoubleMatrix22 evec = this.__getSquareLine_evec;
             NyARDoublePoint2d mean = this.__getSquareLine_mean;
             NyARDoublePoint2d ev = this.__getSquareLine_ev;
@@ -393,8 +399,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     // nが2以下でmatrix.PCAを計算することはできないので、エラー
                     return false;
                 }
+                //配列作成
+                this._dist_factor.observ2IdealBatch(i_xcoord, i_ycoord, st, n, this._xpos, this._ypos);
+
                 //主成分分析する。
-                this._pca.pcaWithDistortionFactor(i_xcoord, i_ycoord, st, n, dist_factor, evec, ev, mean);
+                this._pca.pca(this._xpos, this._ypos, n, evec, ev, mean);
                 NyARLinear l_line_i = l_line[i];
                 l_line_i.run = evec.m01;// line[i][0] = evec->m[1];
                 l_line_i.rise = -evec.m00;// line[i][1] = -evec->m[0];

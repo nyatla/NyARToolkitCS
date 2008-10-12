@@ -47,6 +47,7 @@ namespace ConsoleApplication1
         private const String camera_file = "\\Program Files\\rawtest\\data\\camera_para.dat";
         public RawFileTest()
         {
+            NyMath.initialize();
         }
         public void Test_arDetectMarkerLite()
         {
@@ -67,8 +68,8 @@ namespace ConsoleApplication1
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
-            NyARSingleDetectMarker_Quad ar = new NyARSingleDetectMarker_Quad(ap, code, 80.0);
-//            NyARSingleDetectMarker_X2 ar = new NyARSingleDetectMarker_X2(ap, code, 80.0);
+//            NyARSingleDetectMarker_Quad ar = new NyARSingleDetectMarker_Quad(ap, code, 80.0);
+            NyARSingleDetectMarker_X2 ar = new NyARSingleDetectMarker_X2(ap, code, 80.0);
             NyARTransMatResult result_mat = new NyARTransMatResult();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);
@@ -80,8 +81,8 @@ namespace ConsoleApplication1
             for (int i = 0; i < 10; i++)
             {
                 //変換行列を取得
-                ar.detectMarkerLite(ra, 100);
-                //ar.getTransmationMatrix(result_mat);
+                //ar.detectMarkerLite(ra, 100);
+                ar.getTransmationMatrix(result_mat);
             }
             sw.Stop();
             Debug.WriteLine(sw.ElapsedMilliseconds + "[ms]");

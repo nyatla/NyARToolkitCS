@@ -39,10 +39,10 @@ namespace NyARToolkitCSUtils.Direct3d
     /* DsRGB556Rasterのラスタデータを取り込むことが出来るSurfaceです。
      * このSurfaceはそのままARToolKitの背景描画に使います。
      */
-    public class NyARSurface_RGB565
+    public class NyARSurface_RGB565 : IDisposable
     {
-        private int m_width;
-        private int m_height;
+        private int _width;
+        private int _height;
         private Microsoft.WindowsMobile.DirectX.Direct3D.Device m_ref_dev;
         private Surface m_surface;
         private Rectangle m_src_rect;
@@ -64,8 +64,8 @@ namespace NyARToolkitCSUtils.Direct3d
         {
             this.m_ref_dev = i_dev;
 
-            this.m_height = i_height;
-            this.m_width = i_width;
+            this._height = i_height;
+            this._width = i_width;
 
             this.m_surface = i_dev.CreateImageSurface(i_width, i_height, Format.R5G6B5);
             this.m_src_rect = new Rectangle(0, 0, i_width,i_height);
@@ -80,22 +80,30 @@ namespace NyARToolkitCSUtils.Direct3d
         {
             int pitch;
             GraphicsStream gs = this.m_surface.LockRectangle(this.m_src_rect, LockFlags.None, out pitch);
-            if (i_is_top_to_botomm)
+            if (!i_is_top_to_botomm)
             {
-                int st = this.m_width * 2;
+                int st = this._width * 2;
                 int s_idx = 0;
-                int d_idx = (this.m_height - 1) * st;
-                for (int i = this.m_height - 1; i >= 0; i--)
+                int d_idx = (this._height - 1) * pitch;
+                for (int i = this._height - 1; i >= 0; i--)
                 {
                     i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
                     s_idx += st;
-                    d_idx -= st;
+                    d_idx -= pitch;
                 }
             }else{
-                i_sample.CopyToBuffer(gs.InternalData, 0, this.m_width * this.m_height * 2);
+                i_sample.CopyToBuffer(gs.InternalData, 0, this._width * this._height * 2);
             }
             this.m_surface.UnlockRectangle();
 
+            return;
+        }
+        public void Dispose()
+        {
+            if (this.m_surface != null)
+            {
+                this.m_surface.Dispose();
+            }
             return;
         }
 

@@ -54,30 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARLabeling_ARToolKit_X2.cs">
-      <Link>cs\x2\NyARLabeling_ARToolKit_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARPca2d_SamplingPCA.cs">
-      <Link>cs\x2\NyARPca2d_SamplingPCA.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARRotMatrix_X2.cs">
-      <Link>cs\x2\NyARRotMatrix_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARRotTransOptimize_X2.cs">
-      <Link>cs\x2\NyARRotTransOptimize_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSingleDetectMarker_X2.cs">
-      <Link>cs\x2\NyARSingleDetectMarker_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSinTable.cs">
-      <Link>cs\x2\NyARSinTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_X2.cs">
-      <Link>cs\x2\NyARSquareDetector_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARTransMat_X2.cs">
-      <Link>cs\x2\NyARTransMat_X2.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\quadx2\NyARRasterFilter_ARTTh_Quad.cs">
       <Link>cs\quadx2\NyARRasterFilter_ARTTh_Quad.cs</Link>
     </Compile>
@@ -87,10 +63,48 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\quadx2\NyARSquareDetector_Quad.cs">
       <Link>cs\quadx2\NyARSquareDetector_Quad.cs</Link>
     </Compile>
-
-
-
-
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloat16Mat.cs">
+      <Link>cs\x2\NyARFixedFloat16Mat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatFitVecCalculator.cs">
+      <Link>cs\x2\NyARFixedFloatFitVecCalculator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatPca2d.cs">
+      <Link>cs\x2\NyARFixedFloatPca2d.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatRotMatrix.cs">
+      <Link>cs\x2\NyARFixedFloatRotMatrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatRotTransOptimize_O2.cs">
+      <Link>cs\x2\NyARFixedFloatRotTransOptimize_O2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatRotVector.cs">
+      <Link>cs\x2\NyARFixedFloatRotVector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatTransOffset.cs">
+      <Link>cs\x2\NyARFixedFloatTransOffset.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARLabeling_ARToolKit_X2.cs">
+      <Link>cs\x2\NyARLabeling_ARToolKit_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSingleDetectMarker_X2.cs">
+      <Link>cs\x2\NyARSingleDetectMarker_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_X2.cs">
+      <Link>cs\x2\NyARSquareDetector_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARTransMat_X2.cs">
+      <Link>cs\x2\NyARTransMat_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyMath.cs">
+      <Link>cs\x2\NyMath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatIdeal2Observ.cs">
+      <Link>cs\x2\NyARFixedFloatIdeal2Observ.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatObserv2IdealMap.cs">
+      <Link>cs\x2\NyARFixedFloatObserv2IdealMap.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

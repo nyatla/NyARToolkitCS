@@ -29,23 +29,16 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System;
+using System.Text;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    using System;
-
-    public interface INyARPca2d
+    interface INyARCameraDistortionFactor
     {
-        /**
-         * 通常のPCA
-         * @param i_x
-         * @param i_y
-         * @param i_start
-         * @param i_number_of_point
-         * @param o_evec
-         * @param o_ev
-         * @param o_mean
-         * @throws NyARException
-         */
-        void pca(double[] i_x, double[] i_y, int i_number_of_point, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean);
+	    void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out);
+	    void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size);
+	    void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point);
+	    void observ2IdealBatch(int[] i_x_coord, int[] i_y_coord,int i_start, int i_num, double[] o_x_coord,double[] o_y_coord);
     }
 }

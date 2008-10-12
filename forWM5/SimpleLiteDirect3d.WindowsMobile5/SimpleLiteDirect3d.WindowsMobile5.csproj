@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppFilePathInfo.cs" />
+    <Compile Include="D3dBackground.cs" />
+    <Compile Include="D3dManager.cs" />
     <Compile Include="DeviceAdapter.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

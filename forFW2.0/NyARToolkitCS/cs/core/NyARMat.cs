@@ -46,7 +46,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected double[][] m;
 
-        private int clm, row;
+        protected int clm, row;
 
         /**
          * デフォルトコンストラクタは機能しません。

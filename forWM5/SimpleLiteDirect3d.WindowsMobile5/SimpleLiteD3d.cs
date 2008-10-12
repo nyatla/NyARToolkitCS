@@ -40,6 +40,7 @@ using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
 using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
+using jp.nyatla.nyartoolkit.cs.sandbox.x2;
 using jp.nyatla.cs.NyWMCapture;
 
 
@@ -55,17 +56,14 @@ namespace SimpleLiteDirect3d.WindowsMobile5
          */
         private const String AR_CODE_FILE = "data\\patt.hiro";
         private const String AR_CAMERA_FILE = "data\\camera_para.dat";
-
+        private D3dManager _d3dmgr;
+        private ID3dBackground _back_ground;
         //NyAR
         private NyARSingleDetectMarker_Quad m_ar;
         private DsRGB565Raster m_raster;
-        private NyARD3dUtil _utils;
-        //背景テクスチャ
-        private NyARSurface_RGB565 m_surface;
-        //変数作りおき
-        private Rectangle m_dest_rect;
-        /// Direct3D デバイス
-        private Device _device = null;
+        private NyARD3dUtil _utils = new NyARD3dUtil();
+
+
         // 頂点バッファ/インデックスバッファ/インデックスバッファの各頂点番号配列
         private VertexBuffer _vertexBuffer = null;
         private IndexBuffer _indexBuffer = null;
@@ -74,6 +72,9 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private Brush _fps_brush = new SolidBrush(Color.Red);
         private System.Drawing.Font _fps_font = new System.Drawing.Font(FontFamily.GenericSerif, 9.0f, FontStyle.Bold);
         public int fps_x_100=0;
+        private Matrix trans_matrix = new Matrix();
+        private NyARTransMatResult trans_result = new NyARTransMatResult();
+
         /* 非同期イベントハンドラ
          * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
          */
@@ -84,10 +85,18 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 IntPtr data=i_sample.GetData();
                 this.m_raster.setBuffer(data, this.m_is_turn_vertical);
                 //テクスチャ内容を更新
-                this.m_surface.CopyFromIntPtr(i_sample, this.m_is_turn_vertical);
-                Graphics gs=this.m_surface.d3d_surface.GetGraphics();
-                gs.DrawString(fps_x_100 / 100 + "." + fps_x_100%100+"fps", _fps_font, _fps_brush, 0, 0);
-                this.m_surface.d3d_surface.ReleaseGraphics();
+                this._back_ground.setSample(i_sample);
+//                Graphics gs=this._surface.d3d_surface.GetGraphics();
+//                gs.DrawString(fps_x_100 / 100 + "." + fps_x_100%100+"fps", _fps_font, _fps_brush, 0, 0);
+//                this.m_surface.d3d_surface.ReleaseGraphics();
+                //マーカーは見つかったかな？
+                is_marker_enable = this.m_ar.detectMarkerLite(this.m_raster, 110);
+                if (is_marker_enable)
+                {
+                    //あればMatrixを計算
+                    this.m_ar.getTransmationMatrix(trans_result);
+                    this._utils.toD3dMatrix(trans_result, ref trans_matrix);
+                }
             }
             Thread.Sleep(0);
             return 0;
@@ -105,37 +114,29 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this.m_dev_adapter.CaptureIf.Stop();
         }
 
-
-        /* Direct3Dデバイスを準備する関数
-         */
-        private Device PrepareD3dDevice(Control i_window)
-        {
-            PresentParameters pp = new PresentParameters();
-
-            // ウインドウモードなら true、フルスクリーンモードなら false を指定
-            pp.Windowed = true;
-            // スワップとりあえずDiscardを指定。
-            pp.SwapEffect = SwapEffect.Discard;
-            pp.EnableAutoDepthStencil = true;
-            pp.AutoDepthStencilFormat = DepthFormat.D16;
-            pp.BackBufferCount = 1;
-            pp.BackBufferFormat = Format.R5G6B5;
-
-            return new Device(0, DeviceType.Default, i_window.Handle,CreateFlags.None, pp);
-        }
         public bool InitializeApplication(NyARToolkitCS topLevelForm, DeviceAdapter i_adapter)
         {
+            NyMath.initialize();
             String current_path=Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             this.m_dev_adapter = i_adapter;
             Size cap_size = i_adapter.CaptureSize;
             this.m_is_turn_vertical = i_adapter.IsTurnCapVertical;
-            
-            //ARの設定
 
-            //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
             ap.loadARParamFromFile(current_path + "\\" + AR_CAMERA_FILE);
             ap.changeScreenSize(cap_size.Width,cap_size.Height);
+
+
+            this._d3dmgr = new D3dManager(topLevelForm,ap, -1);
+            this._back_ground = new D3dTextureBackground(this._d3dmgr, -1);
+            //ARの設定
+
+            //カメラProjectionの設定
+            Matrix tmp = new Matrix();
+            this._utils.toCameraFrustumRH(ap, ref tmp);
+            this._d3dmgr.d3d_device.Transform.Projection = tmp;
+
+            //AR用カメラパラメタファイルをロードして設定
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
@@ -147,28 +148,9 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             //計算モードの設定
             this.m_ar.setContinueMode(false);
 
-            
-            //3dデバイスを準備する
-            this._device = PrepareD3dDevice(topLevelForm);
-            //ビューポート計算とスケールの計算
-            Viewport vp=this.m_dev_adapter.D3dViewport;
-            this._device.Viewport = vp;
-
-            this.m_dest_rect = new Rectangle(vp.X, vp.Y, vp.Width, vp.Height);
-
-            //カメラProjectionの設定
-            Matrix tmp = new Matrix();
-            this._utils.toCameraFrustumRH(ap, ref tmp);
-            this._device.Transform.Projection = tmp;
-
-            // ビュー変換の設定(左手座標系ビュー行列で設定する)
-            // 0,0,0から、Z+方向を向いて、上方向がY軸
-            this._device.Transform.View = Matrix.LookAtLH(
-                new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.0f));
-
             //立方体（頂点数8）の準備
             this._vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored),
-                8, this._device, Usage.None, CustomVertex.PositionColored.Format,Pool.SystemMemory);
+                8, this._d3dmgr.d3d_device, Usage.None, CustomVertex.PositionColored.Format,Pool.SystemMemory);
 
             //8点の情報を格納するためのメモリを確保
             CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[8];
@@ -196,7 +178,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             // インデックスバッファの作成
             // 第２引数の数値は(三角ポリゴンの数)*(ひとつの三角ポリゴンの頂点数)*
             // (16 ビットのインデックスサイズ(2byte))
-            this._indexBuffer = new IndexBuffer(this._device, 12 * 3 * 2, Usage.WriteOnly,Pool.SystemMemory, true);
+            this._indexBuffer = new IndexBuffer(this._d3dmgr.d3d_device, 12 * 3 * 2, Usage.WriteOnly,Pool.SystemMemory, true);
 
             // インデックスバッファをロックする
             using (GraphicsStream data = this._indexBuffer.Lock(0, 0, LockFlags.None))
@@ -207,59 +189,36 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 // インデックスバッファのロックを解除します
                 this._indexBuffer.Unlock();
             }
-            // ライトを無効
-            this._device.RenderState.Lighting = false;
-
-
-            // カリングを無効にしてポリゴンの裏も描画する
-            //this._device.RenderState.CullMode = Cull.None;
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
             this.m_raster = new DsRGB565Raster(cap_size.Width, cap_size.Height);
-            //背景テクスチャを作成
-            this.m_surface = new NyARSurface_RGB565(this._device, cap_size.Width, cap_size.Height);
+//            //背景テクスチャを作成
+//            this.m_surface = new NyARSurface_RGB565(this._d3dmgr.d3d_device, cap_size.Width, cap_size.Height);
             return true;
         }
-        private Matrix __MainLoop_trans_matrix = new Matrix();
-        private NyARTransMatResult __MainLoop_nyar_transmat = new NyARTransMatResult();
-
+        private bool is_marker_enable=false;
         //メインループ処理
         public void MainLoop()
         {
 
             //ARの計算
-            Matrix trans_matrix = this.__MainLoop_trans_matrix;
-            NyARTransMatResult trans_result = this.__MainLoop_nyar_transmat;
-            bool is_marker_enable=false;
             lock (this)
             {
-                //マーカーは見つかったかな？
-                is_marker_enable = this.m_ar.detectMarkerLite(this.m_raster, 110);
-                if (is_marker_enable)
-                {
-                    //あればMatrixを計算
-                    this.m_ar.getTransmationMatrix(trans_result);
-                    this._utils.toD3dMatrix(trans_result, ref trans_matrix);
-                }
-                this._device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
-                //背景描画
-                Surface dest_surface=this._device.GetBackBuffer(0, BackBufferType.Mono);
-                this._device.StretchRectangle(this.m_surface.d3d_surface, this.m_surface.d3d_surface_rect, dest_surface, this.m_dest_rect, TextureFilter.Point);
+                this._d3dmgr.d3d_device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+//                //背景描画
                 // 3Dオブジェクトの描画はここから
-                this._device.BeginScene();
+                this._d3dmgr.d3d_device.BeginScene();
+                this._back_ground.drawBackGround();
 
 
                 //マーカーが見つかっていて、0.3より一致してたら描画する。
                 if (is_marker_enable && this.m_ar.getConfidence() > 0.3)
                 {
                     // 頂点バッファをデバイスのデータストリームにバインド
-                    this._device.SetStreamSource(0, this._vertexBuffer, 0);
-
-                    //                // 描画する頂点のフォーマットをセット
-                    //                this._device.VertexFormat = CustomVertex.PositionColored.Format;
+                    this._d3dmgr.d3d_device.SetStreamSource(0, this._vertexBuffer, 0);
 
                     // インデックスバッファをセット
-                    this._device.Indices = this._indexBuffer;
+                    this._d3dmgr.d3d_device.Indices = this._indexBuffer;
 
                     //立方体を20mm上（マーカーの上）にずらしておく
                     Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
@@ -267,17 +226,17 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                     //変換行列を掛ける
                     transform_mat2 *= trans_matrix;
                     // 計算したマトリックスで座標変換
-                    this._device.SetTransform(TransformType.World, transform_mat2);
+                    this._d3dmgr.d3d_device.SetTransform(TransformType.World, transform_mat2);
 
                     // レンダリング（描画）
-                    this._device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
+                    this._d3dmgr.d3d_device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
                 }
 
                 // 描画はここまで
-                this._device.EndScene();
+                this._d3dmgr.d3d_device.EndScene();
 
-                // 実際のディスプレイに描画
-                this._device.Present();
+                // 実際のディスプレイに描画*/
+                this._d3dmgr.d3d_device.Present();
             }            
         }
 
@@ -289,16 +248,19 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             {
                 this._vertexBuffer.Dispose();
             }
-
             // インデックスバッファを解放
             if (this._indexBuffer != null)
             {
                 this._indexBuffer.Dispose();
-            }              
-            // Direct3D デバイスのリソース解放
-            if (this._device != null)
+            }
+            if (this._back_ground != null)
             {
-                this._device.Dispose();
+                this._back_ground.Dispose();
+            }
+            // Direct3D デバイスのリソース解放
+            if (this._d3dmgr != null)
+            {
+                this._d3dmgr.Dispose();
             }
         }
     }

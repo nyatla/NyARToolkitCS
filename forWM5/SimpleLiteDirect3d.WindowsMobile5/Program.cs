@@ -71,7 +71,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                             // イベントがある場合はその処理する
                             Application.DoEvents();
                             sw.Stop();
-                            sample.fps_x_100 = (int)(1000 * 100 / sw.ElapsedMilliseconds);
+                            sample.fps_x_100 = (int)(1000 * 100 / (sw.ElapsedMilliseconds+1));
                             sw.Reset();
 
                         }

@@ -41,24 +41,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private bool get_vertex(int st, int ed)
         {
+            //メモ:座標値は65536を超えなければint32で扱って大丈夫なので変更。
+            //dmaxは4乗なのでやるとしてもint64じゃないとマズイ
             int v1 = 0;
             int[] lx_coord = this.x_coord;
             int[] ly_coord = this.y_coord;
-            double a = ly_coord[ed] - ly_coord[st];
-            double b = lx_coord[st] - lx_coord[ed];
-            double c = lx_coord[ed] * ly_coord[st] - ly_coord[ed] * lx_coord[st];
+            int a = ly_coord[ed] - ly_coord[st];
+            int b = lx_coord[st] - lx_coord[ed];
+            int c = lx_coord[ed] * ly_coord[st] - ly_coord[ed] * lx_coord[st];
             double dmax = 0;
-            double d;
             for (int i = st + 1; i < ed; i++)
             {
-                d = a * lx_coord[i] + b * ly_coord[i] + c;
+                double d = a * lx_coord[i] + b * ly_coord[i] + c;
                 if (d * d > dmax)
                 {
                     dmax = d * d;
                     v1 = i;
                 }
             }
-            if (dmax / (a * a + b * b) > thresh)
+            if (dmax / (double)(a * a + b * b) > thresh)
             {
                 if (!get_vertex(st, v1))
                 {
@@ -78,6 +79,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return true;
         }
-    }
 
+    }
 }

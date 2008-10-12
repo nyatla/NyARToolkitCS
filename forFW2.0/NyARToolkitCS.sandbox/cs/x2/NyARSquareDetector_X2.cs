@@ -30,9 +30,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.core2;
 using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
@@ -46,8 +47,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
      */
     public class NyARSquareDetector_X2 : INyARSquareDetector
     {
-        private const double VERTEX_FACTOR = 1.0;// 線検出のファクタ
-
+        private const int PCA_LENGTH = 20;
         private const int AR_AREA_MAX = 100000;// #define AR_AREA_MAX 100000
 
         private const int AR_AREA_MIN = 70;// #define AR_AREA_MIN 70
@@ -59,18 +59,19 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
         private NyARLabelingImage _limage;
 
         private OverlapChecker _overlap_checker = new OverlapChecker();
-        private NyARCameraDistortionFactor _dist_factor_ref;
+        private NyARFixedFloatObserv2IdealMap _dist_factor;
+        private NyARFixedFloatPca2d _pca;
 
         /**
          * 最大i_squre_max個のマーカーを検出するクラスを作成する。
          * 
          * @param i_param
          */
-        public NyARSquareDetector_X2(NyARCameraDistortionFactor i_dist_factor_ref, NyARIntSize i_size)
+        public NyARSquareDetector_X2(NyARFixedFloatObserv2IdealMap i_dist_factor_ref, NyARIntSize i_size)
         {
             this._width = i_size.w;
             this._height = i_size.h;
-            this._dist_factor_ref = i_dist_factor_ref;
+            this._dist_factor = i_dist_factor_ref;
             this._labeling = new NyARLabeling_ARToolKit_X2();
             this._limage = new NyARLabelingImage(this._width, this._height);
             this._labeling.attachDestination(this._limage);
@@ -83,7 +84,9 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             this._xcoord = new int[number_of_coord * 2];
             this._ycoord = new int[number_of_coord * 2];
             //PCA
-            this._pca = new NyARPca2d_SamplingPCA(16);
+            this._pca = new NyARFixedFloatPca2d();
+            this._xpos = new int[PCA_LENGTH];//最大辺長はthis._width+this._height
+            this._ypos = new int[PCA_LENGTH];//最大辺長はthis._width+this._height
 
         }
 
@@ -202,7 +205,6 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 
                 // 領域を準備する。
                 NyARSquare square_ptr = (NyARSquare)o_square_stack.prePush();
-
                 // 頂点情報を取得
                 if (!getSquareVertex(xcoord, ycoord, vertex1, coord_num, label_area, mkvertex))
                 {
@@ -252,9 +254,9 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             return ret;
         }
 
-        private NyARVertexCounter __getSquareVertex_wv1 = new NyARVertexCounter();
+        private NyARFixedFloatVertexCounter __getSquareVertex_wv1 = new NyARFixedFloatVertexCounter();
 
-        private NyARVertexCounter __getSquareVertex_wv2 = new NyARVertexCounter();
+        private NyARFixedFloatVertexCounter __getSquareVertex_wv2 = new NyARFixedFloatVertexCounter();
 
         /**
          * static int arDetectMarker2_check_square( int area, ARMarkerInfo2 *marker_info2, double factor ) 関数の代替関数 OPTIMIZED STEP [450->415] o_squareに頂点情報をセットします。
@@ -270,8 +272,8 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
          */
         private bool getSquareVertex(int[] i_x_coord, int[] i_y_coord, int i_vertex1_index, int i_coord_num, int i_area, int[] o_vertex)
         {
-            NyARVertexCounter wv1 = this.__getSquareVertex_wv1;
-            NyARVertexCounter wv2 = this.__getSquareVertex_wv2;
+            NyARFixedFloatVertexCounter wv1 = this.__getSquareVertex_wv1;
+            NyARFixedFloatVertexCounter wv2 = this.__getSquareVertex_wv2;
             int end_of_coord = i_vertex1_index + i_coord_num - 1;
             int sx = i_x_coord[i_vertex1_index];// sx = marker_info2->x_coord[0];
             int sy = i_y_coord[i_vertex1_index];// sy = marker_info2->y_coord[0];
@@ -287,16 +289,17 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
                     v1 = i;
                 }
             }
-            double thresh = (i_area / 0.75) * 0.01 * VERTEX_FACTOR;
+            //final double thresh = (i_area / 0.75) * 0.01;
+            long thresh_f16 = (i_area << 16) / 75;
 
             o_vertex[0] = i_vertex1_index;
 
-            if (!wv1.getVertex(i_x_coord, i_y_coord, i_vertex1_index, v1, thresh))
+            if (!wv1.getVertex(i_x_coord, i_y_coord, i_vertex1_index, v1, thresh_f16))
             { // if(get_vertex(marker_info2->x_coord,marker_info2->y_coord,0,v1,thresh,wv1,&wvnum1)<
                 // 0 ) {
                 return false;
             }
-            if (!wv2.getVertex(i_x_coord, i_y_coord, v1, end_of_coord, thresh))
+            if (!wv2.getVertex(i_x_coord, i_y_coord, v1, end_of_coord, thresh_f16))
             {// if(get_vertex(marker_info2->x_coord,marker_info2->y_coord,v1,marker_info2->coord_num-1,thresh,wv2,&wvnum2)
                 // < 0) {
                 return false;
@@ -313,11 +316,11 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             {// }else if( wvnum1 > 1 && wvnum2== 0) {
                 //頂点位置を、起点から対角点の間の1/2にあると予想して、検索する。
                 v2 = (v1 - i_vertex1_index) / 2 + i_vertex1_index;
-                if (!wv1.getVertex(i_x_coord, i_y_coord, i_vertex1_index, v2, thresh))
+                if (!wv1.getVertex(i_x_coord, i_y_coord, i_vertex1_index, v2, thresh_f16))
                 {
                     return false;
                 }
-                if (!wv2.getVertex(i_x_coord, i_y_coord, v2, v1, thresh))
+                if (!wv2.getVertex(i_x_coord, i_y_coord, v2, v1, thresh_f16))
                 {
                     return false;
                 }
@@ -337,11 +340,11 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
                 //v2 = (v1-i_vertex1_index+ end_of_coord-i_vertex1_index) / 2+i_vertex1_index;
                 v2 = (v1 + end_of_coord) / 2;
 
-                if (!wv1.getVertex(i_x_coord, i_y_coord, v1, v2, thresh))
+                if (!wv1.getVertex(i_x_coord, i_y_coord, v1, v2, thresh_f16))
                 {
                     return false;
                 }
-                if (!wv2.getVertex(i_x_coord, i_y_coord, v2, end_of_coord, thresh))
+                if (!wv2.getVertex(i_x_coord, i_y_coord, v2, end_of_coord, thresh_f16))
                 {
                     return false;
                 }
@@ -363,11 +366,13 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             o_vertex[4] = end_of_coord;
             return true;
         }
+        private int[] _xpos;
+        private int[] _ypos;
 
-        private INyARPca2d _pca;
-        private NyARDoubleMatrix22 __getSquareLine_evec = new NyARDoubleMatrix22();
-        private NyARDoublePoint2d __getSquareLine_mean = new NyARDoublePoint2d();
-        private NyARDoublePoint2d __getSquareLine_ev = new NyARDoublePoint2d();
+        private NyARI64Matrix22 __getSquareLine_evec = new NyARI64Matrix22();
+        private NyARI64Point2d __getSquareLine_mean = new NyARI64Point2d();
+        private NyARI64Point2d __getSquareLine_ev = new NyARI64Point2d();
+        private NyARI64Linear[] __getSquareLine_i64liner = NyARI64Linear.createArray(4);
         /**
          * arGetLine(int x_coord[], int y_coord[], int coord_num,int vertex[], double line[4][3], double v[4][2]) arGetLine2(int x_coord[], int y_coord[], int
          * coord_num,int vertex[], double line[4][3], double v[4][2], double *dist_factor) の２関数の合成品です。 マーカーのvertex,lineを計算して、結果をo_squareに保管します。
@@ -380,47 +385,53 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
         private bool getSquareLine(int[] i_mkvertex, int[] i_xcoord, int[] i_ycoord, NyARSquare o_square)
         {
             NyARLinear[] l_line = o_square.line;
-            NyARCameraDistortionFactor dist_factor = this._dist_factor_ref;
-            NyARDoubleMatrix22 evec = this.__getSquareLine_evec;
-            NyARDoublePoint2d mean = this.__getSquareLine_mean;
-            NyARDoublePoint2d ev = this.__getSquareLine_ev;
-
+            NyARI64Matrix22 evec = this.__getSquareLine_evec;
+            NyARI64Point2d mean = this.__getSquareLine_mean;
+            NyARI64Point2d ev = this.__getSquareLine_ev;
+            NyARI64Linear[] i64liner = this.__getSquareLine_i64liner;
 
             for (int i = 0; i < 4; i++)
             {
-                double w1 = (double)(i_mkvertex[i + 1] - i_mkvertex[i] + 1) * 0.05 + 0.5;
-                int st = (int)(i_mkvertex[i] + w1);
-                int ed = (int)(i_mkvertex[i + 1] - w1);
+                //			final double w1 = (double) (i_mkvertex[i + 1] - i_mkvertex[i] + 1) * 0.05 + 0.5;
+                int w1 = ((((i_mkvertex[i + 1] - i_mkvertex[i] + 1) << 8) * 13) >> 8) + (1 << 7);
+                int st = i_mkvertex[i] + (w1 >> 8);
+                int ed = i_mkvertex[i + 1] - (w1 >> 8);
                 int n = ed - st + 1;
                 if (n < 2)
                 {
                     // nが2以下でmatrix.PCAを計算することはできないので、エラー
                     return false;
                 }
+                //配列作成
+                n=this._dist_factor.observ2IdealSampling(i_xcoord, i_ycoord, st, n, this._xpos, this._ypos,PCA_LENGTH);
+
                 //主成分分析する。
-                this._pca.pcaWithDistortionFactor(i_xcoord, i_ycoord, st, n, dist_factor, evec, ev, mean);
-                NyARLinear l_line_i = l_line[i];
+                this._pca.pcaF16(this._xpos, this._ypos, n, evec, ev, mean);
+                NyARI64Linear l_line_i = i64liner[i];
                 l_line_i.run = evec.m01;// line[i][0] = evec->m[1];
                 l_line_i.rise = -evec.m00;// line[i][1] = -evec->m[0];
-                l_line_i.intercept = -(l_line_i.run * mean.x + l_line_i.rise * mean.y);// line[i][2] = -(line[i][0]*mean->v[0] + line[i][1]*mean->v[1]);
+                l_line_i.intercept = -((l_line_i.run * mean.x + l_line_i.rise * mean.y) >> 16);// line[i][2] = -(line[i][0]*mean->v[0] + line[i][1]*mean->v[1]);
             }
 
             NyARDoublePoint2d[] l_sqvertex = o_square.sqvertex;
             NyARIntPoint[] l_imvertex = o_square.imvertex;
             for (int i = 0; i < 4; i++)
             {
-                NyARLinear l_line_i = l_line[i];
-                NyARLinear l_line_2 = l_line[(i + 3) % 4];
-                double w1 = l_line_2.run * l_line_i.rise - l_line_i.run * l_line_2.rise;
-                if (w1 == 0.0)
+                NyARI64Linear l_line_i = i64liner[i];
+                NyARI64Linear l_line_2 = i64liner[(i + 3) % 4];
+                long w1 = (l_line_2.run * l_line_i.rise - l_line_i.run * l_line_2.rise) >> 16;
+                if (w1 == 0)
                 {
                     return false;
                 }
-                l_sqvertex[i].x = (l_line_2.rise * l_line_i.intercept - l_line_i.rise * l_line_2.intercept) / w1;
-                l_sqvertex[i].y = (l_line_i.run * l_line_2.intercept - l_line_2.run * l_line_i.intercept) / w1;
+                l_sqvertex[i].x = (double)((l_line_2.rise * l_line_i.intercept - l_line_i.rise * l_line_2.intercept) / w1) / 65536.0;
+                l_sqvertex[i].y = (double)((l_line_i.run * l_line_2.intercept - l_line_2.run * l_line_i.intercept) / w1) / 65536.0;
                 // 頂点インデクスから頂点座標を得て保存
                 l_imvertex[i].x = i_xcoord[i_mkvertex[i]];
                 l_imvertex[i].y = i_ycoord[i_mkvertex[i]];
+                l_line[i].run = (double)l_line_i.run / 65536.0;
+                l_line[i].rise = (double)l_line_i.rise / 65536.0;
+                l_line[i].intercept = (double)l_line_i.intercept / 65536.0;
             }
             return true;
         }
@@ -490,4 +501,75 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             return true;
         }
     }
+    class NyARFixedFloatVertexCounter
+    {
+        public int[] vertex = new int[6];// 5まで削れる
+
+        public int number_of_vertex;
+
+        private long thresh_16f;
+
+        private int[] x_coord;
+
+        private int[] y_coord;
+
+        public bool getVertex(int[] i_x_coord, int[] i_y_coord, int st, int ed, long i_thresh)
+        {
+            this.number_of_vertex = 0;
+            this.thresh_16f = i_thresh;
+            this.x_coord = i_x_coord;
+            this.y_coord = i_y_coord;
+            return get_vertex(st, ed);
+        }
+
+        /**
+         * static int get_vertex( int x_coord[], int y_coord[], int st, int ed,double thresh, int vertex[], int *vnum) 関数の代替関数
+         * 
+         * @param x_coord
+         * @param y_coord
+         * @param st
+         * @param ed
+         * @param thresh
+         * @return
+         */
+        private bool get_vertex(int st, int ed)
+        {
+            int v1 = 0;
+            int[] lx_coord = this.x_coord;
+            int[] ly_coord = this.y_coord;
+            int a = ly_coord[ed] - ly_coord[st];
+            int b = lx_coord[st] - lx_coord[ed];
+            int c = lx_coord[ed] * ly_coord[st] - ly_coord[ed] * lx_coord[st];
+            long dmax = 0;
+            for (int i = st + 1; i < ed; i++)
+            {
+                long d = a * lx_coord[i] + b * ly_coord[i] + c;
+                if (d * d > dmax)
+                {
+                    dmax = d * d;
+                    v1 = i;
+                }
+            }
+            if ((dmax << 16) / (long)(a * a + b * b) > this.thresh_16f)
+            {
+                if (!get_vertex(st, v1))
+                {
+                    return false;
+                }
+                if (number_of_vertex > 5)
+                {
+                    return false;
+                }
+                vertex[number_of_vertex] = v1;// vertex[(*vnum)] = v1;
+                number_of_vertex++;// (*vnum)++;
+
+                if (!get_vertex(v1, ed))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
 }

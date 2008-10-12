@@ -30,7 +30,8 @@ using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-
+using jp.nyatla.nyartoolkit.cs.sandbox.x2;
+using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
 namespace ConsoleApplication1
 {
     /**
@@ -45,6 +46,7 @@ namespace ConsoleApplication1
         private const String camera_file = "../../../../../data/camera_para.dat";
         public RawFileTest()
         {
+            NyMath.initialize();
         }
         public void Test_arDetectMarkerLite()
         {
