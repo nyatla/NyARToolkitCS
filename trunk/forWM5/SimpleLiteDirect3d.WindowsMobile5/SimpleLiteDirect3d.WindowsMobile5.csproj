@@ -55,21 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppFilePathInfo.cs" />
+    <Compile Include="ResourceBuilder.cs" />
     <Compile Include="D3dBackground.cs" />
     <Compile Include="D3dManager.cs" />
-    <Compile Include="DeviceAdapter.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +80,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SimpleLiteD3d.cs" />
+    <Compile Include="WmCapture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extlib\NyWMCapture\inc.cs\NyWMCaptureCS\NyWMCaptureCS.csproj">
