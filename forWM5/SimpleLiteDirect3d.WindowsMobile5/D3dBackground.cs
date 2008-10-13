@@ -35,26 +35,28 @@ using jp.nyatla.cs.NyWMCapture;
 
 namespace SimpleLiteDirect3d.WindowsMobile5
 {
-    interface ID3dBackground : IDisposable
+    public interface ID3dBackground : IDisposable
     {
         void drawBackGround();
         void setSample(INySample i_sample);
     }
-    class D3dSurfaceBackground : ID3dBackground
+    public class D3dSurfaceBackground : ID3dBackground
     {
         private int _width;
         private int _height;
         private D3dManager _d3dm;
         private Surface _surface;
         private Rectangle _src_rect;
+        private bool _vertical_order;
 
-        public D3dSurfaceBackground(D3dManager i_mgr, int i_mode)
+        public D3dSurfaceBackground(D3dManager i_mgr, bool i_vertical_order)
         {
             this._d3dm = i_mgr;
             this._height = i_mgr.background_size.Height;
             this._width = i_mgr.background_size.Width;
             this._surface = i_mgr.d3d_device.CreateImageSurface(this._width, this._height, Format.R5G6B5);
             this._src_rect = new Rectangle(0, 0, this._width, this._height);
+            this._vertical_order = i_vertical_order;
             return;
         }
         public void drawBackGround()
@@ -68,7 +70,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         {
             int pitch;
             GraphicsStream gs = this._surface.LockRectangle(this._src_rect, LockFlags.None, out pitch);
-            if (true)
+            if (this._vertical_order)
             {
                 int st = this._width * 2;
                 int s_idx = 0;
@@ -95,7 +97,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         }
     }
 
-    class D3dTextureBackground : ID3dBackground
+    public class D3dTextureBackground : ID3dBackground
     {
         private int _width;
         private int _height;

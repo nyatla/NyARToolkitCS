@@ -37,7 +37,7 @@ using jp.nyatla.nyartoolkit.cs.core;
  */
 namespace SimpleLiteDirect3d.WindowsMobile5
 {
-    class D3dManager:IDisposable
+    public class D3dManager:IDisposable
     {
         private Rectangle _view_rect;
         private Device _d3d_device;

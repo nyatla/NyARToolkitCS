@@ -78,13 +78,15 @@ namespace NyARToolkitCSUtils.NyAR
         private INyARRgbPixelReader _rgb_reader;
         private INyARBufferReader _buffer_reader;
         private short[] _ref_buf;
-        public DsRGB565Raster(int i_width, int i_height)
+        private bool _is_top_to_botomm;
+        public DsRGB565Raster(int i_width, int i_height, bool i_is_top_to_botomm)
             : base(new NyARIntSize(i_width, i_height))
         {
             if (i_width % 4 != 0)
             {
                 throw new NyARException();
             }
+            this._is_top_to_botomm = i_is_top_to_botomm;
             this._ref_buf = new short[i_height * i_width];
             this._rgb_reader = new PixelReader(this);
             this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE);
@@ -98,9 +100,9 @@ namespace NyARToolkitCSUtils.NyAR
         {
             return this._buffer_reader;
         }
-        public void setBuffer(IntPtr i_buf, bool i_is_top_to_botomm)
+        public void setBuffer(IntPtr i_buf)
         {
-            if (i_is_top_to_botomm)
+            if (this._is_top_to_botomm)
             {
                 //上下を反転させない。
                 Marshal.Copy(i_buf, this._ref_buf, 0, this._ref_buf.Length);
