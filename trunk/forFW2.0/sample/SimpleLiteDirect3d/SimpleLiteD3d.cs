@@ -34,7 +34,6 @@ using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NyARToolkitCSUtils.Capture;
-using NyARToolkitCSUtils.Raster;
 using NyARToolkitCSUtils.Direct3d;
 using NyARToolkitCSUtils.NyAR;
 using jp.nyatla.nyartoolkit.cs;
@@ -54,7 +53,7 @@ namespace SimpleLiteDirect3d
         private CaptureDevice  _cap;
         //NyAR
         private NyARSingleDetectMarker _ar;
-        private DsXRGB32Raster _raster;
+        private DsBGRX32Raster _raster;
         private NyARD3dUtil _utils;
         //背景テクスチャ
         private NyARSurface_XRGB32 _surface;
@@ -139,7 +138,7 @@ namespace SimpleLiteDirect3d
             //ARの設定
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsXRGB32Raster(i_cap_device.video_width, i_cap_device.video_height, i_cap_device.video_width * i_cap_device.video_bit_count / 8);
+            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height, i_cap_device.video_width * i_cap_device.video_bit_count / 8);
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();

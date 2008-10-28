@@ -31,7 +31,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using NyARToolkitCSUtils.Raster;
+using NyARToolkitCSUtils.NyAR;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -98,7 +98,7 @@ namespace NyARToolkitCSUtils.Direct3d
          * i_rasterのサイズは、このインスタンスに指定したテクスチャサイズ（コンストラクタ等に指定したサイズ）と同じである必要です。
          * ラスタデータはテクスチャの左上を基点にwidth x heightだけコピーされ、残りの部分は更新されません。
          */
-        public void CopyFromXRGB32(DsXRGB32Raster i_raster)
+        public void CopyFromXRGB32(DsBGRX32Raster i_raster)
         {
             //BUFFERFORMAT_BYTE1D_B8G8R8X8_32しか受けられません。
             Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32));

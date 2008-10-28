@@ -63,43 +63,45 @@ namespace SimpleLiteDirect3d
                 return;
             }
             //キャプチャデバイスを選択してもらう。
-            int cdevice_number=0;
+            int cdevice_number = 0;
             using (Form2 frm2 = new Form2())
             {
                 frm2.ShowDialog(capture_device_list, out cdevice_number);
             }
-            CaptureDevice capture_device=capture_device_list[cdevice_number];
-
-
-            // フォームとメインサンプルクラスを作成
-            using (Form1 frm = new Form1())
-            using (SimpleLiteD3d sample = new SimpleLiteD3d())
+            using (CaptureDevice capture_device = capture_device_list[cdevice_number])
             {
-                // アプリケーションの初期化
-                if (sample.InitializeApplication(frm,capture_device))
+
+
+                // フォームとメインサンプルクラスを作成
+                using (Form1 frm = new Form1())
+                using (SimpleLiteD3d sample = new SimpleLiteD3d())
                 {
-                    // メインフォームを表示
-                    frm.Show();
-                    //キャプチャ開始
-                    sample.StartCap();
-                    // フォームが作成されている間はループし続ける
-                    while (frm.Created)
+                    // アプリケーションの初期化
+                    if (sample.InitializeApplication(frm, capture_device))
                     {
-                        // メインループ処理を行う
-                        sample.MainLoop();
+                        // メインフォームを表示
+                        frm.Show();
+                        //キャプチャ開始
+                        sample.StartCap();
+                        // フォームが作成されている間はループし続ける
+                        while (frm.Created)
+                        {
+                            // メインループ処理を行う
+                            sample.MainLoop();
 
-                        //スレッドスイッチ
-                        Thread.Sleep(1);
+                            //スレッドスイッチ
+                            Thread.Sleep(1);
 
-                        // イベントがある場合はその処理する
-                        Application.DoEvents();
+                            // イベントがある場合はその処理する
+                            Application.DoEvents();
+                        }
+                        //キャプチャの停止
+                        sample.StopCap();
                     }
-                    //キャプチャの停止
-                    sample.StopCap();
-                }
-                else
-                {
-                    // 初期化に失敗
+                    else
+                    {
+                        // 初期化に失敗
+                    }
                 }
             }
         }
