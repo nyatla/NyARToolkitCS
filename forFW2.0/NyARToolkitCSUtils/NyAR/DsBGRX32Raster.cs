@@ -31,15 +31,15 @@ using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs;
 using System.IO;
 
-namespace NyARToolkitCSUtils.Raster
+namespace NyARToolkitCSUtils.NyAR
 {
-    public class DsXRGB32Raster : NyARRgbRaster_BasicClass
+    public class DsBGRX32Raster : NyARRgbRaster_BasicClass
     {
         private class PixelReader : INyARRgbPixelReader
         {
-            private DsXRGB32Raster _parent;
+            private DsBGRX32Raster _parent;
 
-            public PixelReader(DsXRGB32Raster i_parent)
+            public PixelReader(DsBGRX32Raster i_parent)
             {
                 this._parent = i_parent;
             }
@@ -73,7 +73,7 @@ namespace NyARToolkitCSUtils.Raster
         private INyARRgbPixelReader _rgb_reader;
         private INyARBufferReader _buffer_reader;
         private byte[] _ref_buf;
-        public DsXRGB32Raster(int i_width, int i_height, int i_stride)
+        public DsBGRX32Raster(int i_width, int i_height, int i_stride)
             : base(new NyARIntSize(i_width, i_height))
         {
             if (i_stride != i_width*4)

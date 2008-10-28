@@ -1,7 +1,7 @@
 ﻿ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008 R.Iizuka
 
-version 2.0.0
+version 2.1.0
 
 http://nyatla.jp/
 airmail(at)ebony.plala.or.jp
@@ -13,11 +13,11 @@ airmail(at)ebony.plala.or.jp
 NyARToolkitCSは、純粋なC#のみで実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 2.0.0
+ARToolkit 2.72.1及び、NyARToolkit version 2.1.0
 をベースにしています。
 
 ※NyARToolkitのcore2パッケージの一部は実装されていません。
-　今後徐々に実装していきく予定です。
+　今後徐々に実装する予定です。
 
 
 ARToolkitは加藤博一先生とHuman Interface Technology Labにより
@@ -93,8 +93,12 @@ http://sourceforge.net/projects/directshownet/
 
 .NyARToolkitCS.slnを開くと、5つのプロジェクトがあります。
 
-NyARToolkitCS,NyARToolkitCSUtilsはクラスライブラリ、他の３つは
-サンプルプログラムです。
+NyARToolkitCS,NyARToolkitCSUtilsはクラスライブラリ、NyARToolkitCS.sandbox
+は試験中のクラスライブラリ群、他の３つはサンプルプログラムです。
+
+NyARToolkitCS.sandbox
+　固定小数点計算クラスや、結果値の互換性を無視した高速化を行った
+　クラス、実験中のクラス群があります。
 
 RawTest (./sample/RawTest)
   ライブラリのベンチマークプログラムです。固定画像にあるマーカーを
@@ -150,11 +154,16 @@ COMオブジェクトです。
 
 ・・ソースコード構成
 
-NyARToolkitCS.WindowsMobile5.slnを開くと、4つのプロジェクトがあります。
+NyARToolkitCS.WindowsMobile5.slnを開くと、5つのプロジェクトがあります。
 
 NyARToolkitCS.WindowsMobile5,NyARToolkitCSUtils.WindowsMobile5,
-NyWMCaptureはクラスライブラリ、SimpleLiteDirect3d.WindowsMobile5
-がサンプルプログラムです。
+NyWMCaptureはクラスライブラリ、NyARToolkitCS.WindowsMobile5.sandboxは
+実験中のクラスライブラリ群、SimpleLiteDirect3d.WindowsMobile5がサンプル
+プログラムです。
+
+NyARToolkitCS.WindowsMobile5.sandboxには、固定小数点対応のクラス群があります。
+モバイルデバイスでの開発では、このクラス郡を使用することにより、浮動小数点版
+の約5倍の高速化が可能です。
 
 SimpleLiteDirect3d.WindowsMobile5
   SimpleLiteをWindowsMobile用に移植したものです。

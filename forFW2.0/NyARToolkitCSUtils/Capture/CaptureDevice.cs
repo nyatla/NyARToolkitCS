@@ -37,7 +37,7 @@ namespace NyARToolkitCSUtils.Capture
     /* キャプチャデバイス1個に対応するオブジェクト
      * 1キャプチャデバイスに対応するクラスです。 
      */
-    public class CaptureDevice : ISampleGrabberCB
+    public class CaptureDevice : ISampleGrabberCB,IDisposable
     {
         private IFilterGraph2   m_FilterGraph;
         private DsDevice        m_dev;
@@ -52,7 +52,7 @@ namespace NyARToolkitCSUtils.Capture
         {
             this.m_dev = i_dev;
         }
-        ~CaptureDevice()  // destructor
+        public void Dispose()
         {
             //既に停止中なら諦める。
             if (this.m_graphi_active)
