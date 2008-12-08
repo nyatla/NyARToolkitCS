@@ -1,7 +1,7 @@
-﻿ARToolkit C# class library NyARToolkitCS.
+ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008 R.Iizuka
 
-version 2.1.0
+version 2.1.1
 
 http://nyatla.jp/
 airmail(at)ebony.plala.or.jp
