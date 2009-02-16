@@ -201,6 +201,9 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs">
       <Link>cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix_NyARToolKit.cs">
+      <Link>cs\core\transmat\rotmatrix\NyARRotMatrix_NyARToolKit.cs</Link>
+    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotVector.cs">
       <Link>cs\core\transmat\rotmatrix\NyARRotVector.cs</Link>
     </Compile>

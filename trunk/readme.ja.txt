@@ -1,7 +1,7 @@
 ARToolkit C# class library NyARToolkitCS.
-Copyright (C)2008 R.Iizuka
+Copyright (C)2008-2009 R.Iizuka
 
-version 2.1.1
+version 2.2.0
 
 http://nyatla.jp/
 airmail(at)ebony.plala.or.jp
@@ -13,7 +13,7 @@ airmail(at)ebony.plala.or.jp
 NyARToolkitCSは、純粋なC#のみで実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 2.1.0
+ARToolkit 2.72.1及び、NyARToolkit version 2.2.0
 をベースにしています。
 
 ※NyARToolkitのcore2パッケージの一部は実装されていません。

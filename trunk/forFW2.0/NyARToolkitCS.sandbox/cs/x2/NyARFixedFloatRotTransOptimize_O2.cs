@@ -136,7 +136,6 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             long SACASC, SACACBSC, SACACBCC, SACACC;
             long[][] double1D = this.__modifyMatrix_double1D;
 
-            NyARFixedFloat16Point3d angle = this.__modifyMatrix_angle;
             long[] a_factor = double1D[1];
             long[] sinb = double1D[2];
             long[] cosb = double1D[3];
@@ -147,7 +146,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             long w, w2;
             long wsin, wcos;
 
-            io_rot.getAngle(angle);// arGetAngle( rot, &a, &b, &c );
+            NyARFixedFloat16Point3d angle = io_rot.refAngle();// arGetAngle( rot, &a, &b, &c );
             a2 = angle.x;
             b2 = angle.y;
             c2 = angle.z;

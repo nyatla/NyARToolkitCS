@@ -45,8 +45,8 @@ namespace SimpleLiteDirect3d
 
     public partial class SimpleLiteD3d : IDisposable, CaptureListener
     {
-        private const int SCREEN_WIDTH=320;
-        private const int SCREEN_HEIGHT=240;
+        private const int SCREEN_WIDTH=640;
+        private const int SCREEN_HEIGHT=480;
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         //DirectShowからのキャプチャ

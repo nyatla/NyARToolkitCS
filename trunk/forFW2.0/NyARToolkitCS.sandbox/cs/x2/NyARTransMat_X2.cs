@@ -214,7 +214,12 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             o_result.m22 = (double)i_rot.m22 / NyMath.FIXEDFLOAT24_1;
             o_result.m23 = (double)(((i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z) >> 24) + i_trans.z) / NyMath.FIXEDFLOAT16_1;
 
-            o_result.has_value = true;
+		    NyARFixedFloat16Point3d angle=i_rot.refAngle();
+
+            o_result.angle.x = (double)angle.x / NyMath.FIXEDFLOAT16_1;
+            o_result.angle.y = (double)angle.y / NyMath.FIXEDFLOAT16_1;
+            o_result.angle.z = (double)angle.z / NyMath.FIXEDFLOAT16_1;
+		    o_result.has_value = true;
             return;
         }
     }
