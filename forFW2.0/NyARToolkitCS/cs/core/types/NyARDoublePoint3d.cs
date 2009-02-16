@@ -51,5 +51,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return ret;
         }
+	    public void copyFrom(NyARDoublePoint3d i_in)
+	    {
+		    this.x=i_in.x;
+		    this.y=i_in.y;
+		    this.z=i_in.z;
+		    return;
+	    }
     }
 }

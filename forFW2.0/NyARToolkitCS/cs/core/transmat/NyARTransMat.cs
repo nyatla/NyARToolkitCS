@@ -33,14 +33,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
 
 
-    /**
-     * This class calculates ARMatrix from square information and holds it. --
-     * 変換行列を計算して、結果を保持するクラス。
-     * 
-     */
     public class NyARTransMat : INyARTransMat
     {
-        private const double AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR = 1.0;
+        private static double AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR = 1.0;
 
         private NyARDoublePoint2d _center = new NyARDoublePoint2d(0, 0);
         private NyARTransOffset _offset = new NyARTransOffset();
@@ -63,8 +58,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARCameraDistortionFactor dist = i_param.getDistortionFactor();
             NyARPerspectiveProjectionMatrix pmat = i_param.getPerspectiveProjectionMatrix();
             this._calculator = new NyARFitVecCalculator(pmat, dist);
-            this._rotmatrix = new NyARRotMatrix_ARToolKit(pmat);
-            this._mat_optimize = new NyARRotTransOptimize(pmat);
+            //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
+            //理屈はNyARRotMatrix_NyARToolKitもNyARRotMatrix_ARToolKitも同じだけど、少しだけ値がずれる。
+            this._rotmatrix = new NyARRotMatrix_NyARToolKit(pmat);
+            //		this._rotmatrix = new NyARRotMatrix_ARToolKit(pmat);
+            this._mat_optimize = new NyARRotTransOptimize_O2(pmat);
         }
 
         public void setCenter(double i_x, double i_y)
@@ -139,7 +137,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
 
             // マトリクスの保存
-            updateMatrixValue(this._rotmatrix, this._offset.point, trans,o_result_conv);
+            this.updateMatrixValue(this._rotmatrix, this._offset.point, trans, o_result_conv);
             return;
         }
         /**
@@ -186,8 +184,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double err = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
 
             //計算結果を保存
-            updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
-            double err2;
+            this.updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
+
             // エラー値が許容範囲でなければTransMatをやり直し
             if (err > AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR)
             {
@@ -196,16 +194,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //回転行列の平行移動量の計算
                 this._calculator.calculateTransfer(this._rotmatrix, trans);
                 //計算結果の最適化(this._rotmatrix,trans)
-                err2 = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
+                double err2 = this._mat_optimize.optimize(this._rotmatrix, trans, this._calculator);
                 //エラー値が低かったら値を差換え
                 if (err2 < err)
                 {
                     // 良い値が取れたら、差換え
-                    updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
+                    this.updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
                 }
             }
             return;
         }
+        /**
+         * パラメータで変換行列を更新します。
+         * 
+         * @param i_rot
+         * @param i_off
+         * @param i_trans
+         */
         public void updateMatrixValue(NyARRotMatrix i_rot, NyARDoublePoint3d i_off, NyARDoublePoint3d i_trans, NyARTransMatResult o_result)
         {
             o_result.m00 = i_rot.m00;
@@ -223,6 +228,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_result.m22 = i_rot.m22;
             o_result.m23 = i_rot.m20 * i_off.x + i_rot.m21 * i_off.y + i_rot.m22 * i_off.z + i_trans.z;
 
+            o_result.angle.copyFrom(i_rot.refAngle());
             o_result.has_value = true;
             return;
         }

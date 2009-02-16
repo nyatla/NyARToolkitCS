@@ -96,6 +96,7 @@
     <Compile Include="cs\core\transmat\optimize\NyARRotTransOptimize.cs" />
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotMatrix.cs" />
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs" />
+    <Compile Include="cs\core\transmat\rotmatrix\NyARRotMatrix_NyARToolKit.cs" />
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotVector.cs" />
     <Compile Include="cs\core\types\matrix\INyARDoubleMatrix.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix22.cs" />

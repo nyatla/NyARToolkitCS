@@ -1,4 +1,35 @@
-﻿using System;
+﻿/* 
+ * PROJECT: NyARToolkitCS
+ * --------------------------------------------------------------------------------
+ * This work is based on the original ARToolKit developed by
+ *   Hirokazu Kato
+ *   Mark Billinghurst
+ *   HITLab, University of Washington, Seattle
+ * http://www.hitl.washington.edu/artoolkit/
+ *
+ * The NyARToolkit is Java version ARToolkit class library.
+ * Copyright (C)2008 R.Iizuka
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this framework; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * For further information please contact.
+ *	http://nyatla.jp/nyatoolkit/
+ *	<airmail(at)ebony.plala.or.jp>
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,16 +46,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this.__initRot_vec1 = new NyARRotVector(i_matrix);
             this.__initRot_vec2 = new NyARRotVector(i_matrix);
+            this._angle = new NyARDoublePoint3d();
             return;
         }
         private NyARRotVector __initRot_vec1;
         private NyARRotVector __initRot_vec2;
-
-
+        protected NyARDoublePoint3d _angle;
 
         public override void initRotByPrevResult(NyARTransMatResult i_prev_result)
         {
-
             this.m00 = i_prev_result.m00;
             this.m01 = i_prev_result.m01;
             this.m02 = i_prev_result.m02;
@@ -73,128 +103,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.m02 = w02 / w;
             this.m12 = w12 / w;
             this.m22 = w22 / w;
+            //Matrixからangleをロード
+            this.updateAngleFromMatrix();
             return;
         }
-
-
-
-        /**
-         * int arGetAngle( double rot[3][3], double *wa, double *wb, double *wc )
-         * Optimize:2008.04.20:STEP[481→433]
-         * 3x3変換行列から、回転角を復元して返します。
-         * @param o_angle
-         * @return
-         */
-        public override void getAngle(NyARDoublePoint3d o_angle)
-	{
-		double a,b,c;
-		double sina, cosa, sinb,cosb,sinc, cosc;
-		
-		if (this.m22 > 1.0) {// <Optimize/>if( rot[2][2] > 1.0 ) {
-			this.m22 = 1.0;// <Optimize/>rot[2][2] = 1.0;
-		} else if (this.m22 < -1.0) {// <Optimize/>}else if( rot[2][2] < -1.0 ) {
-			this.m22 = -1.0;// <Optimize/>rot[2][2] = -1.0;
-		}
-		cosb =this.m22;// <Optimize/>cosb = rot[2][2];
-		b = Math.Acos(cosb);
-		sinb =Math.Sin(b);
-		double rot02=this.m02;
-		double rot12=this.m12;
-		if (b >= 0.000001 || b <= -0.000001) {
-			cosa = rot02 / sinb;// <Optimize/>cosa = rot[0][2] / sinb;
-			sina = rot12 / sinb;// <Optimize/>sina = rot[1][2] / sinb;
-			if (cosa > 1.0) {
-				/* printf("cos(alph) = %f\n", cosa); */
-				cosa = 1.0;
-				sina = 0.0;
-			}
-			if (cosa < -1.0) {
-				/* printf("cos(alph) = %f\n", cosa); */
-				cosa = -1.0;
-				sina = 0.0;
-			}
-			if (sina > 1.0) {
-				/* printf("sin(alph) = %f\n", sina); */
-				sina = 1.0;
-				cosa = 0.0;
-			}
-			if (sina < -1.0) {
-				/* printf("sin(alph) = %f\n", sina); */
-				sina = -1.0;
-				cosa = 0.0;
-			}
-			a = Math.Acos(cosa);
-			if (sina < 0) {
-				a = -a;
-			}
-			// <Optimize>
-			// sinc = (rot[2][1]*rot[0][2]-rot[2][0]*rot[1][2])/(rot[0][2]*rot[0][2]+rot[1][2]*rot[1][2]);
-			// cosc = -(rot[0][2]*rot[2][0]+rot[1][2]*rot[2][1])/(rot[0][2]*rot[0][2]+rot[1][2]*rot[1][2]);
-			double tmp = (rot02 * rot02 + rot12 * rot12);
-			sinc = (this.m21 * rot02 - this.m20 * rot12) / tmp;
-			cosc = -(rot02 * this.m20 + rot12 * this.m21) / tmp;
-			// </Optimize>
-
-			if (cosc > 1.0) {
-				/* printf("cos(r) = %f\n", cosc); */
-				cosc = 1.0;
-				sinc = 0.0;
-			}
-			if (cosc < -1.0) {
-				/* printf("cos(r) = %f\n", cosc); */
-				cosc = -1.0;
-				sinc = 0.0;
-			}
-			if (sinc > 1.0) {
-				/* printf("sin(r) = %f\n", sinc); */
-				sinc = 1.0;
-				cosc = 0.0;
-			}
-			if (sinc < -1.0) {
-				/* printf("sin(r) = %f\n", sinc); */
-				sinc = -1.0;
-				cosc = 0.0;
-			}
-			c = Math.Acos(cosc);
-			if (sinc < 0) {
-				c = -c;
-			}
-		} else {
-			a = b = 0.0;
-			cosa = cosb = 1.0;
-			sina = sinb = 0.0;
-			cosc=this.m00;//cosc = rot[0];// <Optimize/>cosc = rot[0][0];
-			sinc=this.m01;//sinc = rot[1];// <Optimize/>sinc = rot[1][0];
-			if (cosc > 1.0) {
-				/* printf("cos(r) = %f\n", cosc); */
-				cosc = 1.0;
-				sinc = 0.0;
-			}
-			if (cosc < -1.0) {
-				/* printf("cos(r) = %f\n", cosc); */
-				cosc = -1.0;
-				sinc = 0.0;
-			}
-			if (sinc > 1.0) {
-				/* printf("sin(r) = %f\n", sinc); */
-				sinc = 1.0;
-				cosc = 0.0;
-			}
-			if (sinc < -1.0) {
-				/* printf("sin(r) = %f\n", sinc); */
-				sinc = -1.0;
-				cosc = 0.0;
-			}
-			c = Math.Acos(cosc);
-			if (sinc < 0) {
-				c = -c;
-			}
-		}
-		o_angle.x = a;// wa.value=a;//*wa = a;
-		o_angle.y = b;// wb.value=b;//*wb = b;
-		o_angle.z = c;// wc.value=c;//*wc = c;
-		return;
-	}
+        public override NyARDoublePoint3d refAngle()
+        {
+            return this._angle;
+        }
         /**
          * 回転角から回転行列を計算してセットします。
          * @param i_x
@@ -226,6 +142,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.m20 = -CASB * cosc - SASB * sinc;
             this.m21 = CASB * sinc - SASB * cosc;
             this.m22 = cosb;
+            updateAngleFromMatrix();
             return;
         }
         /**
@@ -262,6 +179,129 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 out_ptr.y = this.m10 * x + this.m11 * y + this.m12 * z;
                 out_ptr.z = this.m20 * x + this.m21 * y + this.m22 * z;
             }
+            return;
+        }
+        /**
+         * 現在のMatrixからangkeを復元する。
+         * @param o_angle
+         */
+        private void updateAngleFromMatrix()
+        {
+            double a, b, c;
+            double sina, cosa, sinb, cosb, sinc, cosc;
+
+            if (this.m22 > 1.0)
+            {// <Optimize/>if( rot[2][2] > 1.0 ) {
+                cosb = 1.0;// <Optimize/>rot[2][2] = 1.0;
+            }
+            else if (this.m22 < -1.0)
+            {// <Optimize/>}else if( rot[2][2] < -1.0 ) {
+                cosb = -1.0;// <Optimize/>rot[2][2] = -1.0;
+            }
+            else
+            {
+                cosb = this.m22;// <Optimize/>cosb = rot[2][2];
+            }
+            b = Math.Acos(cosb);
+            sinb = Math.Sin(b);
+            double rot02 = this.m02;
+            double rot12 = this.m12;
+            if (b >= 0.000001 || b <= -0.000001)
+            {
+                cosa = rot02 / sinb;// <Optimize/>cosa = rot[0][2] / sinb;
+                sina = rot12 / sinb;// <Optimize/>sina = rot[1][2] / sinb;
+                if (cosa > 1.0)
+                {
+                    cosa = 1.0;
+                    sina = 0.0;
+                }
+                if (cosa < -1.0)
+                {
+                    cosa = -1.0;
+                    sina = 0.0;
+                }
+                if (sina > 1.0)
+                {
+                    sina = 1.0;
+                    cosa = 0.0;
+                }
+                if (sina < -1.0)
+                {
+                    sina = -1.0;
+                    cosa = 0.0;
+                }
+                a = Math.Acos(cosa);
+                if (sina < 0)
+                {
+                    a = -a;
+                }
+                double tmp = (rot02 * rot02 + rot12 * rot12);
+                sinc = (this.m21 * rot02 - this.m20 * rot12) / tmp;
+                cosc = -(rot02 * this.m20 + rot12 * this.m21) / tmp;
+
+                if (cosc > 1.0)
+                {
+                    cosc = 1.0;
+                    sinc = 0.0;
+                }
+                if (cosc < -1.0)
+                {
+                    cosc = -1.0;
+                    sinc = 0.0;
+                }
+                if (sinc > 1.0)
+                {
+                    sinc = 1.0;
+                    cosc = 0.0;
+                }
+                if (sinc < -1.0)
+                {
+                    sinc = -1.0;
+                    cosc = 0.0;
+                }
+                c = Math.Acos(cosc);
+                if (sinc < 0)
+                {
+                    c = -c;
+                }
+            }
+            else
+            {
+                a = b = 0.0;
+                cosa = cosb = 1.0;
+                sina = sinb = 0.0;
+                cosc = this.m00;//cosc = rot[0];// <Optimize/>cosc = rot[0][0];
+                sinc = this.m01;//sinc = rot[1];// <Optimize/>sinc = rot[1][0];
+                if (cosc > 1.0)
+                {
+                    cosc = 1.0;
+                    sinc = 0.0;
+                }
+                if (cosc < -1.0)
+                {
+                    cosc = -1.0;
+                    sinc = 0.0;
+                }
+                if (sinc > 1.0)
+                {
+                    sinc = 1.0;
+                    cosc = 0.0;
+                }
+                if (sinc < -1.0)
+                {
+                    sinc = -1.0;
+                    cosc = 0.0;
+                }
+                c = Math.Acos(cosc);
+                if (sinc < 0)
+                {
+                    c = -c;
+                }
+            }
+            //angleの更新
+            this._angle.x = a;// wa.value=a;//*wa = a;
+            this._angle.y = b;// wb.value=b;//*wb = b;
+            this._angle.z = c;// wc.value=c;//*wc = c;
             return;
         }
     }

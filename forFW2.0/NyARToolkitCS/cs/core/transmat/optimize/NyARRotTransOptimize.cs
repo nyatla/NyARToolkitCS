@@ -30,6 +30,8 @@
  * 
  */
 using System;
+using jp.nyatla.nyartoolkit.cs.utils;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -37,12 +39,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * を繰り返して、変換行列を最適化する。
      *
      */
-    public class NyARRotTransOptimize : INyARRotTransOptimize
+    public class NyARRotTransOptimize_O2 : INyARRotTransOptimize
     {
-        private const int AR_GET_TRANS_MAT_MAX_LOOP_COUNT = 5;// #define AR_GET_TRANS_MAT_MAX_LOOP_COUNT 5
-        private const double AR_GET_TRANS_MAT_MAX_FIT_ERROR = 1.0;// #define AR_GET_TRANS_MAT_MAX_FIT_ERROR 1.0
+        private static int AR_GET_TRANS_MAT_MAX_LOOP_COUNT = 5;// #define AR_GET_TRANS_MAT_MAX_LOOP_COUNT 5
+        private static double AR_GET_TRANS_MAT_MAX_FIT_ERROR = 1.0;// #define AR_GET_TRANS_MAT_MAX_FIT_ERROR 1.0
         private NyARPerspectiveProjectionMatrix _projection_mat_ref;
-        public NyARRotTransOptimize(NyARPerspectiveProjectionMatrix i_projection_mat_ref)
+        public NyARRotTransOptimize_O2(NyARPerspectiveProjectionMatrix i_projection_mat_ref)
         {
             this._projection_mat_ref = i_projection_mat_ref;
             return;
@@ -71,21 +73,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return err;
         }
 
-        private double[][] __modifyMatrix_double1D = new double[8][]{
-            new double[3],
-            new double[3],
-            new double[3],
-            new double[3],
-            new double[3],
-            new double[3],
-            new double[3],
-            new double[3]
-        };
-        private NyARDoublePoint3d __modifyMatrix_angle = new NyARDoublePoint3d();
+        private double[][] __modifyMatrix_double1D = ArrayUtils.newDouble2dArray(8, 3);
         /**
          * arGetRot計算を階層化したModifyMatrix 896
          * 
-         * @param nyrot
          * @param trans
          * @param i_vertex3d
          * [m][3]
@@ -98,62 +89,42 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             double factor;
             double a2, b2, c2;
-            double ma = 0.0, mb = 0.0, mc = 0.0;
             double h, x, y;
             double err, minerr = 0;
             int t1, t2, t3;
-            int s1 = 0, s2 = 0, s3 = 0;
+            int best_idx = 0;
 
             factor = 10.0 * Math.PI / 180.0;
-            double rot0, rot1, rot3, rot4, rot6, rot7;
+            double rot0, rot1, rot2;
             double combo00, combo01, combo02, combo03, combo10, combo11, combo12, combo13, combo20, combo21, combo22, combo23;
             double combo02_2, combo02_5, combo02_8, combo02_11;
             double combo22_2, combo22_5, combo22_8, combo22_11;
             double combo12_2, combo12_5, combo12_8, combo12_11;
             // vertex展開
             double VX00, VX01, VX02, VX10, VX11, VX12, VX20, VX21, VX22, VX30, VX31, VX32;
-            NyARDoublePoint3d d_pt;
-            d_pt = i_vertex3d[0];
-            VX00 = d_pt.x;
-            VX01 = d_pt.y;
-            VX02 = d_pt.z;
-            d_pt = i_vertex3d[1];
-            VX10 = d_pt.x;
-            VX11 = d_pt.y;
-            VX12 = d_pt.z;
-            d_pt = i_vertex3d[2];
-            VX20 = d_pt.x;
-            VX21 = d_pt.y;
-            VX22 = d_pt.z;
-            d_pt = i_vertex3d[3];
-            VX30 = d_pt.x;
-            VX31 = d_pt.y;
-            VX32 = d_pt.z;
+            VX00 = i_vertex3d[0].x;
+            VX01 = i_vertex3d[0].y;
+            VX02 = i_vertex3d[0].z;
+            VX10 = i_vertex3d[1].x;
+            VX11 = i_vertex3d[1].y;
+            VX12 = i_vertex3d[1].z;
+            VX20 = i_vertex3d[2].x;
+            VX21 = i_vertex3d[2].y;
+            VX22 = i_vertex3d[2].z;
+            VX30 = i_vertex3d[3].x;
+            VX31 = i_vertex3d[3].y;
+            VX32 = i_vertex3d[3].z;
             double P2D00, P2D01, P2D10, P2D11, P2D20, P2D21, P2D30, P2D31;
-            NyARDoublePoint2d d_pt2;
-            d_pt2 = i_vertex2d[0];
-            P2D00 = d_pt2.x;
-            P2D01 = d_pt2.y;
-            d_pt2 = i_vertex2d[1];
-            P2D10 = d_pt2.x;
-            P2D11 = d_pt2.y;
-            d_pt2 = i_vertex2d[2];
-            P2D20 = d_pt2.x;
-            P2D21 = d_pt2.y;
-            d_pt2 = i_vertex2d[3];
-            P2D30 = d_pt2.x;
-            P2D31 = d_pt2.y;
+            P2D00 = i_vertex2d[0].x;
+            P2D01 = i_vertex2d[0].y;
+            P2D10 = i_vertex2d[1].x;
+            P2D11 = i_vertex2d[1].y;
+            P2D20 = i_vertex2d[2].x;
+            P2D21 = i_vertex2d[2].y;
+            P2D30 = i_vertex2d[3].x;
+            P2D31 = i_vertex2d[3].y;
             NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
-            double CP0, CP1, CP2, CP4, CP5, CP6, CP8, CP9, CP10;
-            CP0 = prjmat.m00;
-            CP1 = prjmat.m01;
-            CP2 = prjmat.m02;
-            CP4 = prjmat.m10;
-            CP5 = prjmat.m11;
-            CP6 = prjmat.m12;
-            CP8 = prjmat.m20;
-            CP9 = prjmat.m21;
-            CP10 = prjmat.m22;
+            double CP0 = prjmat.m00, CP1 = prjmat.m01, CP2 = prjmat.m02, CP4 = prjmat.m10, CP5 = prjmat.m11, CP6 = prjmat.m12, CP8 = prjmat.m20, CP9 = prjmat.m21, CP10 = prjmat.m22;
             combo03 = CP0 * trans.x + CP1 * trans.y + CP2 * trans.z + prjmat.m03;
             combo13 = CP4 * trans.x + CP5 * trans.y + CP6 * trans.z + prjmat.m13;
             combo23 = CP8 * trans.x + CP9 * trans.y + CP10 * trans.z + prjmat.m23;
@@ -161,8 +132,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double CACACB, SACACB, SASACB, CASB, SASB;
             double SACASC, SACACBSC, SACACBCC, SACACC;
             double[][] double1D = this.__modifyMatrix_double1D;
-
-            NyARDoublePoint3d angle = this.__modifyMatrix_angle;
 
             double[] a_factor = double1D[1];
             double[] sinb = double1D[2];
@@ -174,18 +143,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double w, w2;
             double wsin, wcos;
 
-            io_rot.getAngle(angle);// arGetAngle( rot, &a, &b, &c );
+            NyARDoublePoint3d angle = io_rot.refAngle();
             a2 = angle.x;
             b2 = angle.y;
             c2 = angle.z;
-            int i, j;
 
             // comboの3行目を先に計算
-            for (i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 minerr = 1000000000.0;
                 // sin-cosテーブルを計算(これが外に出せるとは…。)
-                for (j = 0; j < 3; j++)
+                for (int j = 0; j < 3; j++)
                 {
                     w2 = factor * (j - 1);
                     w = a2 + w2;
@@ -244,19 +212,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             SACACBCC = SACACB * wcos;
 
                             rot0 = CACACB * wcos + SASA * wcos + SACACBSC - SACASC;
-                            rot3 = SACACBCC - SACACC + SASACB * wsin + CACA * wsin;
-                            rot6 = -CASB * wcos - SASB * wsin;
+                            rot1 = SACACBCC - SACACC + SASACB * wsin + CACA * wsin;
+                            rot2 = -CASB * wcos - SASB * wsin;
+                            combo00 = CP0 * rot0 + CP1 * rot1 + CP2 * rot2;
+                            combo10 = CP4 * rot0 + CP5 * rot1 + CP6 * rot2;
+                            combo20 = CP8 * rot0 + CP9 * rot1 + CP10 * rot2;
 
-                            combo00 = CP0 * rot0 + CP1 * rot3 + CP2 * rot6;
-                            combo10 = CP4 * rot0 + CP5 * rot3 + CP6 * rot6;
-                            combo20 = CP8 * rot0 + CP9 * rot3 + CP10 * rot6;
-
-                            rot1 = -CACACB * wsin - SASA * wsin + SACACBCC - SACACC;
-                            rot4 = -SACACBSC + SACASC + SASACB * wcos + CACA * wcos;
-                            rot7 = CASB * wsin - SASB * wcos;
-                            combo01 = CP0 * rot1 + CP1 * rot4 + CP2 * rot7;
-                            combo11 = CP4 * rot1 + CP5 * rot4 + CP6 * rot7;
-                            combo21 = CP8 * rot1 + CP9 * rot4 + CP10 * rot7;
+                            rot0 = -CACACB * wsin - SASA * wsin + SACACBCC - SACACC;
+                            rot1 = -SACACBSC + SACASC + SASACB * wcos + CACA * wcos;
+                            rot2 = CASB * wsin - SASB * wcos;
+                            combo01 = CP0 * rot0 + CP1 * rot1 + CP2 * rot2;
+                            combo11 = CP4 * rot0 + CP5 * rot1 + CP6 * rot2;
+                            combo21 = CP8 * rot0 + CP9 * rot1 + CP10 * rot2;
                             //
                             err = 0.0;
                             h = combo20 * VX00 + combo21 * VX01 + combo22_2;
@@ -278,27 +245,24 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             if (err < minerr)
                             {
                                 minerr = err;
-                                ma = a_factor[t1];
-                                mb = b_factor[t2];
-                                mc = c_factor[t3];
-                                s1 = t1 - 1;
-                                s2 = t2 - 1;
-                                s3 = t3 - 1;
+                                a2 = a_factor[t1];
+                                b2 = b_factor[t2];
+                                c2 = c_factor[t3];
+                                best_idx = t1 + t2 * 3 + t3 * 9;
                             }
                         }
                     }
                 }
-                if (s1 == 0 && s2 == 0 && s3 == 0)
+                if (best_idx == (1 + 3 + 9))
                 {
                     factor *= 0.5;
                 }
-                a2 = ma;
-                b2 = mb;
-                c2 = mc;
             }
-            io_rot.setAngle(ma, mb, mc);
+            io_rot.setAngle(a2, b2, c2);
             /* printf("factor = %10.5f\n", factor*180.0/MD_PI); */
             return minerr / 4;
         }
+
+
     }
 }
