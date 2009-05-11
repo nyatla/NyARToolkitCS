@@ -165,6 +165,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 return;
             }
 
+            //計算用に頂点情報を初期化（順番調整）
+            initVertexOrder(i_square, i_direction, sqvertex_ref, linear_ref);
+
             //基準矩形を設定
             this._offset.setSquare(i_width, this._center);
 
