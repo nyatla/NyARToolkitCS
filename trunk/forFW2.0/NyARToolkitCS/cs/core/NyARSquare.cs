@@ -38,15 +38,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARSquare
     {
-        public NyARLinear[] line = new NyARLinear[4];
-        public NyARDoublePoint2d[] sqvertex = new NyARDoublePoint2d[4];
-        public NyARIntPoint[] imvertex = new NyARIntPoint[4];
+	    public const int DIRECTION_UNKNOWN=-1;
+	    public int direction;
+        public NyARLinear[] line = NyARLinear.createArray(4);
+        public NyARDoublePoint2d[] sqvertex = NyARDoublePoint2d.createArray(4);
+        public NyARIntPoint2d[] imvertex = NyARIntPoint2d.createArray(4);
         public NyARSquare()
         {
             for (int i = 0; i < 4; i++)
             {
-                this.sqvertex[i] = new NyARDoublePoint2d();
-                this.imvertex[i] = new NyARIntPoint();
                 this.line[i] = new NyARLinear();
             }
         }

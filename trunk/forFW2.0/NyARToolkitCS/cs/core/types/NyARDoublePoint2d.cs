@@ -29,9 +29,10 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     public class NyARDoublePoint2d
     {
         public double x;
@@ -54,11 +55,45 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this.x = 0;
             this.y = 0;
+            return;
         }
         public NyARDoublePoint2d(double i_x, double i_y)
         {
             this.x = i_x;
             this.y = i_y;
+            return;
+        }
+        public NyARDoublePoint2d(NyARDoublePoint2d i_src)
+        {
+            this.x = i_src.x;
+            this.y = i_src.y;
+            return;
+        }
+        public NyARDoublePoint2d(NyARIntPoint2d i_src)
+        {
+            this.x = (double)i_src.x;
+            this.y = (double)i_src.y;
+            return;
+        }
+        public void setValue(NyARDoublePoint2d i_src)
+        {
+            this.x = i_src.x;
+            this.y = i_src.y;
+            return;
+        }
+        public void setValue(NyARIntPoint2d i_src)
+        {
+            this.x = (double)i_src.x;
+            this.y = (double)i_src.y;
+            return;
+        }
+        /**
+         * 格納値をベクトルとして、距離を返します。
+         * @return
+         */
+        public double dist()
+        {
+            return Math.Sqrt(this.x * this.x + this.y + this.y);
         }
     }
 }

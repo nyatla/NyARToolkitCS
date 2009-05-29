@@ -129,7 +129,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
     }
 
 
-    public partial class SimpleLiteD3d : IDisposable,INySampleCB
+    public partial class SimpleLiteD3d : IDisposable, IWmCaptureListener
     {
         private D3dManager _d3dmgr;
         private D3dCube _d3dcube;
@@ -171,14 +171,14 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         /* 非同期イベントハンドラ
          * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
          */
-        public int OnSample(INySample i_sample)
+        public void onSample(WmCapture i_sender, INySample i_sample)
         {
             lock (this)
             {
                 IntPtr data=i_sample.GetData();
-                this.m_raster.setBuffer(data);
+                this.m_raster.setBuffer(data, i_sender.vertical_flip);
                 //テクスチャ内容を更新
-                this._back_ground.setSample(i_sample);
+                this._back_ground.CopyFromRaster(this.m_raster);
                 //マーカーは見つかったかな？
                 is_marker_enable = this.m_ar.detectMarkerLite(this.m_raster, 110);
                 if (is_marker_enable)
@@ -189,7 +189,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 }
             }
             Thread.Sleep(0);
-            return 0;
+            return;
         }
         /* キャプチャを開始する関数
          */
@@ -242,6 +242,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 // 3Dオブジェクトの描画はここから
                 this._d3dmgr.d3d_device.BeginScene();
                 this._back_ground.drawBackGround();
+                this._d3dmgr.d3d_device.RenderState.CullMode = Cull.Clockwise;
 
 
                 //マーカーが見つかっていて、0.3より一致してたら描画する。
@@ -249,7 +250,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 {
 
                     //立方体を20mm上（マーカーの上）にずらしておく
-                    Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
+                   Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
 
                     //変換行列を掛ける
                     transform_mat2 *= trans_matrix;

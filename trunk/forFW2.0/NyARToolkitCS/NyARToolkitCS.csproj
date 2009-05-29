@@ -8,7 +8,7 @@
     <ProjectGuid>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jp.nyatla.nyartoolkit.cs</RootNamespace>
+    <RootNamespace>jp.nyatla.nyartoolkit</RootNamespace>
     <AssemblyName>NyARToolkitCS</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -38,6 +38,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\core2\rasteranalyzer\threshold\INyARRasterThresholdAnalyzer.cs" />
+    <Compile Include="cs\core2\rasteranalyzer\threshold\NyARRasterThresholdAnalyzer_SlidePTile.cs" />
     <Compile Include="cs\core2\types\matrix\NyARFixedFloat16Matrix33.cs" />
     <Compile Include="cs\core2\types\matrix\NyARFixedFloat24Matrix33.cs" />
     <Compile Include="cs\core2\types\matrix\NyARI64Matrix22.cs" />
@@ -55,6 +57,10 @@
     <Compile Include="cs\core\labeling\NyARLabelingLabelStack.cs" />
     <Compile Include="cs\core\labeling\NyARLabeling_ARToolKit.cs" />
     <Compile Include="cs\core\match\INyARMatchPatt.cs" />
+    <Compile Include="cs\core\match\NyARMatchPattDeviationBlackWhiteData.cs" />
+    <Compile Include="cs\core\match\NyARMatchPattDeviationColorData.cs" />
+    <Compile Include="cs\core\match\NyARMatchPattResult.cs" />
+    <Compile Include="cs\core\match\NyARMatchPatt_BlackWhite.cs" />
     <Compile Include="cs\core\match\NyARMatchPatt_Color_WITHOUT_PCA.cs" />
     <Compile Include="cs\core\NyARCode.cs" />
     <Compile Include="cs\core\NyARSquareDetector.cs" />
@@ -69,6 +75,8 @@
     <Compile Include="cs\core\pca2d\NyARPca2d_MatrixPCA.cs" />
     <Compile Include="cs\core\pickup\INyARColorPatt.cs" />
     <Compile Include="cs\core\pickup\NyARColorPatt_O3.cs" />
+    <Compile Include="cs\core\pickup\NyARColorPatt_Perspective.cs" />
+    <Compile Include="cs\core\pickup\NyARColorPatt_PseudoAffine.cs" />
     <Compile Include="cs\core\rasterfilter\INyARRasterFilter.cs" />
     <Compile Include="cs\core\rasterfilter\INyARRasterFilter_GsToBin.cs" />
     <Compile Include="cs\core\rasterfilter\INyARRasterFilter_RgbToGs.cs" />
@@ -77,10 +85,13 @@
     <Compile Include="cs\core\rasterreader\INyARBufferReader.cs" />
     <Compile Include="cs\core\rasterreader\INyARRgbPixelReader.cs" />
     <Compile Include="cs\core\rasterreader\NyARBufferReader.cs" />
+    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_INT1D_GLAY_8.cs" />
+    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs" />
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_RGB24.cs" />
     <Compile Include="cs\core\raster\INyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARBinRaster.cs" />
     <Compile Include="cs\core\raster\NyARGrayscaleRaster.cs" />
+    <Compile Include="cs\core\raster\NyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARRaster_BasicClass.cs" />
     <Compile Include="cs\core\raster\rgb\INyARRgbRaster.cs" />
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_BasicClass.cs" />
@@ -102,14 +113,21 @@
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix22.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix33.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix34.cs" />
+    <Compile Include="cs\core\types\matrix\NyARDoubleMatrix44.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint2d.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint3d.cs" />
     <Compile Include="cs\core\types\NyARIntPoint.cs" />
+    <Compile Include="cs\core\types\NyARIntPoint2d.cs" />
     <Compile Include="cs\core\types\NyARIntRect.cs" />
     <Compile Include="cs\core\types\NyARIntSize.cs" />
     <Compile Include="cs\core\types\NyARLinear.cs" />
     <Compile Include="cs\core\types\stack\NyARIntPointStack.cs" />
     <Compile Include="cs\core\types\stack\NyARIntRectStack.cs" />
+    <Compile Include="cs\core\utils\NyARDoubleMatrixProcessor.cs" />
+    <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator.cs" />
+    <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator_O1.cs" />
+    <Compile Include="cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs" />
+    <Compile Include="cs\detector\NyARCustomSingleDetectMarker.cs" />
     <Compile Include="cs\NyARException.cs" />
     <Compile Include="cs\core\NyARMat.cs" />
     <Compile Include="cs\core\NyARSquare.cs" />
@@ -118,6 +136,15 @@
     <Compile Include="cs\detector\NyARDetectMarker.cs" />
     <Compile Include="cs\detector\NyARSingleDetectMarker.cs" />
     <Compile Include="cs\core\NyARVertexCounter.cs" />
+    <Compile Include="cs\nyidmarker\data\INyIdMarkerData.cs" />
+    <Compile Include="cs\nyidmarker\data\INyIdMarkerDataEncoder.cs" />
+    <Compile Include="cs\nyidmarker\data\NyIdMarkerDataEncoder_RawBit.cs" />
+    <Compile Include="cs\nyidmarker\data\NyIdMarkerData_RawBit.cs" />
+    <Compile Include="cs\nyidmarker\NyIdMarkerParam.cs" />
+    <Compile Include="cs\nyidmarker\NyIdMarkerPattern.cs" />
+    <Compile Include="cs\nyidmarker\NyIdMarkerPickup.cs" />
+    <Compile Include="cs\processor\SingleARMarkerProcesser.cs" />
+    <Compile Include="cs\processor\SingleNyIdMarkerProcesser.cs" />
     <Compile Include="cs\utils.cs\ArrayUtils.cs" />
     <Compile Include="cs\utils\IntValue.cs" />
     <Compile Include="cs\utils\NyObjectStack.cs" />

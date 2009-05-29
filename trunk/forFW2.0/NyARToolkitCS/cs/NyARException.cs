@@ -34,19 +34,34 @@ using System.Collections.Generic;
 
 namespace jp.nyatla.nyartoolkit.cs
 {
-    public class NyARException : Exception {
-	    public NyARException():base()
+    public class NyARException : Exception
+    {
+        public NyARException()
+            : base()
         {
-	    }
-        public NyARException(Exception e):base("",e)
+            return;
+        }
+
+        public NyARException(Exception e)
+            : base("NyARException", e)
         {
-	    }
-	    public NyARException(String m):base(m)
+            return;
+        }
+
+        public NyARException(String m)
+            : base(m)
         {
-	    }
-	    public static void trap(String m)
-	    {
-	        throw new NyARException("トラップ:"+m);
-	    }
+            return;
+        }
+
+        public static void trap(String m)
+        {
+            throw new NyARException("トラップ:" + m);
+        }
+
+        public static void notImplement()
+        {
+            throw new NyARException("Not Implement!");
+        }
     }
 }

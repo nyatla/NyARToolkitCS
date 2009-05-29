@@ -411,7 +411,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
 
             NyARDoublePoint2d[] l_sqvertex = o_square.sqvertex;
-            NyARIntPoint[] l_imvertex = o_square.imvertex;
+            NyARIntPoint2d[] l_imvertex = o_square.imvertex;
             for (int i = 0; i < 4; i++)
             {
                 NyARLinear l_line_i = l_line[i];

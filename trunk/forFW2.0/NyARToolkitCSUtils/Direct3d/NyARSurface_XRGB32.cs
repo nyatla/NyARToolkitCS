@@ -39,7 +39,7 @@ namespace NyARToolkitCSUtils.Direct3d
     /* DsXRGB32Rasterのラスタデータを取り込むことが出来るSurfaceです。
      * このSurfaceはそのままARToolKitの背景描画に使います。
      */
-    public class NyARSurface_XRGB32
+    public class NyARSurface_XRGB32:IDisposable
     {
         private int m_width;
         private int m_height;
@@ -73,6 +73,7 @@ namespace NyARToolkitCSUtils.Direct3d
         {
             Debug.Assert(i_sample.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32));
             GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None);
+            /*
             int cp_size = this.m_width * 4;
             int s_idx=0;
             int d_idx = (this.m_height - 1) * cp_size;
@@ -82,10 +83,16 @@ namespace NyARToolkitCSUtils.Direct3d
                 s_idx += cp_size;
                 d_idx -= cp_size;
             }
+            */
+            Marshal.Copy((byte[])i_sample.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
+
             this.m_surface.UnlockRectangle();
 
             return;
         }
-
+        public void Dispose()
+        {
+            this.d3d_surface.Dispose();
+        }
     }
 }

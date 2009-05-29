@@ -31,7 +31,6 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     /**
      * byte[]配列に、パディング無しの8bit画素値が、RGBRGBの順で並んでいる
      * バッファに使用できるピクセルリーダー
@@ -53,24 +52,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             byte[] ref_buf = this._ref_buf;
             int bp = (i_x + i_y * this._size.w) * 3;
-            o_rgb[0] = ref_buf[bp + 0];// R
-            o_rgb[1] = ref_buf[bp + 1];// G
-            o_rgb[2] = ref_buf[bp + 2];// B
+            o_rgb[0] = (ref_buf[bp + 0] & 0xff);// R
+            o_rgb[1] = (ref_buf[bp + 1] & 0xff);// G
+            o_rgb[2] = (ref_buf[bp + 2] & 0xff);// B
             return;
         }
 
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
+            int bp;
             int width = this._size.w;
             byte[] ref_buf = this._ref_buf;
-            int bp;
             for (int i = i_num - 1; i >= 0; i--)
             {
                 bp = (i_x[i] + i_y[i] * width) * 3;
-                o_rgb[i * 3 + 0] = ref_buf[bp + 0];// R
-                o_rgb[i * 3 + 1] = ref_buf[bp + 1];// G
-                o_rgb[i * 3 + 2] = ref_buf[bp + 2];// B
+                o_rgb[i * 3 + 0] = (ref_buf[bp + 0] & 0xff);// R
+                o_rgb[i * 3 + 1] = (ref_buf[bp + 1] & 0xff);// G
+                o_rgb[i * 3 + 2] = (ref_buf[bp + 2] & 0xff);// B
             }
+            return;
         }
     }
 }

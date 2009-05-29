@@ -101,14 +101,12 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 new_w = i_client_size.Width;
                 new_h = (int)(cap_size.h * scale);
             }
-
             //ビューポート作成
             Viewport vp = new Viewport();
-            vp.Height = new_h;
-            vp.Width = new_w;
             vp.X = (i_client_size.Width - new_w) / 2;
             vp.Y = (i_client_size.Height - new_h) / 2;
-
+            vp.Height = new_h;
+            vp.Width = new_w;
             //ビューポート設定
             this._d3d_device.Viewport = vp;
 

@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="RawTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NyIdTest.cs" />
+    <Compile Include="Main.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NyARToolkitCS.sandbox\NyARToolkitCS.sandbox.csproj">

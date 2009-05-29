@@ -93,9 +93,26 @@ namespace NyARToolkitCSUtils.NyAR
         {
             return this._buffer_reader;
         }
-        public void setBuffer(IntPtr i_buf)
+        public void setBuffer(IntPtr i_buf,bool i_flip_vertical)
         {
-            Marshal.Copy(i_buf, this._ref_buf, 0, this._ref_buf.Length);
+            if (i_flip_vertical)
+            {
+                //上下反転させる
+                int w = this._size.w*4;
+                int st = w * (this._size.h - 1);
+                int et = 0;
+                for (int i = this._size.h - 1; i >= 0; i--)
+                {
+                    Marshal.Copy((IntPtr)((int)i_buf + et), this._ref_buf, st, w);
+                    st -= w;
+                    et += w;
+                }
+            }
+            else
+            {
+                //上下を反転させない。
+                Marshal.Copy(i_buf, this._ref_buf, 0, this._ref_buf.Length);
+            }
             return;
         }
     }

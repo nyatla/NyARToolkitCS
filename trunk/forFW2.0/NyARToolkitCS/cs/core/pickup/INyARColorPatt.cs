@@ -31,33 +31,10 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-    public interface INyARColorPatt
+    public interface INyARColorPatt : INyARRgbRaster
     {
         /**
-         * カラーパターンの幅をピクセル値で返します。
-         * 
-         * @return
-         */
-        int getWidth();
-
-        /**
-         * カラーパターンの高さをピクセル値で返します。
-         * 
-         * @return
-         */
-        int getHeight();
-        /**
-         * カメラパターンを格納した配列への参照値を返します。 配列は最低でも[height][wight][3]のサイズを持ちますが、
-         * 配列のlengthとwidth,heightの数は一致しないことがあります。
-         * setSize関数を実行すると、以前に呼び出されたgetPatArrayが返した値は不定になります。
-         * 
-         * @return
-         */
-        int[,,] getPatArray();
-
-        /**
-         * ラスタイメージからi_square部分のカラーパターンを抽出して、保持します。
+         * ラスタイメージからi_square部分のカラーパターンを抽出して、thisメンバに格納します。
          * 
          * @param image
          * @param i_square

@@ -55,7 +55,7 @@ namespace NyARToolkitCSUtils.NyAR
         {
             view_distance_max = i_new_value;
         }
-        /* カメラのプロジェクションMatrixを返します。
+        /* カメラのプロジェクションMatrix(RH)を返します。
          * このMatrixはMicrosoft.DirectX.Direct3d.Device.Transform.Projectionに設定できます。
          */
         public void toCameraFrustumRH(NyARParam i_arparam, ref Matrix o_d3d_projection)
@@ -116,8 +116,8 @@ namespace NyARToolkitCSUtils.NyAR
             o_d3d_projection.M24 = (float)(q[3, 1] * trans[0][1] + q[3, 1] * trans[1][1] + q[3, 2] * trans[2][1]);
             o_d3d_projection.M31 = (float)(q[0, 2] * trans[0][2] + q[0, 1] * trans[1][2] + q[0, 2] * trans[2][2]);
             o_d3d_projection.M32 = (float)(q[1, 2] * trans[0][2] + q[1, 1] * trans[1][2] + q[1, 2] * trans[2][2]);
-            o_d3d_projection.M33 = -(float)(q[2, 2] * trans[0][2] + q[2, 1] * trans[1][2] + q[2, 2] * trans[2][2]);
-            o_d3d_projection.M34 = -(float)(q[3, 2] * trans[0][2] + q[3, 1] * trans[1][2] + q[3, 2] * trans[2][2]);
+            o_d3d_projection.M33 = (float)(q[2, 2] * trans[0][2] + q[2, 1] * trans[1][2] + q[2, 2] * trans[2][2]);
+            o_d3d_projection.M34 = (float)(q[3, 2] * trans[0][2] + q[3, 1] * trans[1][2] + q[3, 2] * trans[2][2]);
             o_d3d_projection.M41 = (float)(q[0, 3] * trans[0][3] + q[0, 1] * trans[1][3] + q[0, 2] * trans[2][3] + q[0, 3]);
             o_d3d_projection.M42 = (float)(q[1, 3] * trans[0][3] + q[1, 1] * trans[1][3] + q[1, 2] * trans[2][3] + q[1, 3]);
             o_d3d_projection.M43 = (float)(q[2, 3] * trans[0][3] + q[2, 1] * trans[1][3] + q[2, 2] * trans[2][3] + q[2, 3]);
@@ -126,23 +126,24 @@ namespace NyARToolkitCSUtils.NyAR
         }
         public void toD3dMatrix(NyARTransMatResult i_ny_result,ref Matrix o_result)
         {
-            //ARのMatrixをDirectXのMatrixに変換
-            o_result.M11 = (float)i_ny_result.m00;
-            o_result.M12 = (float)i_ny_result.m10;
-            o_result.M13 = (float)i_ny_result.m20;
-            o_result.M14 = 0;
-            o_result.M21 = (float)i_ny_result.m01;
-            o_result.M22 = (float)i_ny_result.m11;
-            o_result.M23 = (float)i_ny_result.m21;
-            o_result.M24 = 0;
-            o_result.M31 = (float)i_ny_result.m02;
-            o_result.M32 = (float)i_ny_result.m12;
-            o_result.M33 = (float)i_ny_result.m22;
-            o_result.M34 = 0;
-            o_result.M41 = (float)i_ny_result.m03;
-            o_result.M42 = (float)i_ny_result.m13;
-            o_result.M43 = (float)i_ny_result.m23;
-            o_result.M44 = 1;
+            Matrix m;
+            m.M11 = (float)i_ny_result.m00;
+            m.M12 = -(float)i_ny_result.m10;
+            m.M13 = -(float)i_ny_result.m20;
+            m.M14 = 0;
+            m.M21 = (float)i_ny_result.m01;
+            m.M22 = -(float)i_ny_result.m11;
+            m.M23 = -(float)i_ny_result.m21;
+            m.M24 = 0;
+            m.M31 = (float)i_ny_result.m02;
+            m.M32 = -(float)i_ny_result.m12;
+            m.M33 = -(float)i_ny_result.m22;
+            m.M34 = 0;
+            m.M41 = (float)i_ny_result.m03;
+            m.M42 = -(float)i_ny_result.m13;
+            m.M43 = -(float)i_ny_result.m23;
+            m.M44 = 1;
+            o_result = m;
             return;
         }
     }

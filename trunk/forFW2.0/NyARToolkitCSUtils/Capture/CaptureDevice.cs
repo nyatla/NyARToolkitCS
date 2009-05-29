@@ -76,6 +76,12 @@ namespace NyARToolkitCSUtils.Capture
             get { return m_video_info.BmiHeader.BitCount; } 
         }
 
+        public bool video_vertical_flip
+        {
+            //VideoFormatから取るようにしないと…。
+            get { return true;}
+        }
+
         /**
          * キャプチャデバイスのパスを返す。
          */
