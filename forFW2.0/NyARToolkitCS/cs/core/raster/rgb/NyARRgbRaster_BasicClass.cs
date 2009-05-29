@@ -37,13 +37,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * 
      * 
      */
-    public abstract class NyARRgbRaster_BasicClass : NyARRaster_BasicClass,INyARRgbRaster
+    public abstract class NyARRgbRaster_BasicClass : INyARRgbRaster
     {
-        protected NyARRgbRaster_BasicClass(NyARIntSize i_size)
-            : base(i_size)
+        protected NyARIntSize _size;
+        public int getWidth()
         {
+            return this._size.w;
         }
- 
+
+        public int getHeight()
+        {
+            return this._size.h;
+        }
+
+        public NyARIntSize getSize()
+        {
+            return this._size;
+        }
+        protected NyARRgbRaster_BasicClass(NyARIntSize i_size)
+        {
+            this._size = i_size;
+        }
         public abstract INyARRgbPixelReader getRgbPixelReader();
+        public abstract INyARBufferReader getBufferReader();
     }
 }

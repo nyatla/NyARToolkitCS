@@ -27,18 +27,21 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
 using Microsoft.WindowsMobile.DirectX;
 using NyARToolkitCSUtils.Direct3d;
 using jp.nyatla.cs.NyWMCapture;
-
+using jp.nyatla.nyartoolkit.cs.core;
+using NyARToolkitCSUtils.NyAR;
+using System.Runtime.InteropServices;
 
 namespace SimpleLiteDirect3d.WindowsMobile5
 {
     public interface ID3dBackground : IDisposable
     {
         void drawBackGround();
-        void setSample(INySample i_sample);
+        void CopyFromRaster(DsRGB565Raster i_raster);
     }
     public class D3dSurfaceBackground : ID3dBackground
     {
@@ -47,16 +50,13 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private D3dManager _d3dm;
         private Surface _surface;
         private Rectangle _src_rect;
-        private bool _vertical_order;
-
-        public D3dSurfaceBackground(D3dManager i_mgr, bool i_vertical_order)
+        public D3dSurfaceBackground(D3dManager i_mgr)
         {
             this._d3dm = i_mgr;
             this._height = i_mgr.background_size.Height;
             this._width = i_mgr.background_size.Width;
             this._surface = i_mgr.d3d_device.CreateImageSurface(this._width, this._height, Format.R5G6B5);
             this._src_rect = new Rectangle(0, 0, this._width, this._height);
-            this._vertical_order = i_vertical_order;
             return;
         }
         public void drawBackGround()
@@ -66,25 +66,26 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this._d3dm.d3d_device.StretchRectangle(this._surface, this._src_rect, dest_surface, this._d3dm.view_rect, TextureFilter.None);
             return;
         }
-        public void setSample(INySample i_sample)
+        public void CopyFromRaster(DsRGB565Raster i_raster)
         {
+            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
             int pitch;
             GraphicsStream gs = this._surface.LockRectangle(this._src_rect, LockFlags.None, out pitch);
-            if (this._vertical_order)
-            {
-                int st = this._width * 2;
-                int s_idx = 0;
-                int d_idx = (this._height - 1) * pitch;
-                for (int i = this._height - 1; i >= 0; i--)
-                {
-                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
-                    s_idx += st;
-                    d_idx -= pitch;
-                }
-            }else{
-                i_sample.CopyToBuffer(gs.InternalData, 0, this._width * this._height * 2);
+            /*
+            int cp_size = this.m_width * 4;
+            int s_idx=0;
+            int d_idx = (this.m_height - 1) * cp_size;
+            for(int i=this.m_height-1;i>=0;i--){
+                //どう考えてもポインタです。
+                Marshal.Copy((byte[])i_sample.getBufferReader().getBuffer(),s_idx,(IntPtr)((int)gs.InternalData+d_idx),cp_size);
+                s_idx += cp_size;
+                d_idx -= cp_size;
             }
+            */
+            Marshal.Copy((short[])i_raster.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width  * this._height);
+
             this._surface.UnlockRectangle();
+
             return;
         }
         public void Dispose()
@@ -109,7 +110,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private Sprite _sprite;
         private Vector3 _pos_vec;
         private Matrix _scaling;
-        public D3dTextureBackground(D3dManager i_mgr,int i_mode)
+        public D3dTextureBackground(D3dManager i_mgr)
         {
             this._d3dm = i_mgr;
             float scale = this._d3dm.scale;
@@ -135,18 +136,22 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this._sprite.End();
             return;
         }
-        public void setSample(INySample i_sample)
+        public void CopyFromRaster(DsRGB565Raster i_raster)
         {
+            //BUFFERFORMAT_WORD1D_R5G6B5_16LEしか受けられません。
+            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
             int pi;
+            int w = this._width;
             GraphicsStream gs = this._texture.LockRectangle(0, LockFlags.None, out pi);
-            int st = this._width * 2;
+            short[] buf = (short[])i_raster.getBufferReader().getBuffer();
+            int st = this._width;
             int s_idx = 0;
-            int d_idx = (this._height - 1) * pi;
+            int d_idx = 0;
             for (int i = this._height - 1; i >= 0; i--)
             {
-                i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
+                Marshal.Copy(buf, s_idx, (IntPtr)((int)gs.InternalData + d_idx),w);
                 s_idx += st;
-                d_idx -= pi;
+                d_idx += pi;
             }
             this._texture.UnlockRectangle(0);
             return;

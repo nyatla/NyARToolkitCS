@@ -57,7 +57,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 input_array[i][1] = i_y[i];
             }
             // 主成分分析
-            input.matrixPCA(this.__pca_evec, this.__pca_ev, this.__pca_mean);
+            input.pca(this.__pca_evec, this.__pca_ev, this.__pca_mean);
             double[] mean_array = this.__pca_mean.getArray();
             double[][] evec_array = this.__pca_evec.getArray();
             double[] ev_array = this.__pca_ev.getArray();

@@ -31,12 +31,19 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARIntPoint
+    /**
+     * @deprecated このクラスは名称変更のため、削除されます。
+     * @see NyARIntPoint2d
+     */
+    [System.Obsolete("This class will be deleted. See NyARIntPoint2d.--このクラスは名称変更のため、削除されます。NyARIntPoint2dを使って下さい。")]
+    public class NyARIntPoint : NyARIntPoint2d
     {
-        public int x;
-
-        public int y;
-        public static NyARIntPoint[] createArray(int i_number)
+        /**
+         * 配列ファクトリ
+         * @param i_number
+         * @return
+         */
+        public new static NyARIntPoint[] createArray(int i_number)
         {
             NyARIntPoint[] ret = new NyARIntPoint[i_number];
             for (int i = 0; i < i_number; i++)

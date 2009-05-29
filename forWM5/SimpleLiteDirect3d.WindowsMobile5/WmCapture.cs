@@ -6,12 +6,18 @@ using jp.nyatla.cs.NyWMCapture;
 
 namespace SimpleLiteDirect3d.WindowsMobile5
 {
+    public interface IWmCaptureListener
+    {
+        void onSample(WmCapture i_sender, INySample i_sample);
+    }
     public class WmCapture : IDisposable,INySampleCB
     {
         private INyWMCapture _capture;
-        private INySampleCB _on_sample_event=null;
+        private IWmCaptureListener _on_sample_event = null;
         private bool _is_start = false;
-        public WmCapture(Size i_cap_size)
+        private bool _vertical_flip;
+        public bool vertical_flip { get { return this._vertical_flip; } } 
+        public WmCapture(Size i_cap_size,bool i_vertical_flip_property)
         {
             //キャプチャ作る。
             NyWMCapture cap = new NyWMCapture();
@@ -33,6 +39,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 throw new Exception("cap_if.Initialize");
             }
             this._capture = cap_if;
+            this._vertical_flip = i_vertical_flip_property;
             return;
         }
         public void start()
@@ -49,7 +56,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this._is_start = false;
             return;
         }
-        public void setOnSample(INySampleCB i_handler)
+        public void setOnSample(IWmCaptureListener i_handler)
         {
             this._on_sample_event=i_handler;
             return;
@@ -58,7 +65,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         {
             if (this._on_sample_event != null)
             {
-                return this._on_sample_event.OnSample(i_sample);
+                this._on_sample_event.onSample(this,i_sample);
             }
             return 0;
         }

@@ -65,12 +65,12 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         }
         public WmCapture createWmCapture()
         {
-            WmCapture result = new WmCapture(this._cap_size);
+            WmCapture result = new WmCapture(this._cap_size,this._cvertical);
             return result;
         }
         public DsRGB565Raster createARRaster()
         {
-            return new DsRGB565Raster(this._cap_size.Width, this._cap_size.Height,this._cvertical);
+            return new DsRGB565Raster(this._cap_size.Width, this._cap_size.Height);
         }
         public D3dManager createD3dManager(Form i_form)
         {
@@ -86,9 +86,9 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         {
             switch(this._background_type){
                 case BGMODE_SURFACE:
-                    return new D3dSurfaceBackground(i_d3dmgr,this._cvertical);
+                    return new D3dSurfaceBackground(i_d3dmgr);
                 case BGMODE_TEXTURE:
-                    return new D3dTextureBackground(i_d3dmgr, -1);
+                    return new D3dTextureBackground(i_d3dmgr);
                 default:
                     throw new Exception("unknown this._background_type");
             }

@@ -63,21 +63,35 @@ namespace SimpleLiteDirect3d
         private VertexBuffer _vertexBuffer = null;
         private IndexBuffer _indexBuffer = null;
         private static Int16[] _vertexIndices = new Int16[] { 2, 0, 1, 1, 3, 2, 4, 0, 2, 2, 6, 4, 5, 1, 0, 0, 4, 5, 7, 3, 1, 1, 5, 7, 6, 2, 3, 3, 7, 6, 4, 6, 7, 7, 5, 4 };
+
+        private NyARTransMatResult __OnBuffer_nyar_transmat = new NyARTransMatResult();
+        private bool _is_marker_enable;
+        private Matrix _trans_mat;
         /* 非同期イベントハンドラ
-         * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
-         */
+          * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
+          */
         public void OnBuffer(CaptureDevice i_sender, double i_sample_time, IntPtr i_buffer, int i_buffer_len)
         {
             int w = i_sender.video_width;
             int h = i_sender.video_height;
             int s = w * (i_sender.video_bit_count / 8);
+            NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
             
             //テクスチャにRGBを取り込み()
             lock (this)
             {
                 //カメラ映像をARのバッファにコピー
-                this._raster.setBuffer(i_buffer);
-
+                this._raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
+                
+                //マーカーは見つかったかな？
+                bool is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
+                if (is_marker_enable)
+                {
+                    //あればMatrixを計算
+                    this._ar.getTransmationMatrix(nyar_transmat);
+                    this._utils.toD3dMatrix(nyar_transmat, ref this._trans_mat);
+                }
+                this._is_marker_enable=is_marker_enable;
                 //テクスチャ内容を更新
                 this._surface.CopyFromXRGB32(this._raster);
             }
@@ -88,12 +102,14 @@ namespace SimpleLiteDirect3d
         public void StartCap()
         {
             this._cap.StartCapture();
+            return;
         }
         /* キャプチャを停止する関数
          */
         public void StopCap()
         {
             this._cap.StopCapture();
+            return;
         }
 
 
@@ -102,13 +118,12 @@ namespace SimpleLiteDirect3d
         private Device PrepareD3dDevice(Control i_window)
         {
             PresentParameters pp = new PresentParameters();
-
-            // ウインドウモードなら true、フルスクリーンモードなら false を指定
             pp.Windowed = true;
-            // スワップとりあえずDiscardを指定。
             pp.SwapEffect = SwapEffect.Flip;
             pp.BackBufferFormat = Format.X8R8G8B8;
             pp.BackBufferCount = 1;
+            pp.EnableAutoDepthStencil = true;
+            pp.AutoDepthStencilFormat = DepthFormat.D16;
             CreateFlags fl_base = CreateFlags.FpuPreserve;
 
             try{
@@ -128,8 +143,10 @@ namespace SimpleLiteDirect3d
                 }
             }
         }
+
         public bool InitializeApplication(Form1 topLevelForm,CaptureDevice i_cap_device)
         {
+            topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);
             //キャプチャを作る(QVGAでフレームレートは30)
             i_cap_device.SetCaptureListener(this);
             i_cap_device.PrepareCapture(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
@@ -156,10 +173,13 @@ namespace SimpleLiteDirect3d
             this._utils = new NyARD3dUtil();
 
             //計算モードの設定
-            this._ar.setContinueMode(false);
+            this._ar.setContinueMode(true);
 
             //3dデバイスを準備する
             this._device = PrepareD3dDevice(topLevelForm);
+            this._device.RenderState.ZBufferEnable = true;
+            this._device.RenderState.Lighting = false;
+
 
             //カメラProjectionの設定
             Matrix tmp = new Matrix();
@@ -170,10 +190,19 @@ namespace SimpleLiteDirect3d
             // 0,0,0から、Z+方向を向いて、上方向がY軸
             this._device.Transform.View = Matrix.LookAtLH(
                 new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.0f));
+            Viewport vp = new Viewport();
+            vp.X = 0;
+            vp.Y = 0;
+            vp.Height = ap.getScreenSize().h;
+            vp.Width = ap.getScreenSize().w;
+            vp.MaxZ = 1.0f;
+            //ビューポート設定
+            this._device.Viewport = vp;
 
             //立方体（頂点数8）の準備
             this._vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored),
                 8, this._device, Usage.None, CustomVertex.PositionColored.Format, Pool.Managed);
+            
 
             //8点の情報を格納するためのメモリを確保
             CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[8];
@@ -213,37 +242,19 @@ namespace SimpleLiteDirect3d
                 // インデックスバッファのロックを解除します
                 this._indexBuffer.Unlock();
             }
-            // ライトを無効
-            this._device.RenderState.Lighting = false;
-
-            // カリングを無効にしてポリゴンの裏も描画する
-            //this._device.RenderState.CullMode = Cull.None;
 
             //背景サーフェイスを作成
             this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+            this._is_marker_enable = false;
             return true;
         }
-        private Matrix __MainLoop_trans_matrix = new Matrix();
-        private NyARTransMatResult __MainLoop_nyar_transmat = new NyARTransMatResult();
         //メインループ処理
         public void MainLoop()
         {
             //ARの計算
-            Matrix trans_matrix = this.__MainLoop_trans_matrix;
-            NyARTransMatResult trans_result = this.__MainLoop_nyar_transmat;
-            bool is_marker_enable;
             lock (this)
             {
-                //マーカーは見つかったかな？
-                is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
-                if (is_marker_enable)
-                {
-                    //あればMatrixを計算
-                    this._ar.getTransmationMatrix(trans_result);
-                    this._utils.toD3dMatrix(trans_result,ref trans_matrix);
-                }
-
                 // 背景サーフェイスを直接描画
                 Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
                 Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -251,10 +262,11 @@ namespace SimpleLiteDirect3d
 
                 // 3Dオブジェクトの描画はここから
                 this._device.BeginScene();
+                this._device.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
 
 
                 //マーカーが見つかっていて、0.4より一致してたら描画する。
-                if (is_marker_enable && this._ar.getConfidence()>0.4)
+                if (this._is_marker_enable && this._ar.getConfidence()>0.4)
                 {
                     // 頂点バッファをデバイスのデータストリームにバインド
                     this._device.SetStreamSource(0, this._vertexBuffer, 0);
@@ -269,11 +281,12 @@ namespace SimpleLiteDirect3d
                     Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
 
                     //変換行列を掛ける
-                    transform_mat2 *= trans_matrix;
+                    transform_mat2 *= this._trans_mat;
                     // 計算したマトリックスで座標変換
                     this._device.SetTransform(TransformType.World, transform_mat2);
 
                     // レンダリング（描画）
+                    this._device.RenderState.CullMode = Cull.Clockwise;
                     this._device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
                 }
 
@@ -283,27 +296,35 @@ namespace SimpleLiteDirect3d
                 // 実際のディスプレイに描画
                 this._device.Present();
             }
-            
+            return;
         }
 
         // リソースの破棄をするために呼ばれる
         public void Dispose()
         {
-            // 頂点バッファを解放
-            if (this._vertexBuffer != null)
+            lock (this)
             {
-                this._vertexBuffer.Dispose();
-            }
 
-            // インデックスバッファを解放
-            if (this._indexBuffer != null)
-            {
-                this._indexBuffer.Dispose();
-            }              
-            // Direct3D デバイスのリソース解放
-            if (this._device != null)
-            {
-                this._device.Dispose();
+                // 頂点バッファを解放
+                if (this._vertexBuffer != null)
+                {
+                    this._vertexBuffer.Dispose();
+                }
+
+                // インデックスバッファを解放
+                if (this._indexBuffer != null)
+                {
+                    this._indexBuffer.Dispose();
+                }
+                if (this._surface != null)
+                {
+                    this._surface.Dispose();
+                }
+                // Direct3D デバイスのリソース解放
+                if (this._device != null)
+                {
+                    this._device.Dispose();
+                }
             }
         }
     }

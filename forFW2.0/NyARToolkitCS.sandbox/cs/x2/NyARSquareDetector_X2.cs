@@ -414,7 +414,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             }
 
             NyARDoublePoint2d[] l_sqvertex = o_square.sqvertex;
-            NyARIntPoint[] l_imvertex = o_square.imvertex;
+            NyARIntPoint2d[] l_imvertex = o_square.imvertex;
             for (int i = 0; i < 4; i++)
             {
                 NyARI64Linear l_line_i = i64liner[i];

@@ -85,7 +85,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
                     }
                     //キャプチャの停止
-                    sample.stop();
+                    //sample.stop();
                 }
             }
             return;

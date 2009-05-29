@@ -23,7 +23,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
                 ptr = i_mat.getArray();
                 for (c = 0; c < this.clm; c++)
                 {
-                    this.m[c][r] = (double)ptr[c][r] / 0x10000;
+                    this._m[c][r] = (double)ptr[c][r] / 0x10000;
                 }
             }
             return;

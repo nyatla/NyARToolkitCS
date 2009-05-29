@@ -70,7 +70,7 @@ namespace CaptureTest
             pictureBox1.Image = b;
 
             //ARの計算
-            this.m_raster.setBuffer(i_buffer);
+            this.m_raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
             if (this.m_ar.detectMarkerLite(this.m_raster, 100))
             {
                 NyARTransMatResult result_mat = new NyARTransMatResult();

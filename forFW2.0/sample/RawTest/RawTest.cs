@@ -48,7 +48,7 @@ namespace ConsoleApplication1
         {
             NyMath.initialize();
         }
-        public void Test_arDetectMarkerLite()
+        public void Test()
         {
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
@@ -85,25 +85,6 @@ namespace ConsoleApplication1
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds + "[ms]");
             return;
-        }
-        public static void main(String[] args)
-        {
-            try
-            {
-                RawFileTest t = new RawFileTest();
-                //t.Test_arGetVersion();
-                t.Test_arDetectMarkerLite();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-        static void Main(string[] args)
-        {
-            RawFileTest rf;
-            rf = new RawFileTest();
-            rf.Test_arDetectMarkerLite();
         }
     }
 }

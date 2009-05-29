@@ -111,9 +111,10 @@ namespace NyARToolkitCSUtils.Direct3d
                 //テクスチャのピッチって何？
                 int cp_size = this.m_width * 4;
                 int sk_size = (this.m_texture_width - this.m_width) * 4;
-                for (int r = this.m_height - 1; r >= 0; r--)
+                int s = 0;
+                for (int r = this.m_height - 1; r >= 0; r--,s++)
                 {
-                    texture_rect.Write(buf, r * cp_size, cp_size);
+                    texture_rect.Write(buf, s * cp_size, cp_size);
                     texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);
                 }
             }
@@ -123,6 +124,10 @@ namespace NyARToolkitCSUtils.Direct3d
                 this.m_texture.UnlockRectangle(0);
             }
             return;
+        }
+        public void Dispose()
+        {
+            this.d3d_texture.Dispose();
         }
     }
 }

@@ -34,6 +34,9 @@ using Microsoft.WindowsMobile.DirectX;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
 using System.Runtime.InteropServices;
 using jp.nyatla.cs.NyWMCapture;
+using jp.nyatla.nyartoolkit.cs.core;
+using NyARToolkitCSUtils.NyAR;
+using System.Diagnostics;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -97,28 +100,23 @@ namespace NyARToolkitCSUtils.Direct3d
             //OK、完成だ。
             return;
         }
-        /* DsXRGB32Rasterの内容を保持しているテクスチャにコピーします。
-         * i_rasterのサイズは、このインスタンスに指定したテクスチャサイズ（コンストラクタ等に指定したサイズ）と同じである必要です。
-         * ラスタデータはテクスチャの左上を基点にwidth x heightだけコピーされ、残りの部分は更新されません。
-         */
-        public void CopyFromIntPtr(INySample i_sample)
+        public void CopyFromRaster(DsRGB565Raster i_raster)
         {
+            //BUFFERFORMAT_WORD1D_R5G6B5_16LEしか受けられません。
+            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
             int pi;
+            int w = this.m_width;
             GraphicsStream gs = this._texture.LockRectangle(0, LockFlags.None, out pi);
-//            if (i_is_top_to_botomm)
-//            {
-                int st = this.m_width * 2;
-                int s_idx = 0;
-                int d_idx = (this.m_height - 1) * pi;
-                for (int i = this.m_height - 1; i >= 0; i--)
-                {
-                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
-                    s_idx += st;
-                    d_idx -= pi;
-                }
-//            }else{
-//                i_sample.CopyToBuffer(gs.InternalData, 0, this.m_width * this.m_height * 2);
-//            }
+            short[] buf = (short[])i_raster.getBufferReader().getBuffer();
+            int st = this.m_width;
+            int s_idx = 0;
+            int d_idx = 0;
+            for (int i = this.m_height - 1; i >= 0; i--)
+            {
+                Marshal.Copy(buf, s_idx, (IntPtr)((int)gs.InternalData + d_idx), w);
+                s_idx += st;
+                d_idx += pi;
+            }
             this._texture.UnlockRectangle(0);
             return;
         }

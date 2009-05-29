@@ -35,7 +35,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     public class NyARIntPointStack : NyObjectStack
     {
-        public NyARIntPointStack(int i_length): base(new NyARIntPoint[i_length])
+        public NyARIntPointStack(int i_length): base(new NyARIntPoint2d[i_length])
         {
         }
 
@@ -43,18 +43,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             for (int i = i_start; i < i_end; i++)
             {
-                i_buffer[i] = new NyARIntPoint();
+                i_buffer[i] = new NyARIntPoint2d();
             }
         }
 
-        new public NyARIntPoint[] getArray()
+        new public NyARIntPoint2d[] getArray()
         {
-            return (NyARIntPoint[])this._items;
+            return (NyARIntPoint2d[])this._items;
         }
 
-        new public NyARIntPoint prePush()
+        new public NyARIntPoint2d prePush()
         {
-            return (NyARIntPoint)base.prePush();
+            return (NyARIntPoint2d)base.prePush();
         }
     }
 }

@@ -31,276 +31,184 @@
  */
 using System.IO;
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
+    class NyARCodeFileReader
+    {
+
+        /**
+         * ARコードファイルからデータを読み込んでo_raster[4]に格納します。
+         * @param i_stream
+         * @param o_raster
+         * @throws NyARException
+         */
+        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARRaster[] o_raster)
+        {
+            Debug.Assert(o_raster.Length == 4);
+            //4個の要素をラスタにセットする。
+            try
+            {
+                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
+                //GBRAで一度読みだす。
+                int idx = 0;
+                for (int h = 0; h < 4; h++)
+                {
+                    Debug.Assert(o_raster[h].getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32));
+                    NyARRaster ra = o_raster[h];
+                    idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBufferReader().getBuffer());
+                }
+            }
+            catch (Exception e)
+            {
+                throw new NyARException(e);
+            }
+            return;
+        }
+        /**
+         * ARコードファイルからデータを読み込んでo_codeに格納します。
+         * @param i_stream
+         * @param o_code
+         * @throws NyARException
+         */
+        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARCode o_code)
+        {
+            int width = o_code.getWidth();
+            int height = o_code.getHeight();
+            NyARRaster tmp_raster = new NyARRaster(new NyARIntSize(width, height), new int[width * height], INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32);
+            //4個の要素をラスタにセットする。
+            try
+            {
+                int[] buf = (int[])tmp_raster.getBufferReader().getBuffer();
+                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
+                //GBRAで一度読みだす。
+                int idx=0;
+                for (int h = 0; h < 4; h++)
+                {
+                    idx=readBlock(data,idx, width, height, buf);
+                    //ARCodeにセット(カラー)
+                    o_code.getColorData(h).setRaster(tmp_raster);
+                    o_code.getBlackWhiteData(h).setRaster(tmp_raster);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new NyARException(e);
+            }
+            tmp_raster = null;//ポイ
+            return;
+        }
+        /**
+         * 1ブロック分のXRGBデータをi_stからo_bufへ読みだします。
+         * @param i_st
+         * @param o_buf
+         */
+        private static int readBlock(string[] i_data, int i_idx, int i_width, int i_height, int[] o_buf)
+        {
+            int idx = i_idx;
+            try
+            {
+                int pixels = i_width * i_height;
+                for (int i3 = 0; i3 < 3; i3++)
+                {
+                    for (int i2 = 0; i2 < pixels; i2++)
+                    {
+                        //数値のみ読み出す(空文字は読み飛ばし！)
+                        for (; ; )
+                        {
+                            if (i_data[idx].Length > 0)
+                            {
+                                break;
+                            }
+                            idx++;
+                        }
+                        o_buf[i2] = (o_buf[i2] << 8) | ((0x000000ff & (int)int.Parse(i_data[idx])));
+                        idx++;
+                    }
+                }
+                //GBR→RGB
+                for (int i3 = 0; i3 < pixels; i3++)
+                {
+                    o_buf[i3] = ((o_buf[i3] << 16) & 0xff0000) | (o_buf[i3] & 0x00ff00) | ((o_buf[i3] >> 16) & 0x0000ff);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new NyARException(e);
+            }
+            return idx;
+        }
+    }
+
     /**
      * ARToolKitのマーカーコードを1個保持します。
      * 
      */
     public class NyARCode
     {
-        private int[, , ,] pat;// static int pat[AR_PATT_NUM_MAX][4][AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3];
+        private NyARMatchPattDeviationColorData[] _color_pat = new NyARMatchPattDeviationColorData[4];
+        private NyARMatchPattDeviationBlackWhiteData[] _bw_pat = new NyARMatchPattDeviationBlackWhiteData[4];
+        private int _width;
+        private int _height;
 
-        private double[] patpow = new double[4];// static double patpow[AR_PATT_NUM_MAX][4];
-
-        private short[,,] patBW;// static int patBW[AR_PATT_NUM_MAX][4][AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3];
-
-        private double[] patpowBW = new double[4];// static double patpowBW[AR_PATT_NUM_MAX][4];
-
-        private int width, height;
-
-        public int[, , ,] getPat()
+        public NyARMatchPattDeviationColorData getColorData(int i_index)
         {
-            return pat;
+            return this._color_pat[i_index];
         }
-
-        public double[] getPatPow()
+        public NyARMatchPattDeviationBlackWhiteData getBlackWhiteData(int i_index)
         {
-            return patpow;
+            return this._bw_pat[i_index];
         }
-
-        public short[,,] getPatBW()
-        {
-            return patBW;
-        }
-
-        public double[] getPatPowBW()
-        {
-            return patpowBW;
-        }
-
         public int getWidth()
         {
-            return width;
+            return _width;
         }
 
         public int getHeight()
         {
-            return height;
+            return _height;
         }
-
         public NyARCode(int i_width, int i_height)
         {
-            width = i_width;
-            height = i_height;
-            pat = new int[4, height, width, 3];// static int pat[AR_PATT_NUM_MAX][4][AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3];
-            patBW = new short[4, height, width];// static int patBW[AR_PATT_NUM_MAX][4][AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3];
+            this._width = i_width;
+            this._height = i_height;
+            //空のラスタを4個作成
+            for (int i = 0; i < 4; i++)
+            {
+                this._color_pat[i] = new NyARMatchPattDeviationColorData(i_width, i_height);
+                this._bw_pat[i] = new NyARMatchPattDeviationBlackWhiteData(i_width, i_height);
+            }
+            return;
         }
-
-        /**
-         * int arLoadPatt( const char *filename ); ARToolKitのパターンファイルをロードする。
-         * ファイル形式はBGR形式で記録されたパターンファイルであること。
-         * 
-         * @param filename
-         * @return
-         * @throws Exception
-         */
-        public void loadARPattFromFile(string filename)
+        public void loadARPattFromFile(String filename)
         {
             try
             {
                 loadARPatt(new StreamReader(filename));
-
             }
             catch (Exception e)
             {
                 throw new NyARException(e);
             }
+            return;
         }
-#if NyartoolkitCS_FRAMEWORK_CFW
-        /**
-         * 
-         * @param i_stream
-         * @throws NyARException
-         */
+        public void setRaster(NyARRaster[] i_raster)
+        {
+            Debug.Assert(i_raster.Length != 4);
+            //ラスタにパターンをロードする。
+            for (int i = 0; i < 4; i++)
+            {
+                this._color_pat[i].setRaster(i_raster[i]);
+            }
+            return;
+        }
+
         public void loadARPatt(StreamReader i_stream)
         {
-            try
-            {
-                string s = i_stream.ReadToEnd();
-                String[] dt = s.Split(new Char[] { ' ', '\r', '\n' });
-                int idx = 0;
-                //パターンデータはGBRAで並んでる。
-                for (int h = 0; h < 4; h++)
-                {
-                    int l = 0;
-                    for (int i3 = 0; i3 < 3; i3++)
-                    {
-                        for (int i2 = 0; i2 < height; i2++)
-                        {
-                            for (int i1 = 0; i1 < width; i1++)
-                            {
-                                short j;
-                                //数値のみ読み出す(空文字は読み飛ばし！)
-
-                                for (; ; )
-                                {
-                                    if (dt[idx].Length > 0)
-                                    {
-                                        break;
-                                    }
-                                    idx++;
-                                }
-                                j = (short)(255 - int.Parse(dt[idx]));//j = 255-j;
-                                idx++;
-                                //標準ファイルのパターンはBGRでならんでるからRGBに並べなおす
-                                switch (i3)
-                                {
-                                    case 0: pat[h, i2, i1, 2] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+2] = j;break;
-                                    case 1: pat[h, i2, i1, 1] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+1] = j;break;
-                                    case 2: pat[h, i2, i1, 0] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+0] = j;break;
-                                }
-                                //pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+i3] = j;
-                                if (i3 == 0)
-                                {
-                                    patBW[h, i2, i1] = j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1]  = j;
-                                }
-                                else
-                                {
-                                    patBW[h, i2, i1] += j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] += j;
-                                }
-                                if (i3 == 2)
-                                {
-                                    patBW[h, i2, i1] /= 3;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] /= 3;
-                                }
-                                l += j;
-                            }
-                        }
-                    }
-
-                    l /= (height * width * 3);
-
-                    int m = 0;
-                    for (int i = 0; i < height; i++)
-                    {//for( i = 0; i < AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3; i++ ) {
-                        for (int i2 = 0; i2 < width; i2++)
-                        {
-                            for (int i3 = 0; i3 < 3; i3++)
-                            {
-                                pat[h, i, i2, i3] -= l;
-                                m += (pat[h, i, i2, i3] * pat[h, i, i2, i3]);
-                            }
-                        }
-                    }
-                    patpow[h] = Math.Sqrt((double)m);
-                    if (patpow[h] == 0.0)
-                    {
-                        patpow[h] = 0.0000001;
-                    }
-
-                    m = 0;
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int i2 = 0; i2 < width; i2++)
-                        {
-                            patBW[h, i, i2] -= (short)l;
-                            m += (patBW[h, i, i2] * patBW[h, i, i2]);
-                        }
-                    }
-                    patpowBW[h] = Math.Sqrt((double)m);
-                    if (patpowBW[h] == 0.0)
-                    {
-                        patpowBW[h] = 0.0000001;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new NyARException(e);
-            }
+            //ラスタにパターンをロードする。
+            NyARCodeFileReader.loadFromARToolKitFormFile(i_stream, this);
+            return;
         }
-#else
-        /**
-         * 
-         * @param i_stream
-         * @throws NyARException
-         */
-        public void loadARPatt(StreamReader i_stream)
-        {
-            try
-            {
-                string s = i_stream.ReadToEnd();
-                string[] dt = s.Split(new Char[] { ' ', '\r', '\n' }, 10000, StringSplitOptions.RemoveEmptyEntries);
-                int idx = 0;
-                //パターンデータはGBRAで並んでる。
-                for (int h = 0; h < 4; h++)
-                {
-                    int l = 0;
-                    for (int i3 = 0; i3 < 3; i3++)
-                    {
-                        for (int i2 = 0; i2 < height; i2++)
-                        {
-                            for (int i1 = 0; i1 < width; i1++)
-                            {
-                                //数値のみ読み出す
-                                short j = (short)(255 - int.Parse(dt[idx]));//j = 255-j;
-                                idx++;
-                                //標準ファイルのパターンはBGRでならんでるからRGBに並べなおす
-                                switch (i3)
-                                {
-                                    case 0: pat[h, i2, i1, 2] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+2] = j;break;
-                                    case 1: pat[h, i2, i1, 1] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+1] = j;break;
-                                    case 2: pat[h, i2, i1, 0] = j; break;//pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+0] = j;break;
-                                }
-                                //pat[patno][h][(i2*Config.AR_PATT_SIZE_X+i1)*3+i3] = j;
-                                if (i3 == 0)
-                                {
-                                    patBW[h, i2, i1] = j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1]  = j;
-                                }
-                                else
-                                {
-                                    patBW[h, i2, i1] += j;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] += j;
-                                }
-                                if (i3 == 2)
-                                {
-                                    patBW[h, i2, i1] /= 3;//patBW[patno][h][i2*Config.AR_PATT_SIZE_X+i1] /= 3;
-                                }
-                                l += j;
-                            }
-                        }
-                    }
 
-                    l /= (height * width * 3);
-
-                    int m = 0;
-                    for (int i = 0; i < height; i++)
-                    {//for( i = 0; i < AR_PATT_SIZE_Y*AR_PATT_SIZE_X*3; i++ ) {
-                        for (int i2 = 0; i2 < width; i2++)
-                        {
-                            for (int i3 = 0; i3 < 3; i3++)
-                            {
-                                pat[h, i, i2, i3] -= l;
-                                m += (pat[h, i, i2, i3] * pat[h, i, i2, i3]);
-                            }
-                        }
-                    }
-                    patpow[h] = Math.Sqrt((double)m);
-                    if (patpow[h] == 0.0)
-                    {
-                        patpow[h] = 0.0000001;
-                    }
-
-                    m = 0;
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int i2 = 0; i2 < width; i2++)
-                        {
-                            patBW[h, i, i2] -= (short)l;
-                            m += (patBW[h, i, i2] * patBW[h, i, i2]);
-                        }
-                    }
-                    patpowBW[h] = Math.Sqrt((double)m);
-                    if (patpowBW[h] == 0.0)
-                    {
-                        patpowBW[h] = 0.0000001;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new NyARException(e);
-            }
-        }
-#endif
     }
 }

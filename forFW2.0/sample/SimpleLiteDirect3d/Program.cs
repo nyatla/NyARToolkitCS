@@ -70,8 +70,6 @@ namespace SimpleLiteDirect3d
             }
             using (CaptureDevice capture_device = capture_device_list[cdevice_number])
             {
-
-
                 // フォームとメインサンプルクラスを作成
                 using (Form1 frm = new Form1())
                 using (SimpleLiteD3d sample = new SimpleLiteD3d())

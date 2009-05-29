@@ -32,7 +32,9 @@ using Microsoft.WindowsMobile.DirectX;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
 using System.Runtime.InteropServices;
 using jp.nyatla.cs.NyWMCapture;
-
+using jp.nyatla.nyartoolkit.cs.core;
+using NyARToolkitCSUtils.NyAR;
+using System.Diagnostics;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -41,10 +43,11 @@ namespace NyARToolkitCSUtils.Direct3d
      */
     public class NyARSurface_RGB565 : IDisposable
     {
+
         private int _width;
         private int _height;
         private Microsoft.WindowsMobile.DirectX.Direct3D.Device m_ref_dev;
-        private Surface m_surface;
+        private Surface _surface;
         private Rectangle m_src_rect;
         public Rectangle d3d_surface_rect
         {
@@ -52,7 +55,7 @@ namespace NyARToolkitCSUtils.Direct3d
         }
         public Surface d3d_surface
         {
-            get { return this.m_surface; }
+            get { return this._surface; }
         }
 
         /* i_width x i_heightのテクスチャを格納するインスタンスを生成します。
@@ -67,42 +70,29 @@ namespace NyARToolkitCSUtils.Direct3d
             this._height = i_height;
             this._width = i_width;
 
-            this.m_surface = i_dev.CreateImageSurface(i_width, i_height, Format.R5G6B5);
+            this._surface = i_dev.CreateImageSurface(i_width, i_height, Format.R5G6B5);
             this.m_src_rect = new Rectangle(0, 0, i_width,i_height);
 
             //OK、完成だ。
             return;
         }
-        /* ISampleの内容を保持しているサーフェイスにコピーします。
-         * i_is_top_to_botommは、i_sampleが上下反転画像(Y軸が下から上に向かって増加する)かを指定します。
-         */
-        public void CopyFromIntPtr(INySample i_sample,bool i_is_top_to_botomm)
+        public void CopyFromRaster(DsRGB565Raster i_raster)
         {
+            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
             int pitch;
-            GraphicsStream gs = this.m_surface.LockRectangle(this.m_src_rect, LockFlags.None, out pitch);
-            if (!i_is_top_to_botomm)
-            {
-                int st = this._width * 2;
-                int s_idx = 0;
-                int d_idx = (this._height - 1) * pitch;
-                for (int i = this._height - 1; i >= 0; i--)
-                {
-                    i_sample.CopyToBuffer((IntPtr)((int)gs.InternalData + d_idx), s_idx, st);
-                    s_idx += st;
-                    d_idx -= pitch;
-                }
-            }else{
-                i_sample.CopyToBuffer(gs.InternalData, 0, this._width * this._height * 2);
-            }
-            this.m_surface.UnlockRectangle();
+            GraphicsStream gs = this._surface.LockRectangle(this.m_src_rect,LockFlags.None, out pitch);
+            Marshal.Copy((short[])i_raster.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width * 2 * this._height);
+
+            this._surface.UnlockRectangle();
 
             return;
-        }
+        }        
+
         public void Dispose()
         {
-            if (this.m_surface != null)
+            if (this._surface != null)
             {
-                this.m_surface.Dispose();
+                this._surface.Dispose();
             }
             return;
         }
