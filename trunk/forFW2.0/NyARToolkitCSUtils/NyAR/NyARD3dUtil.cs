@@ -110,18 +110,18 @@ namespace NyARToolkitCSUtils.NyAR
             o_d3d_projection.M12 = (float)(q[1, 0] * trans[0][0] + q[1, 1] * trans[1][0] + q[1, 2] * trans[2][0]);
             o_d3d_projection.M13 = (float)(q[2, 0] * trans[0][0] + q[2, 1] * trans[1][0] + q[2, 2] * trans[2][0]);
             o_d3d_projection.M14 = (float)(q[3, 0] * trans[0][0] + q[3, 1] * trans[1][0] + q[3, 2] * trans[2][0]);
-            o_d3d_projection.M21 = (float)(q[0, 1] * trans[0][1] + q[0, 1] * trans[1][1] + q[0, 2] * trans[2][1]);
-            o_d3d_projection.M22 = (float)(q[1, 1] * trans[0][1] + q[1, 1] * trans[1][1] + q[1, 2] * trans[2][1]);
-            o_d3d_projection.M23 = (float)(q[2, 1] * trans[0][1] + q[2, 1] * trans[1][1] + q[2, 2] * trans[2][1]);
-            o_d3d_projection.M24 = (float)(q[3, 1] * trans[0][1] + q[3, 1] * trans[1][1] + q[3, 2] * trans[2][1]);
-            o_d3d_projection.M31 = (float)(q[0, 2] * trans[0][2] + q[0, 1] * trans[1][2] + q[0, 2] * trans[2][2]);
-            o_d3d_projection.M32 = (float)(q[1, 2] * trans[0][2] + q[1, 1] * trans[1][2] + q[1, 2] * trans[2][2]);
-            o_d3d_projection.M33 = (float)(q[2, 2] * trans[0][2] + q[2, 1] * trans[1][2] + q[2, 2] * trans[2][2]);
-            o_d3d_projection.M34 = (float)(q[3, 2] * trans[0][2] + q[3, 1] * trans[1][2] + q[3, 2] * trans[2][2]);
-            o_d3d_projection.M41 = (float)(q[0, 3] * trans[0][3] + q[0, 1] * trans[1][3] + q[0, 2] * trans[2][3] + q[0, 3]);
-            o_d3d_projection.M42 = (float)(q[1, 3] * trans[0][3] + q[1, 1] * trans[1][3] + q[1, 2] * trans[2][3] + q[1, 3]);
-            o_d3d_projection.M43 = (float)(q[2, 3] * trans[0][3] + q[2, 1] * trans[1][3] + q[2, 2] * trans[2][3] + q[2, 3]);
-            o_d3d_projection.M44 = (float)(q[3, 3] * trans[0][3] + q[3, 1] * trans[1][3] + q[3, 2] * trans[2][3] + q[3, 3]);
+            o_d3d_projection.M21 = (float)(q[0, 0] * trans[0][1] + q[0, 1] * trans[1][1] + q[0, 2] * trans[2][1]);
+            o_d3d_projection.M22 = (float)(q[1, 0] * trans[0][1] + q[1, 1] * trans[1][1] + q[1, 2] * trans[2][1]);
+            o_d3d_projection.M23 = (float)(q[2, 0] * trans[0][1] + q[2, 1] * trans[1][1] + q[2, 2] * trans[2][1]);
+            o_d3d_projection.M24 = (float)(q[3, 0] * trans[0][1] + q[3, 1] * trans[1][1] + q[3, 2] * trans[2][1]);
+            o_d3d_projection.M31 = (float)(q[0, 0] * trans[0][2] + q[0, 1] * trans[1][2] + q[0, 2] * trans[2][2]);
+            o_d3d_projection.M32 = (float)(q[1, 0] * trans[0][2] + q[1, 1] * trans[1][2] + q[1, 2] * trans[2][2]);
+            o_d3d_projection.M33 = (float)(q[2, 0] * trans[0][2] + q[2, 1] * trans[1][2] + q[2, 2] * trans[2][2]);
+            o_d3d_projection.M34 = (float)(q[3, 0] * trans[0][2] + q[3, 1] * trans[1][2] + q[3, 2] * trans[2][2]);
+            o_d3d_projection.M41 = (float)(q[0, 0] * trans[0][3] + q[0, 1] * trans[1][3] + q[0, 2] * trans[2][3] + q[0, 3]);
+            o_d3d_projection.M42 = (float)(q[1, 0] * trans[0][3] + q[1, 1] * trans[1][3] + q[1, 2] * trans[2][3] + q[1, 3]);
+            o_d3d_projection.M43 = (float)(q[2, 0] * trans[0][3] + q[2, 1] * trans[1][3] + q[2, 2] * trans[2][3] + q[2, 3]);
+            o_d3d_projection.M44 = (float)(q[3, 0] * trans[0][3] + q[3, 1] * trans[1][3] + q[3, 2] * trans[2][3] + q[3, 3]);
             return;
         }
         public void toD3dMatrix(NyARTransMatResult i_ny_result,ref Matrix o_result)
