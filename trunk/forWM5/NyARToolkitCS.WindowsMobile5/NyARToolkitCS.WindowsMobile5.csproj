@@ -168,8 +168,8 @@
       <Link>cs\core\rasterreader\NyARBufferReader.cs</Link>
     </Compile>
 
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_INT1D_GLAY_8.cs">
-      <Link>cs\core\rasterreader\NyARRgbPixelReader_INT1D_GLAY_8.cs</Link>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_INT1D_GRAY_8.cs">
+      <Link>cs\core\rasterreader\NyARRgbPixelReader_INT1D_GRAY_8.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs">
       <Link>cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs</Link>

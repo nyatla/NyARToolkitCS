@@ -30,8 +30,8 @@ using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-using jp.nyatla.nyartoolkit.cs.sandbox.x2;
-using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
+//using jp.nyatla.nyartoolkit.cs.sandbox.x2;
+//using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
 namespace ConsoleApplication1
 {
     /**
@@ -46,7 +46,7 @@ namespace ConsoleApplication1
         private const String camera_file = "../../../../../data/camera_para.dat";
         public RawFileTest()
         {
-            NyMath.initialize();
+//            NyMath.initialize();
         }
         public void Test()
         {
@@ -67,7 +67,7 @@ namespace ConsoleApplication1
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
-            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0);
+            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferReader().getBufferType(), NyARSingleDetectMarker.PF_ARTOOLKIT_CONPATIBLE);
             NyARTransMatResult result_mat = new NyARTransMatResult();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);

@@ -29,11 +29,11 @@ namespace jp.nyatla.nyartoolkit.cs.utils
      * オンデマンド割り当てをするオブジェクト配列。
      * 配列には実体を格納します。
      */
-    public abstract class NyObjectStack
+    public abstract class NyObjectStack<T>
     {
         private const int ARRAY_APPEND_STEP = 64;
 
-        protected object[] _items;
+        protected T[] _items;
 
         private int _allocated_size;
 
@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 
          * @param i_array
          */
-        public NyObjectStack(object[] i_array)
+        protected NyObjectStack(T[] i_array)
         {
             // ポインタだけははじめに確保しておく
             this._items = i_array;
@@ -52,12 +52,14 @@ namespace jp.nyatla.nyartoolkit.cs.utils
             this._allocated_size = 0;
             this._length = 0;
         }
+        
+        protected abstract T createElement();
 
         /**
          * ポインタを1進めて、その要素を予約し、その要素へのポインタを返します。
          * 特定型に依存させるときには、継承したクラスでこの関数をオーバーライドしてください。
          */
-        virtual public object prePush()
+        virtual public T prePush()
         {
             // 必要に応じてアロケート
             if (this._length >= this._allocated_size)
@@ -78,7 +80,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
                 this._allocated_size = range;
             }
             // 使用領域を+1して、予約した領域を返す。
-            object ret = this._items[this._length];
+            T ret = this._items[this._length];
             this._length++;
             return ret;
         }
@@ -86,7 +88,7 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 見かけ上の要素数を1減らして、最後尾のアイテムを返します。
          * @return
          */
-        virtual public object pop()
+        virtual public T pop()
         {
             if (this._length < 1)
             {
@@ -130,25 +132,22 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 
          * @return
          */
-        virtual protected object[] getArray()
+        virtual public T[] getArray()
         {
             return this._items;
         }
-        virtual protected object getItem(int i_index)
+        virtual public T getItem(int i_index)
         {
             return this._items[i_index];
         }
 
-        /**
-         * この関数を継承先クラスで実装して下さい。
-         * i_bufferの配列の、i_start番目からi_end-1番目までの要素に、オブジェクトを割り当てて下さい。
-         * 
-         * @param i_start
-         * @param i_end
-         * @param i_buffer
-         */
-        protected abstract void onReservRequest(int i_start, int i_end, object[] i_buffer);
-
+        protected void onReservRequest(int i_start, int i_end, T[] i_buffer)
+	    {
+            for (int i = i_start; i < i_end; i++){
+                i_buffer[i] = createElement();
+            }
+            return;
+	    }
         /**
          * 配列の見かけ上の要素数を返却します。
          * @return

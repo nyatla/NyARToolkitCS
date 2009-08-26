@@ -34,7 +34,19 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.utils
-{
+{/*
+    public class Array2<T> where T : new()
+    {
+        public T[] createArray(int i_length)
+        {
+            T[] ret = new T[i_length];
+            for (int i = 0; i < i_length; i++)
+            {
+                ret[i]=new T();
+            }
+            return ret;
+        }
+    }*/
     public class ArrayUtils
     {
         public static double[][] newDouble2dArray(int i_r, int i_c)

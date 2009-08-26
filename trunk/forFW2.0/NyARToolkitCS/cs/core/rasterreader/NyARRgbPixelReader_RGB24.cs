@@ -72,5 +72,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return;
         }
+	    public void setPixel(int i_x, int i_y, int[] i_rgb) 
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+	    {
+		    NyARException.notImplement();		
+	    }
     }
 }

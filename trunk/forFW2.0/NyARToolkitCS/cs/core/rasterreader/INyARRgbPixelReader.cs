@@ -56,6 +56,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * yのインデックス配列
          */
         void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+	    /**
+	     * 1ピクセルを設定します。
+	     * @param i_x
+	     * @param i_y
+	     * @param i_rgb
+	     * @throws NyARException
+	     */
+	    void setPixel(int i_x, int i_y, int[] i_rgb);
+	    /**
+	     * 複数のピクセル値をint配列から設定します。
+	     * @param i_x
+	     * @param i_y
+	     * @param i_num
+	     * @param i_intrgb
+	     * @throws NyARException
+	     */
+	    void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
     }
 
 }

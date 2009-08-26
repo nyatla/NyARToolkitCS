@@ -29,15 +29,12 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
-
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public interface INyARLabeling
+    public class NyARLabelingLabel : NyARLabelInfo
     {
-        void attachDestination(INyARLabelingImage i_destination_image);
-        INyARLabelingImage getAttachedDestination();
+	    public int id; // フラグメントラベルのインデクス
 
-        void labeling(NyARBinRaster i_raster);
     }
 }

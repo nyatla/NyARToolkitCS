@@ -66,6 +66,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
                 return;
             }
+		    public void setPixel(int i_x, int i_y, int[] i_rgb)
+		    {
+			    byte[] ref_buf = this._parent._ref_buf;
+			    int bp = (i_x + i_y * this._parent._size.w) * 4;
+			    ref_buf[bp+0] = (byte)i_rgb[0];// R
+			    ref_buf[bp+1] = (byte)i_rgb[1];// G
+			    ref_buf[bp+2] = (byte)i_rgb[2];// B	
+		    }
+		    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+		    {
+			    NyARException.notImplement();		
+		    }
         }
 
         private INyARRgbPixelReader _rgb_reader;

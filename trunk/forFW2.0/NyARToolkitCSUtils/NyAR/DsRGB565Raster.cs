@@ -74,6 +74,14 @@ namespace NyARToolkitCSUtils.NyAR
                     i_rgb[i * 3 + 2] = (int)((pixcel & 0x001f) << 3);//B
                 }
             }
+            public void setPixel(int i_x, int i_y, int[] i_rgb)
+            {
+                NyARException.notImplement();
+            }
+            public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+            {
+                NyARException.notImplement();
+            }
         }
         private INyARRgbPixelReader _rgb_reader;
         private INyARBufferReader _buffer_reader;

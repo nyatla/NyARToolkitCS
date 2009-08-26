@@ -71,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             try
             {
-                loadARParam(new StreamReader(i_filename));
+                loadARParam(new StreamReader(i_filename).BaseStream);
             }
             catch (Exception e)
             {
@@ -106,7 +106,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-
+        public void loadARParam(Stream i_stream)
+        {
+            loadARParam(new BinaryReader(i_stream));
+        }
         /**
          * int arParamLoad( const char *filename, int num, ARParam *param, ...);
          * i_streamの入力ストリームからi_num個の設定を読み込み、パラメタを配列にして返します。
@@ -114,28 +117,27 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_stream
          * @throws Exception
          */
-        public void loadARParam(StreamReader i_stream)
+        public void loadARParam(BinaryReader i_reader)
         {
             try
             {
                 byte[] buf = new byte[SIZE_OF_PARAM_SET];
-                BinaryReader br=new BinaryReader(i_stream.BaseStream);
                 double[] tmp = new double[12];
 
                 // バッファを加工
-                this._screen_size.w = endianConv(br.ReadInt32());
-                this._screen_size.h = endianConv(br.ReadInt32());
+                this._screen_size.w = endianConv(i_reader.ReadInt32());
+                this._screen_size.h = endianConv(i_reader.ReadInt32());
                 //double値を12個読み込む
                 for (int i = 0; i < 12; i++)
                 {
-                    tmp[i] =endianConv(br.ReadDouble());
+                    tmp[i] = endianConv(i_reader.ReadDouble());
                 }
                 //Projectionオブジェクトにセット
                 this._projection_matrix.setValue(tmp);
                 //double値を4個読み込む
                 for (int i = 0; i < 4; i++)
                 {
-                    tmp[i] = endianConv(br.ReadDouble());
+                    tmp[i] = endianConv(i_reader.ReadDouble());
                 }
                 //Factorオブジェクトにセット
                 this._dist.setValue(tmp);

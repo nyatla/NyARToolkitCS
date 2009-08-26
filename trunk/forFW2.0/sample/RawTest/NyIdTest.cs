@@ -49,8 +49,9 @@ namespace ConsoleApplication1
             public int current_id = -1;
 
             public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
-                : base(i_cparam, new NyIdMarkerDataEncoder_RawBit(), i_raster_format)
             {
+                initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), i_raster_format);
+
                 //アプリケーションフレームワークの初期化
                 return;
             }

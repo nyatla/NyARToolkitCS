@@ -203,10 +203,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        public void loadARPatt(StreamReader i_stream)
+        public void loadARPatt(StreamReader i_reader)
         {
             //ラスタにパターンをロードする。
-            NyARCodeFileReader.loadFromARToolKitFormFile(i_stream, this);
+            NyARCodeFileReader.loadFromARToolKitFormFile(i_reader, this);
+            return;
+        }
+        public void loadARPatt(Stream i_stream)
+        {
+            //ラスタにパターンをロードする。
+            NyARCodeFileReader.loadFromARToolKitFormFile(new StreamReader(i_stream), this);
             return;
         }
 

@@ -33,28 +33,15 @@ using jp.nyatla.nyartoolkit.cs.utils;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public class NyARIntPointStack : NyObjectStack
+    public class NyARIntPointStack : NyObjectStack<NyARIntPoint2d>
     {
         public NyARIntPointStack(int i_length): base(new NyARIntPoint2d[i_length])
         {
         }
 
-        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
+        protected override NyARIntPoint2d createElement()
         {
-            for (int i = i_start; i < i_end; i++)
-            {
-                i_buffer[i] = new NyARIntPoint2d();
-            }
-        }
-
-        new public NyARIntPoint2d[] getArray()
-        {
-            return (NyARIntPoint2d[])this._items;
-        }
-
-        new public NyARIntPoint2d prePush()
-        {
-            return (NyARIntPoint2d)base.prePush();
+            return new NyARIntPoint2d();
         }
     }
 }
