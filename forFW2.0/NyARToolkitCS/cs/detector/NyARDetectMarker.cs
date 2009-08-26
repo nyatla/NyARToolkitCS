@@ -105,31 +105,46 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * i_codeのマーカーサイズをミリメートルで指定した配列を指定します。 先頭からi_number_of_code個の要素には、有効な値を指定する必要があります。
          * @param i_number_of_code
          * i_codeに含まれる、ARCodeの数を指定します。
+         * @param i_input_raster_type
+         * 入力ラスタのピクセルタイプを指定します。この値は、INyARBufferReaderインタフェイスのgetBufferTypeの戻り値を指定します。
          * @throws NyARException
          */
-        public NyARDetectMarker(NyARParam i_param, NyARCode[] i_code, double[] i_marker_width, int i_number_of_code)
+        public NyARDetectMarker(NyARParam i_param, NyARCode[] i_code, double[] i_marker_width, int i_number_of_code, int i_input_raster_type)
         {
-            NyARIntSize scr_size = i_param.getScreenSize();
-            // 解析オブジェクトを作る
-            this._square_detect = new NyARSquareDetector(i_param.getDistortionFactor(), scr_size);
-            this._transmat = new NyARTransMat(i_param);
+            initInstance(i_param, i_code, i_marker_width, i_number_of_code, i_input_raster_type);
+            return;
+        }
+        protected void initInstance(
+            NyARParam i_ref_param,
+            NyARCode[] i_ref_code,
+            double[] i_marker_width,
+            int i_number_of_code,
+            int i_input_raster_type)
+        {
 
+            NyARIntSize scr_size = i_ref_param.getScreenSize();
+            // 解析オブジェクトを作る
+
+            this._transmat = new NyARTransMat(i_ref_param);
             //各コード用の比較器を作る。
             this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_number_of_code];
-            int cw = i_code[0].getWidth();
-            int ch = i_code[0].getHeight();
-            this._match_patt[0] = new NyARMatchPatt_Color_WITHOUT_PCA(i_code[0]);
+            int cw = i_ref_code[0].getWidth();
+            int ch = i_ref_code[0].getHeight();
+            this._match_patt[0] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[0]);
             for (int i = 1; i < i_number_of_code; i++)
             {
                 //解像度チェック
-                if (cw != i_code[i].getWidth() || ch != i_code[i].getHeight())
+                if (cw != i_ref_code[i].getWidth() || ch != i_ref_code[i].getHeight())
                 {
                     throw new NyARException();
                 }
-                this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_code[i]);
+                this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[i]);
             }
-            // 評価パターンのホルダを作る
-            this._patt = new NyARColorPatt_O3(cw, ch);
+            //NyARToolkitプロファイル
+            this._patt = new NyARColorPatt_Perspective_O2(cw, ch, 4, 25);
+            this._square_detect = new NyARSquareDetector_Rle(i_ref_param.getDistortionFactor(), i_ref_param.getScreenSize());
+            this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(100, i_input_raster_type);
+
             //実サイズ保存
             this._marker_width = i_marker_width;
             //差分データインスタンスの作成
@@ -141,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
 
         private NyARBinRaster _bin_raster;
 
-        private NyARRasterFilter_ARToolkitThreshold _tobin_filter = new NyARRasterFilter_ARToolkitThreshold(100);
+        private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
         private NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
 
         /**

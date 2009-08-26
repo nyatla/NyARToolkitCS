@@ -72,7 +72,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private int _lost_delay = 5;
 
-        private NyARSquareDetector _square_detect;
+        private INyARSquareDetector _square_detect;
 
         protected NyARTransMat _transmat;
 
@@ -92,26 +92,31 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         // [AR]検出結果の保存用
         private NyARBinRaster _bin_raster;
 
-        private NyARRasterFilter_ARToolkitThreshold _tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110);
+        private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
 
         protected int _current_arcode_index = -1;
 
         private NyARMatchPattDeviationColorData _deviation_data;
 
 
-        public SingleARMarkerProcesser(NyARParam i_param)
-        {
-            NyARIntSize scr_size = i_param.getScreenSize();
-            // 解析オブジェクトを作る
-            this._square_detect = new NyARSquareDetector(i_param.getDistortionFactor(), scr_size);
-            this._transmat = new NyARTransMat(i_param);
-            this._deviation_data = new NyARMatchPattDeviationColorData(scr_size.w, scr_size.h);
+	    protected SingleARMarkerProcesser()
+	    {
+		    return;
+	    }
 
-            // ２値画像バッファを作る
-            this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
-            return;
-        }
 
+	    protected void initInstance(NyARParam i_param,int i_raster_type)
+	    {
+		    NyARIntSize scr_size = i_param.getScreenSize();
+		    // 解析オブジェクトを作る
+		    this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
+		    this._transmat = new NyARTransMat(i_param);
+		    this._tobin_filter=new NyARRasterFilter_ARToolkitThreshold(110,i_raster_type);
+
+		    // ２値画像バッファを作る
+		    this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
+		    return;
+	    }
         public void setThreshold(int i_threshold)
         {
             this._threshold = i_threshold;
@@ -130,6 +135,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             }
             // 検出するマーカセット、情報、検出器を作り直す。
             this._patt = new NyARColorPatt_O3(i_code_resolution, i_code_resolution);
+            this._deviation_data = new NyARMatchPattDeviationColorData(i_code_resolution, i_code_resolution);
             this._marker_width = i_marker_width;
 
             this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_ref_code_table.Length];
@@ -155,7 +161,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         public void detectMarker(INyARRgbRaster i_raster)
         {
             // サイズチェック
-            if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize().w / 2, i_raster.getSize().h / 2))
+            if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h))
             {
                 throw new NyARException();
             }

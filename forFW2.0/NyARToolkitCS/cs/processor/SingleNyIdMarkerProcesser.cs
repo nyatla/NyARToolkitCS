@@ -52,7 +52,7 @@ public abstract class SingleNyIdMarkerProcesser
 	private int _lost_delay_count = 0;
 	private int _lost_delay = 5;
 
-	private NyARSquareDetector _square_detect;
+	private INyARSquareDetector _square_detect;
 	protected NyARTransMat _transmat;
 	private double _marker_width=100;
 
@@ -66,16 +66,20 @@ public abstract class SingleNyIdMarkerProcesser
 	// [AR]検出結果の保存用
 	private NyARBinRaster _bin_raster;
 
-	private NyARRasterFilter_ARToolkitThreshold _tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110);
 
+	private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
 	private NyIdMarkerPickup _id_pickup = new NyIdMarkerPickup();
 
 
-	protected SingleNyIdMarkerProcesser(NyARParam i_param,INyIdMarkerDataEncoder i_encoder,int i_raster_format)
+	protected SingleNyIdMarkerProcesser()
+	{
+		return;
+	}
+	protected void initInstance(NyARParam i_param,INyIdMarkerDataEncoder i_encoder,int i_raster_format)
 	{
 		NyARIntSize scr_size = i_param.getScreenSize();
 		// 解析オブジェクトを作る
-		this._square_detect = new NyARSquareDetector(i_param.getDistortionFactor(), scr_size);
+		this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
 		this._transmat = new NyARTransMat(i_param);
 		this._encoder=i_encoder;
 
@@ -85,9 +89,12 @@ public abstract class SingleNyIdMarkerProcesser
 		this._is_active=false;
 		this._data_temp=i_encoder.createDataInstance();
 		this._data_current=i_encoder.createDataInstance();
+		this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110,i_raster_format);
 		this._threshold_detect=new NyARRasterThresholdAnalyzer_SlidePTile(15,i_raster_format,4);
 		return;
+		
 	}
+
 
 	public void setMarkerWidth(int i_width)
 	{

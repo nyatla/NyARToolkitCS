@@ -1,14 +1,8 @@
-/* 
- * PROJECT: NyARToolkitCS
+﻿/* 
+ * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
  * The NyARToolkit is Java version ARToolkit class library.
- * Copyright (C)2008 R.Iizuka
+ * Copyright (C)2008-2009 R.Iizuka
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,18 +23,29 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-    public class NyARLabelingLabel
+    public class RleLabelFragmentInfoStack : NyARLabelInfoStack<RleLabelFragmentInfoStack.RleLabelFragmentInfo>
     {
-        public int id;
-        public int area;
-        public int clip_r;// 0
-        public int clip_l;// 1
-        public int clip_b;// 2
-        public int clip_t;// 3
-        public double pos_x;
-        public double pos_y;
+        public class RleLabelFragmentInfo : NyARLabelInfo
+        {
+            //継承メンバ
+            //int area; // フラグメントラベルの領域数
+            public int entry_x; // フラグメントラベルの位置
+        }
+        public RleLabelFragmentInfoStack(int i_length)
+            : base(i_length)
+        {
+            return;
+        }
+
+        protected override RleLabelFragmentInfoStack.RleLabelFragmentInfo createElement()
+        {
+            return new RleLabelFragmentInfoStack.RleLabelFragmentInfo();
+        }
     }
 }

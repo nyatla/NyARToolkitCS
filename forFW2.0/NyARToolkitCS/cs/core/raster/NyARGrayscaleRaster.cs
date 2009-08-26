@@ -42,7 +42,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             : base(new NyARIntSize(i_width, i_height))
         {
             this._ref_buf = ArrayUtils.newInt2dArray(i_height, i_width);
-            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_INT2D_GLAY_8);
+            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_INT2D_GRAY_8);
         }
         public override INyARBufferReader getBufferReader()
         {

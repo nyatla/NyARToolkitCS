@@ -29,45 +29,18 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * ARToolKit互換のラベリングクラスです。 ARToolKitと同一な評価結果を返します。
      * 
      */
-    public class NyARLabeling_ARToolKit : INyARLabeling
+    public class NyARLabeling_ARToolKit
     {
         private const int WORK_SIZE = 1024 * 32;// #define WORK_SIZE 1024*32
         private NyARWorkHolder work_holder = new NyARWorkHolder(WORK_SIZE);
-        private NyARIntSize _dest_size;
-        private INyARLabelingImage _out_image;
 
-        public void attachDestination(INyARLabelingImage i_destination_image)
-        {
-            // サイズチェック
-            NyARIntSize size = i_destination_image.getSize();
-            this._out_image = i_destination_image;
-
-            // NyLabelingImageのイメージ初期化(枠書き)
-            int[][] img = (int[][])i_destination_image.getBufferReader().getBuffer();
-            for (int i = 0; i < size.w; i++)
-            {
-                img[0][i] = 0;
-                img[size.h - 1][i] = 0;
-            }
-            for (int i = 0; i < size.h; i++)
-            {
-                img[i][0] = 0;
-                img[i][size.w - 1] = 0;
-            }
-
-            // サイズ(参照値)を保存
-            this._dest_size = size;
-        }
-        public INyARLabelingImage getAttachedDestination()
-        {
-            return this._out_image;
-        }
         /**
          * static ARInt16 *labeling2( ARUint8 *image, int thresh,int *label_num, int **area, double **pos, int **clip,int **label_ref, int LorR ) 関数の代替品
          * ラスタimageをラベリングして、結果を保存します。 Optimize:STEP[1514->1493]
@@ -75,49 +48,52 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_raster
          * @throws NyARException
          */
-        public void labeling(NyARBinRaster i_raster)
+        public int labeling(NyARBinRaster i_raster, NyARLabelingImage o_destination)
         {
-            int m, n; /* work */
-            int i, j, k;
-            INyARLabelingImage out_image = this._out_image;
+            int label_img_ptr1, label_pixel;
+            int i, j;
+            int n, k; /* work */
 
             // サイズチェック
             NyARIntSize in_size = i_raster.getSize();
-            this._dest_size.isEqualSize(in_size);
+            Debug.Assert(o_destination.getSize().isEqualSize(in_size));
 
             int lxsize = in_size.w;// lxsize = arUtil_c.arImXsize;
             int lysize = in_size.h;// lysize = arUtil_c.arImYsize;
-            int[][] label_img = (int[][])out_image.getBufferReader().getBuffer();
+            int[] label_img = (int[])o_destination.getBufferReader().getBuffer();
 
             // 枠作成はインスタンスを作った直後にやってしまう。
 
-            //ラベリング情報のリセット（ラベリングインデックスを使用）
-            out_image.reset(true);
+            // ラベリング情報のリセット（ラベリングインデックスを使用）
+            o_destination.reset(true);
 
-            int[] label_idxtbl = out_image.getIndexArray();
+            int[] label_idxtbl = o_destination.getIndexArray();
+            int[] raster_buf = (int[])i_raster.getBufferReader().getBuffer();
 
             int[] work2_pt;
             int wk_max = 0;
 
-            int label_pixel;
-            int[][] raster_buf = (int[][])i_raster.getBufferReader().getBuffer();
-            int[] line_ptr;
+            int pixel_index;
             int[][] work2 = this.work_holder.work2;
-            int[] label_img_pt0,label_img_pt1;
+
+            // [1,1](ptr0)と、[0,1](ptr1)のインデクス値を計算する。
             for (j = 1; j < lysize - 1; j++)
             {// for (int j = 1; j < lysize - 1;j++, pnt += poff*2, pnt2 += 2) {
-                line_ptr = raster_buf[j];
-                label_img_pt0 = label_img[j];
-                label_img_pt1 = label_img[j - 1];
-                for (i = 1; i < lxsize - 1; i++)
+                pixel_index = j * lxsize + 1;
+                label_img_ptr1 = pixel_index - lxsize;// label_img_pt1 = label_img[j - 1];
+                for (i = 1; i < lxsize - 1; i++, pixel_index++, label_img_ptr1++)
                 {// for(int i = 1; i < lxsize-1;i++, pnt+=poff, pnt2++) {
                     // RGBの合計値が閾値より小さいかな？
-                    if (line_ptr[i] == 0)
+                    if (raster_buf[pixel_index] != 0)
+                    {
+                        label_img[pixel_index] = 0;// label_img_pt0[i] = 0;// *pnt2 = 0;
+                    }
+                    else
                     {
                         // pnt1 = ShortPointer.wrap(pnt2, -lxsize);//pnt1 =&(pnt2[-lxsize]);
-                        if (label_img_pt1[i] > 0)
-                        {// if( *pnt1 > 0 ) {
-                            label_pixel = label_img_pt1[i];// *pnt2 = *pnt1;
+                        if (label_img[label_img_ptr1] > 0)
+                        {// if (label_img_pt1[i] > 0) {// if( *pnt1 > 0 ) {
+                            label_pixel = label_img[label_img_ptr1];// label_pixel = label_img_pt1[i];// *pnt2 = *pnt1;
 
                             work2_pt = work2[label_pixel - 1];
                             work2_pt[0]++;// work2[((*pnt2)-1)*7+0] ++;
@@ -125,40 +101,35 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             work2_pt[2] += j;// work2[((*pnt2)-1)*7+2] += j;
                             work2_pt[6] = j;// work2[((*pnt2)-1)*7+6] = j;
                         }
-                        else if (label_img_pt1[i + 1] > 0)
-                        {// }else if(*(pnt1+1) > 0 ) {
-                            if (label_img_pt1[i - 1] > 0)
-                            {// if( *(pnt1-1) > 0 ) {
-                                m = label_idxtbl[label_img_pt1[i + 1] - 1];// m =work[*(pnt1+1)-1];
-                                n = label_idxtbl[label_img_pt1[i - 1] - 1];// n =work[*(pnt1-1)-1];
-                                if (m > n)
+                        else if (label_img[label_img_ptr1 + 1] > 0)
+                        {// } else if (label_img_pt1[i + 1] > 0) {// }else if(*(pnt1+1) > 0 ) {
+                            if (label_img[label_img_ptr1 - 1] > 0)
+                            {// if (label_img_pt1[i - 1] > 0) {// if( *(pnt1-1) > 0 ) {
+                                label_pixel = label_idxtbl[label_img[label_img_ptr1 + 1] - 1];// m = label_idxtbl[label_img_pt1[i + 1] - 1];// m
+                                // =work[*(pnt1+1)-1];
+                                n = label_idxtbl[label_img[label_img_ptr1 - 1] - 1];// n = label_idxtbl[label_img_pt1[i - 1] - 1];// n =work[*(pnt1-1)-1];
+                                if (label_pixel > n)
                                 {
-                                    label_pixel = n;// *pnt2 = n;
-                                    // wk=IntPointer.wrap(work, 0);//wk =
-                                    // &(work[0]);
+                                    // wk=IntPointer.wrap(work, 0);//wk = &(work[0]);
                                     for (k = 0; k < wk_max; k++)
                                     {
-                                        if (label_idxtbl[k] == m)
+                                        if (label_idxtbl[k] == label_pixel)
                                         {// if( *wk == m )
                                             label_idxtbl[k] = n;// *wk = n;
                                         }
                                     }
+                                    label_pixel = n;// *pnt2 = n;
                                 }
-                                else if (m < n)
+                                else if (label_pixel < n)
                                 {
-                                    label_pixel = m;// *pnt2 = m;
                                     // wk=IntPointer.wrap(work,0);//wk = &(work[0]);
                                     for (k = 0; k < wk_max; k++)
                                     {
                                         if (label_idxtbl[k] == n)
                                         {// if( *wk == n ){
-                                            label_idxtbl[k] = m;// *wk = m;
+                                            label_idxtbl[k] = label_pixel;// *wk = m;
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    label_pixel = m;// *pnt2 = m;
                                 }
                                 work2_pt = work2[label_pixel - 1];
                                 work2_pt[0]++;
@@ -166,36 +137,30 @@ namespace jp.nyatla.nyartoolkit.cs.core
                                 work2_pt[2] += j;
                                 work2_pt[6] = j;
                             }
-                            else if ((label_img_pt0[i - 1]) > 0)
-                            {// }else if(*(pnt2-1) > 0) {
-                                m = label_idxtbl[(label_img_pt1[i + 1]) - 1];// m =work[*(pnt1+1)-1];
-                                n = label_idxtbl[label_img_pt0[i - 1] - 1];// n =work[*(pnt2-1)-1];
-                                if (m > n)
+                            else if ((label_img[pixel_index - 1]) > 0)
+                            {// } else if ((label_img_pt0[i - 1]) > 0) {// }else if(*(pnt2-1) > 0) {
+                                label_pixel = label_idxtbl[label_img[label_img_ptr1 + 1] - 1];// m = label_idxtbl[label_img_pt1[i + 1] - 1];// m =work[*(pnt1+1)-1];
+                                n = label_idxtbl[label_img[pixel_index - 1] - 1];// n = label_idxtbl[label_img_pt0[i - 1] - 1];// n =work[*(pnt2-1)-1];
+                                if (label_pixel > n)
                                 {
-
-                                    label_pixel = n;// *pnt2 = n;
                                     for (k = 0; k < wk_max; k++)
                                     {
-                                        if (label_idxtbl[k] == m)
+                                        if (label_idxtbl[k] == label_pixel)
                                         {// if( *wk == m ){
                                             label_idxtbl[k] = n;// *wk = n;
                                         }
                                     }
+                                    label_pixel = n;// *pnt2 = n;
                                 }
-                                else if (m < n)
+                                else if (label_pixel < n)
                                 {
-                                    label_pixel = m;// *pnt2 = m;
                                     for (k = 0; k < wk_max; k++)
                                     {
                                         if (label_idxtbl[k] == n)
                                         {// if( *wk == n ){
-                                            label_idxtbl[k] = m;// *wk = m;
+                                            label_idxtbl[k] = label_pixel;// *wk = m;
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    label_pixel = m;// *pnt2 = m;
                                 }
                                 work2_pt = work2[label_pixel - 1];
                                 work2_pt[0]++;// work2[((*pnt2)-1)*7+0] ++;
@@ -205,7 +170,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             else
                             {
 
-                                label_pixel = label_img_pt1[i + 1];// *pnt2 =
+                                label_pixel = label_img[label_img_ptr1 + 1];// label_pixel = label_img_pt1[i + 1];// *pnt2 =
                                 // *(pnt1+1);
 
                                 work2_pt = work2[label_pixel - 1];
@@ -213,18 +178,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
                                 work2_pt[1] += i;// work2[((*pnt2)-1)*7+1] += i;
                                 work2_pt[2] += j;// work2[((*pnt2)-1)*7+2] += j;
                                 if (work2_pt[3] > i)
-                                {// if(
-                                    // work2[((*pnt2)-1)*7+3] >
-                                    // i ){
+                                {// if(work2[((*pnt2)-1)*7+3] > i ){
                                     work2_pt[3] = i;// work2[((*pnt2)-1)*7+3] = i;
                                 }
                                 work2_pt[6] = j;// work2[((*pnt2)-1)*7+6] = j;
                             }
                         }
-                        else if ((label_img_pt1[i - 1]) > 0)
-                        {// }else if(
+                        else if ((label_img[label_img_ptr1 - 1]) > 0)
+                        {// } else if ((label_img_pt1[i - 1]) > 0) {// }else if(
                             // *(pnt1-1) > 0 ) {
-                            label_pixel = label_img_pt1[i - 1];// *pnt2 =
+                            label_pixel = label_img[label_img_ptr1 - 1];// label_pixel = label_img_pt1[i - 1];// *pnt2 =
                             // *(pnt1-1);
 
                             work2_pt = work2[label_pixel - 1];
@@ -237,9 +200,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             }
                             work2_pt[6] = j;// work2[((*pnt2)-1)*7+6] = j;
                         }
-                        else if (label_img_pt0[i - 1] > 0)
-                        {// }else if(*(pnt2-1) > 0) {
-                            label_pixel = label_img_pt0[i - 1];// *pnt2 =*(pnt2-1);
+                        else if (label_img[pixel_index - 1] > 0)
+                        {// } else if (label_img_pt0[i - 1] > 0) {// }else if(*(pnt2-1) > 0) {
+                            label_pixel = label_img[pixel_index - 1];// label_pixel = label_img_pt0[i - 1];// *pnt2 =*(pnt2-1);
 
                             work2_pt = work2[label_pixel - 1];
                             work2_pt[0]++;// work2[((*pnt2)-1)*7+0] ++;
@@ -266,13 +229,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             work2_pt[5] = j;
                             work2_pt[6] = j;
                         }
-                        label_img_pt0[i] = label_pixel;
-                    }
-                    else
-                    {
-                        label_img_pt0[i] = 0;// *pnt2 = 0;
+                        label_img[pixel_index] = label_pixel;// label_img_pt0[i] = label_pixel;
                     }
                 }
+
             }
             // インデックステーブルとラベル数の計算
             int wlabel_num = 1;// *label_num = *wlabel_num = j - 1;
@@ -285,11 +245,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             if (wlabel_num == 0)
             {// if( *label_num == 0 ) {
                 // 発見数0
-                out_image.getLabelStack().clear();
-                return;
+                o_destination.getLabelStack().clear();
+                return 0;
             }
             // ラベル情報の保存等
-            NyARLabelingLabelStack label_list = out_image.getLabelStack();
+            NyARLabelingLabelStack label_list = o_destination.getLabelStack();
 
             // ラベルバッファを予約
             label_list.reserv(wlabel_num);
@@ -300,7 +260,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             for (i = 0; i < wlabel_num; i++)
             {
                 label_pt = labels[i];
-                label_pt.id = i + 1;
+                label_pt.id = (short)(i + 1);
                 label_pt.area = 0;
                 label_pt.pos_x = label_pt.pos_y = 0;
                 label_pt.clip_l = lxsize;// wclip[i*4+0] = lxsize;
@@ -339,7 +299,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 label_pt.pos_x /= label_pt.area;
                 label_pt.pos_y /= label_pt.area;
             }
-            return;
+            // ラベルを大きい順に整列
+            label_list.sortByArea();
+            return wlabel_num;
         }
 
     }

@@ -69,6 +69,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return;
         }
+	    public void setPixel(int i_x, int i_y, int[] i_rgb)
+	    {
+		    this._ref_buf[i_x + i_y * this._size.w]=((i_rgb[0]<<16)&0xff)|((i_rgb[1]<<8)&0xff)|((i_rgb[2])&0xff);
+	    }
+	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+	    {
+		    NyARException.notImplement();		
+	    }
     }
 
 }

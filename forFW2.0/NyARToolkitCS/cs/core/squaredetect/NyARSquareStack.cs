@@ -33,34 +33,15 @@ using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARSquareStack : NyObjectStack
+    public class NyARSquareStack : NyObjectStack<NyARSquare>
     {
         public NyARSquareStack(int i_length): base(new NyARSquare[i_length])
         {
-           
-
         }
-
-        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
+        protected override NyARSquare createElement()
         {
-            for (int i = i_start; i < i_end; i++)
-            {
-                i_buffer[i] = new NyARSquare();
-            }
+            return new NyARSquare();
         }
 
-        new public NyARSquare[] getArray()
-        {
-            return (NyARSquare[])this._items;
-        }
-        new public NyARSquare getItem(int i_index)
-        {
-            return (NyARSquare)this._items[i_index];
-        }
-
-        new public NyARSquare prePush()
-        {
-            return (NyARSquare)base.prePush();
-        }
     }
 }

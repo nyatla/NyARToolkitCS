@@ -1,12 +1,6 @@
 ﻿/* 
- * PROJECT: NyARToolkit
+ * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
  * The NyARToolkit is Java version ARToolkit class library.
  * Copyright (C)2008 R.Iizuka
  *
@@ -61,7 +55,7 @@ namespace jp.nyatla.nyartoolkit.cs.core2
             }
             public int createHistgramImpl(INyARBufferReader i_reader, NyARIntSize i_size, int[] o_histgram)
             {
-                Debug.Assert(i_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GLAY_8));
+                Debug.Assert(i_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
 
                 int sum = 0;
                 int[] input = (int[])i_reader.getBuffer();
@@ -202,7 +196,7 @@ namespace jp.nyatla.nyartoolkit.cs.core2
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
                     this._histgram = new CreateHistgramImpl_BYTE1D_RGB_24(i_vertical_interval);
                     break;
-                case INyARBufferReader.BUFFERFORMAT_INT1D_GLAY_8:
+                case INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8:
                     this._histgram = new CreateHistgramImpl_INT1D_GLAY_8(i_vertical_interval);
                     break;
                 case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:

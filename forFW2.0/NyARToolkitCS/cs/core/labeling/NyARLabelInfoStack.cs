@@ -38,35 +38,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * NyLabelの予約型動的配列
      * 
      */
-    public class NyARLabelingLabelStack : NyObjectStack
+    public abstract class NyARLabelInfoStack<T> : NyObjectStack<T> where T: NyARLabelInfo
     {
-        protected NyARLabelingLabelStack(NyARLabelingLabel[] i_label_array)
-            : base(i_label_array)
+        public NyARLabelInfoStack(int i_max_array_size)
+            : base(new T[i_max_array_size])
         {
-        }
-        public NyARLabelingLabelStack(int i_max_array_size)
-            : base(new NyARLabelingLabel[i_max_array_size])
-        {
-        }
-
-        override protected void onReservRequest(int i_start, int i_end, object[] i_buffer)
-        {
-            for (int i = i_start; i < i_end; i++)
-            {
-                i_buffer[i] = new NyARLabelingLabel();
-            }
-        }
-        new public NyARLabelingLabel[] getArray()
-        {
-            return (NyARLabelingLabel[])this._items;
-        }
-        new public NyARLabelingLabel getItem(int i_index)
-        {
-            return (NyARLabelingLabel)this._items[i_index];
-        }
-        new public NyARLabelingLabel prePush()
-        {
-            return (NyARLabelingLabel)base.prePush();
         }
         /**
          * エリアの大きい順にラベルをソートします。
@@ -74,18 +50,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void sortByArea()
         {
             int len = this._length;
+            if (len < 1)
+            {
+                return;
+            }
             int h = len * 13 / 10;
-            NyARLabelingLabel[] item = (NyARLabelingLabel[])this._items;
-            int swaps;
-            int i;
+            T[] item = this._items;
             for (; ; )
             {
-                swaps = 0;
-                for (i = 0; i + h < len; i++)
+                int swaps = 0;
+                for (int i = 0; i + h < len; i++)
                 {
                     if (item[i + h].area > item[i].area)
                     {
-                        NyARLabelingLabel temp = item[i + h];
+                        T temp = item[i + h];
                         item[i + h] = item[i];
                         item[i] = temp;
                         swaps++;
