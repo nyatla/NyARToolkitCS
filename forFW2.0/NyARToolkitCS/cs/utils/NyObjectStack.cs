@@ -23,6 +23,7 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.utils
 {
     /**
@@ -44,10 +45,10 @@ namespace jp.nyatla.nyartoolkit.cs.utils
          * 
          * @param i_array
          */
-        protected NyObjectStack(T[] i_array)
+        protected NyObjectStack(int i_length)
         {
             // ポインタだけははじめに確保しておく
-            this._items = i_array;
+            this._items = new T[i_length];
             // アロケート済サイズと、使用中個数をリセット
             this._allocated_size = 0;
             this._length = 0;
@@ -84,24 +85,30 @@ namespace jp.nyatla.nyartoolkit.cs.utils
             this._length++;
             return ret;
         }
-        /**
-         * 見かけ上の要素数を1減らして、最後尾のアイテムを返します。
-         * @return
-         */
-        virtual public T pop()
-        {
-            if (this._length < 1)
-            {
-                throw new NyARException();
-            }
-            this._length--;
-            return this.getItem(this._length);
-        }
-        /**
-         * 0～i_number_of_item-1までの領域を予約します。
-         * 予約すると、見かけ上の要素数は0にリセットされます。
-         * @param i_number_of_reserv
-         */
+	    public T pop()
+	    {
+		    Debug.Assert(this._length>=1);
+		    this._length--;
+		    return this._items[this._length];
+	    }
+	    /**
+	     * 見かけ上の要素数をi_count個減らします。
+	     * @param i_count
+	     * @return
+	     * NULLを返します。
+	     */
+	    public void pops(int i_count)
+	    {
+		    Debug.Assert(this._length>=i_count);
+		    this._length-=i_count;
+		    return;
+	    }	
+    	
+	    /**
+	     * 0～i_number_of_item-1までの領域を予約します。
+	     * 予約済の領域よりも小さい場合には、現在の長さを調整します。
+	     * @param i_number_of_reserv
+	     */
         virtual public void reserv(int i_number_of_item)
         {
             // 必要に応じてアロケート

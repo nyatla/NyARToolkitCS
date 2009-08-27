@@ -35,7 +35,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARSquareStack : NyObjectStack<NyARSquare>
     {
-        public NyARSquareStack(int i_length): base(new NyARSquare[i_length])
+        public NyARSquareStack(int i_length): base(i_length)
         {
         }
         protected override NyARSquare createElement()

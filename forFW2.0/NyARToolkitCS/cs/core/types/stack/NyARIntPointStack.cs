@@ -35,7 +35,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     public class NyARIntPointStack : NyObjectStack<NyARIntPoint2d>
     {
-        public NyARIntPointStack(int i_length): base(new NyARIntPoint2d[i_length])
+        public NyARIntPointStack(int i_length): base(i_length)
         {
         }
 

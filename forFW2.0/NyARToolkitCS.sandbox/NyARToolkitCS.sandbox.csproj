@@ -48,11 +48,12 @@
     <Compile Include="cs\x2\NyARFixedFloatRotTransOptimize_O2.cs" />
     <Compile Include="cs\x2\NyARFixedFloatRotVector.cs" />
     <Compile Include="cs\x2\NyARFixedFloatTransOffset.cs" />
-    <Compile Include="cs\x2\NyARLabeling_ARToolKit_X2.cs" />
+    <Compile Include="cs\x2\NyARFixedFloatVertexCounter.cs" />
     <Compile Include="cs\x2\NyARSingleDetectMarker_X2.cs" />
     <Compile Include="cs\x2\NyARSquareDetector_X2.cs" />
     <Compile Include="cs\x2\NyARTransMat_X2.cs" />
     <Compile Include="cs\x2\NyMath.cs" />
+    <Compile Include="cs\x2\SquareContourDetector_X2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -117,6 +117,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
 
             NyARLabelingLabelStack stack = limage.getLabelStack();
+            //ラベルをソートしておく
+            stack.sortByArea();
+            //
             NyARLabelingLabel[] labels = stack.getArray();
 
 

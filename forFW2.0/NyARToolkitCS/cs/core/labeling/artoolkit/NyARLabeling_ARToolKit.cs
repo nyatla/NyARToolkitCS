@@ -299,8 +299,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 label_pt.pos_x /= label_pt.area;
                 label_pt.pos_y /= label_pt.area;
             }
-            // ラベルを大きい順に整列
-            label_list.sortByArea();
             return wlabel_num;
         }
 

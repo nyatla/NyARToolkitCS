@@ -55,12 +55,14 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
         private int _width;
         private int _height;
 
-        private INyARLabeling _labeling;
+        private NyARLabeling_ARToolKit _labeling;
 
         private NyARLabelingImage _limage;
 
         private OverlapChecker _overlap_checker = new OverlapChecker();
         private NyARFixedFloatObserv2IdealMap _dist_factor;
+	    private ContourPickup _cpickup=new ContourPickup();
+    	private SquareContourDetector _sqconvertor;
         /**
          * 最大i_squre_max個のマーカーを検出するクラスを作成する。
          * 
@@ -70,9 +72,9 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
         {
             this._width = i_size.w / 2;
             this._height = i_size.h / 2;
-            this._labeling = new NyARLabeling_ARToolKit_X2();
+            this._labeling = new NyARLabeling_ARToolKit();
             this._limage = new NyARLabelingImage(this._width, this._height);
-            this._labeling.attachDestination(this._limage);
+            this._sqconvertor = new SquareContourDetector(i_size, i_dist_factor_ref);        
 
             // 輪郭の最大長は画面に映りうる最大の長方形サイズ。
             int number_of_coord = (this._width + this._height) * 2;
@@ -119,7 +121,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
          */
         public void detectMarker(NyARBinRaster i_raster, NyARSquareStack o_square_stack)
         {
-            INyARLabeling labeling_proc = this._labeling;
+
             NyARLabelingImage limage = this._limage;
 
             // 初期化
@@ -128,7 +130,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
             o_square_stack.clear();
 
             // ラベリング
-            labeling_proc.labeling(i_raster);
+            this._labeling.labeling(i_raster,limage);
 
             // ラベル数が0ならここまで
             int label_num = limage.getLabelStack().getLength();
@@ -138,11 +140,9 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
             }
 
             NyARLabelingLabelStack stack = limage.getLabelStack();
+            stack.sortByArea();
             NyARLabelingLabel[] labels = (NyARLabelingLabel[])stack.getArray();
 
-
-            // ラベルを大きい順に整列
-            stack.sortByArea();
 
             // デカいラベルを読み飛ばし
             int i;
@@ -162,7 +162,6 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
             int coord_max = this._max_coord;
             int[] mkvertex = this.__detectMarker_mkvertex;
             OverlapChecker overlap = this._overlap_checker;
-            int coord_num;
             int label_area;
             NyARLabelingLabel label_pt;
 
@@ -194,35 +193,22 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
                     continue;
                 }
 
-                // 輪郭を取得
-                coord_num = limage.getContour(i, coord_max, xcoord, ycoord);
-                if (coord_num == coord_max)
-                {
-                    // 輪郭が大きすぎる。
-                    continue;
-                }
-                //頂点候補のインデクスを取得
-                int vertex1 = scanVertex(xcoord, ycoord, coord_num);
+			// 輪郭を取得
+			int coord_num = _cpickup.getContour(limage,limage.getTopClipTangentX(label_pt),label_pt.clip_t, coord_max, xcoord, ycoord);
+			if (coord_num == coord_max) {
+				// 輪郭が大きすぎる。
+				continue;
+			}
+			//輪郭分析用に正規化する。
+			int vertex1 = SquareContourDetector.normalizeCoord(xcoord, ycoord, coord_num);
 
-                // 頂点候補(vertex1)を先頭に並べなおした配列を作成する。
-                normalizeCoord(xcoord, ycoord, vertex1, coord_num);
+			//ここから先が輪郭分析
+			NyARSquare square_ptr = o_square_stack.prePush();
+			if(!this._sqconvertor.coordToSquare(xcoord,ycoord,vertex1,coord_num,label_area,square_ptr)){
+				o_square_stack.pop();// 頂点の取得が出来なかったので破棄
+				continue;				
+			}
 
-                // 領域を準備する。
-                NyARSquare square_ptr = (NyARSquare)o_square_stack.prePush();
-
-                // 頂点情報を取得
-                if (!getSquareVertex(xcoord, ycoord, vertex1, coord_num, label_area, mkvertex))
-                {
-                    o_square_stack.pop();// 頂点の取得が出来なかったので破棄
-                    continue;
-                }
-                // マーカーを検出
-                if (!getSquareLine(mkvertex, xcoord, ycoord, square_ptr))
-                {
-                    // 矩形が成立しなかった。
-                    o_square_stack.pop();
-                    continue;
-                }
                 // 検出済の矩形の属したラベルを重なりチェックに追加する。
                 overlap.push(label_pt);
             }

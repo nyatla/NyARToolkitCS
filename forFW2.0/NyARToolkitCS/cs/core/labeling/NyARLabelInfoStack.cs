@@ -41,7 +41,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public abstract class NyARLabelInfoStack<T> : NyObjectStack<T> where T: NyARLabelInfo
     {
         public NyARLabelInfoStack(int i_max_array_size)
-            : base(new T[i_max_array_size])
+            : base(i_max_array_size)
         {
         }
         /**
