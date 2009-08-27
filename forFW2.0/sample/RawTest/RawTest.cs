@@ -67,7 +67,7 @@ namespace ConsoleApplication1
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
-            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferReader().getBufferType(), NyARSingleDetectMarker.PF_ARTOOLKIT_CONPATIBLE);
+            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferReader().getBufferType());
             NyARTransMatResult result_mat = new NyARTransMatResult();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);

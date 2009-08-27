@@ -84,14 +84,8 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatTransOffset.cs">
       <Link>cs\x2\NyARFixedFloatTransOffset.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARLabeling_ARToolKit_X2.cs">
-      <Link>cs\x2\NyARLabeling_ARToolKit_X2.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSingleDetectMarker_X2.cs">
       <Link>cs\x2\NyARSingleDetectMarker_X2.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_X2.cs">
-      <Link>cs\x2\NyARSquareDetector_X2.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARTransMat_X2.cs">
       <Link>cs\x2\NyARTransMat_X2.cs</Link>
@@ -104,6 +98,18 @@
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatObserv2IdealMap.cs">
       <Link>cs\x2\NyARFixedFloatObserv2IdealMap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatVertexCounter.cs">
+      <Link>cs\x2\NyARFixedFloatVertexCounter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\SquareContourDetector_X2.cs">
+      <Link>cs\x2\SquareContourDetector_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_ARToolKit_X2.cs">
+      <Link>cs\x2\NyARSquareDetector_ARToolKit_X2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_Rle_X2.cs">
+      <Link>cs\x2\NyARSquareDetector_Rle_X2.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

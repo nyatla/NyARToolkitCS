@@ -51,34 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\INyARSquareDetector.cs">
-      <Link>cs\core\INyARSquareDetector.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\INyARLabeling.cs">
-      <Link>cs\core\labeling\INyARLabeling.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\INyARLabelingImage.cs">
-      <Link>cs\core\labeling\INyARLabelingImage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabelingImage.cs">
-      <Link>cs\core\labeling\NyARLabelingImage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabelingLabel.cs">
-      <Link>cs\core\labeling\NyARLabelingLabel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabelingLabelStack.cs">
-      <Link>cs\core\labeling\NyARLabelingLabelStack.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabeling_ARToolKit.cs">
-      <Link>cs\core\labeling\NyARLabeling_ARToolKit.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\match\INyARMatchPatt.cs">
       <Link>cs\core\match\INyARMatchPatt.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\match\NyARMatchPatt_Color_WITHOUT_PCA.cs">
       <Link>cs\core\match\NyARMatchPatt_Color_WITHOUT_PCA.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\match\NyARMatchPatt_BlackWhite.cs">
       <Link>cs\core\match\NyARMatchPatt_BlackWhite.cs</Link>
     </Compile>
@@ -91,18 +69,8 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\match\NyARMatchPattResult.cs">
       <Link>cs\core\match\NyARMatchPattResult.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARCode.cs">
       <Link>cs\core\NyARCode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARVertexCounter.cs">
-      <Link>cs\core\NyARVertexCounter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARSquareDetector.cs">
-      <Link>cs\core\NyARSquareDetector.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARSquareStack.cs">
-      <Link>cs\core\NyARSquareStack.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\param\NyARCameraDistortionFactor.cs">
       <Link>cs\core\param\NyARCameraDistortionFactor.cs</Link>
@@ -128,21 +96,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pca2d\NyARPca2d_MatrixPCA.cs">
       <Link>cs\core\pca2d\NyARPca2d_MatrixPCA.cs</Link>
     </Compile>
-
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\INyARColorPatt.cs">
-      <Link>cs\core\pickup\INyARColorPatt.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_O3.cs">
-      <Link>cs\core\pickup\NyARColorPatt_O3.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_Perspective.cs">
-      <Link>cs\core\pickup\NyARColorPatt_Perspective.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_PseudoAffine.cs">
-      <Link>cs\core\pickup\NyARColorPatt_PseudoAffine.cs</Link>
-    </Compile>
-
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterfilter\INyARRasterFilter.cs">
       <Link>cs\core\rasterfilter\INyARRasterFilter.cs</Link>
     </Compile>
@@ -167,16 +120,12 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARBufferReader.cs">
       <Link>cs\core\rasterreader\NyARBufferReader.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_INT1D_GRAY_8.cs">
       <Link>cs\core\rasterreader\NyARRgbPixelReader_INT1D_GRAY_8.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs">
       <Link>cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs</Link>
     </Compile>
-
-
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\rasterreader\NyARRgbPixelReader_RGB24.cs">
       <Link>cs\core\rasterreader\NyARRgbPixelReader_RGB24.cs</Link>
     </Compile>
@@ -189,14 +138,12 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\raster\NyARGrayscaleRaster.cs">
       <Link>cs\core\raster\NyARGrayscaleRaster.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\raster\NyARRaster_BasicClass.cs">
       <Link>cs\core\raster\NyARRaster_BasicClass.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\raster\NyARRaster.cs">
       <Link>cs\core\raster\NyARRaster.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\raster\rgb\INyARRgbRaster.cs">
       <Link>cs\core\raster\rgb\INyARRgbRaster.cs</Link>
     </Compile>
@@ -260,7 +207,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\matrix\NyARDoubleMatrix44.cs">
       <Link>cs\core\types\matrix\NyARDoubleMatrix44.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\NyARDoublePoint2d.cs">
       <Link>cs\core\types\NyARDoublePoint2d.cs</Link>
     </Compile>
@@ -282,14 +228,12 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\NyARIntPoint2d.cs">
       <Link>cs\core\types\NyARIntPoint2d.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\stack\NyARIntPointStack.cs">
       <Link>cs\core\types\stack\NyARIntPointStack.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\stack\NyARIntRectStack.cs">
       <Link>cs\core\types\stack\NyARIntRectStack.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyARDoubleMatrixProcessor.cs">
       <Link>cs\core\utils\NyARDoubleMatrixProcessor.cs</Link>
     </Compile>
@@ -302,16 +246,11 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs">
       <Link>cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs</Link>
     </Compile>
-
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\NyARException.cs">
       <Link>cs\NyARException.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARMat.cs">
       <Link>cs\core\NyARMat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARSquare.cs">
-      <Link>cs\core\NyARSquare.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\NyARVersion.cs">
       <Link>cs\core\NyARVersion.cs</Link>
@@ -328,7 +267,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\detector\NyARCustomSingleDetectMarker.cs">
       <Link>cs\detector\NyARCustomSingleDetectMarker.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\nyidmarker\NyIdMarkerParam.cs">
       <Link>cs\nyidmarker\NyIdMarkerParam.cs</Link>
     </Compile>
@@ -338,7 +276,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\nyidmarker\NyIdMarkerPickup.cs">
       <Link>cs\nyidmarker\NyIdMarkerPickup.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\nyidmarker\data\INyIdMarkerData.cs">
       <Link>cs\nyidmarker\data\INyIdMarkerData.cs</Link>
     </Compile>
@@ -351,15 +288,12 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\nyidmarker\data\NyIdMarkerDataEncoder_RawBit.cs">
       <Link>cs\nyidmarker\data\NyIdMarkerDataEncoder_RawBit.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\processor\SingleARMarkerProcesser.cs">
       <Link>cs\processor\SingleARMarkerProcesser.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\processor\SingleNyIdMarkerProcesser.cs">
       <Link>cs\processor\SingleNyIdMarkerProcesser.cs</Link>
     </Compile>
-
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\utils.cs\ArrayUtils.cs">
       <Link>cs\utils.cs\ArrayUtils.cs</Link>
     </Compile>
@@ -399,13 +333,86 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\types\NyARI64Point3d.cs">
       <Link>cs\core2\types\NyARI64Point3d.cs</Link>
     </Compile>
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\rasteranalyzer\threshold\INyARRasterThresholdAnalyzer.cs">
       <Link>cs\core2\rasteranalyzer\threshold\INyARRasterThresholdAnalyzer.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core2\rasteranalyzer\threshold\NyARRasterThresholdAnalyzer_SlidePTile.cs">
       <Link>cs\core2\rasteranalyzer\threshold\NyARRasterThresholdAnalyzer_SlidePTile.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\artoolkit\NyARLabeling_ARToolKit.cs">
+      <Link>cs\core\labeling\artoolkit\NyARLabeling_ARToolKit.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\artoolkit\NyARLabelingImage.cs">
+      <Link>cs\core\labeling\artoolkit\NyARLabelingImage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\artoolkit\NyARLabelingLabel.cs">
+      <Link>cs\core\labeling\artoolkit\NyARLabelingLabel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\artoolkit\NyARLabelingLabelStack.cs">
+      <Link>cs\core\labeling\artoolkit\NyARLabelingLabelStack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\rlelabeling\NyARLabeling_Rle.cs">
+      <Link>cs\core\labeling\rlelabeling\NyARLabeling_Rle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\rlelabeling\RleLabelFragmentInfoStack.cs">
+      <Link>cs\core\labeling\rlelabeling\RleLabelFragmentInfoStack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\LabelOverlapChecker.cs">
+      <Link>cs\core\labeling\LabelOverlapChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabelInfo.cs">
+      <Link>cs\core\labeling\NyARLabelInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\labeling\NyARLabelInfoStack.cs">
+      <Link>cs\core\labeling\NyARLabelInfoStack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\INyARColorPatt.cs">
+      <Link>cs\core\pickup\INyARColorPatt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_O3.cs">
+      <Link>cs\core\pickup\NyARColorPatt_O3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_Perspective.cs">
+      <Link>cs\core\pickup\NyARColorPatt_Perspective.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_PseudoAffine.cs">
+      <Link>cs\core\pickup\NyARColorPatt_PseudoAffine.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_Perspective_O2.cs">
+      <Link>cs\core\pickup\NyARColorPatt_Perspective_O2.cs</Link>
+    </Compile>
+
+
+
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\ContourPickup.cs">
+      <Link>cs\core\squaredetect\ContourPickup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\INyARSquareDetector.cs">
+      <Link>cs\core\squaredetect\INyARSquareDetector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\NyARSquare.cs">
+      <Link>cs\core\squaredetect\NyARSquare.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\NyARSquareDetector_ARToolKit.cs">
+      <Link>cs\core\squaredetect\NyARSquareDetector_ARToolKit.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\NyARSquareDetector_Rle.cs">
+      <Link>cs\core\squaredetect\NyARSquareDetector_Rle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\NyARSquareStack.cs">
+      <Link>cs\core\squaredetect\NyARSquareStack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\NyARVertexCounter.cs">
+      <Link>cs\core\squaredetect\NyARVertexCounter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\SquareContourDetector.cs">
+      <Link>cs\core\squaredetect\SquareContourDetector.cs</Link>
+    </Compile>
+
+
+
+
+
 
 
     <Compile Include="Properties\AssemblyInfo.cs" />

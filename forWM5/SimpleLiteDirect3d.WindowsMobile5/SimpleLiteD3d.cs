@@ -153,17 +153,18 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
             //AR用のパターンコードを読み出
             NyARCode code = i_resource.createNyARCode();
+            //ARラスタを作る(DirectShowキャプチャ仕様)。
+            this.m_raster = i_resource.createARRaster();
 
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0);
+            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
             this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);
 
             ////立方体（頂点数8）の準備
 
-            //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this.m_raster = i_resource.createARRaster();
+
             return;
         }
 
@@ -204,7 +205,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this._capture.stop();
         }
 
-
+/*
         public bool InitializeApplication(NyARToolkitCS topLevelForm, ResourceBuilder i_resource)
         {
             NyMath.initialize();
@@ -218,16 +219,16 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             //AR用のパターンコードを読み出
             NyARCode code = i_resource.createNyARCode();
 
+            //ARラスタを作る(DirectShowキャプチャ仕様)。
+            this.m_raster = i_resource.createARRaster();
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0);
+            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
             this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);
 
-            //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this.m_raster = i_resource.createARRaster();
             return true;
-        }
+        }*/
         private bool is_marker_enable=false;
         private Matrix trans_matrix = new Matrix();
         private NyARTransMatResult trans_result = new NyARTransMatResult();

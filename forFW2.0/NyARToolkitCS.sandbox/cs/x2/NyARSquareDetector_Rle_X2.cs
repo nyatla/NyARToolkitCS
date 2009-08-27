@@ -45,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
      * このクラスは、arDetectMarker2.cとの置き換えになります。
      * 
      */
-    public class NyARSquareDetector_X2 : INyARSquareDetector
+    public class NyARSquareDetector_Rle_X2 : INyARSquareDetector
     {
         private const int AR_AREA_MAX = 100000;// #define AR_AREA_MAX 100000
 
@@ -66,7 +66,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
          * 
          * @param i_param
          */
-        public NyARSquareDetector_X2(NyARCameraDistortionFactor i_dist_factor_ref, NyARIntSize i_size)
+        public NyARSquareDetector_Rle_X2(NyARCameraDistortionFactor i_dist_factor_ref, NyARIntSize i_size)
         {
             this._width = i_size.w;
             this._height = i_size.h;
@@ -107,12 +107,15 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 
             // マーカーホルダをリセット
             o_square_stack.clear();
-
-		    // ラベル数が0ならここまで(Labeling内部でソートするようにした。)
+            this._labeling.labeling(i_raster, 0, i_raster.getHeight(), flagment);
+            
+            // ラベル数が0ならここまで(Labeling内部でソートするようにした。)
 		    int label_num=this._labeling.labeling(i_raster, 0, i_raster.getHeight(), flagment);
 		    if (label_num < 1) {
 			    return;
 		    }
+            //ラベルをソートしておく
+            flagment.sortByArea();
 
             RleLabelFragmentInfoStack.RleLabelFragmentInfo[] labels = flagment.getArray();
 
