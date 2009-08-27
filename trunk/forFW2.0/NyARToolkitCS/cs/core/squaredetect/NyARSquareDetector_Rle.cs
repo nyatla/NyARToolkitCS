@@ -30,9 +30,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._width = i_size.w;
             this._height = i_size.h;
-            //歪み計算テーブルを作ると、8*width/height*2の領域を消費します。
-            //領域を取りたくない場合は、i_dist_factor_refの値をそのまま使ってください。
-            this._labeling = new NyARLabeling_Rle(this._width);
+            //ラベリングのサイズを指定したいときはsetAreaRangeを使ってね。
+            this._labeling = new NyARLabeling_Rle(this._width, this._height);
+            this._labeling.setAreaRange(AR_AREA_MAX, AR_AREA_MIN);
             this._sqconvertor = new SquareContourDetector(i_size, i_dist_factor_ref);
             this._stack = new RleLabelFragmentInfoStack(i_size.w * i_size.h * 2048 / (320 * 240) + 32);//検出可能な最大ラベル数
 
@@ -65,25 +65,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // マーカーホルダをリセット
             o_square_stack.clear();
 
-            // ラベル数が0ならここまで(Labeling内部でソートするようにした。)
+            // ラベル数が0ならここまで
             int label_num = this._labeling.labeling(i_raster, 0, i_raster.getHeight(), flagment);
             if (label_num < 1)
             {
                 return;
             }
-            // ラベルを大きい順に整列
+            //ラベルをソートしておく
+            flagment.sortByArea();
+            //ラベルリストを取得
             RleLabelFragmentInfoStack.RleLabelFragmentInfo[] labels = flagment.getArray();
 
-            // デカいラベルを読み飛ばし
-            int i;
-            for (i = 0; i < label_num; i++)
-            {
-                // 検査対象内のラベルサイズになるまで無視
-                if (labels[i].area <= AR_AREA_MAX)
-                {
-                    break;
-                }
-            }
 
             int xsize = this._width;
             int ysize = this._height;
@@ -94,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //重なりチェッカの最大数を設定
             overlap.setMaxLabels(label_num);
 
-            for (; i < label_num; i++)
+            for (int i=0; i < label_num; i++)
             {
                 RleLabelFragmentInfoStack.RleLabelFragmentInfo label_pt = labels[i];
                 int label_area = label_pt.area;

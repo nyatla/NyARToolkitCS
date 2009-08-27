@@ -75,13 +75,11 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
          * ARコードの物理サイズを、ミリメートルで指定します。
          * @throws NyARException
          */
-        public NyARSingleDetectMarker_X2(NyARParam i_param, NyARCode i_code, double i_marker_width)
+        public NyARSingleDetectMarker_X2(NyARParam i_param, NyARCode i_code, double i_marker_width, int i_input_raster_type)
         {
             NyARIntSize scr_size = i_param.getScreenSize();
-            NyARFixedFloatObserv2IdealMap dist_map = new NyARFixedFloatObserv2IdealMap(i_param.getDistortionFactor(), scr_size);
-
             // 解析オブジェクトを作る
-            this._square_detect = new NyARSquareDetector_X2(dist_map, scr_size);
+            this._square_detect = new NyARSquareDetector_X2(i_param.getDistortionFactor(), scr_size);
             this._transmat = new NyARTransMat_X2(i_param);
             this._marker_width = i_marker_width;
             int cw = i_code.getWidth();
@@ -94,11 +92,12 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
             //差分データインスタンスの作成
             this._deviation_data = new NyARMatchPattDeviationColorData(cw, ch);
+            this._tobin_filter= new NyARRasterFilter_ARToolkitThreshold(100,i_input_raster_type);
             return;
         }
 
         private NyARBinRaster _bin_raster;
-        private NyARRasterFilter_ARToolkitThreshold _tobin_filter = new NyARRasterFilter_ARToolkitThreshold(100);
+        private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
         private NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
         private NyARMatchPattDeviationColorData _deviation_data;
 

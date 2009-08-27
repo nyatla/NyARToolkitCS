@@ -35,7 +35,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARIntRectStack : NyObjectStack<NyARIntRect>
     {
-        public NyARIntRectStack(int i_length): base(new NyARIntRect[i_length])
+        public NyARIntRectStack(int i_length): base(i_length)
         {
 
         }
