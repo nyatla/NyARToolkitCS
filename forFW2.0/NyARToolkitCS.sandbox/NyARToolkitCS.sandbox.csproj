@@ -54,6 +54,7 @@
     <Compile Include="cs\x2\NyARSquareDetector_Rle_X2.cs" />
     <Compile Include="cs\x2\NyARTransMat_X2.cs" />
     <Compile Include="cs\x2\NyMath.cs" />
+    <Compile Include="cs\x2\SingleARMarkerProcesser_X2.cs" />
     <Compile Include="cs\x2\SquareContourDetector_X2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
