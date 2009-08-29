@@ -111,6 +111,9 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARSquareDetector_Rle_X2.cs">
       <Link>cs\x2\NyARSquareDetector_Rle_X2.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\SingleARMarkerProcesser_X2.cs">
+      <Link>cs\x2\SingleARMarkerProcesser_X2.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

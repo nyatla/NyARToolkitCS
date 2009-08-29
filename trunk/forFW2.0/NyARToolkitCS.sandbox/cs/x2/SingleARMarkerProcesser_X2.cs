@@ -35,7 +35,7 @@ using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.core2;
 
-namespace jp.nyatla.nyartoolkit.cs.processor
+namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 {
     /**
      * このクラスは、同時に１個のマーカを処理することのできる、アプリケーションプロセッサです。
@@ -49,7 +49,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
      * イベントが発生します。
      * 
      */
-    public abstract class SingleARMarkerProcesser
+    public abstract class SingleARMarkerProcesser_X2
     {
         /**
          * [[STRAGE CLASS]]
@@ -74,7 +74,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private INyARSquareDetector _square_detect;
 
-        protected NyARTransMat _transmat;
+        protected NyARTransMat_X2 _transmat;
 
         private double _marker_width;
 
@@ -100,7 +100,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         private NyARRasterThresholdAnalyzer_SlidePTile _threshold_detect;
 
 
-	    protected SingleARMarkerProcesser()
+	    protected SingleARMarkerProcesser_X2()
 	    {
 		    return;
 	    }
@@ -110,8 +110,8 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 	    {
 		    NyARIntSize scr_size = i_param.getScreenSize();
 		    // 解析オブジェクトを作る
-		    this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
-		    this._transmat = new NyARTransMat(i_param);
+		    this._square_detect = new NyARSquareDetector_Rle_X2(i_param.getDistortionFactor(), scr_size);
+		    this._transmat = new NyARTransMat_X2(i_param);
 		    this._tobin_filter=new NyARRasterFilter_ARToolkitThreshold(110,i_raster_type);
 
 		    // ２値画像バッファを作る
