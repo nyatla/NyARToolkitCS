@@ -62,8 +62,8 @@ public class NyARTransMat : INyARTransMat
 		NyARPerspectiveProjectionMatrix pmat=i_param.getPerspectiveProjectionMatrix();
 		this._calculator=new NyARFitVecCalculator(pmat,dist);
 		//互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
-		//理屈はNyARRotMatrix_NyARToolKitもNyARRotMatrix_ARToolKitも同じだけど、少しだけ値がずれる。
-		this._rotmatrix = new NyARRotMatrix_NyARToolKit(pmat);
+		//理屈はNyARRotMatrix_ARToolKit_O2もNyARRotMatrix_ARToolKitも同じだけど、少しだけ値がずれる。
+        this._rotmatrix = new NyARRotMatrix_ARToolKit_O2(pmat);
 //		this._rotmatrix = new NyARRotMatrix_ARToolKit(pmat);
 		this._mat_optimize=new NyARRotTransOptimize_O2(pmat);
 	}
