@@ -39,6 +39,5 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARTransMatResult : NyARDoubleMatrix34
     {
         public bool has_value = false;
-        public NyARDoublePoint3d angle = new NyARDoublePoint3d();
     }
 }

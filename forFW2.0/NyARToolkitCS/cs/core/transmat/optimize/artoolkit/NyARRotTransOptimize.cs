@@ -50,7 +50,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        public double optimize(NyARRotMatrix io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator)
+        public double optimize(NyARRotMatrix_ARToolKit io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator)
         {
             NyARDoublePoint2d[] fit_vertex = i_calculator.getFitSquare();
             NyARDoublePoint3d[] offset_square = i_calculator.getOffsetVertex().vertex;
@@ -85,7 +85,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * @throws NyARException
          */
-        private double modifyMatrix(NyARRotMatrix io_rot, NyARDoublePoint3d trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d)
+        private double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d)
         {
             double factor;
             double a2, b2, c2;

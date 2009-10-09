@@ -41,14 +41,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * 処理を省略しているため、下位12桁目の計算値が異なる。
      *
      */
-    public class NyARRotMatrix_NyARToolKit : NyARRotMatrix_ARToolKit
+    public class NyARRotMatrix_ARToolKit_O2 : NyARRotMatrix_ARToolKit
     {
         /**
          * インスタンスを準備します。
          * 
          * @param i_param
          */
-        public NyARRotMatrix_NyARToolKit(NyARPerspectiveProjectionMatrix i_matrix)
+        public NyARRotMatrix_ARToolKit_O2(NyARPerspectiveProjectionMatrix i_matrix)
             : base(i_matrix)
         {
             return;
