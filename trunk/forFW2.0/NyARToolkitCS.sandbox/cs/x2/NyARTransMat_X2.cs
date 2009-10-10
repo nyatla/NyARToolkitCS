@@ -216,9 +216,6 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 
 		    NyARFixedFloat16Point3d angle=i_rot.refAngle();
 
-            o_result.angle.x = (double)angle.x / NyMath.FIXEDFLOAT16_1;
-            o_result.angle.y = (double)angle.y / NyMath.FIXEDFLOAT16_1;
-            o_result.angle.z = (double)angle.z / NyMath.FIXEDFLOAT16_1;
 		    o_result.has_value = true;
             return;
         }

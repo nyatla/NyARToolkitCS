@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.solver
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 並進ベクトル[T]を３次元座標[b]と基点の回転済行列[M]から計算するインタフェイスです。
@@ -36,7 +36,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.solver
      */
     public interface INyARTransportVectorSolver
     {
-	    public void set2dVertex(NyARDoublePoint2d[] i_ref_vertex_2d,int i_number_of_vertex);
+	    void set2dVertex(NyARDoublePoint2d[] i_ref_vertex_2d,int i_number_of_vertex);
 	    /**
 	     * 画面座標群と3次元座標群から、平行移動量を計算します。
 	     * 2d座標系は、直前に実行したset2dVertexのものを使用します。
@@ -47,6 +47,6 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.solver
 	     * @param o_transfer
 	     * @throws NyARException
 	     */
-	    public void solveTransportVector(NyARDoublePoint3d[] i_vertex3d,NyARDoublePoint3d o_transfer);
+	    void solveTransportVector(NyARDoublePoint3d[] i_vertex3d,NyARDoublePoint3d o_transfer);
     }
 }

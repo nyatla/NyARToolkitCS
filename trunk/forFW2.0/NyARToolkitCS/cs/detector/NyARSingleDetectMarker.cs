@@ -41,8 +41,10 @@ namespace jp.nyatla.nyartoolkit.cs.detector
 
     public class NyARSingleDetectMarker : NyARCustomSingleDetectMarker
     {
-        public const int PF_ARTOOLKIT_CONPATIBLE = 1;
-        public const int PF_NYARTOOLKIT = 2;
+	    public const int PF_ARTOOLKIT_COMPATIBLE=1;
+	    public const int PF_NYARTOOLKIT=2;
+	    public const int PF_NYARTOOLKIT_ARTOOLKIT_FITTING=100;
+        public const int PF_TEST2 = 201;
 
         /**
          * 検出するARCodeとカメラパラメータから、1個のARCodeを検出するNyARSingleDetectMarkerインスタンスを作ります。
@@ -86,22 +88,30 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             NyARRasterFilter_ARToolkitThreshold th = new NyARRasterFilter_ARToolkitThreshold(100, i_input_raster_type);
             INyARColorPatt patt_inst;
             INyARSquareDetector sqdetect_inst;
+            INyARTransMat transmat_inst;
 
             switch (i_profile_id)
             {
-                case PF_ARTOOLKIT_CONPATIBLE:
+                case PF_ARTOOLKIT_COMPATIBLE:
                     patt_inst = new NyARColorPatt_O3(i_ref_code.getWidth(), i_ref_code.getHeight());
                     sqdetect_inst = new NyARSquareDetector_ARToolKit(i_ref_param.getDistortionFactor(), i_ref_param.getScreenSize());
+                    transmat_inst = new NyARTransMat_ARToolKit(i_ref_param);
+                    break;
+                case PF_NYARTOOLKIT_ARTOOLKIT_FITTING:
+                    patt_inst = new NyARColorPatt_Perspective_O2(i_ref_code.getWidth(), i_ref_code.getHeight(), 4, 25);
+                    sqdetect_inst = new NyARSquareDetector_Rle(i_ref_param.getDistortionFactor(), i_ref_param.getScreenSize());
+                    transmat_inst = new NyARTransMat_ARToolKit(i_ref_param);
                     break;
                 case PF_NYARTOOLKIT:
                     patt_inst = new NyARColorPatt_Perspective_O2(i_ref_code.getWidth(), i_ref_code.getHeight(), 4, 25);
                     sqdetect_inst = new NyARSquareDetector_Rle(i_ref_param.getDistortionFactor(), i_ref_param.getScreenSize());
+                    transmat_inst = new NyARTransMat(i_ref_param);
                     break;
                 default:
                     throw new NyARException();
             }
-            base.initInstance(patt_inst, sqdetect_inst, th, i_ref_param, i_ref_code, i_marker_width);
-
+            base.initInstance(patt_inst, sqdetect_inst, transmat_inst,th, i_ref_param, i_ref_code, i_marker_width);
+            return;
         }
 
 

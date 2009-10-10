@@ -29,6 +29,8 @@
  *	<airmail(at)ebony.plala.or.jp>
  * 
  */
+using System;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -39,5 +41,32 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARTransMatResult : NyARDoubleMatrix34
     {
         public bool has_value = false;
+        /**
+         * この関数は、0-PIの間で値を返します。
+         * @param o_out
+         */
+        public void getZXYAngle(NyARDoublePoint3d o_out)
+        {
+            double sina = this.m21;
+            if (sina >= 1.0)
+            {
+                o_out.x = Math.PI / 2;
+                o_out.y = 0;
+                o_out.z = Math.Atan2(-this.m10, this.m00);
+            }
+            else if (sina <= -1.0)
+            {
+                o_out.x = -Math.PI / 2;
+                o_out.y = 0;
+                o_out.z = Math.Atan2(-this.m10, this.m00);
+            }
+            else
+            {
+                o_out.x = Math.Asin(sina);
+                o_out.z = Math.Atan2(-this.m01, this.m11);
+                o_out.y = Math.Atan2(-this.m20, this.m22);
+            }
+        }
     }
+
 }

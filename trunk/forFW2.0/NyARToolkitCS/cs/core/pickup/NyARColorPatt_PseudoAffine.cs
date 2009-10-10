@@ -71,33 +71,33 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_height
          */
         public NyARColorPatt_PseudoAffine(int i_width, int i_height)
-	{		
-		this._size=new NyARIntSize(i_width,i_height);
-		this._patdata = new int[i_height*i_width];
-		this._buf_reader=new NyARBufferReader(this._patdata,NyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32);
-		this._pixelreader=new NyARRgbPixelReader_INT1D_X8R8G8B8_32(this._patdata,this._size);
-		//疑似アフィン変換のパラメタマトリクスを計算します。
-		//長方形から計算すると、有効要素がm00,m01,m02,m03,m10,m11,m20,m23,m30になります。
-		NyARDoubleMatrix44 mat=this._invmat;
-		mat.m00=0;
-		mat.m01=0;
-		mat.m02=0;
-		mat.m03=1.0;
-		mat.m10=0;
-		mat.m11=i_width-1;
-		mat.m12=0;
-		mat.m13=1.0;
-		mat.m20=(i_width-1)*(i_height-1);
-		mat.m21=i_width-1;
-		mat.m22=i_height-1;
-		mat.m23=1.0;
-		mat.m30=0;
-		mat.m31=0;
-		mat.m32=i_height-1;
-		mat.m33=1.0;
-		NyARDoubleMatrixProcessor.inverse(mat,mat);
-		return;
-	}
+        {
+            this._size = new NyARIntSize(i_width, i_height);
+            this._patdata = new int[i_height * i_width];
+            this._buf_reader = new NyARBufferReader(this._patdata, NyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32);
+            this._pixelreader = new NyARRgbPixelReader_INT1D_X8R8G8B8_32(this._patdata, this._size);
+            //疑似アフィン変換のパラメタマトリクスを計算します。
+            //長方形から計算すると、有効要素がm00,m01,m02,m03,m10,m11,m20,m23,m30になります。
+            NyARDoubleMatrix44 mat = this._invmat;
+            mat.m00 = 0;
+            mat.m01 = 0;
+            mat.m02 = 0;
+            mat.m03 = 1.0;
+            mat.m10 = 0;
+            mat.m11 = i_width - 1;
+            mat.m12 = 0;
+            mat.m13 = 1.0;
+            mat.m20 = (i_width - 1) * (i_height - 1);
+            mat.m21 = i_width - 1;
+            mat.m22 = i_height - 1;
+            mat.m23 = 1.0;
+            mat.m30 = 0;
+            mat.m31 = 0;
+            mat.m32 = i_height - 1;
+            mat.m33 = 1.0;
+            mat.inverse(mat);
+            return;
+        }
 
         /**
          * 変換行列と頂点座標から、パラメータを計算

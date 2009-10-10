@@ -53,7 +53,7 @@ public abstract class SingleNyIdMarkerProcesser
 	private int _lost_delay = 5;
 
 	private INyARSquareDetector _square_detect;
-	protected NyARTransMat _transmat;
+	protected INyARTransMat _transmat;
 	private double _marker_width=100;
 
 	private NyARSquareStack _square_list = new NyARSquareStack(100);

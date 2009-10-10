@@ -74,7 +74,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private INyARSquareDetector _square_detect;
 
-        protected NyARTransMat _transmat;
+        protected INyARTransMat _transmat;
 
         private double _marker_width;
 

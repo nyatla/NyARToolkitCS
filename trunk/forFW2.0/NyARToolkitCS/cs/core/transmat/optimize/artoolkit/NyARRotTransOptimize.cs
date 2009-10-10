@@ -41,36 +41,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARRotTransOptimize_O2 : INyARRotTransOptimize
     {
-        private static int AR_GET_TRANS_MAT_MAX_LOOP_COUNT = 5;// #define AR_GET_TRANS_MAT_MAX_LOOP_COUNT 5
-        private static double AR_GET_TRANS_MAT_MAX_FIT_ERROR = 1.0;// #define AR_GET_TRANS_MAT_MAX_FIT_ERROR 1.0
         private NyARPerspectiveProjectionMatrix _projection_mat_ref;
         public NyARRotTransOptimize_O2(NyARPerspectiveProjectionMatrix i_projection_mat_ref)
         {
             this._projection_mat_ref = i_projection_mat_ref;
             return;
-        }
-
-        public double optimize(NyARRotMatrix_ARToolKit io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator)
-        {
-            NyARDoublePoint2d[] fit_vertex = i_calculator.getFitSquare();
-            NyARDoublePoint3d[] offset_square = i_calculator.getOffsetVertex().vertex;
-
-            double err = -1;
-            /*ループを抜けるタイミングをARToolKitと合わせるために変なことしてます。*/
-            for (int i = 0; ; i++)
-            {
-                // <arGetTransMat3>
-                err = modifyMatrix(io_rotmat, io_transvec, offset_square, fit_vertex);
-                i_calculator.calculateTransfer(io_rotmat, io_transvec);
-                err = modifyMatrix(io_rotmat, io_transvec, offset_square, fit_vertex);
-                // //</arGetTransMat3>
-                if (err < AR_GET_TRANS_MAT_MAX_FIT_ERROR || i == AR_GET_TRANS_MAT_MAX_LOOP_COUNT - 1)
-                {
-                    break;
-                }
-                i_calculator.calculateTransfer(io_rotmat, io_transvec);
-            }
-            return err;
         }
 
         private double[][] __modifyMatrix_double1D = ArrayUtils.newDouble2dArray(8, 3);
@@ -85,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * @throws NyARException
          */
-        private double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d)
+        public double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d)
         {
             double factor;
             double a2, b2, c2;
@@ -125,9 +100,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             P2D31 = i_vertex2d[3].y;
             NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
             double CP0 = prjmat.m00, CP1 = prjmat.m01, CP2 = prjmat.m02, CP4 = prjmat.m10, CP5 = prjmat.m11, CP6 = prjmat.m12, CP8 = prjmat.m20, CP9 = prjmat.m21, CP10 = prjmat.m22;
-            combo03 = CP0 * trans.x + CP1 * trans.y + CP2 * trans.z + prjmat.m03;
-            combo13 = CP4 * trans.x + CP5 * trans.y + CP6 * trans.z + prjmat.m13;
-            combo23 = CP8 * trans.x + CP9 * trans.y + CP10 * trans.z + prjmat.m23;
+            combo03 = CP0 * i_trans.x + CP1 * i_trans.y + CP2 * i_trans.z + prjmat.m03;
+            combo13 = CP4 * i_trans.x + CP5 * i_trans.y + CP6 * i_trans.z + prjmat.m13;
+            combo23 = CP8 * i_trans.x + CP9 * i_trans.y + CP10 * i_trans.z + prjmat.m23;
             double CACA, SASA, SACA, CA, SA;
             double CACACB, SACACB, SASACB, CASB, SASB;
             double SACASC, SACACBSC, SACACBCC, SACACC;

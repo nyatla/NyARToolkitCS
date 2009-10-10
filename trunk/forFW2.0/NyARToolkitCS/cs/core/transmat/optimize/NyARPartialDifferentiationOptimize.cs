@@ -25,9 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-    class TSinCosValue
+    public class TSinCosValue
     {
         public double cos_val;
         public double sin_val;
@@ -83,29 +83,29 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             {
                 x = Math.PI / 2;
                 y = 0;
-                z = Math.atan2(-i_rot_matrix.m10, i_rot_matrix.m00);
+                z = Math.Atan2(-i_rot_matrix.m10, i_rot_matrix.m00);
             }
             else if (sina <= -1.0)
             {
                 x = -Math.PI / 2;
                 y = 0;
-                z = Math.atan2(-i_rot_matrix.m10, i_rot_matrix.m00);
+                z = Math.Atan2(-i_rot_matrix.m10, i_rot_matrix.m00);
             }
             else
             {
-                x = Math.asin(sina);
-                y = Math.atan2(-i_rot_matrix.m20, i_rot_matrix.m22);
-                z = Math.atan2(-i_rot_matrix.m01, i_rot_matrix.m11);
+                x = Math.Asin(sina);
+                y = Math.Atan2(-i_rot_matrix.m20, i_rot_matrix.m22);
+                z = Math.Atan2(-i_rot_matrix.m01, i_rot_matrix.m11);
             }
             o_ang.x = x;
             o_ang.y = y;
             o_ang.z = z;
-            o_out[0].sin_val = Math.sin(x);
-            o_out[0].cos_val = Math.cos(x);
-            o_out[1].sin_val = Math.sin(y);
-            o_out[1].cos_val = Math.cos(y);
-            o_out[2].sin_val = Math.sin(z);
-            o_out[2].cos_val = Math.cos(z);
+            o_out[0].sin_val = Math.Sin(x);
+            o_out[0].cos_val = Math.Cos(x);
+            o_out[1].sin_val = Math.Sin(y);
+            o_out[1].cos_val = Math.Cos(y);
+            o_out[2].sin_val = Math.Sin(z);
+            o_out[2].cos_val = Math.Cos(z);
             return;
         }
 
@@ -337,15 +337,15 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
 
 
             // 最小値２個を得ておく。
-            double min_ang_0 = Double.MAX_VALUE;
-            double min_ang_1 = Double.MAX_VALUE;
-            double min_err_0 = Double.MAX_VALUE;
-            double min_err_1 = Double.MAX_VALUE;
+            double min_ang_0 = Double.MaxValue;
+            double min_ang_1 = Double.MaxValue;
+            double min_err_0 = Double.MaxValue;
+            double min_err_1 = Double.MaxValue;
             for (int i = 0; i < number_of_sin; i++)
             {
                 // +-cos_v[i]が頂点候補
                 double sin_rt = sin_table[i];
-                double cos_rt = Math.sqrt(1 - (sin_rt * sin_rt));
+                double cos_rt = Math.Sqrt(1 - (sin_rt * sin_rt));
                 // cosを修復。微分式で0に近い方が正解
                 // 0 = 2*cos(x)*sin(x)*M - sin(x)^2 + cos(x)^2 + sin(x)*K + cos(x)*J
                 double a1 = 2 * cos_rt * sin_rt * M + sin_rt * (K - sin_rt) + cos_rt * (cos_rt + J);
@@ -354,7 +354,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
                 a1 = a1 < 0 ? -a1 : a1;
                 a2 = a2 < 0 ? -a2 : a2;
                 cos_rt = (a1 < a2) ? cos_rt : -cos_rt;
-                double ang = Math.atan2(sin_rt, cos_rt);
+                double ang = Math.Atan2(sin_rt, cos_rt);
                 // エラー値を計算
                 double err = iN * sin_rt * sin_rt + (iL * cos_rt + iJ) * sin_rt + iM * cos_rt * cos_rt + iK * cos_rt + iO;
                 // 最小の２個を獲得する。
@@ -393,7 +393,7 @@ namespace jp.nyatla.nyartoolkit.cs.core.transmat.optimize
             {
                 gap_1 = (min_ang_1 + Math.PI * 2) - i_hint_angle;
             }
-            return Math.abs(gap_1) < Math.abs(gap_0) ? gap_1 : gap_0;
+            return Math.Abs(gap_1) < Math.Abs(gap_0) ? gap_1 : gap_0;
         }
     }
 }
