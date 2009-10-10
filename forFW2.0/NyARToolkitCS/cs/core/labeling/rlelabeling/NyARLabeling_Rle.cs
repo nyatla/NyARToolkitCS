@@ -159,7 +159,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return current;
         }
 
-        private void addFragment(RleElement i_rel_img, int i_nof, int i_row_index, int i_rel_index, RleInfoStack o_stack)
+        private void addFragment(RleElement i_rel_img, int i_nof, int i_row_index, RleInfoStack o_stack)
         {
             int l = i_rel_img.l;
             int len = i_rel_img.r - l;
@@ -199,7 +199,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             for (int i = 0; i < len_prev; i++)
             {
                 // フラグメントID=フラグメント初期値、POS=Y値、RELインデクス=行
-                addFragment(rle_prev[i], id_max, i_top, i, rlestack);
+                addFragment(rle_prev[i], id_max, i_top, rlestack);
                 id_max++;
                 // nofの最大値チェック
                 label_count++;
@@ -228,7 +228,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         else if (rle_prev[index_prev].l - rle_current[i].r > 0)
                         {// 0なら8方位ラベリングになる
                             // prevがcur右方にある→独立フラグメント
-                            addFragment(rle_current[i], id_max, y, i, rlestack);
+                            addFragment(rle_current[i], id_max, y, rlestack);
                             id_max++;
                             label_count++;
                             // 次のindexをしらべる
@@ -350,7 +350,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     // 右端独立フラグメントを追加
                     if (id < 0)
                     {
-                        addFragment(rle_current[i], id_max, y, i, rlestack);
+                        addFragment(rle_current[i], id_max, y, rlestack);
                         id_max++;
                         label_count++;
                     }

@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jp.nyatla.nyartoolkit.cs.core.transmat.solver
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * 並進ベクトル[T]を３次元座標[b]と基点の回転済行列[M]から計算します。

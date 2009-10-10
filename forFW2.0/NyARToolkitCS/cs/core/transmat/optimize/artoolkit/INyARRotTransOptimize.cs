@@ -33,6 +33,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARRotTransOptimize
     {
-        double optimize(NyARRotMatrix_ARToolKit io_rotmat, NyARDoublePoint3d io_transvec, NyARFitVecCalculator i_calculator);
+        double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d);
     }
 }

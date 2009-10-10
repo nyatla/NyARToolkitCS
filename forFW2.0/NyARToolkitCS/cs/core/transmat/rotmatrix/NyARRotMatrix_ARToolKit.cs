@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private NyARRotVector __initRot_vec2;
         protected NyARDoublePoint3d _angle;
 
-	    public void initRotBySquare(NyARLinear[] i_linear,NyARDoublePoint2d[] i_sqvertex)
+	    public override void initRotBySquare(NyARLinear[] i_linear,NyARDoublePoint2d[] i_sqvertex)
 	    {
 		    base.initRotBySquare(i_linear,i_sqvertex);
 		    //Matrixからangleをロード
@@ -71,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_y
          * @param i_z
          */
-        public override void setAngle(double i_x, double i_y, double i_z)
+        public virtual void setAngle(double i_x, double i_y, double i_z)
         {
             double sina = Math.Sin(i_x);
             double cosa = Math.Cos(i_x);

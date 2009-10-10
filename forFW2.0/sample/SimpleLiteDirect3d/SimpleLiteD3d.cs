@@ -167,7 +167,7 @@ namespace SimpleLiteDirect3d
             code.loadARPattFromFile(AR_CODE_FILE);
 
             //１パターンのみを追跡するクラスを作成
-            this._ar = new NyARSingleDetectMarker(ap, code, 80.0, this._raster.getBufferReader().getBufferType());
+            this._ar = new NyARSingleDetectMarker(ap, code, 80.0, this._raster.getBufferReader().getBufferType(), NyARSingleDetectMarker.PF_NYARTOOLKIT);
             
             //Direct3d用のユーティリティ準備
             this._utils = new NyARD3dUtil();

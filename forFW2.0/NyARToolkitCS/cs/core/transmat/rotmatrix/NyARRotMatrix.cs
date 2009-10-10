@@ -51,7 +51,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * NyARTransMatResultの内容からNyARRotMatrixを復元します。
          * @param i_prev_result
          */
-        public void initRotByPrevResult(NyARTransMatResult i_prev_result)
+        public virtual void initRotByPrevResult(NyARTransMatResult i_prev_result)
         {
             this.m00 = i_prev_result.m00;
             this.m01 = i_prev_result.m01;
@@ -67,7 +67,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        public void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
+        public virtual void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
         {
             NyARRotVector vec1 = this.__initRot_vec1;
             NyARRotVector vec2 = this.__initRot_vec2;
@@ -101,7 +101,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.m12 = w12 / w;
             this.m22 = w22 / w;
             //Matrixからangleをロード
-            this.updateAngleFromMatrix();
             return;
         }
         /**
