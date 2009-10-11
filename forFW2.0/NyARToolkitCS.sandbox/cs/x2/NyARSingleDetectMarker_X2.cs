@@ -81,7 +81,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
             // 解析オブジェクトを作る
             //this._square_detect = new NyARSquareDetector_ARToolKit(i_param.getDistortionFactor(), scr_size);
             this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
-            this._transmat = new NyARTransMat_X2(i_param);
+            this._transmat = new NyARTransMat(i_param);
             this._marker_width = i_marker_width;
             int cw = i_code.getWidth();
             int ch = i_code.getHeight();

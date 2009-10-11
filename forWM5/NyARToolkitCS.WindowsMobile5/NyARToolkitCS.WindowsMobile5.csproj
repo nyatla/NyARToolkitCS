@@ -159,9 +159,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\raster\rgb\NyARRgbRaster_RGB.cs">
       <Link>cs\core\raster\rgb\NyARRgbRaster_RGB.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\fitveccalc\NyARFitVecCalculator.cs">
-      <Link>cs\core\transmat\fitveccalc\NyARFitVecCalculator.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\INyARTransMat.cs">
       <Link>cs\core\transmat\INyARTransMat.cs</Link>
     </Compile>
@@ -174,24 +171,19 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\NyARTransOffset.cs">
       <Link>cs\core\transmat\NyARTransOffset.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\optimize\INyARRotTransOptimize.cs">
-      <Link>cs\core\transmat\optimize\INyARRotTransOptimize.cs</Link>
-    </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\optimize\NyARRotTransOptimize.cs">
-      <Link>cs\core\transmat\optimize\NyARRotTransOptimize.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix.cs">
       <Link>cs\core\transmat\rotmatrix\NyARRotMatrix.cs</Link>
     </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs">
       <Link>cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix_NyARToolKit.cs">
-      <Link>cs\core\transmat\rotmatrix\NyARRotMatrix_NyARToolKit.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotVector.cs">
       <Link>cs\core\transmat\rotmatrix\NyARRotVector.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit_O2.cs">
+      <Link>cs\core\transmat\rotmatrix\NyARRotMatrix_ARToolKit_O2.cs</Link>
+    </Compile>
+
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\matrix\INyARDoubleMatrix.cs">
       <Link>cs\core\types\matrix\INyARDoubleMatrix.cs</Link>
     </Compile>
@@ -234,9 +226,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\types\stack\NyARIntRectStack.cs">
       <Link>cs\core\types\stack\NyARIntRectStack.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyARDoubleMatrixProcessor.cs">
-      <Link>cs\core\utils\NyARDoubleMatrixProcessor.cs</Link>
-    </Compile>
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyARPerspectiveParamGenerator.cs">
       <Link>cs\core\utils\NyARPerspectiveParamGenerator.cs</Link>
     </Compile>
@@ -246,6 +235,12 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs">
       <Link>cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs</Link>
     </Compile>
+
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\utils\NyAREquationSolver.cs">
+      <Link>cs\core\utils\NyAREquationSolver.cs</Link>
+    </Compile>
+
+
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\NyARException.cs">
       <Link>cs\NyARException.cs</Link>
     </Compile>
@@ -381,9 +376,6 @@
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\pickup\NyARColorPatt_Perspective_O2.cs">
       <Link>cs\core\pickup\NyARColorPatt_Perspective_O2.cs</Link>
     </Compile>
-
-
-
     <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\squaredetect\ContourPickup.cs">
       <Link>cs\core\squaredetect\ContourPickup.cs</Link>
     </Compile>
@@ -409,13 +401,34 @@
       <Link>cs\core\squaredetect\SquareContourDetector.cs</Link>
     </Compile>
 
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\NyARTransMat_ARToolKit.cs">
+      <Link>cs\core\transmat\NyARTransMat_ARToolKit.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\optimize\NyARPartialDifferentiationOptimize.cs">
+      <Link>cs\core\transmat\optimize\NyARPartialDifferentiationOptimize.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\optimize\artoolkit\INyARRotTransOptimize.cs">
+      <Link>cs\core\transmat\optimize\artoolkit\INyARRotTransOptimize.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\optimize\artoolkit\NyARRotTransOptimize.cs">
+      <Link>cs\core\transmat\optimize\artoolkit\NyARRotTransOptimize.cs</Link>
+    </Compile>
 
-
-
-
-
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\solver\INyARTransportVectorSolver.cs">
+      <Link>cs\core\transmat\optimize\solver\INyARTransportVectorSolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\solver\NyARTransportVectorSolver.cs">
+      <Link>cs\core\transmat\optimize\solver\NyARTransportVectorSolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCS\cs\core\transmat\solver\NyARTransportVectorSolver_ARToolKit.cs">
+      <Link>cs\core\transmat\optimize\solver\NyARTransportVectorSolver_ARToolKit.cs</Link>
+    </Compile>
 
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cs\core\transmat\fitveccalc\" />
+    <Folder Include="cs\core\transmat\optimize\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
