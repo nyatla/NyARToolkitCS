@@ -52,7 +52,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._cy = new double[i_max_vertex];
             return;
         }
-        private double _a00, _a01, _a02_20, _a10, _a11, _a12_21, _a22;
+        private double _a00, _a01_10, _a02_20, _a11, _a12_21, _a22;
         /**
          * 画面上の座標群を指定します。
          * @param i_ref_vertex_2d
@@ -63,7 +63,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void set2dVertex(NyARDoublePoint2d[] i_ref_vertex_2d, int i_number_of_vertex)
         {
             //3x2nと2n*3の行列から、最小二乗法計算するために3x3マトリクスを作る。		
-            //[A]*[A]T
             //行列[A]の3列目のキャッシュ
             double[] cx = this._cx;
             double[] cy = this._cy;
@@ -76,12 +75,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double p02 = this._projection_mat.m02;
             double w1, w2, w3, w4;
             this._a00 = i_number_of_vertex * p00 * p00;
-            this._a01 = i_number_of_vertex * p00 * p01;
-            this._a10 = i_number_of_vertex * p00 * p01;
+            this._a01_10 = i_number_of_vertex * p00 * p01;
             this._a11 = i_number_of_vertex * (p01 * p01 + p11 * p11);
 
             m22 = 0;
             w1 = w2 = 0;
+            //[A]T*[A]
             for (int i = 0; i < i_number_of_vertex; i++)
             {
                 //座標を保存しておく。
@@ -123,33 +122,39 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             //回転行列を元座標の頂点群に適応
             //[A]T*[b]を計算
-            double bt1 = 0, bt2 = 0, bt3 = 0;
+            double b1 = 0, b2 = 0, b3 = 0;
             for (int i = 0; i < number_of_vertex; i++)
             {
                 double w1 = i_vertex3d[i].z * cx[i] - p00 * i_vertex3d[i].x - p01 * i_vertex3d[i].y - p02 * i_vertex3d[i].z;
                 double w2 = i_vertex3d[i].z * cy[i] - p11 * i_vertex3d[i].y - p12 * i_vertex3d[i].z;
-                bt1 += w1;
-                bt2 += w2;
-                bt3 += -cx[i] * w1 - cy[i] * w2;
+                b1 += w1;
+                b2 += w2;
+                b3 += cx[i] * w1 + cy[i] * w2;
             }
-            //([A]*T[A])*[T]=[A]T*[b]を方程式で解く。
+            //[A]T*[b]を計算
+            b3 = p02 * b1 + p12 * b2 - b3;//順番変えたらダメよ
+            b2 = p01 * b1 + p11 * b2;
+            b1 = p00 * b1;
+            //([A]T*[A])*[T]=[A]T*[b]を方程式で解く。
             //a01とa10を0と仮定しても良いんじゃないかな？
-            double b00 = bt1 * p00;
-            double m00 = this._a00;
-            double m10 = this._a10;
-            double m20 = this._a02_20;
-            double m12_21 = this._a12_21;
-            double m01 = this._a01;
+            double a00 = this._a00;
+            double a01 = this._a01_10;
+            double a02 = this._a02_20;
+            double a11 = this._a11;
+            double a12 = this._a12_21;
+            double a22 = this._a22;
 
-            double a = (this._a11 * m00 - m10 * m01);
-            double b = (m00 * m12_21 - m20 * m01);
-            double c = (m00 * this._a22 - m20 * m20);
-            double d = (m00 * (bt1 * p02 + bt2 * p12 + bt3) - m20 * b00);
+            double t1 = a22 * b2 - a12 * b3;
+            double t2 = a12 * b2 - a11 * b3;
+            double t3 = a01 * b3 - a02 * b2;
+            double t4 = a12 * a12 - a11 * a22;
+            double t5 = a02 * a12 - a01 * a22;
+            double t6 = a02 * a11 - a01 * a12;
+            double det = a00 * t4 - a01 * t5 + a02 * t6;
+            o_transfer.x = (a01 * t1 - a02 * t2 + b1 * t4) / det;
+            o_transfer.y = -(a00 * t1 + a02 * t3 + b1 * t5) / det;
+            o_transfer.z = (a00 * t2 + a01 * t3 + b1 * t6) / det;
 
-            double z, y;
-            o_transfer.z = z = ((a * d) - (b * (m00 * (b00 + bt2 * p11) - m10 * b00))) / ((c * a) - (b * (m00 * m12_21 - m10)));
-            o_transfer.y = y = (d - c * z) / (b);
-            o_transfer.x = (b00 - m01 * y - m20 * z) / m00;
             return;
         }
     }

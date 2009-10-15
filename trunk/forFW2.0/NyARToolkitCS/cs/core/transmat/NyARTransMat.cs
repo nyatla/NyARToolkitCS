@@ -38,7 +38,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
  */
 public class NyARTransMat : INyARTransMat
 {
-	private const double FIT_DIFF_THRESHOLD = 0.01;
+	private const double FIT_DIFF_THRESHOLD = 1.0;
 	private const double FIT_DIFF_THRESHOLD_CONT = 1.0;
 
 	private NyARDoublePoint2d _center=new NyARDoublePoint2d(0,0);

@@ -107,7 +107,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		b12=a32*a13-a33*a12;
 		b13=a12*a23-a13*a22;
 		
-		b21=a13*a31-a21*a33;
+		b21=a23*a31-a21*a33;
 		b22=a33*a11-a31*a13;
 		b23=a13*a21-a11*a23;
 		
