@@ -3,8 +3,9 @@ Copyright (C)2008-2009 R.Iizuka
 
 version 2.4.0
 
-http://nyatla.jp/
+http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
+wm(at)nyatla.jp
 --------------------------------------------------
 
 
@@ -26,7 +27,7 @@ ARToolkitは加藤博一先生とHuman Interface Technology Labにより
 http://www.hitl.washington.edu/artoolkit/
 
 NyARToolkitはARToolkit 2.72.1をベースに開発された、ARToolKit互換の
-演算結果を持つ、Javaクラスライブラリです。
+機能を持つ、Javaクラスライブラリです。
 詳しくはこちらをご覧下さい。
 http://nyatla.jp/nyartoolkit/
 
@@ -198,7 +199,17 @@ NyARToolkitのクラス構造・演算結果に互換性があります。
 
 
 ・ライセンス
-extlib以下のものは、各モジュールのライセンスに従ってください。
-NyARToolkitは、特にソースに表記の無い限り、GPLライセンスです。
-詳しくはLICENCE.txtをみてください。
 
+NyARToolkitCS本体は、商用ライセンスとGPLv3以降のデュアルライセンスを採用しています。
+(Version/2.4.0より、GPLv3ライセンスになりました。)
+extlib以下のものは、各モジュールのライセンスに従ってください。
+
+ -GPL
+ GPLについては、LICENCE.txtをお読みください。
+
+ -商用ライセンス
+ 商用ライセンスについては、ARToolWorks社に管理を委託しております。
+ http://www.artoolworks.com/Home.html
+
+ 日本国内での販売については、下記にお問い合わせ下さい。
+ http://www.msoft.co.jp/pressrelease/press090928-1.html
