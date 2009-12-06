@@ -31,8 +31,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.core2;
 
 namespace jp.nyatla.nyartoolkit.cs.processor
 {
@@ -51,17 +51,160 @@ namespace jp.nyatla.nyartoolkit.cs.processor
     public abstract class SingleARMarkerProcesser
     {
         /**
-         * [[STRAGE CLASS]]
-         * selectARCodeIndexFromListが値を返す時に使う変数型です。
+         * detectMarkerのコールバック関数
          */
-
-        private class TResult_selectARCodeIndex
+        private class DetectSquareCB : INyARSquareContourDetector.DetectMarkerCallback
         {
-            public int direction;
+            //公開プロパティ
+            public NyARSquare square = new NyARSquare();
+            public double confidence = 0.0;
+            public int code_index = -1;
+            public double cf_threshold_new = 0.30;
+            public double cf_threshold_exist = 0.15;
 
-            public double confidence;
+            //参照
+            private INyARRgbRaster _ref_raster;
+            //所有インスタンス
+            private INyARColorPatt _inst_patt;
+            private NyARMatchPattDeviationColorData _deviation_data;
+            private NyARMatchPatt_Color_WITHOUT_PCA[] _match_patt;
+            private NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
+            private Coord2Linear _coordline;
 
-            public int code_index;
+            public DetectSquareCB(NyARParam i_param)
+            {
+                this._match_patt = null;
+                this._coordline = new Coord2Linear(i_param.getScreenSize(), i_param.getDistortionFactor());
+                return;
+            }
+            public void setNyARCodeTable(NyARCode[] i_ref_code, int i_code_resolution)
+            {
+                /*unmanagedで実装するときは、ここでリソース解放をすること。*/
+                this._deviation_data = new NyARMatchPattDeviationColorData(i_code_resolution, i_code_resolution);
+                this._inst_patt = new NyARColorPatt_Perspective_O2(i_code_resolution, i_code_resolution, 4, 25);
+                this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_ref_code.Length];
+                for (int i = 0; i < i_ref_code.Length; i++)
+                {
+                    this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[i]);
+                }
+            }
+            private NyARIntPoint2d[] __tmp_vertex = NyARIntPoint2d.createArray(4);
+            /**
+             * Initialize call back handler.
+             */
+            public void init(INyARRgbRaster i_raster)
+            {
+                this._ref_raster = i_raster;
+                this.code_index = -1;
+                this.confidence = Double.MinValue;
+            }
+
+            /**
+             * 矩形が見付かるたびに呼び出されます。
+             * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
+             */
+            public void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
+            {
+                if (this._match_patt == null)
+                {
+                    return;
+                }
+                //輪郭座標から頂点リストに変換
+                NyARIntPoint2d[] vertex = this.__tmp_vertex;
+                vertex[0].x = i_coordx[i_vertex_index[0]];
+                vertex[0].y = i_coordy[i_vertex_index[0]];
+                vertex[1].x = i_coordx[i_vertex_index[1]];
+                vertex[1].y = i_coordy[i_vertex_index[1]];
+                vertex[2].x = i_coordx[i_vertex_index[2]];
+                vertex[2].y = i_coordy[i_vertex_index[2]];
+                vertex[3].x = i_coordx[i_vertex_index[3]];
+                vertex[3].y = i_coordy[i_vertex_index[3]];
+
+                //画像を取得
+                if (!this._inst_patt.pickFromRaster(this._ref_raster, vertex))
+                {
+                    return;//取得失敗
+                }
+                //取得パターンをカラー差分データに変換して評価する。
+                this._deviation_data.setRaster(this._inst_patt);
+
+
+                //code_index,dir,c1にデータを得る。
+                NyARMatchPattResult mr = this.__detectMarkerLite_mr;
+                int lcode_index = 0;
+                int dir = 0;
+                double c1 = 0;
+                for (int i = 0; i < this._match_patt.Length; i++)
+                {
+                    this._match_patt[i].evaluate(this._deviation_data, mr);
+                    double c2 = mr.confidence;
+                    if (c1 < c2)
+                    {
+                        lcode_index = i;
+                        c1 = c2;
+                        dir = mr.direction;
+                    }
+                }
+
+                //認識処理
+                if (this.code_index == -1)
+                { // マーカ未認識
+                    //現在は未認識
+                    if (c1 < this.cf_threshold_new)
+                    {
+                        return;
+                    }
+                    if (this.confidence > c1)
+                    {
+                        // 一致度が低い。
+                        return;
+                    }
+                    //認識しているマーカIDを保存
+                    this.code_index = lcode_index;
+                }
+                else
+                {
+                    //現在はマーカ認識中				
+                    // 現在のマーカを認識したか？
+                    if (lcode_index != this.code_index)
+                    {
+                        // 認識中のマーカではないので無視
+                        return;
+                    }
+                    //認識中の閾値より大きいか？
+                    if (c1 < this.cf_threshold_exist)
+                    {
+                        return;
+                    }
+                    //現在の候補よりも一致度は大きいか？
+                    if (this.confidence > c1)
+                    {
+                        return;
+                    }
+                }
+                //新しく認識、または継続認識中に更新があったときだけ、Square情報を更新する。
+                //ココから先はこの条件でしか実行されない。
+
+                //一致率の高い矩形があれば、方位を考慮して頂点情報を作成
+                this.confidence = c1;
+                NyARSquare sq = this.square;
+                //directionを考慮して、squareを更新する。
+                for (int i = 0; i < 4; i++)
+                {
+                    int idx = (i + 4 - dir) % 4;
+                    sq.imvertex[i].x = vertex[idx].x;
+                    sq.imvertex[i].y = vertex[idx].y;
+                    this._coordline.coord2Line(i_vertex_index[idx], i_vertex_index[(idx + 1) % 4], i_coordx, i_coordy, i_coor_num, sq.line[i]);
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    //直線同士の交点計算
+                    if (!NyARLinear.crossPos(sq.line[i], sq.line[(i + 3) % 4], sq.sqvertex[i]))
+                    {
+                        throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                    }
+                }
+            }
         }
         /**オーナーが自由に使えるタグ変数です。
          */
@@ -71,22 +214,11 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private int _lost_delay = 5;
 
-        private INyARSquareDetector _square_detect;
+        private INyARSquareContourDetector _square_detect;
 
         protected INyARTransMat _transmat;
 
         private double _marker_width;
-
-        private NyARMatchPatt_Color_WITHOUT_PCA[] _match_patt;
-
-        private NyARSquareStack _square_list = new NyARSquareStack(100);
-
-        private NyARColorPatt_Perspective_O2 _patt = null;
-
-        private double _cf_threshold_new = 0.30;
-
-        private double _cf_threshold_exist = 0.15;
-
         private int _threshold = 110;
         // [AR]検出結果の保存用
         private NyARBinRaster _bin_raster;
@@ -95,29 +227,36 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         protected int _current_arcode_index = -1;
 
-        private NyARMatchPattDeviationColorData _deviation_data;
         private NyARRasterThresholdAnalyzer_SlidePTile _threshold_detect;
 
-
-	    protected SingleARMarkerProcesser()
-	    {
-		    return;
-	    }
-
-
-	    protected void initInstance(NyARParam i_param,int i_raster_type)
-	    {
-		    NyARIntSize scr_size = i_param.getScreenSize();
-		    // 解析オブジェクトを作る
-		    this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
-		    this._transmat = new NyARTransMat(i_param);
-		    this._tobin_filter=new NyARRasterFilter_ARToolkitThreshold(110,i_raster_type);
-
-		    // ２値画像バッファを作る
-		    this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
-            this._threshold_detect = new NyARRasterThresholdAnalyzer_SlidePTile(15, i_raster_type, 4);
+        protected SingleARMarkerProcesser()
+        {
             return;
-	    }
+        }
+
+        private bool _initialized = false;
+
+        protected void initInstance(NyARParam i_param, int i_raster_type)
+        {
+            //初期化済？
+            Debug.Assert(this._initialized == false);
+
+            NyARIntSize scr_size = i_param.getScreenSize();
+            // 解析オブジェクトを作る
+            this._square_detect = new NyARSquareContourDetector_Rle(i_param.getDistortionFactor(), scr_size);
+            this._transmat = new NyARTransMat(i_param);
+            this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110, i_raster_type);
+
+            // ２値画像バッファを作る
+            this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
+            this._threshold_detect = new NyARRasterThresholdAnalyzer_SlidePTile(15, i_raster_type, 4);
+            this._initialized = true;
+            //コールバックハンドラ
+            this._detectmarker_cb = new DetectSquareCB(i_param);
+
+            return;
+        }
+
         /*自動・手動の設定が出来ないので、コメントアウト
         public void setThreshold(int i_threshold)
         {
@@ -125,9 +264,9 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             return;
         }*/
 
-    /**検出するマーカコードの配列を指定します。 検出状態でこの関数を実行すると、
-     * オブジェクト状態に強制リセットがかかります。
-     */
+        /**検出するマーカコードの配列を指定します。 検出状態でこの関数を実行すると、
+         * オブジェクト状態に強制リセットがかかります。
+         */
         public void setARCodeTable(NyARCode[] i_ref_code_table, int i_code_resolution, double i_marker_width)
         {
             if (this._current_arcode_index != -1)
@@ -135,16 +274,9 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 // 強制リセット
                 reset(true);
             }
-            // 検出するマーカセット、情報、検出器を作り直す。
-            this._patt = new NyARColorPatt_Perspective_O2(i_code_resolution, i_code_resolution,4,25);
-            this._deviation_data = new NyARMatchPattDeviationColorData(i_code_resolution, i_code_resolution);
+            //検出するマーカセット、情報、検出器を作り直す。(1ピクセル4ポイントサンプリング,マーカのパターン領域は50%)
+            this._detectmarker_cb.setNyARCodeTable(i_ref_code_table, i_code_resolution);
             this._marker_width = i_marker_width;
-
-            this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_ref_code_table.Length];
-            for (int i = 0; i < i_ref_code_table.Length; i++)
-            {
-                this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code_table[i]);
-            }
             return;
         }
 
@@ -159,186 +291,47 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._current_arcode_index = -1;
             return;
         }
-
+        private DetectSquareCB _detectmarker_cb;
         public void detectMarker(INyARRgbRaster i_raster)
         {
             // サイズチェック
-            if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h))
-            {
-                throw new NyARException();
-            }
+            Debug.Assert(this._bin_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h));
 
-            // コードテーブルが無ければここで終わり
-            if (this._match_patt == null)
-            {
-                return;
-            }
-
-            // ラスタを(1/4の画像の)２値イメージに変換する.
+            //BINイメージへの変換
             this._tobin_filter.setThreshold(this._threshold);
             this._tobin_filter.doFilter(i_raster, this._bin_raster);
 
-            NyARSquareStack square_stack = this._square_list;
             // スクエアコードを探す
-            this._square_detect.detectMarker(this._bin_raster, square_stack);
-            // 認識処理
-            if (this._current_arcode_index == -1)
-            { // マーカ未認識
-                detectNewMarker(i_raster, square_stack);
-            }
-            else
-            { // マーカ認識中
-                detectExistMarker(i_raster, square_stack, this._current_arcode_index);
-            }
-            return;
-        }
+            this._detectmarker_cb.init(i_raster);
+            this._square_detect.detectMarkerCB(this._bin_raster, this._detectmarker_cb);
 
-
-        private NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
-
-        /**ARCodeのリストから、最も一致するコード番号を検索します。
-         */
-        private bool selectARCodeIndexFromList(INyARRgbRaster i_raster, NyARSquare i_square, TResult_selectARCodeIndex o_result)
-        {
-            // 現在コードテーブルはアクティブ？
-            if (this._match_patt == null)
-            {
-                return false;
-            }
-            // 評価基準になるパターンをイメージから切り出す
-            if (!this._patt.pickFromRaster(i_raster, i_square))
-            {
-                return false;
-            }
-            //評価データを作成して、評価器にセット
-            this._deviation_data.setRaster(this._patt);
-            NyARMatchPattResult mr = this.__detectMarkerLite_mr;
-            int code_index = 0;
-            int dir = 0;
-            double c1 = 0;
-            // コードと比較する
-            for (int i = 0; i < this._match_patt.Length; i++)
-            {
-                this._match_patt[i].evaluate(this._deviation_data, mr);
-                double c2 = mr.confidence;
-                if (c1 < c2)
-                {
-                    code_index = i;
-                    c1 = c2;
-                    dir = mr.direction;
-                }
-            }
-            o_result.code_index = code_index;
-            o_result.direction = dir;
-            o_result.confidence = c1;
-            return true;
-        }
-
-        private TResult_selectARCodeIndex __detect_X_Marker_detect_result = new TResult_selectARCodeIndex();
-
-        /**新規マーカ検索 現在認識中のマーカがないものとして、最も認識しやすいマーカを１個認識します。
-         */
-        private void detectNewMarker(INyARRgbRaster i_raster, NyARSquareStack i_stack)
-        {
-            int number_of_square = i_stack.getLength();
-            double cf = 0;
-            int dir = 0;
-            int code_index = -1;
-            int square_index = 0;
-            TResult_selectARCodeIndex detect_result = this.__detect_X_Marker_detect_result;
-            for (int i = 0; i < number_of_square; i++)
-            {
-                if (!selectARCodeIndexFromList(i_raster, (NyARSquare)i_stack.getItem(i), detect_result))
-                {
-                    // 見つからない。
-                    return;
-                }
-                if (detect_result.confidence < this._cf_threshold_new)
-                {
-                    continue;
-                }
-                if (detect_result.confidence < cf)
-                {
-                    // 一致度が低い。
-                    continue;
-                }
-                cf = detect_result.confidence;
-                code_index = detect_result.code_index;
-                square_index = i;
-                dir = detect_result.direction;
-            }
             // 認識状態を更新
-            bool is_id_found=updateStatus(this._square_list.getItem(square_index), code_index, cf, dir);
-		    //閾値フィードバック(detectExistMarkerにもあるよ)
-		    if(!is_id_found){
-			    //マーカがなければ、探索+DualPTailで基準輝度検索
-			    this._threshold_detect.analyzeRaster(i_raster);
-			    this._threshold=(this._threshold+this._threshold_detect.getThreshold())/2;
-		    }
-        }
-
-        /**マーカの継続認識 現在認識中のマーカを優先して認識します。 
-         * （注）この機能はたぶん今後いろいろ発展するからNewと混ぜないこと。
-         */
-        private void detectExistMarker(INyARRgbRaster i_raster, NyARSquareStack i_stack, int i_current_id)
-        {
-            int number_of_square = i_stack.getLength();
-            double cf = 0;
-            int dir = 0;
-            int code_index = -1;
-            int square_index = 0;
-            TResult_selectARCodeIndex detect_result = this.__detect_X_Marker_detect_result;
-            for (int i = 0; i < number_of_square; i++)
-            {
-                if (!selectARCodeIndexFromList(i_raster, (NyARSquare)i_stack.getItem(i), detect_result))
-                {
-                    // 見つからない。
-                    return;
-                }
-                // 現在のマーカを認識したか？
-                if (detect_result.code_index != i_current_id)
-                {
-                    // 認識中のマーカではないので無視
-                    continue;
-                }
-                if (detect_result.confidence < this._cf_threshold_exist)
-                {
-                    continue;
-                }
-                if (detect_result.confidence < cf)
-                {
-                    // 一致度が高い方を選ぶ
-                    continue;
-                }
-                cf = detect_result.confidence;
-                code_index = detect_result.code_index;
-                dir = detect_result.direction;
-                square_index = i;
-            }
-            // 認識状態を更新
-            bool is_id_found=updateStatus(this._square_list.getItem(square_index), code_index, cf, dir);
+            bool is_id_found = updateStatus(this._detectmarker_cb.square, this._detectmarker_cb.code_index);
             //閾値フィードバック(detectExistMarkerにもあるよ)
             if (!is_id_found)
             {
                 //マーカがなければ、探索+DualPTailで基準輝度検索
-                this._threshold_detect.analyzeRaster(i_raster);
-                this._threshold = (this._threshold + this._threshold_detect.getThreshold()) / 2;
+                int th = this._threshold_detect.analyzeRaster(i_raster);
+                this._threshold = (this._threshold + th) / 2;
             }
 
+
+            return;
         }
 
         private NyARTransMatResult __NyARSquare_result = new NyARTransMatResult();
 
-        /**オブジェクトのステータスを更新し、必要に応じてハンドル関数を駆動します。
+        /**	オブジェクトのステータスを更新し、必要に応じてハンドル関数を駆動します。
+         * 	戻り値は、「実際にマーカを発見する事ができたか」です。クラスの状態とは異なります。
          */
-        private bool updateStatus(NyARSquare i_square, int i_code_index, double i_cf, int i_dir)
+        private bool updateStatus(NyARSquare i_square, int i_code_index)
         {
             NyARTransMatResult result = this.__NyARSquare_result;
             if (this._current_arcode_index < 0)
             {// 未認識中
                 if (i_code_index < 0)
                 {// 未認識から未認識の遷移
-                    // なにもしないよーん
+                    // なにもしないよーん。
                     return false;
                 }
                 else
@@ -348,7 +341,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     // OnEnter
                     this.onEnterHandler(i_code_index);
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, i_dir, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._marker_width, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;
@@ -372,7 +365,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 {// 同じARCodeの再認識
                     // イベント生成
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, i_dir, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._marker_width, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;

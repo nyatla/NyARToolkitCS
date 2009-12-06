@@ -31,7 +31,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     interface IpickFromRaster_Impl
     {
-        void pickFromRaster(double[] i_cpara, INyARRgbRaster image, NyARSquare i_square, int[] o_patt);
+        void pickFromRaster(double[] i_cpara, INyARRgbRaster image, int[] o_patt);
     }
 
     /**
@@ -65,7 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private double[] _cp4cy_cp5;
         private double[] _cp7cy_1;
 
-        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, NyARSquare i_square, int[] o_patt)
+        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, int[] o_patt)
         {
             int i2x, i2y;//プライム変数
             int x, y;
@@ -190,81 +190,85 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private int[] _rgb_py;
 
 
-        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, NyARSquare i_square, int[] o_patt)
-	{
-		double d0,m0;
-		int x,y;
-		
-		int img_x = image.getWidth();
-		int img_y = image.getHeight();
-		int patt_w=this._size_ref.w;
+        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, int[] o_patt)
+        {
+            double d0, m0;
+            int x, y;
 
-		int[] rgb_tmp = this._rgb_temp;
-		int[] rgb_px=this._rgb_px;
-		int[] rgb_py=this._rgb_py;	
+            int img_x = image.getWidth();
+            int img_y = image.getHeight();
+            int patt_w = this._size_ref.w;
 
-		
-
-		double cp0=i_cpara[0];
-		double cp3=i_cpara[3];
-		double cp6=i_cpara[6];
-		double cp1=i_cpara[1];
-		double cp4=i_cpara[4];
-		double cp7=i_cpara[7];
-		
-	
-		int pick_y=this._lt_ref.y;
-		int pick_x=this._lt_ref.x;
-		//ピクセルリーダーを取得
-		INyARRgbPixelReader reader=image.getRgbPixelReader();
-		int p=0;
-
-		
-		double cp0cx0,cp3cx0;
-		double cp1cy_cp20=cp1*pick_y+i_cpara[2]+cp0*pick_x;
-		double cp4cy_cp50=cp4*pick_y+i_cpara[5]+cp3*pick_x;
-		double cp7cy_10=cp7*pick_y+1.0+cp6*pick_x;
-		
-
-		for(int iy=this._size_ref.h-1;iy>=0;iy--){
-			m0=1/(cp7cy_10);
-			d0=-cp6/(cp7cy_10*(cp7cy_10+cp6));			
-
-			cp0cx0=cp1cy_cp20;
-			cp3cx0=cp4cy_cp50;
-			
-			//ピックアップシーケンス
-			
-			//0番目のピクセル(検査対象)をピックアップ
+            int[] rgb_tmp = this._rgb_temp;
+            int[] rgb_px = this._rgb_px;
+            int[] rgb_py = this._rgb_py;
 
 
-			for(int ix=patt_w-1;ix>=0;ix--){
-				//1ピクセルを作成
-				x=rgb_px[ix]=(int)(cp0cx0*m0);
-				y=rgb_py[ix]=(int)(cp3cx0*m0);
-				if(x<0||x>=img_x||y<0||y>=img_y){
-					if(x<0){rgb_px[ix]=0;}else if(x>=img_x){rgb_px[ix]=img_x-1;}
-					if(y<0){rgb_py[ix]=0;}else if(y>=img_y){rgb_py[ix]=img_y-1;}			
-				}
-				cp0cx0+=cp0;
-				cp3cx0+=cp3;
-				m0+=d0;
-			}
-			
-			cp1cy_cp20+=cp1;
-			cp4cy_cp50+=cp4;
-			cp7cy_10+=cp7;
-			
-			reader.getPixelSet(rgb_px, rgb_py,patt_w, rgb_tmp);
-			for(int ix=patt_w-1;ix>=0;ix--){
-				int idx=ix*3;
-				o_patt[p]=(rgb_tmp[idx]<<16)|(rgb_tmp[idx+1]<<8)|((rgb_tmp[idx+2]&0xff));
-				p++;
-			}
-		}
 
-		return;
-	}
+            double cp0 = i_cpara[0];
+            double cp3 = i_cpara[3];
+            double cp6 = i_cpara[6];
+            double cp1 = i_cpara[1];
+            double cp4 = i_cpara[4];
+            double cp7 = i_cpara[7];
+
+
+            int pick_y = this._lt_ref.y;
+            int pick_x = this._lt_ref.x;
+            //ピクセルリーダーを取得
+            INyARRgbPixelReader reader = image.getRgbPixelReader();
+            int p = 0;
+
+
+            double cp0cx0, cp3cx0;
+            double cp1cy_cp20 = cp1 * pick_y + i_cpara[2] + cp0 * pick_x;
+            double cp4cy_cp50 = cp4 * pick_y + i_cpara[5] + cp3 * pick_x;
+            double cp7cy_10 = cp7 * pick_y + 1.0 + cp6 * pick_x;
+
+
+            for (int iy = this._size_ref.h - 1; iy >= 0; iy--)
+            {
+                m0 = 1 / (cp7cy_10);
+                d0 = -cp6 / (cp7cy_10 * (cp7cy_10 + cp6));
+
+                cp0cx0 = cp1cy_cp20;
+                cp3cx0 = cp4cy_cp50;
+
+                //ピックアップシーケンス
+
+                //0番目のピクセル(検査対象)をピックアップ
+
+
+                for (int ix = patt_w - 1; ix >= 0; ix--)
+                {
+                    //1ピクセルを作成
+                    x = rgb_px[ix] = (int)(cp0cx0 * m0);
+                    y = rgb_py[ix] = (int)(cp3cx0 * m0);
+                    if (x < 0 || x >= img_x || y < 0 || y >= img_y)
+                    {
+                        if (x < 0) { rgb_px[ix] = 0; } else if (x >= img_x) { rgb_px[ix] = img_x - 1; }
+                        if (y < 0) { rgb_py[ix] = 0; } else if (y >= img_y) { rgb_py[ix] = img_y - 1; }
+                    }
+                    cp0cx0 += cp0;
+                    cp3cx0 += cp3;
+                    m0 += d0;
+                }
+
+                cp1cy_cp20 += cp1;
+                cp4cy_cp50 += cp4;
+                cp7cy_10 += cp7;
+
+                reader.getPixelSet(rgb_px, rgb_py, patt_w, rgb_tmp);
+                for (int ix = patt_w - 1; ix >= 0; ix--)
+                {
+                    int idx = ix * 3;
+                    o_patt[p] = (rgb_tmp[idx] << 16) | (rgb_tmp[idx + 1] << 8) | ((rgb_tmp[idx + 2] & 0xff));
+                    p++;
+                }
+            }
+
+            return;
+        }
     }
 
     /**
@@ -293,7 +297,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private int[] _rgb_py;
 
 
-        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, NyARSquare i_square, int[] o_patt)
+        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image,  int[] o_patt)
         {
             double d0, m0, d1, m1;
             int x, y;
@@ -427,7 +431,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private int[] _rgb_px;
         private int[] _rgb_py;
 
-        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, NyARSquare i_square, int[] o_patt)
+        public void pickFromRaster(double[] i_cpara, INyARRgbRaster image, int[] o_patt)
         {
             int x, y;
             double d, m;
@@ -681,7 +685,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARColorPatt_Perspective_O2 : NyARColorPatt_Perspective
     {
         private IpickFromRaster_Impl _pickup;
-        public NyARColorPatt_Perspective_O2(int i_width, int i_height, int i_resolution, int i_edge_percentage):base(i_width, i_height, i_resolution, i_edge_percentage)
+        public NyARColorPatt_Perspective_O2(int i_width, int i_height, int i_resolution, int i_edge_percentage)
+            : base(i_width, i_height, i_resolution, i_edge_percentage)
         {
             switch (i_resolution)
             {
@@ -700,16 +705,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return;
         }
-
-        public override bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
+        /**
+         * @see INyARColorPatt#pickFromRaster
+         */
+        public override bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
         {
             //遠近法のパラメータを計算
             double[] cpara = this.__pickFromRaster_cpara;
-            if (!this._perspective_gen.getParam(i_square.imvertex, cpara))
+            if (!this._perspective_gen.getParam(i_vertexs, cpara))
             {
                 return false;
             }
-            this._pickup.pickFromRaster(cpara, image, i_square, this._patdata);
+            this._pickup.pickFromRaster(cpara, image, this._patdata);
             return true;
         }
     }

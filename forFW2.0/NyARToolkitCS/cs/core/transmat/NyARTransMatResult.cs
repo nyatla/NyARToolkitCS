@@ -39,6 +39,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARTransMatResult : NyARDoubleMatrix34
     {
+        /**
+         * エラーレート。この値はINyARTransMatの派生クラスが使います。
+         */
+        public double error;
+
         public bool has_value = false;
         /**
          * この関数は、0-PIの間で値を返します。
@@ -65,6 +70,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 o_out.z = Math.Atan2(-this.m01, this.m11);
                 o_out.y = Math.Atan2(-this.m20, this.m22);
             }
+        }
+        public void transformVertex(double i_x, double i_y, double i_z, NyARDoublePoint3d o_out)
+        {
+            o_out.x = this.m00 * i_x + this.m01 * i_y + this.m02 * i_z + this.m03;
+            o_out.y = this.m10 * i_x + this.m11 * i_y + this.m12 * i_z + this.m13;
+            o_out.z = this.m20 * i_x + this.m21 * i_y + this.m22 * i_z + this.m23;
+            return;
         }
     }
 

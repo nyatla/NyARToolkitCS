@@ -78,8 +78,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //
             int[] linput = i_patt.refData();
             int sum;
-            double max = 0.0;
-            int res = NyARSquare.DIRECTION_UNKNOWN;
+            double max = Double.MinValue;
+            int res = NyARMatchPattResult.DIRECTION_UNKNOWN;
             int for_mod = this._optimize_for_mod;
             for (int j = 0; j < 4; j++)
             {

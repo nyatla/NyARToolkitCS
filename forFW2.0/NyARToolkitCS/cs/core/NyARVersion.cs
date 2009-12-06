@@ -44,8 +44,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private const int AR_HEADER_VERSION_TINY = 0;//#define AR_HEADER_VERSION_TINY		0
         private const int AR_HEADER_VERSION_BUILD = 0;//#define AR_HEADER_VERSION_BUILD		0
         private const String AR_HEADER_VERSION_STRING = "2.72.0";//#define AR_HEADER_VERSION_STRING	"2.72.0"
-        public const Boolean AR_HAVE_HEADER_VERSION_2 = true;//#define AR_HAVE_HEADER_VERSION_2
-        public const Boolean AR_HAVE_HEADER_VERSION_2_72 = true;//#define AR_HAVE_HEADER_VERSION_2_72
+        public const bool AR_HAVE_HEADER_VERSION_2 = true;//#define AR_HAVE_HEADER_VERSION_2
+        public const bool AR_HAVE_HEADER_VERSION_2_72 = true;//#define AR_HAVE_HEADER_VERSION_2_72
 
         public static String getARVersion()
         {

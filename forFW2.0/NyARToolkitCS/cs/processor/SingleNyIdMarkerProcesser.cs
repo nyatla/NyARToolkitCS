@@ -31,251 +31,297 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.core2;
 using jp.nyatla.nyartoolkit.cs.nyidmarker;
 
 
 namespace jp.nyatla.nyartoolkit.cs.processor
 {
-public abstract class SingleNyIdMarkerProcesser
-{
-	/**
-	 * オーナーが自由に使えるタグ変数です。
-	 */
-	public object tag;
-
-	/**
-	 * ロスト遅延の管理
-	 */
-	private int _lost_delay_count = 0;
-	private int _lost_delay = 5;
-
-	private INyARSquareDetector _square_detect;
-	protected INyARTransMat _transmat;
-	private double _marker_width=100;
-
-	private NyARSquareStack _square_list = new NyARSquareStack(100);
-	private INyIdMarkerDataEncoder _encoder;
-	private bool _is_active;
-	private INyIdMarkerData _data_temp;
-	private INyIdMarkerData _data_current;
-
-	private int _current_threshold=110;
-	// [AR]検出結果の保存用
-	private NyARBinRaster _bin_raster;
+    public abstract class SingleNyIdMarkerProcesser
+    {
+        /**
+         * detectMarkerのコールバック関数
+         */
+        private class DetectSquareCB : INyARSquareContourDetector.DetectMarkerCallback
+        {
+            //公開プロパティ
+            public NyARSquare square = new NyARSquare();
+            public INyIdMarkerData marker_data;
+            public int threshold;
 
 
-	private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
-	private NyIdMarkerPickup _id_pickup = new NyIdMarkerPickup();
+            //参照
+            private INyARRgbRaster _ref_raster;
+            //所有インスタンス
+            private INyIdMarkerData _current_data;
+            private NyIdMarkerPickup _id_pickup = new NyIdMarkerPickup();
+            private Coord2Linear _coordline;
+            private INyIdMarkerDataEncoder _encoder;
 
 
-	protected SingleNyIdMarkerProcesser()
-	{
-		return;
-	}
-	protected void initInstance(NyARParam i_param,INyIdMarkerDataEncoder i_encoder,int i_raster_format)
-	{
-		NyARIntSize scr_size = i_param.getScreenSize();
-		// 解析オブジェクトを作る
-		this._square_detect = new NyARSquareDetector_Rle(i_param.getDistortionFactor(), scr_size);
-		this._transmat = new NyARTransMat(i_param);
-		this._encoder=i_encoder;
+            private INyIdMarkerData _data_temp;
+            private INyIdMarkerData _prev_data;
 
-		// ２値画像バッファを作る
-		this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
-		//ワーク用のデータオブジェクトを２個作る
-		this._is_active=false;
-		this._data_temp=i_encoder.createDataInstance();
-		this._data_current=i_encoder.createDataInstance();
-		this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110,i_raster_format);
-		this._threshold_detect=new NyARRasterThresholdAnalyzer_SlidePTile(15,i_raster_format,4);
-		return;
-		
-	}
-
-
-	public void setMarkerWidth(int i_width)
-	{
-		this._marker_width=i_width;
-		return;
-	}
-
-	public void reset(bool i_is_force)
-	{
-		if (this._data_current!=null && i_is_force == false) {
-			// 強制書き換えでなければイベントコール
-			this.onLeaveHandler();
-		}
-		// カレントマーカをリセット
-		this._data_current = null;
-		return;
-	}
-
-	public void detectMarker(INyARRgbRaster i_raster)
-	{
-		// サイズチェック
-		if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h)) {
-			throw new NyARException();
-		}
-		// ラスタを２値イメージに変換する.
-		this._tobin_filter.setThreshold(this._current_threshold);
-		this._tobin_filter.doFilter(i_raster, this._bin_raster);
-
-		NyARSquareStack square_stack = this._square_list;
-		// スクエアコードを探す
-		this._square_detect.detectMarker(this._bin_raster, square_stack);
-		// 認識処理
-		if (!this._is_active) {
-			// マーカ未認識→新規認識
-			detectNewMarker(i_raster, square_stack);
-		} else {
-			// マーカ認識依頼→継続認識
-			detectExistMarker(i_raster, square_stack);
-		}
-		return;
-	}
-
-	
-	private NyIdMarkerPattern _marker_data=new NyIdMarkerPattern();
-	private NyIdMarkerParam _marker_param=new NyIdMarkerParam();
-	private NyARRasterThresholdAnalyzer_SlidePTile _threshold_detect;
-	
-	/**新規マーカ検索 現在認識中のマーカがないものとして、最も認識しやすいマーカを１個認識します。
-	 */
-	private void detectNewMarker(INyARRgbRaster i_raster, NyARSquareStack i_stack)
-	{
-		NyIdMarkerParam param=this._marker_param;
-		NyIdMarkerPattern patt_data  =this._marker_data;
-		int number_of_square = i_stack.getLength();
-        NyARSquare current_square = null;
-        INyIdMarkerData marker_id = null;
-		for (int i = 0; i < number_of_square; i++) {
-            current_square = (NyARSquare)i_stack.getItem(i);
-            // 評価基準になるパターンをイメージから切り出す
-            if (!this._id_pickup.pickFromRaster(i_raster, current_square, patt_data, param))
+            public DetectSquareCB(NyARParam i_param, INyIdMarkerDataEncoder i_encoder)
             {
-				continue;
-			}
-			//エンコード
-			if(!this._encoder.encode(patt_data,this._data_temp)){
-				continue;
-			}
-			//認識率が一番高いもの（占有面積が一番大きいもの）を選択する(省略)
-			//id認識が成功したら終了
-			marker_id=this._data_temp;
-			break;
-		}
-		
-		// 認識状態を更新
-        bool is_id_found = updateStatus(current_square, marker_id, param);
-
-		//閾値フィードバック(detectExistMarkerにもあるよ)
-		if(is_id_found){
-			//マーカがあれば、マーカの周辺閾値を反映
-			this._current_threshold=(this._current_threshold+param.threshold)/2;
-		}else{
-			//マーカがなければ、探索+DualPTailで基準輝度検索
-			this._threshold_detect.analyzeRaster(i_raster);
-			this._current_threshold=(this._current_threshold+this._threshold_detect.getThreshold())/2;
-		}
-		return;
-	}
-
-	/**マーカの継続認識 現在認識中のマーカを優先して認識します。 
-	 * （注）この機能はたぶん今後いろいろ発展するからNewと混ぜないこと。
-	 */
-	private void detectExistMarker(INyARRgbRaster i_raster, NyARSquareStack i_stack)
-	{
-		NyIdMarkerParam param=this._marker_param;
-		NyIdMarkerPattern patt_data  =this._marker_data;
-		int number_of_square = i_stack.getLength();
-        NyARSquare current_square = null;
-        INyIdMarkerData marker_id = null;
-		for (int i = 0; i < number_of_square; i++){
-			//idマーカを認識
-            current_square = (NyARSquare)i_stack.getItem(i);
-            if (!this._id_pickup.pickFromRaster(i_raster, current_square, patt_data, param))
+                this._coordline = new Coord2Linear(i_param.getScreenSize(), i_param.getDistortionFactor());
+                this._data_temp = i_encoder.createDataInstance();
+                this._current_data = i_encoder.createDataInstance();
+                this._encoder = i_encoder;
+                return;
+            }
+            private NyARIntPoint2d[] __tmp_vertex = NyARIntPoint2d.createArray(4);
+            /**
+             * Initialize call back handler.
+             */
+            public void init(INyARRgbRaster i_raster, INyIdMarkerData i_prev_data)
             {
-				continue;
-			}
-			if(!this._encoder.encode(patt_data,this._data_temp)){
-				continue;
-			}
-			//現在認識中のidか確認
-			if(!this._data_current.isEqual((this._data_temp))){
-				continue;
-			}
-			//現在認識中のものであれば、終了
-			marker_id=this._data_temp;
-            break;
-		}
-		// 認識状態を更新
-        bool is_id_found = updateStatus(current_square, marker_id, param);
+                this.marker_data = null;
+                this._prev_data = i_prev_data;
+                this._ref_raster = i_raster;
+            }
+            private NyIdMarkerParam _marker_param = new NyIdMarkerParam();
+            private NyIdMarkerPattern _marker_data = new NyIdMarkerPattern();
 
-		//閾値フィードバック(detectExistMarkerにもあるよ)
-		if(is_id_found){
-			//マーカがあれば、マーカの周辺閾値を反映
-			this._current_threshold=(this._current_threshold+param.threshold)/2;
-		}else{
-			//マーカがなければ、探索+DualPTailで基準輝度検索
-			this._threshold_detect.analyzeRaster(i_raster);
-			this._current_threshold=(this._current_threshold+this._threshold_detect.getThreshold())/2;
-		}
-		return;
-	}
+            /**
+             * 矩形が見付かるたびに呼び出されます。
+             * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
+             */
+            public void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
+            {
+                //既に発見済なら終了
+                if (this.marker_data != null)
+                {
+                    return;
+                }
+                //輪郭座標から頂点リストに変換
+                NyARIntPoint2d[] vertex = this.__tmp_vertex;
+                vertex[0].x = i_coordx[i_vertex_index[0]];
+                vertex[0].y = i_coordy[i_vertex_index[0]];
+                vertex[1].x = i_coordx[i_vertex_index[1]];
+                vertex[1].y = i_coordy[i_vertex_index[1]];
+                vertex[2].x = i_coordx[i_vertex_index[2]];
+                vertex[2].y = i_coordy[i_vertex_index[2]];
+                vertex[3].x = i_coordx[i_vertex_index[3]];
+                vertex[3].y = i_coordy[i_vertex_index[3]];
 
-	private NyARTransMatResult __NyARSquare_result = new NyARTransMatResult();
+                NyIdMarkerParam param = this._marker_param;
+                NyIdMarkerPattern patt_data = this._marker_data;
+                // 評価基準になるパターンをイメージから切り出す
+                if (!this._id_pickup.pickFromRaster(this._ref_raster, vertex, patt_data, param))
+                {
+                    return;
+                }
+                //エンコード
+                if (!this._encoder.encode(patt_data, this._data_temp))
+                {
+                    return;
+                }
 
-	/**オブジェクトのステータスを更新し、必要に応じてハンドル関数を駆動します。
-	 */
-	private bool updateStatus(NyARSquare i_square, INyIdMarkerData i_marker_data,NyIdMarkerParam i_param)
-	{
-		bool is_id_found=false;
-		NyARTransMatResult result = this.__NyARSquare_result;
-		if (!this._is_active) {// 未認識中
-			if (i_marker_data==null) {// 未認識から未認識の遷移
-				// なにもしないよーん。
-				this._is_active=false;
-			} else {// 未認識から認識の遷移
-				this._data_current.copyFrom(i_marker_data);
-				// イベント生成
-				// OnEnter
-				this.onEnterHandler(this._data_current);
-				// 変換行列を作成
-				this._transmat.transMat(i_square,i_param.direction, this._marker_width, result);
-				// OnUpdate
-				this.onUpdateHandler(i_square, result);
-				this._lost_delay_count = 0;
-				this._is_active=true;
-				is_id_found=true;
-			}
-		} else {// 認識中
-			if (i_marker_data==null) {
-				// 認識から未認識の遷移
-				this._lost_delay_count++;
-				if (this._lost_delay < this._lost_delay_count) {
-					// OnLeave
-					this.onLeaveHandler();
-					this._is_active=false;
-				}
-			} else if(this._data_current.isEqual(i_marker_data)) {
-				//同じidの再認識
-				this._transmat.transMat(i_square, i_param.direction, this._marker_width, result);
-				// OnUpdate
-				this.onUpdateHandler(i_square, result);
-				this._lost_delay_count = 0;
-				is_id_found=true;
-			} else {// 異なるコードの認識→今はサポートしない。
-				throw new  NyARException();
-			}
-		}
-		return is_id_found;
-	}	
-	//通知ハンドラ
-	protected abstract void onEnterHandler(INyIdMarkerData i_code);
-	protected abstract void onLeaveHandler();
-	protected abstract void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result);
-}
+                //継続認識要求されている？
+                if (this._prev_data == null)
+                {
+                    //継続認識要求なし
+                    this._current_data.copyFrom(this._data_temp);
+                }
+                else
+                {
+                    //継続認識要求あり
+                    if (!this._prev_data.isEqual((this._data_temp)))
+                    {
+                        return;//認識請求のあったIDと違う。
+                    }
+                }
+                //新しく認識、または継続認識中に更新があったときだけ、Square情報を更新する。
+                //ココから先はこの条件でしか実行されない。
+                NyARSquare sq = this.square;
+                //directionを考慮して、squareを更新する。
+                for (int i = 0; i < 4; i++)
+                {
+                    int idx = (i + 4 - param.direction) % 4;
+                    sq.imvertex[i].x = vertex[idx].x;
+                    sq.imvertex[i].y = vertex[idx].y;
+                    this._coordline.coord2Line(i_vertex_index[idx], i_vertex_index[(idx + 1) % 4], i_coordx, i_coordy, i_coor_num, sq.line[i]);
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    //直線同士の交点計算
+                    if (!NyARLinear.crossPos(sq.line[i], sq.line[(i + 3) % 4], sq.sqvertex[i]))
+                    {
+                        throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                    }
+                }
+                this.threshold = param.threshold;
+                this.marker_data = this._current_data;//みつかった。
+            }
+        }
+        /**
+         * オーナーが自由に使えるタグ変数です。
+         */
+        public Object tag;
 
+        /**
+         * ロスト遅延の管理
+         */
+        private int _lost_delay_count = 0;
+        private int _lost_delay = 5;
+
+        private NyARSquareContourDetector_Rle _square_detect;
+        protected INyARTransMat _transmat;
+        private double _marker_width = 100;
+        private bool _is_active;
+        private int _current_threshold = 110;
+        // [AR]検出結果の保存用
+        private NyARBinRaster _bin_raster;
+        private NyARRasterFilter_ARToolkitThreshold _tobin_filter;
+        private DetectSquareCB _callback;
+        private INyIdMarkerData _data_current;
+
+
+        protected SingleNyIdMarkerProcesser()
+        {
+            return;
+        }
+        private bool _initialized = false;
+        protected void initInstance(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, int i_raster_format)
+        {
+            //初期化済？
+            Debug.Assert(this._initialized == false);
+
+            NyARIntSize scr_size = i_param.getScreenSize();
+            // 解析オブジェクトを作る
+            this._square_detect = new NyARSquareContourDetector_Rle(i_param.getDistortionFactor(), scr_size);
+            this._transmat = new NyARTransMat(i_param);
+            this._callback = new DetectSquareCB(i_param, i_encoder);
+
+            // ２値画像バッファを作る
+            this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
+            //ワーク用のデータオブジェクトを２個作る
+            this._data_current = i_encoder.createDataInstance();
+            this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(110, i_raster_format);
+            this._threshold_detect = new NyARRasterThresholdAnalyzer_SlidePTile(15, i_raster_format, 4);
+            this._initialized = true;
+            this._is_active = false;
+            return;
+
+        }
+
+        public void setMarkerWidth(int i_width)
+        {
+            this._marker_width = i_width;
+            return;
+        }
+
+        public void reset(bool i_is_force)
+        {
+            if (i_is_force == false && this._is_active)
+            {
+                // 強制書き換えでなければイベントコール
+                this.onLeaveHandler();
+            }
+            //マーカ無効
+            this._is_active = false;
+            return;
+        }
+
+        public void detectMarker(INyARRgbRaster i_raster)
+        {
+            // サイズチェック
+            if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h))
+            {
+                throw new NyARException();
+            }
+            // ラスタを２値イメージに変換する.
+            this._tobin_filter.setThreshold(this._current_threshold);
+            this._tobin_filter.doFilter(i_raster, this._bin_raster);
+
+            // スクエアコードを探す(第二引数に指定したマーカ、もしくは新しいマーカを探す。)
+            this._callback.init(i_raster, this._is_active ? this._data_current : null);
+            this._square_detect.detectMarkerCB(this._bin_raster, this._callback);
+
+            // 認識状態を更新(マーカを発見したなら、current_dataを渡すかんじ)
+            bool is_id_found = updateStatus(this._callback.square, this._callback.marker_data);
+
+            //閾値フィードバック(detectExistMarkerにもあるよ)
+            if (is_id_found)
+            {
+                //マーカがあれば、マーカの周辺閾値を反映
+                this._current_threshold = (this._current_threshold + this._callback.threshold) / 2;
+            }
+            else
+            {
+                //マーカがなければ、探索+DualPTailで基準輝度検索
+                int th = this._threshold_detect.analyzeRaster(i_raster);
+                this._current_threshold = (this._current_threshold + th) / 2;
+            }
+            return;
+        }
+
+
+        private NyARRasterThresholdAnalyzer_SlidePTile _threshold_detect;
+        private NyARTransMatResult __NyARSquare_result = new NyARTransMatResult();
+
+        /**オブジェクトのステータスを更新し、必要に応じてハンドル関数を駆動します。
+         */
+        private bool updateStatus(NyARSquare i_square, INyIdMarkerData i_marker_data)
+        {
+            bool is_id_found = false;
+            NyARTransMatResult result = this.__NyARSquare_result;
+            if (!this._is_active)
+            {// 未認識中
+                if (i_marker_data == null)
+                {// 未認識から未認識の遷移
+                    // なにもしないよーん。
+                    this._is_active = false;
+                }
+                else
+                {// 未認識から認識の遷移
+                    this._data_current.copyFrom(i_marker_data);
+                    // イベント生成
+                    // OnEnter
+                    this.onEnterHandler(this._data_current);
+                    // 変換行列を作成
+                    this._transmat.transMat(i_square, this._marker_width, result);
+                    // OnUpdate
+                    this.onUpdateHandler(i_square, result);
+                    this._lost_delay_count = 0;
+                    this._is_active = true;
+                    is_id_found = true;
+                }
+            }
+            else
+            {// 認識中
+                if (i_marker_data == null)
+                {
+                    // 認識から未認識の遷移
+                    this._lost_delay_count++;
+                    if (this._lost_delay < this._lost_delay_count)
+                    {
+                        // OnLeave
+                        this.onLeaveHandler();
+                        this._is_active = false;
+                    }
+                }
+                else if (this._data_current.isEqual(i_marker_data))
+                {
+                    //同じidの再認識
+                    this._transmat.transMat(i_square, this._marker_width, result);
+                    // OnUpdate
+                    this.onUpdateHandler(i_square, result);
+                    this._lost_delay_count = 0;
+                    is_id_found = true;
+                }
+                else
+                {// 異なるコードの認識→今はサポートしない。
+                    throw new NyARException();
+                }
+            }
+            return is_id_found;
+        }
+        //通知ハンドラ
+        protected abstract void onEnterHandler(INyIdMarkerData i_code);
+        protected abstract void onLeaveHandler();
+        protected abstract void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result);
+    }
 }

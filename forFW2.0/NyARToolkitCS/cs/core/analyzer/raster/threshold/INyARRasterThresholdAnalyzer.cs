@@ -1,6 +1,12 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
+ * This work is based on the original ARToolKit developed by
+ *   Hirokazu Kato
+ *   Mark Billinghurst
+ *   HITLab, University of Washington, Seattle
+ * http://www.hitl.washington.edu/artoolkit/
+ *
  * The NyARToolkitCS is C# edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
@@ -22,10 +28,15 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.utils
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class DoubleValue
+    public interface INyARRasterThresholdAnalyzer
     {
-        public double value;
+        int analyzeRaster(INyARRaster i_input);
     }
+
 }

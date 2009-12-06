@@ -135,19 +135,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private double[] _convparam = new double[8];
 
-        public bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
-        {
-            double[] conv_param = this._convparam;
-            int rx2, ry2;
-            rx2 = this._size.w;
-            ry2 = this._size.h;
-            int[] rgb_tmp = new int[3];
+	    /**
+	     * @see INyARColorPatt#pickFromRaster
+	     */
+        public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
+	    {
+		    double[] conv_param=this._convparam;
+	        int rx2,ry2;
+		    rx2=this._size.w;
+		    ry2=this._size.h;
+		    int[] rgb_tmp=new int[3];
 
-            INyARRgbPixelReader reader = image.getRgbPixelReader();
-            // 変形先領域の頂点を取得
+		    INyARRgbPixelReader reader=image.getRgbPixelReader();
+		    // 変形先領域の頂点を取得
 
-            //変換行列から現在の座標系への変換パラメタを作成
-            calcPara(i_square.imvertex, conv_param);// 変換パラメータを求める
+		    //変換行列から現在の座標系への変換パラメタを作成
+		    calcPara(i_vertexs,conv_param);// 変換パラメータを求める
             for (int y = 0; y < ry2; y++)
             {
                 for (int x = 0; x < rx2; x++)

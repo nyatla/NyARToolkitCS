@@ -78,9 +78,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             //1行目
             NyARPerspectiveProjectionMatrix cmat = this._projection_mat_ref;
-            double w1 = i_linear1.run * i_linear2.rise - i_linear2.run * i_linear1.rise;
-            double w2 = i_linear1.rise * i_linear2.intercept - i_linear2.rise * i_linear1.intercept;
-            double w3 = i_linear1.intercept * i_linear2.run - i_linear2.intercept * i_linear1.run;
+            double w1 = i_linear1.dy * i_linear2.dx - i_linear2.dy * i_linear1.dx;
+            double w2 = i_linear1.dx * i_linear2.c - i_linear2.dx * i_linear1.c;
+            double w3 = i_linear1.c * i_linear2.dy - i_linear2.c * i_linear1.dy;
 
             double m0 = w1 * (cmat.m01 * cmat.m12 - cmat.m02 * cmat.m11) + w2 * cmat.m11 - w3 * cmat.m01;//w1 * (cpara[0 * 4 + 1] * cpara[1 * 4 + 2] - cpara[0 * 4 + 2] * cpara[1 * 4 + 1]) + w2 * cpara[1 * 4 + 1] - w3 * cpara[0 * 4 + 1];
             double m1 = -w1 * cmat.m00 * cmat.m12 + w3 * cmat.m00;//-w1 * cpara[0 * 4 + 0] * cpara[1 * 4 + 2] + w3 * cpara[0 * 4 + 0];

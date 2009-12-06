@@ -89,6 +89,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public const int BUFFERFORMAT_INT2D_GRAY_8 = INT2D | 0x0001;
         /**
          * int[][]で0/1の2値画像
+    	 * これは、階調値1bitのBUFFERFORMAT_INT2D_GRAY_1と同じです。
          */
         public const int BUFFERFORMAT_INT2D_BIN_8 = INT2D | 0x0002;
 
@@ -102,6 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public const int BUFFERFORMAT_INT1D_GRAY_8 = INT1D | 0x0001;
         /**
          * int[]で0/1の2値画像
+    	 * これは、階調値1bitのBUFFERFORMAT_INT1D_GRAY_1と同じです。
          */
         public const int BUFFERFORMAT_INT1D_BIN_8 = INT1D | 0x0002;
         /**
@@ -109,6 +111,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public const int BUFFERFORMAT_INT1D_X8R8G8B8_32 = INT1D | 0x0102;
 
+	    /**
+	     * H:9bit(0-359),S:8bit(0-255),V(0-255)
+	     */
+        public const int BUFFERFORMAT_INT1D_X7H9S8V8_32 = INT1D | 0x0103;
 
         /**
          * バッファオブジェクトを返します。

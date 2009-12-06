@@ -143,18 +143,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         private int[] __pickFromRaster_rgb_tmp = new int[3];
         protected double[] __pickFromRaster_cpara = new double[8];
+
         /**
-         * 
-         * @param image
-         * @param i_marker
-         * @return 切り出しに失敗した
-         * @throws Exception
+         * @see INyARColorPatt#pickFromRaster
          */
-        public virtual bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
+        public virtual bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
         {
             //遠近法のパラメータを計算
             double[] cpara = this.__pickFromRaster_cpara;
-            if (!this._perspective_gen.getParam(i_square.imvertex, cpara))
+            if (!this._perspective_gen.getParam(i_vertexs, cpara))
             {
                 return false;
             }

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -28,10 +28,20 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-namespace jp.nyatla.nyartoolkit.cs.utils
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class IntValue
+    public interface INyARHistgramAnalyzer_Threshold
     {
-        public int value;
+        /**
+         * ヒストグラムから閾値探索をします。
+         * @param i_histgram
+         * ヒストグラム
+         * @return
+         */
+        int getThreshold(NyARHistgram i_histgram);
     }
 }

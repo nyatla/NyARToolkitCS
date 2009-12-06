@@ -40,6 +40,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARMatchPattResult
     {
+    	public const int DIRECTION_UNKNOWN=-1;
         public double confidence;
         public int direction;
     }

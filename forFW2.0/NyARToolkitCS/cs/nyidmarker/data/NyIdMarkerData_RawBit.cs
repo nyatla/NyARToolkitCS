@@ -46,7 +46,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             }
             for (int i = s.length - 1; i >= 0; i--)
             {
-                if (s.packet[i] != s.packet[i])
+                if (s.packet[i] != this.packet[i])
                 {
                     return false;
                 }
