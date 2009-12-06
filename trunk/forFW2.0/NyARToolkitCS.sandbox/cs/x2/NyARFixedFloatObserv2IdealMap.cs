@@ -32,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.core2;
 
 namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 {
