@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -38,17 +38,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="cs\core2\rasteranalyzer\threshold\INyARRasterThresholdAnalyzer.cs" />
-    <Compile Include="cs\core2\rasteranalyzer\threshold\NyARRasterThresholdAnalyzer_SlidePTile.cs" />
-    <Compile Include="cs\core2\types\matrix\NyARFixedFloat16Matrix33.cs" />
-    <Compile Include="cs\core2\types\matrix\NyARFixedFloat24Matrix33.cs" />
-    <Compile Include="cs\core2\types\matrix\NyARI64Matrix22.cs" />
-    <Compile Include="cs\core2\types\matrix\NyARI64Matrix33.cs" />
-    <Compile Include="cs\core2\types\NyARFixedFloat16Point2d.cs" />
-    <Compile Include="cs\core2\types\NyARFixedFloat16Point3d.cs" />
-    <Compile Include="cs\core2\types\NyARI64Linear.cs" />
-    <Compile Include="cs\core2\types\NyARI64Point2d.cs" />
-    <Compile Include="cs\core2\types\NyARI64Point3d.cs" />
+    <Compile Include="cs\core\analyzer\histgram\INyARHistgramAnalyzer_Threshold.cs" />
+    <Compile Include="cs\core\analyzer\histgram\NyARHistgramAnalyzer_DiscriminantThreshold.cs" />
+    <Compile Include="cs\core\analyzer\histgram\NyARHistgramAnalyzer_KittlerThreshold.cs" />
+    <Compile Include="cs\core\analyzer\histgram\NyARHistgramAnalyzer_SlidePTile.cs" />
+    <Compile Include="cs\core\analyzer\raster\NyARRasterAnalyzer_Histgram.cs" />
+    <Compile Include="cs\core\analyzer\raster\threshold\INyARRasterThresholdAnalyzer.cs" />
+    <Compile Include="cs\core\analyzer\raster\threshold\NyARRasterThresholdAnalyzer_SlidePTile.cs" />
     <Compile Include="cs\core\labeling\artoolkit\NyARLabelingImage.cs" />
     <Compile Include="cs\core\labeling\artoolkit\NyARLabelingLabel.cs" />
     <Compile Include="cs\core\labeling\artoolkit\NyARLabelingLabelStack.cs" />
@@ -78,11 +74,23 @@
     <Compile Include="cs\core\pickup\NyARColorPatt_Perspective.cs" />
     <Compile Include="cs\core\pickup\NyARColorPatt_PseudoAffine.cs" />
     <Compile Include="cs\core\pickup\NyARColorPatt_Perspective_O2.cs" />
+    <Compile Include="cs\core\rasterfilter\gs2bin\INyARRasterFilter_Gs2Bin.cs" />
+    <Compile Include="cs\core\rasterfilter\gs2bin\NyARRasterFilter_ConstantThrshold.cs" />
     <Compile Include="cs\core\rasterfilter\INyARRasterFilter.cs" />
-    <Compile Include="cs\core\rasterfilter\INyARRasterFilter_GsToBin.cs" />
-    <Compile Include="cs\core\rasterfilter\INyARRasterFilter_RgbToGs.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_CustomToneTable.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2bin\INyARRasterFilter_RgbToBin.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2bin\NyARRasterFilter_ARToolkitThreshold.cs" />
+    <Compile Include="cs\core\rasterfilter\rgb2gs\INyARRasterFilter_RgbToGs.cs" />
+    <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_AveAdd.cs" />
+    <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_RgbCube.cs" />
+    <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_YCbCr.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_EqualizeHist.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_GaussianSmooth.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_Reverse.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_Rgb2Hsv.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_Roberts.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_SimpleSmooth.cs" />
+    <Compile Include="cs\core\rasterfilter\NyARRasterFilter_ToneTable.cs" />
     <Compile Include="cs\core\rasterreader\INyARBufferReader.cs" />
     <Compile Include="cs\core\rasterreader\INyARRgbPixelReader.cs" />
     <Compile Include="cs\core\rasterreader\NyARBufferReader.cs" />
@@ -99,14 +107,15 @@
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_BGRA.cs" />
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_Blank.cs" />
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_RGB.cs" />
+    <Compile Include="cs\core\raster\NyARHsvRaster.cs" />
     <Compile Include="cs\core\squaredetect\ContourPickup.cs" />
-    <Compile Include="cs\core\squaredetect\INyARSquareDetector.cs" />
+    <Compile Include="cs\core\squaredetect\Coord2Linear.cs" />
+    <Compile Include="cs\core\squaredetect\Coord2SquareVertexIndexes.cs" />
+    <Compile Include="cs\core\squaredetect\INyARSquareContourDetector.cs" />
     <Compile Include="cs\core\squaredetect\NyARSquare.cs" />
-    <Compile Include="cs\core\squaredetect\NyARSquareDetector_ARToolKit.cs" />
-    <Compile Include="cs\core\squaredetect\NyARSquareDetector_Rle.cs" />
+    <Compile Include="cs\core\squaredetect\NyARSquareContourDetector_ARToolKit.cs" />
+    <Compile Include="cs\core\squaredetect\NyARSquareContourDetector_Rle.cs" />
     <Compile Include="cs\core\squaredetect\NyARSquareStack.cs" />
-    <Compile Include="cs\core\squaredetect\NyARVertexCounter.cs" />
-    <Compile Include="cs\core\squaredetect\SquareContourDetector.cs" />
     <Compile Include="cs\core\transmat\INyARTransMat.cs" />
     <Compile Include="cs\core\transmat\NyARTransMat.cs" />
     <Compile Include="cs\core\transmat\NyARTransMatResult.cs" />
@@ -122,6 +131,7 @@
     <Compile Include="cs\core\transmat\solver\INyARTransportVectorSolver.cs" />
     <Compile Include="cs\core\transmat\solver\NyARTransportVectorSolver.cs" />
     <Compile Include="cs\core\transmat\solver\NyARTransportVectorSolver_ARToolKit.cs" />
+    <Compile Include="cs\core\types\NyARHistgram.cs" />
     <Compile Include="cs\core\types\matrix\INyARDoubleMatrix.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix22.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix33.cs" />
@@ -136,6 +146,7 @@
     <Compile Include="cs\core\types\NyARLinear.cs" />
     <Compile Include="cs\core\types\stack\NyARIntPointStack.cs" />
     <Compile Include="cs\core\types\stack\NyARIntRectStack.cs" />
+    <Compile Include="cs\core\types\stack\NyObjectStack.cs" />
     <Compile Include="cs\core\utils\NyAREquationSolver.cs" />
     <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator.cs" />
     <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator_O1.cs" />
@@ -157,10 +168,8 @@
     <Compile Include="cs\processor\SingleARMarkerProcesser.cs" />
     <Compile Include="cs\processor\SingleNyIdMarkerProcesser.cs" />
     <Compile Include="cs\utils.cs\ArrayUtils.cs" />
-    <Compile Include="cs\utils\IntValue.cs" />
-    <Compile Include="cs\utils\NyObjectStack.cs" />
+    <Compile Include="cs\utils\TransformedBitmapPickup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="cs\utils\DoubleValue.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -184,6 +193,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cs\core2\rasteranalyzer\threshold\" />
+    <Folder Include="cs\core2\types\matrix\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
