@@ -28,24 +28,27 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
-     * 
-     */
-    public class NyARSquare
+    public class NyARHsvRaster : NyARRaster_BasicClass
     {
-        public NyARLinear[] line = NyARLinear.createArray(4);
-        public NyARDoublePoint2d[] sqvertex = NyARDoublePoint2d.createArray(4);
-        public NyARIntPoint2d[] imvertex = NyARIntPoint2d.createArray(4);
-        public NyARSquare()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                this.line[i] = new NyARLinear();
-            }
-        }
+
+	    protected int[] _ref_buf;
+	    private INyARBufferReader _buffer_reader;
+
+        public NyARHsvRaster(int i_width, int i_height)
+            : base(new NyARIntSize(i_width, i_height))
+	    {
+		    this._ref_buf = new int[i_height*i_width];
+		    this._buffer_reader=new NyARBufferReader(this._ref_buf,INyARBufferReader.BUFFERFORMAT_INT1D_X7H9S8V8_32);
+	    }
+	    public override INyARBufferReader getBufferReader()
+	    {
+		    return this._buffer_reader;
+	    }
     }
 }

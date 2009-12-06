@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -28,10 +28,25 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public interface INyARSquareDetector
+    public abstract class INyARSquareContourDetector
     {
-        void detectMarker(NyARBinRaster i_raster, NyARSquareStack o_square_stack);
+        public interface DetectMarkerCallback
+        {
+            void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index);
+        }
+        /**
+         *
+         * @param i_raster
+         * @param o_square_stack
+         * @throws NyARException
+         */
+        public abstract void detectMarkerCB(NyARBinRaster i_raster, DetectMarkerCallback i_callback);
     }
+
 }

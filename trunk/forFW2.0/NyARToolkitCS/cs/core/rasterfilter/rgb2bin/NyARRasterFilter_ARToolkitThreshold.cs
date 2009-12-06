@@ -33,6 +33,57 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARRasterFilter_ARToolkitThreshold : INyARRasterFilter_RgbToBin
     {
+
+
+        private int _threshold;
+        private IdoThFilterImpl _do_threshold_impl;
+
+        public NyARRasterFilter_ARToolkitThreshold(int i_threshold, int i_input_raster_type)
+        {
+            this._threshold = i_threshold;
+            switch (i_input_raster_type)
+            {
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
+                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_RGB_24();
+                    break;
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
+                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_B8G8R8X8_32();
+                    break;
+                case INyARBufferReader.BUFFERFORMAT_BYTE1D_X8R8G8B8_32:
+                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_X8R8G8B8_32();
+                    break;
+                case INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32:
+                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_INT1D_X8R8G8B8_32();
+                    break;
+                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
+                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_WORD1D_R5G6B5_16LE();
+                    break;
+
+                default:
+                    throw new NyARException();
+            }
+
+
+        }
+        public void setThreshold(int i_threshold)
+        {
+            this._threshold = i_threshold;
+        }
+
+        public void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output)
+        {
+            INyARBufferReader in_buffer_reader = i_input.getBufferReader();
+            INyARBufferReader out_buffer_reader = i_output.getBufferReader();
+
+            Debug.Assert(out_buffer_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_BIN_8));
+            Debug.Assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
+            this._do_threshold_impl.doThFilter(in_buffer_reader, out_buffer_reader, i_output.getSize(), this._threshold);
+            return;
+        }
+        /*
+         * ここから各ラスタ用のフィルタ実装
+         */
         interface IdoThFilterImpl
         {
             void doThFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size, int i_threshold);
@@ -321,52 +372,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
         }
 
-        private int _threshold;
-        private IdoThFilterImpl _do_threshold_impl;
-
-        public NyARRasterFilter_ARToolkitThreshold(int i_threshold, int i_input_raster_type)
-        {
-            this._threshold = i_threshold;
-            switch (i_input_raster_type)
-            {
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
-                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_RGB_24();
-                    break;
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
-                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_B8G8R8X8_32();
-                    break;
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_X8R8G8B8_32:
-                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_BYTE1D_X8R8G8B8_32();
-                    break;
-                case INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32:
-                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_INT1D_X8R8G8B8_32();
-                    break;
-                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
-                    this._do_threshold_impl = new doThFilterImpl_BUFFERFORMAT_WORD1D_R5G6B5_16LE();
-                    break;
-
-                default:
-                    throw new NyARException();
-            }
-
-
-        }
-        public void setThreshold(int i_threshold)
-        {
-            this._threshold = i_threshold;
-        }
-
-        public void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output)
-        {
-            INyARBufferReader in_buffer_reader = i_input.getBufferReader();
-            INyARBufferReader out_buffer_reader = i_output.getBufferReader();
-
-            Debug.Assert(out_buffer_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_BIN_8));
-            Debug.Assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
-            this._do_threshold_impl.doThFilter(in_buffer_reader, out_buffer_reader, i_output.getSize(), this._threshold);
-            return;
-        }
 
     }
 }

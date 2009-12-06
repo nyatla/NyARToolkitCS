@@ -28,24 +28,41 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
-     * ARMarkerInfoに相当するクラス。 矩形情報を保持します。
+     * 明点と暗点をPタイル法で検出して、その中央値を閾値とする。
+     * 
      * 
      */
-    public class NyARSquare
+    public class NyARRasterThresholdAnalyzer_SlidePTile : INyARRasterThresholdAnalyzer
     {
-        public NyARLinear[] line = NyARLinear.createArray(4);
-        public NyARDoublePoint2d[] sqvertex = NyARDoublePoint2d.createArray(4);
-        public NyARIntPoint2d[] imvertex = NyARIntPoint2d.createArray(4);
-        public NyARSquare()
+        private NyARRasterAnalyzer_Histgram _raster_analyzer;
+        private NyARHistgramAnalyzer_SlidePTile _sptile;
+        private NyARHistgram _histgram;
+        public void setVerticalInterval(int i_step)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                this.line[i] = new NyARLinear();
-            }
+            this._raster_analyzer.setVerticalInterval(i_step);
+            return;
+        }
+        public NyARRasterThresholdAnalyzer_SlidePTile(int i_persentage, int i_raster_format, int i_vertical_interval)
+        {
+            Debug.Assert(0 <= i_persentage && i_persentage <= 50);
+            //初期化
+            this._sptile = new NyARHistgramAnalyzer_SlidePTile(i_persentage);
+            this._histgram = new NyARHistgram(256);
+            this._raster_analyzer = new NyARRasterAnalyzer_Histgram(i_raster_format, i_vertical_interval);
+        }
+
+        public int analyzeRaster(INyARRaster i_input)
+        {
+            this._raster_analyzer.analyzeRaster(i_input, this._histgram);
+            return this._sptile.getThreshold(this._histgram);
         }
     }
 }

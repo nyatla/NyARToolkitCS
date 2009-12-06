@@ -129,74 +129,62 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
 
 
-        /**
-         * imageから、i_markerの位置にあるパターンを切り出して、保持します。 Optimize:STEP[769->750]
-         * 
-         * @param image
-         * @param i_marker
-         * @throws Exception
-         */
-        public bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square)
-        {
-            NyARMat cpara = this.wk_pickFromRaster_cpara;
-            NyARIntPoint2d[] local = i_square.imvertex;
-            // xdiv2,ydiv2の計算
-            int xdiv2, ydiv2;
-            int l1, l2;
-            int w1, w2;
-            // x計算
-            w1 = local[0].x - local[1].x;
-            w2 = local[0].y - local[1].y;
-            l1 = (w1 * w1 + w2 * w2);
-            w1 = local[2].x - local[3].x;
-            w2 = local[2].y - local[3].y;
-            l2 = (w1 * w1 + w2 * w2);
-            if (l2 > l1)
-            {
-                l1 = l2;
-            }
-            l1 = l1 / 4;
-            xdiv2 = this._size.w;
-            while (xdiv2 * xdiv2 < l1)
-            {
-                xdiv2 *= 2;
-            }
-            if (xdiv2 > AR_PATT_SAMPLE_NUM)
-            {
-                xdiv2 = AR_PATT_SAMPLE_NUM;
-            }
+	    /**
+	     * @see INyARColorPatt#pickFromRaster
+	     */
+	    public bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)
+	    {
+		    NyARMat cpara = this.wk_pickFromRaster_cpara;
+		    // xdiv2,ydiv2の計算
+		    int xdiv2, ydiv2;
+		    int l1, l2;
+		    int w1, w2;
+		    // x計算
+		    w1 = i_vertexs[0].x - i_vertexs[1].x;
+		    w2 = i_vertexs[0].y - i_vertexs[1].y;
+		    l1 = (w1 * w1 + w2 * w2);
+		    w1 = i_vertexs[2].x - i_vertexs[3].x;
+		    w2 = i_vertexs[2].y - i_vertexs[3].y;
+		    l2 = (w1 * w1 + w2 * w2);
+		    if (l2 > l1) {
+			    l1 = l2;
+		    }
+		    l1 = l1 / 4;
+		    xdiv2 = this._size.w;
+		    while (xdiv2 * xdiv2 < l1) {
+			    xdiv2 *= 2;
+		    }
+		    if (xdiv2 > AR_PATT_SAMPLE_NUM) {
+			    xdiv2 = AR_PATT_SAMPLE_NUM;
+		    }
 
-            // y計算
-            w1 = local[1].x - local[2].x;
-            w2 = local[1].y - local[2].y;
-            l1 = (w1 * w1 + w2 * w2);
-            w1 = local[3].x - local[0].x;
-            w2 = local[3].y - local[0].y;
-            l2 = (w1 * w1 + w2 * w2);
-            if (l2 > l1)
-            {
-                l1 = l2;
-            }
-            ydiv2 = this._size.h;
-            l1 = l1 / 4;
-            while (ydiv2 * ydiv2 < l1)
-            {
-                ydiv2 *= 2;
-            }
-            if (ydiv2 > AR_PATT_SAMPLE_NUM)
-            {
-                ydiv2 = AR_PATT_SAMPLE_NUM;
-            }
+		    // y計算
+		    w1 = i_vertexs[1].x - i_vertexs[2].x;
+		    w2 = i_vertexs[1].y - i_vertexs[2].y;
+		    l1 = (w1 * w1 + w2 * w2);
+		    w1 = i_vertexs[3].x - i_vertexs[0].x;
+		    w2 = i_vertexs[3].y - i_vertexs[0].y;
+		    l2 = (w1 * w1 + w2 * w2);
+		    if (l2 > l1) {
+			    l1 = l2;
+		    }
+		    ydiv2 = this._size.h;
+		    l1 = l1 / 4;
+		    while (ydiv2 * ydiv2 < l1) {
+			    ydiv2 *= 2;
+		    }
+		    if (ydiv2 > AR_PATT_SAMPLE_NUM) {
+			    ydiv2 = AR_PATT_SAMPLE_NUM;
+		    }
 
-            // cparaの計算
-            if (!get_cpara(local, cpara))
-            {
-                return false;
-            }
-            updateExtpat(image, cpara, xdiv2, ydiv2);
+		    // cparaの計算
+		    if (!get_cpara(i_vertexs, cpara)) {
+			    return false;
+		    }
+		    updateExtpat(image, cpara, xdiv2, ydiv2);
 
-            return true;
-        }
+		    return true;
+	    }
         private int[] __updateExtpat_rgbset;
         private int[] __updateExtpat_xc;
         private int[] __updateExtpat_yc;

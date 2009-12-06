@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_ev
          * @param o_mean
          * @throws NyARException
-         */
-        void pca(double[] i_x, double[] i_y, int i_number_of_point, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean);
+	     */
+	    void pca(double[] i_v1,double[] i_v2,int i_number_of_point,NyARDoubleMatrix22 o_evec, double[] o_ev,double[] o_mean);
     }
 }

@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private NyARVec __pca_ev = new NyARVec(2);
         private NyARVec __pca_mean = new NyARVec(2);
 
-        public void pca(double[] i_x, double[] i_y, int i_number_of_point, NyARDoubleMatrix22 o_evec, NyARDoublePoint2d o_ev, NyARDoublePoint2d o_mean)
+	    public void pca(double[] i_v1,double[] i_v2,int i_number_of_point,NyARDoubleMatrix22 o_evec, double[] o_ev,double[] o_mean)
         {
             NyARMat input = this.__pca_input;// 次処理で初期化される。		
             // pcaの準備
@@ -52,8 +52,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double[][] input_array = input.getArray();
             for (int i = 0; i < i_number_of_point; i++)
             {
-                input_array[i][0] = i_x[i];
-                input_array[i][1] = i_y[i];
+                input_array[i][0] = i_v1[i];
+                input_array[i][1] = i_v2[i];
             }
             // 主成分分析
             input.pca(this.__pca_evec, this.__pca_ev, this.__pca_mean);
@@ -64,10 +64,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_evec.m01 = evec_array[0][1];
             o_evec.m10 = evec_array[1][0];
             o_evec.m11 = evec_array[1][1];
-            o_ev.x = ev_array[0];
-            o_ev.y = ev_array[1];
-            o_mean.x = mean_array[0];
-            o_mean.y = mean_array[1];
+            o_ev[0] = ev_array[0];
+            o_ev[1] = ev_array[1];
+            o_mean[0] = mean_array[0];
+            o_mean[1] = mean_array[1];
             return;
         }
     }

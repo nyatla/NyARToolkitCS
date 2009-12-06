@@ -32,14 +32,24 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARColorPatt : INyARRgbRaster
     {
-        /**
-         * ラスタイメージからi_square部分のカラーパターンを抽出して、thisメンバに格納します。
-         * 
-         * @param image
-         * @param i_square
-         * @return ラスターの取得に成功するとTRUE/失敗するとFALSE
-         * @throws NyARException
-         */
-        bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square);
+	    /**
+	     * ラスタイメージからi_square部分のカラーパターンを抽出して、thisメンバに格納します。
+	     * 
+	     * @param image
+	     * Source raster object.
+	     * ----
+	     * 抽出元のラスタオブジェクト
+	     * @param i_vertexs
+	     * Vertexes of the square. Number of element must be 4.
+	     * ----
+	     * 射影変換元の４角形を構成する頂点群頂群。要素数は4であること。
+	     * @return
+	     * True if sucessfull; otherwise false.
+	     * ----
+	     * ラスターの取得に成功するとTRUE/失敗するとFALSE
+	     * @throws NyARException
+	     */
+        //	public bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square) throws NyARException;
+        bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs);
     }
 }

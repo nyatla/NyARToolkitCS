@@ -79,32 +79,8 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 
 
 
-	/**
-	 * 頂点順序をi_directionに対応して並べ替えます。
-	 * @param i_square
-	 * @param i_direction
-	 * @param o_sqvertex_ref
-	 * @param o_liner_ref
-	 */
-	private void initVertexOrder(NyARSquare i_square, int i_direction, NyARDoublePoint2d[] o_sqvertex_ref, NyARLinear[] o_liner_ref)
-	{
-		//頂点順序を考慮した矩形の頂点情報
-		o_sqvertex_ref[0]= i_square.sqvertex[(4 - i_direction) % 4];
-		o_sqvertex_ref[1]= i_square.sqvertex[(5 - i_direction) % 4];
-		o_sqvertex_ref[2]= i_square.sqvertex[(6 - i_direction) % 4];
-		o_sqvertex_ref[3]= i_square.sqvertex[(7 - i_direction) % 4];	
-		o_liner_ref[0]=i_square.line[(4 - i_direction) % 4];
-		o_liner_ref[1]=i_square.line[(5 - i_direction) % 4];
-		o_liner_ref[2]=i_square.line[(6 - i_direction) % 4];
-		o_liner_ref[3]=i_square.line[(7 - i_direction) % 4];
-		return;
-	}
-
-
-	private NyARDoublePoint2d[] __transMat_sqvertex_ref = new NyARDoublePoint2d[4];
 	private NyARDoublePoint2d[] __transMat_vertex_2d = NyARDoublePoint2d.createArray(4);
 	private NyARDoublePoint3d[] __transMat_vertex_3d = NyARDoublePoint3d.createArray(4);
-	private NyARLinear[] __transMat_linear_ref=new NyARLinear[4];
 	private NyARDoublePoint3d __transMat_trans=new NyARDoublePoint3d();
 
 	/**
@@ -112,38 +88,32 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 	 * 
 	 * @param i_square
 	 * 計算対象のNyARSquareオブジェクト
-	 * @param i_direction
 	 * @param i_width
 	 * @return
 	 * @throws NyARException
 	 */
-	public void transMat(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult o_result_conv)
+	public void transMat(NyARSquare i_square, double i_width, NyARTransMatResult o_result_conv)
 	{
-		NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
-		NyARLinear[] linear_ref=__transMat_linear_ref;
 		NyARDoublePoint3d trans=this.__transMat_trans;
-		
-		//計算用に頂点情報を初期化（順番調整）
-		initVertexOrder(i_square, i_direction, sqvertex_ref,linear_ref);
 		
 		//平行移動量計算機に、2D座標系をセット
 		NyARDoublePoint2d[] vertex_2d=this.__transMat_vertex_2d;
 		NyARDoublePoint3d[] vertex_3d=this.__transMat_vertex_3d;
-		this._ref_dist_factor.ideal2ObservBatch(sqvertex_ref, vertex_2d,4);		
-		this._transsolver.set2dVertex(vertex_2d,4);
+        this._ref_dist_factor.ideal2ObservBatch(i_square.sqvertex, vertex_2d, 4);
+        this._transsolver.set2dVertex(vertex_2d, 4);
 		
 		//基準矩形の3D座標系を作成
 		this._offset.setSquare(i_width,this._center);
 
 		//回転行列を計算
-		this._rotmatrix.initRotBySquare(linear_ref,sqvertex_ref);
+        this._rotmatrix.initRotBySquare(i_square.line, i_square.sqvertex);
 		
 		//回転後の3D座標系から、平行移動量を計算
 		this._rotmatrix.getPoint3dBatch(this._offset.vertex,vertex_3d,4);
 		this._transsolver.solveTransportVector(vertex_3d,trans);
 		
 		//計算結果の最適化(平行移動量と回転行列の最適化)
-        this.optimize(this._rotmatrix, trans, this._transsolver, this._offset.vertex, vertex_2d);
+        o_result_conv.error = this.optimize(this._rotmatrix, trans, this._transsolver, this._offset.vertex, vertex_2d);
 		
 		// マトリクスの保存
 		this.updateMatrixValue(this._rotmatrix, this._offset.point, trans,o_result_conv);
@@ -154,33 +124,27 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 	 * (non-Javadoc)
 	 * @see jp.nyatla.nyartoolkit.core.transmat.INyARTransMat#transMatContinue(jp.nyatla.nyartoolkit.core.NyARSquare, int, double, jp.nyatla.nyartoolkit.core.transmat.NyARTransMatResult)
 	 */
-	public void transMatContinue(NyARSquare i_square, int i_direction, double i_width, NyARTransMatResult io_result_conv)
+	public void transMatContinue(NyARSquare i_square, double i_width, NyARTransMatResult o_result_conv)
 	{
-		NyARDoublePoint2d[] sqvertex_ref = __transMat_sqvertex_ref;
-		NyARLinear[] linear_ref=__transMat_linear_ref;
 		NyARDoublePoint3d trans=this.__transMat_trans;
 
 		// io_result_convが初期値なら、transMatで計算する。
-		if (!io_result_conv.has_value) {
-			this.transMat(i_square, i_direction, i_width, io_result_conv);
+		if (!o_result_conv.has_value) {
+			this.transMat(i_square, i_width, o_result_conv);
 			return;
 		}
-
-		//計算用に頂点情報を初期化（順番調整）
-		initVertexOrder(i_square, i_direction, sqvertex_ref,linear_ref);
-
 		
 		//平行移動量計算機に、2D座標系をセット
 		NyARDoublePoint2d[] vertex_2d=this.__transMat_vertex_2d;
 		NyARDoublePoint3d[] vertex_3d=this.__transMat_vertex_3d;
-		this._ref_dist_factor.ideal2ObservBatch(sqvertex_ref, vertex_2d,4);		
+		this._ref_dist_factor.ideal2ObservBatch(i_square.sqvertex, vertex_2d,4);		
 		this._transsolver.set2dVertex(vertex_2d,4);
 		
 		//基準矩形の3D座標系を作成
 		this._offset.setSquare(i_width,this._center);
 
 		//回転行列を計算
-        this._rotmatrix.initRotByPrevResult(io_result_conv);
+		this._rotmatrix.initRotByPrevResult(o_result_conv);
 		
 		//回転後の3D座標系から、平行移動量を計算
 		this._rotmatrix.getPoint3dBatch(this._offset.vertex,vertex_3d,4);
@@ -190,12 +154,12 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 		double err=this.optimize(this._rotmatrix, trans, this._transsolver, this._offset.vertex, vertex_2d);
 		
 		// マトリクスの保存
-        this.updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
+		this.updateMatrixValue(this._rotmatrix, this._offset.point, trans,o_result_conv);
 		
 		// エラー値が許容範囲でなければTransMatをやり直し
 		if (err > AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR) {
 			// rotationを矩形情報で初期化
-			this._rotmatrix.initRotBySquare(linear_ref,sqvertex_ref);
+			this._rotmatrix.initRotBySquare(i_square.line,i_square.sqvertex);
 			//回転行列の平行移動量の計算
 			this._rotmatrix.getPoint3dBatch(this._offset.vertex,vertex_3d,4);
 			this._transsolver.solveTransportVector(vertex_3d,trans);
@@ -204,15 +168,19 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 			//エラー値が低かったら値を差換え
 			if (err2 < err) {
 				// 良い値が取れたら、差換え
-                this.updateMatrixValue(this._rotmatrix, this._offset.point, trans, io_result_conv);
+				this.updateMatrixValue(this._rotmatrix, this._offset.point, trans,o_result_conv);
 			}
+			err=err2;
 		}
+		//エラー値保存
+		o_result_conv.error=err;
 		return;
 	}
 	private double optimize(NyARRotMatrix_ARToolKit io_rotmat,NyARDoublePoint3d io_transvec,INyARTransportVectorSolver i_solver,NyARDoublePoint3d[] i_offset_3d,NyARDoublePoint2d[] i_2d_vertex)
 	{
 		NyARDoublePoint3d[] vertex_3d=this.__transMat_vertex_3d;
 		double err = -1;
+		//System.out.println("START");
 		// ループを抜けるタイミングをARToolKitと合わせるために変なことしてます。 
 		for (int i = 0;; i++) {
 			// <arGetTransMat3>
@@ -221,6 +189,7 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 			i_solver.solveTransportVector(vertex_3d, io_transvec);
 			
 			err = this._mat_optimize.modifyMatrix(io_rotmat, io_transvec, i_offset_3d, i_2d_vertex);
+			//System.out.println("E:"+err*4);
 			// //</arGetTransMat3>
 			if (err < AR_GET_TRANS_MAT_MAX_FIT_ERROR || i == AR_GET_TRANS_MAT_MAX_LOOP_COUNT - 1) {
 				break;
@@ -228,8 +197,9 @@ public class NyARTransMat_ARToolKit : INyARTransMat
 			io_rotmat.getPoint3dBatch(i_offset_3d,vertex_3d,4);
 			i_solver.solveTransportVector(vertex_3d, io_transvec);
 		}
+		//System.out.println("END");
 		return err;
-	}
+	}	
 	/**
 	 * パラメータで変換行列を更新します。
 	 * 
