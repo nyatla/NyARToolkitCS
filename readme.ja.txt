@@ -1,7 +1,7 @@
 ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008-2009 R.Iizuka
 
-version 2.4.0
+version 2.4.1
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
@@ -14,12 +14,10 @@ wm(at)nyatla.jp
 NyARToolkitCSは、純粋なC#のみで実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 2.4.0
+ARToolkit 2.72.1及び、NyARToolkit version 2.4.1
 をベースにしています。
 
-※NyARToolkitのcore2パッケージの一部は実装されていません。
-　今後徐々に実装する予定です。
-
+※sandboxの一部のクラスは未実装です。
 
 ARToolkitは加藤博一先生とHuman Interface Technology Labにより
 開発されたAugmented Reality (AR) ライブラリです。
