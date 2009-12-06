@@ -31,44 +31,23 @@
 using System;
 using jp.nyatla.nyartoolkit.cs.core;
 
-namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARFixedFloatTransOffset
+    public class NyARFixedFloat16Point3d : NyARI64Point3d
     {
-        public NyARFixedFloat16Point3d[] vertex = NyARFixedFloat16Point3d.createArray(4);
-        public NyARFixedFloat16Point3d point = new NyARFixedFloat16Point3d();
         /**
-         * 中心位置と辺長から、オフセット情報を作成して設定する。
-         * @param i_width
-         * FF16で渡すこと！
-         * @param i_center
+         * 配列ファクトリ
+         * @param i_number
+         * @return
          */
-        public void setSquare(long i_width, NyARFixedFloat16Point2d i_center)
+        public new static NyARFixedFloat16Point3d[] createArray(int i_number)
         {
-            long w_2 = i_width >> 1;
-
-            NyARFixedFloat16Point3d vertex3d_ptr;
-            vertex3d_ptr = this.vertex[0];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[1];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[2];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[3];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0;
-
-            this.point.x = -i_center.x;
-            this.point.y = -i_center.y;
-            this.point.z = 0;
-            return;
+            NyARFixedFloat16Point3d[] ret = new NyARFixedFloat16Point3d[i_number];
+            for (int i = 0; i < i_number; i++)
+            {
+                ret[i] = new NyARFixedFloat16Point3d();
+            }
+            return ret;
         }
     }
 }

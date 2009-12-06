@@ -29,46 +29,35 @@
  * 
  */
 using System;
+using System.Collections.Generic;
 using jp.nyatla.nyartoolkit.cs.core;
 
-namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARFixedFloatTransOffset
+    public class NyARFixedFloat24Matrix33 : NyARI64Matrix33
     {
-        public NyARFixedFloat16Point3d[] vertex = NyARFixedFloat16Point3d.createArray(4);
-        public NyARFixedFloat16Point3d point = new NyARFixedFloat16Point3d();
-        /**
-         * 中心位置と辺長から、オフセット情報を作成して設定する。
-         * @param i_width
-         * FF16で渡すこと！
-         * @param i_center
-         */
-        public void setSquare(long i_width, NyARFixedFloat16Point2d i_center)
+        public void copyFrom(NyARDoubleMatrix33 i_matrix)
         {
-            long w_2 = i_width >> 1;
-
-            NyARFixedFloat16Point3d vertex3d_ptr;
-            vertex3d_ptr = this.vertex[0];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[1];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[2];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0;
-            vertex3d_ptr = this.vertex[3];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0;
-
-            this.point.x = -i_center.x;
-            this.point.y = -i_center.y;
-            this.point.z = 0;
+            this.m00 = (long)i_matrix.m00 * 0x1000000;
+            this.m01 = (long)i_matrix.m01 * 0x1000000;
+            this.m02 = (long)i_matrix.m02 * 0x1000000;
+            this.m10 = (long)i_matrix.m10 * 0x1000000;
+            this.m11 = (long)i_matrix.m11 * 0x1000000;
+            this.m12 = (long)i_matrix.m12 * 0x1000000;
+            this.m20 = (long)i_matrix.m20 * 0x1000000;
+            this.m21 = (long)i_matrix.m21 * 0x1000000;
+            this.m22 = (long)i_matrix.m22 * 0x1000000;
             return;
         }
+        public static new NyARFixedFloat24Matrix33[] createArray(int i_number)
+        {
+            NyARFixedFloat24Matrix33[] ret = new NyARFixedFloat24Matrix33[i_number];
+            for (int i = 0; i < i_number; i++)
+            {
+                ret[i] = new NyARFixedFloat24Matrix33();
+            }
+            return ret;
+        }
     }
+
 }
