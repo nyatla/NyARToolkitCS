@@ -136,7 +136,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private ID3dBackground _back_ground;
         private WmCapture _capture;
         //NyAR
-        private NyARSingleDetectMarker_X2 m_ar;
+        private NyARSingleDetectMarker m_ar;
         private DsRGB565Raster m_raster;
         private NyARD3dUtil _utils = new NyARD3dUtil();
 
@@ -157,7 +157,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this.m_raster = i_resource.createARRaster();
 
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
+            this.m_ar = new NyARSingleDetectMarker(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
             this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);
