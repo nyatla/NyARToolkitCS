@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{07B19A8B-33C7-4234-8FF6-2FF240B819AA}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -36,26 +36,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\core\types\matrix\NyARFixedFloat16Matrix33.cs" />
+    <Compile Include="cs\core\types\matrix\NyARFixedFloat24Matrix33.cs" />
+    <Compile Include="cs\core\types\matrix\NyARI64Matrix22.cs" />
+    <Compile Include="cs\core\types\matrix\NyARI64Matrix33.cs" />
+    <Compile Include="cs\core\types\NyARFixedFloat16Point2d.cs" />
+    <Compile Include="cs\core\types\NyARFixedFloat16Point3d.cs" />
+    <Compile Include="cs\core\types\NyARI64Linear.cs" />
+    <Compile Include="cs\core\types\NyARI64Point2d.cs" />
+    <Compile Include="cs\core\types\NyARI64Point3d.cs" />
     <Compile Include="cs\quadx2\NyARRasterFilter_ARTTh_Quad.cs" />
-    <Compile Include="cs\quadx2\NyARSingleDetectMarker_Quad.cs" />
-    <Compile Include="cs\quadx2\NyARSquareDetector_Quad.cs" />
     <Compile Include="cs\x2\NyARFixedFloat16Mat.cs" />
     <Compile Include="cs\x2\NyARFixedFloatObserv2IdealMap.cs" />
-    <Compile Include="cs\x2\NyARFixedFloatFitVecCalculator.cs" />
     <Compile Include="cs\x2\NyARFixedFloatIdeal2Observ.cs" />
-    <Compile Include="cs\x2\NyARFixedFloatPca2d.cs" />
-    <Compile Include="cs\x2\NyARFixedFloatRotMatrix.cs" />
-    <Compile Include="cs\x2\NyARFixedFloatRotTransOptimize_O2.cs" />
-    <Compile Include="cs\x2\NyARFixedFloatRotVector.cs" />
     <Compile Include="cs\x2\NyARFixedFloatTransOffset.cs" />
     <Compile Include="cs\x2\NyARFixedFloatVertexCounter.cs" />
-    <Compile Include="cs\x2\NyARSingleDetectMarker_X2.cs" />
-    <Compile Include="cs\x2\NyARSquareDetector_ARToolKit_X2.cs" />
-    <Compile Include="cs\x2\NyARSquareDetector_Rle_X2.cs" />
-    <Compile Include="cs\x2\NyARTransMat_X2.cs" />
     <Compile Include="cs\x2\NyMath.cs" />
-    <Compile Include="cs\x2\SingleARMarkerProcesser_X2.cs" />
-    <Compile Include="cs\x2\SquareContourDetector_X2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +59,9 @@
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cs\core\analyzer\histgram\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

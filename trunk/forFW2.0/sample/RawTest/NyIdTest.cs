@@ -115,11 +115,11 @@ namespace ConsoleApplication1
             ap.loadARParamFromFile(camera_file);
             ap.changeScreenSize(320, 240);
 
-            //試験イメージの読み出し(320x240 BGRAのRAWデータ)
+            //試験イメージの読み出し(320x240 RGBのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
-            byte[] raw = bs.ReadBytes(320 * 240 * 4);
-            NyARRgbRaster_BGRA ra = NyARRgbRaster_BGRA.wrap(raw, 320, 240);
+            byte[] raw = bs.ReadBytes(320 * 240 * 3);
+            NyARRgbRaster_RGB ra = NyARRgbRaster_RGB.wrap(raw, 320, 240);
 
             MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferReader().getBufferType());
             pr.detectMarker(ra);
