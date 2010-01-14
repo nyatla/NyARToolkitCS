@@ -101,11 +101,11 @@ namespace NyARToolkitCSUtils.Direct3d
         public void CopyFromXRGB32(DsBGRX32Raster i_raster)
         {
             //BUFFERFORMAT_BYTE1D_B8G8R8X8_32しか受けられません。
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             GraphicsStream texture_rect;
             try
             {
-                byte[] buf =(byte[])i_raster.getBufferReader().getBuffer();
+                byte[] buf =(byte[])i_raster.getBuffer();
                 // テクスチャをロックする
                 texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
                 //テクスチャのピッチって何？

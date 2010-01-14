@@ -34,14 +34,14 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public interface INyARHistgramAnalyzer_Threshold
+    public interface INyARHistogramAnalyzer_Threshold
     {
         /**
          * ヒストグラムから閾値探索をします。
-         * @param i_histgram
+         * @param i_histogram
          * ヒストグラム
          * @return
          */
-        int getThreshold(NyARHistgram i_histgram);
+        int getThreshold(NyARHistogram i_histogram);
     }
 }

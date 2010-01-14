@@ -43,7 +43,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : INyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
         {
             //公開プロパティ
             public NyARSquare square = new NyARSquare();
@@ -88,7 +88,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            public void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
+            public void onSquareDetect(NyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
             {
                 //既に発見済なら終了
                 if (this.marker_data != null)
@@ -140,8 +140,6 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 for (int i = 0; i < 4; i++)
                 {
                     int idx = (i + 4 - param.direction) % 4;
-                    sq.imvertex[i].x = vertex[idx].x;
-                    sq.imvertex[i].y = vertex[idx].y;
                     this._coordline.coord2Line(i_vertex_index[idx], i_vertex_index[(idx + 1) % 4], i_coordx, i_coordy, i_coor_num, sq.line[i]);
                 }
                 for (int i = 0; i < 4; i++)
@@ -159,7 +157,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         /**
          * オーナーが自由に使えるタグ変数です。
          */
-        public Object tag;
+        public object tag;
 
         /**
          * ロスト遅延の管理
@@ -169,7 +167,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private NyARSquareContourDetector_Rle _square_detect;
         protected INyARTransMat _transmat;
-        private double _marker_width = 100;
+        private NyARRectOffset _offset;
         private bool _is_active;
         private int _current_threshold = 110;
         // [AR]検出結果の保存用
@@ -184,7 +182,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             return;
         }
         private bool _initialized = false;
-        protected void initInstance(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, int i_raster_format)
+        protected void initInstance(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, int i_marker_width, int i_raster_format)
         {
             //初期化済？
             Debug.Assert(this._initialized == false);
@@ -203,13 +201,15 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._threshold_detect = new NyARRasterThresholdAnalyzer_SlidePTile(15, i_raster_format, 4);
             this._initialized = true;
             this._is_active = false;
+            this._offset = new NyARRectOffset();
+            this._offset.setSquare(i_marker_width);
             return;
 
         }
 
         public void setMarkerWidth(int i_width)
         {
-            this._marker_width = i_width;
+            this._offset.setSquare(i_width);
             return;
         }
 
@@ -282,7 +282,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     // OnEnter
                     this.onEnterHandler(this._data_current);
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._offset, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;
@@ -306,7 +306,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 else if (this._data_current.isEqual(i_marker_data))
                 {
                     //同じidの再認識
-                    this._transmat.transMat(i_square, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._offset, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;

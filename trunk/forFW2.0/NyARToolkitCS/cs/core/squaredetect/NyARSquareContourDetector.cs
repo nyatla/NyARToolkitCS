@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -28,46 +28,25 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-
-    public class NyARTransOffset
+    public abstract class NyARSquareContourDetector
     {
-        public NyARDoublePoint3d[] vertex = NyARDoublePoint3d.createArray(4);
-        public NyARDoublePoint3d point = new NyARDoublePoint3d();
-        /**
-         * 中心位置と辺長から、オフセット情報を作成して設定する。
-         * @param i_width
-         * @param i_center
-         */
-        public void setSquare(double i_width, NyARDoublePoint2d i_center)
+        public interface DetectMarkerCallback
         {
-            double w_2 = i_width / 2.0;
-
-            NyARDoublePoint3d vertex3d_ptr;
-            vertex3d_ptr = this.vertex[0];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0.0;
-            vertex3d_ptr = this.vertex[1];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = w_2;
-            vertex3d_ptr.z = 0.0;
-            vertex3d_ptr = this.vertex[2];
-            vertex3d_ptr.x = w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0.0;
-            vertex3d_ptr = this.vertex[3];
-            vertex3d_ptr.x = -w_2;
-            vertex3d_ptr.y = -w_2;
-            vertex3d_ptr.z = 0.0;
-
-            this.point.x = -i_center.x;
-            this.point.y = -i_center.y;
-            this.point.z = 0;
-            return;
-
+            void onSquareDetect(NyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index);
         }
+        /**
+         *
+         * @param i_raster
+         * @param o_square_stack
+         * @throws NyARException
+         */
+        public abstract void detectMarkerCB(NyARBinRaster i_raster, DetectMarkerCallback i_callback);
     }
+
 }

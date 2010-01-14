@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.core
@@ -222,6 +223,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int labeling(NyARBinRaster i_bin_raster, int i_top, int i_bottom, RleLabelFragmentInfoStack o_stack)
         {
+            Debug.Assert(i_bin_raster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             return this.imple_labeling(i_bin_raster, 0, i_top, i_bottom, o_stack);
         }
         /**
@@ -237,6 +239,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int labeling(NyARGrayscaleRaster i_gs_raster, int i_th, int i_top, int i_bottom, RleLabelFragmentInfoStack o_stack)
         {
+            Debug.Assert(i_gs_raster.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
             return this.imple_labeling(i_gs_raster, i_th, i_top, i_bottom, o_stack);
         }
         private int imple_labeling(INyARRaster i_raster, int i_th, int i_top, int i_bottom, RleLabelFragmentInfoStack o_stack)
@@ -251,7 +254,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int len_prev = 0;
             int len_current = 0;
             int width = i_raster.getWidth();
-            int[] in_buf = (int[])i_raster.getBufferReader().getBuffer();
+            int[] in_buf = (int[])i_raster.getBuffer();
 
             int id_max = 0;
             int label_count = 0;
@@ -425,7 +428,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 rle_current = tmp;
             }
             //対象のラベルだけ転写
-            o_stack.reserv(label_count);
+            o_stack.init(label_count);
             RleLabelFragmentInfoStack.RleLabelFragmentInfo[] o_dest_array = o_stack.getArray();
             int max = this._max_area;
             int min = this._min_area;

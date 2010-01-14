@@ -72,10 +72,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setRaster(INyARRaster i_raster)
         {
             //画素フォーマット、サイズ制限
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
             Debug.Assert(i_raster.getSize().isEqualSize(i_raster.getSize()));
 
-            int[] buf = (int[])i_raster.getBufferReader().getBuffer();
+            int[] buf = (int[])i_raster.getBuffer();
             //i_buffer[XRGB]→差分[R,G,B]変換			
             int i;
             int ave;//<PV/>

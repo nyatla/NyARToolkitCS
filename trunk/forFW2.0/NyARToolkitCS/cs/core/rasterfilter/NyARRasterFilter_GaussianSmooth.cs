@@ -36,93 +36,88 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARRasterFilter_GaussianSmooth : INyARRasterFilter
     {
-        private IdoFilterImpl _do_filter_impl;
-        public NyARRasterFilter_GaussianSmooth(int i_raster_type)
-        {
-            switch (i_raster_type)
-            {
-                case INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8:
-                    this._do_filter_impl = new IdoFilterImpl_GRAY_8();
-                    break;
-                default:
-                    throw new NyARException();
-            }
-        }
-        public void doFilter(INyARRaster i_input, INyARRaster i_output)
-        {
-            Debug.Assert(i_input != i_output);
-            this._do_filter_impl.doFilter(i_input.getBufferReader(), i_output.getBufferReader(), i_input.getSize());
-        }
+	    private IdoFilterImpl _do_filter_impl; 
+	    public NyARRasterFilter_GaussianSmooth(int i_raster_type)
+	    {
+		    switch (i_raster_type) {
+		    case NyARBufferType.INT1D_GRAY_8:
+			    this._do_filter_impl=new IdoFilterImpl_GRAY_8();
+			    break;
+		    default:
+			    throw new NyARException();
+		    }
+	    }
+	    public void doFilter(INyARRaster i_input, INyARRaster i_output)
+	    {
+		    Debug.Assert (i_input!=i_output);
+		    this._do_filter_impl.doFilter(i_input,i_output,i_input.getSize());
+	    }
+    	
+	    interface IdoFilterImpl
+	    {
+		    void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size);
+	    }
+	    class IdoFilterImpl_GRAY_8 : IdoFilterImpl
+	    {
+		    public void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size)
+		    {
+			    Debug.Assert (i_input.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
+			    Debug.Assert (i_output.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
+			    int[] in_ptr =(int[])i_input.getBuffer();
+			    int[] out_ptr=(int[])i_output.getBuffer();
+			    int width=i_size.w;
+			    int height=i_size.h;
+			    int col0,col1,col2;
+			    int bptr=0;
+			    //1行目
+			    col1=in_ptr[bptr  ]*2+in_ptr[bptr+width  ];
+			    col2=in_ptr[bptr+1]*2+in_ptr[bptr+width+1];
+			    out_ptr[bptr]=(col1*2+col2)/9;
+			    bptr++;
+			    for(int x=0;x<width-2;x++){
+				    col0=col1;
+				    col1=col2;
+				    col2=in_ptr[bptr+1]*2+in_ptr[bptr+width+1];
+				    out_ptr[bptr]=(col0+col1*2+col2)/12;
+				    bptr++;
+			    }			
+			    out_ptr[bptr]=(col1+col2)/9;
+			    bptr++;
+			    //2行目-末行-1
 
-        interface IdoFilterImpl
-        {
-            void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size);
-        }
-        class IdoFilterImpl_GRAY_8 : IdoFilterImpl
-        {
-            public void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size)
-            {
-                Debug.Assert(i_input.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
-                Debug.Assert(i_output.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
-                int[] in_ptr = (int[])i_input.getBuffer();
-                int[] out_ptr = (int[])i_output.getBuffer();
-                int width = i_size.w;
-                int height = i_size.h;
-                int col0, col1, col2;
-                int bptr = 0;
-                //1行目
-                col1 = in_ptr[bptr] * 2 + in_ptr[bptr + width];
-                col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr + width + 1];
-                out_ptr[bptr] = (col1 * 2 + col2) / 9;
-                bptr++;
-                for (int x = 0; x < width - 2; x++)
-                {
-                    col0 = col1;
-                    col1 = col2;
-                    col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr + width + 1];
-                    out_ptr[bptr] = (col0 + col1 * 2 + col2) / 12;
-                    bptr++;
-                }
-                out_ptr[bptr] = (col1 + col2) / 9;
-                bptr++;
-                //2行目-末行-1
-
-                for (int y = 0; y < height - 2; y++)
-                {
-                    //左端
-                    col1 = in_ptr[bptr] * 2 + in_ptr[bptr - width] + in_ptr[bptr + width];
-                    col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr - width + 1] + in_ptr[bptr + width + 1];
-                    out_ptr[bptr] = (col1 + col2) / 12;
-                    bptr++;
-                    for (int x = 0; x < width - 2; x++)
-                    {
-                        col0 = col1;
-                        col1 = col2;
-                        col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr - width + 1] + in_ptr[bptr + width + 1];
-                        out_ptr[bptr] = (col0 + col1 * 2 + col2) / 16;
-                        bptr++;
-                    }
-                    //右端
-                    out_ptr[bptr] = (col1 * 2 + col2) / 12;
-                    bptr++;
-                }
-                //末行目
-                col1 = in_ptr[bptr] * 2 + in_ptr[bptr - width];
-                col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr - width + 1];
-                out_ptr[bptr] = (col1 + col2) / 9;
-                bptr++;
-                for (int x = 0; x < width - 2; x++)
-                {
-                    col0 = col1;
-                    col1 = col2;
-                    col2 = in_ptr[bptr + 1] * 2 + in_ptr[bptr - width + 1];
-                    out_ptr[bptr] = (col0 + col1 * 2 + col2) / 12;
-                    bptr++;
-                }
-                out_ptr[bptr] = (col1 * 2 + col2) / 9;
-                bptr++;
-                return;
-            }
-        }
+			    for(int y=0;y<height-2;y++){
+				    //左端
+				    col1=in_ptr[bptr  ]*2+in_ptr[bptr-width  ]+in_ptr[bptr+width  ];
+				    col2=in_ptr[bptr+1]*2+in_ptr[bptr-width+1]+in_ptr[bptr+width+1];
+				    out_ptr[bptr]=(col1+col2)/12;
+				    bptr++;
+				    for(int x=0;x<width-2;x++){
+					    col0=col1;
+					    col1=col2;
+					    col2=in_ptr[bptr+1]*2+in_ptr[bptr-width+1]+in_ptr[bptr+width+1];
+					    out_ptr[bptr]=(col0+col1*2+col2)/16;
+					    bptr++;
+				    }
+				    //右端
+				    out_ptr[bptr]=(col1*2+col2)/12;
+				    bptr++;
+			    }
+			    //末行目
+			    col1=in_ptr[bptr  ]*2+in_ptr[bptr-width  ];
+			    col2=in_ptr[bptr+1]*2+in_ptr[bptr-width+1];
+			    out_ptr[bptr]=(col1+col2)/9;
+			    bptr++;
+			    for(int x=0;x<width-2;x++){
+				    col0=col1;
+				    col1=col2;
+				    col2=in_ptr[bptr+1]*2+in_ptr[bptr-width+1];
+				    out_ptr[bptr]=(col0+col1*2+col2)/12;
+				    bptr++;
+			    }			
+			    out_ptr[bptr]=(col1*2+col2)/9;
+			    bptr++;
+			    return;
+		    }
+	    }
     }
 }

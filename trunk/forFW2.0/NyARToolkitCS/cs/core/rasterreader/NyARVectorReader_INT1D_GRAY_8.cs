@@ -31,22 +31,49 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public abstract class INyARSquareContourDetector
+    public class NyARRgbPixelReader_INT1D_GRAY_8 : INyARRgbPixelReader
     {
-        public interface DetectMarkerCallback
-        {
-            void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index);
-        }
-        /**
-         *
-         * @param i_raster
-         * @param o_square_stack
-         * @throws NyARException
-         */
-        public abstract void detectMarkerCB(NyARBinRaster i_raster, DetectMarkerCallback i_callback);
-    }
+	    protected int[] _ref_buf;
 
+	    private NyARIntSize _size;
+
+	    public NyARRgbPixelReader_INT1D_GRAY_8(int[] i_buf, NyARIntSize i_size)
+	    {
+		    this._ref_buf = i_buf;
+		    this._size = i_size;
+	    }
+
+	    public void getPixel(int i_x, int i_y, int[] o_rgb)
+	    {
+		    o_rgb[0] = o_rgb[1]=o_rgb[2]=this._ref_buf[i_x + i_y * this._size.w];
+		    return;
+	    }
+
+	    public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
+	    {
+		    int width = this._size.w;
+		    int[] ref_buf = this._ref_buf;
+		    for (int i = i_num - 1; i >= 0; i--){
+			    o_rgb[i * 3 + 0] = o_rgb[i * 3 + 1]=o_rgb[i * 3 + 2]=ref_buf[i_x[i] + i_y[i] * width];
+		    }
+		    return;
+	    }
+	    public void setPixel(int i_x, int i_y, int[] i_rgb)
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void switchBuffer(Object i_ref_buffer)
+	    {
+		    Debug.Assert(((int[])i_ref_buffer).Length>=this._size.w*this._size.h);
+		    this._ref_buf=(int[])i_ref_buffer;
+	    }	
+    }
 }

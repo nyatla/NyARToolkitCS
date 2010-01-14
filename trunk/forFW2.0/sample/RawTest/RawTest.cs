@@ -63,11 +63,12 @@ namespace ConsoleApplication1
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
-            NyARRgbRaster_BGRA ra = NyARRgbRaster_BGRA.wrap(raw, 320, 240);
+            NyARRgbRaster_BGRA ra = new NyARRgbRaster_BGRA(320, 240,false);
+            ra.wrapBuffer(raw);
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
-            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferReader().getBufferType(),NyARSingleDetectMarker.PF_NYARTOOLKIT);
+            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferType(),NyARSingleDetectMarker.PF_NYARTOOLKIT);
             NyARTransMatResult result_mat = new NyARTransMatResult();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);

@@ -52,7 +52,7 @@ namespace SingleNyIdMarkerDirect3d
         public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
         {
             //アプリケーションフレームワークの初期化
-            initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), i_raster_format);
+            initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(),100, i_raster_format);
             return;
         }
         /**
@@ -226,7 +226,7 @@ namespace SingleNyIdMarkerDirect3d
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //プロセッサの準備
-            this._processor = new MarkerProcessor(ap, this._raster.getBufferReader().getBufferType());
+            this._processor = new MarkerProcessor(ap, this._raster.getBufferType());
             this._processor.setMarkerWidth(100);
 
             //Direct3d用のユーティリティ準備

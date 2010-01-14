@@ -30,8 +30,10 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public interface INyARRotTransOptimize
+
+    public interface INyARRasterFilter_Rgb2Bin
     {
-        double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d);
+        void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output);
     }
 }
+

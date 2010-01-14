@@ -70,7 +70,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int ave;//<PV/>
             int rgb;//<PV/>
             int[] linput = this._data;//<PV/>
-            int[] buf = (int[])i_raster.getBufferReader().getBuffer();
+            int[] buf = (int[])i_raster.getBuffer();
 
             // input配列のサイズとwhも更新// input=new int[height][width][3];
             int number_of_pixels = this._number_of_pixels;

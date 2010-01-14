@@ -37,10 +37,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARColorPatt_O3 : INyARColorPatt
     {
-        private const int AR_PATT_SAMPLE_NUM = 64;
+        private static int AR_PATT_SAMPLE_NUM = 64;
+        private static int BUFFER_FORMAT = NyARBufferType.INT1D_X8R8G8B8_32;
 
         private int[] _patdata;
-        private NyARBufferReader _buf_reader;
         private NyARIntSize _size;
         private NyARRgbPixelReader_INT1D_X8R8G8B8_32 _pixelreader;
 
@@ -48,7 +48,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._size = new NyARIntSize(i_width, i_height);
             this._patdata = new int[i_height * i_width];
-            this._buf_reader = new NyARBufferReader(this._patdata, NyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32);
             this._pixelreader = new NyARRgbPixelReader_INT1D_X8R8G8B8_32(this._patdata, this._size);
         }
         public int getWidth()
@@ -63,13 +62,29 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             return this._size;
         }
-        public INyARBufferReader getBufferReader()
-        {
-            return this._buf_reader;
-        }
         public INyARRgbPixelReader getRgbPixelReader()
         {
             return this._pixelreader;
+        }
+        public object getBuffer()
+        {
+            return this._patdata;
+        }
+        public bool hasBuffer()
+        {
+            return this._patdata != null;
+        }
+        public void wrapBuffer(object i_ref_buf)
+        {
+            NyARException.notImplement();
+        }
+        public int getBufferType()
+        {
+            return BUFFER_FORMAT;
+        }
+        public bool isEqualBufferType(int i_type_value)
+        {
+            return BUFFER_FORMAT == i_type_value;
         }
         private NyARMat wk_get_cpara_a = new NyARMat(8, 8);
         private NyARMat wk_get_cpara_b = new NyARMat(8, 1);
@@ -83,34 +98,36 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private bool get_cpara(NyARIntPoint2d[] i_vertex, NyARMat o_para)
         {
-            int[,] world = wk_pickFromRaster_world;
+            int[][] world = wk_pickFromRaster_world;
             NyARMat a = wk_get_cpara_a;// 次処理で値を設定するので、初期化不要// new NyARMat( 8, 8 );
             double[][] a_array = a.getArray();
             NyARMat b = wk_get_cpara_b;// 次処理で値を設定するので、初期化不要// new NyARMat( 8, 1 );
             double[][] b_array = b.getArray();
             double[] a_pt0, a_pt1;
+            int[] world_pti;
 
             for (int i = 0; i < 4; i++)
             {
                 a_pt0 = a_array[i * 2];
                 a_pt1 = a_array[i * 2 + 1];
+                world_pti = world[i];
 
-                a_pt0[0] = (double)world[i,0];// a->m[i*16+0] = world[i][0];
-                a_pt0[1] = (double)world[i,1];// a->m[i*16+1] = world[i][1];
+                a_pt0[0] = (double)world_pti[0];// a->m[i*16+0] = world[i][0];
+                a_pt0[1] = (double)world_pti[1];// a->m[i*16+1] = world[i][1];
                 a_pt0[2] = 1.0;// a->m[i*16+2] = 1.0;
                 a_pt0[3] = 0.0;// a->m[i*16+3] = 0.0;
                 a_pt0[4] = 0.0;// a->m[i*16+4] = 0.0;
                 a_pt0[5] = 0.0;// a->m[i*16+5] = 0.0;
-                a_pt0[6] = (double)(-world[i, 0] * i_vertex[i].x);// a->m[i*16+6]= -world[i][0]*vertex[i][0];
-                a_pt0[7] = (double)(-world[i, 1] * i_vertex[i].x);// a->m[i*16+7]=-world[i][1]*vertex[i][0];
+                a_pt0[6] = (double)(-world_pti[0] * i_vertex[i].x);// a->m[i*16+6]= -world[i][0]*vertex[i][0];
+                a_pt0[7] = (double)(-world_pti[1] * i_vertex[i].x);// a->m[i*16+7]=-world[i][1]*vertex[i][0];
                 a_pt1[0] = 0.0;// a->m[i*16+8] = 0.0;
                 a_pt1[1] = 0.0;// a->m[i*16+9] = 0.0;
                 a_pt1[2] = 0.0;// a->m[i*16+10] = 0.0;
-                a_pt1[3] = (double)world[i,0];// a->m[i*16+11] = world[i][0];
-                a_pt1[4] = (double)world[i,1];// a->m[i*16+12] = world[i][1];
+                a_pt1[3] = (double)world_pti[0];// a->m[i*16+11] = world[i][0];
+                a_pt1[4] = (double)world_pti[1];// a->m[i*16+12] = world[i][1];
                 a_pt1[5] = 1.0;// a->m[i*16+13] = 1.0;
-                a_pt1[6] = (double)(-world[i,0] * i_vertex[i].y);// a->m[i*16+14]=-world[i][0]*vertex[i][1];
-                a_pt1[7] = (double)(-world[i,1] * i_vertex[i].y);// a->m[i*16+15]=-world[i][1]*vertex[i][1];
+                a_pt1[6] = (double)(-world_pti[0] * i_vertex[i].y);// a->m[i*16+14]=-world[i][0]*vertex[i][1];
+                a_pt1[7] = (double)(-world_pti[1] * i_vertex[i].y);// a->m[i*16+15]=-world[i][1]*vertex[i][1];
                 b_array[i * 2 + 0][0] = (double)i_vertex[i].x;// b->m[i*2+0] =vertex[i][0];
                 b_array[i * 2 + 1][0] = (double)i_vertex[i].y;// b->m[i*2+1] =vertex[i][1];
             }
@@ -124,67 +141,77 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
 
         // private final double[] wk_pickFromRaster_para=new double[9];//[3][3];
-        private static int[,] wk_pickFromRaster_world = {// double world[4][2];
-	{ 100, 100 }, { 100 + 10, 100 }, { 100 + 10, 100 + 10 }, { 100, 100 + 10 } };
+        private static int[][] wk_pickFromRaster_world = {// double world[4][2];
+	        new int[]{ 100, 100 },
+            new int[]{ 100 + 10, 100 },
+            new int[]{ 100 + 10, 100 + 10 },
+            new int[]{ 100, 100 + 10 } };
 
 
 
-	    /**
-	     * @see INyARColorPatt#pickFromRaster
-	     */
-	    public bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)
-	    {
-		    NyARMat cpara = this.wk_pickFromRaster_cpara;
-		    // xdiv2,ydiv2の計算
-		    int xdiv2, ydiv2;
-		    int l1, l2;
-		    int w1, w2;
-		    // x計算
-		    w1 = i_vertexs[0].x - i_vertexs[1].x;
-		    w2 = i_vertexs[0].y - i_vertexs[1].y;
-		    l1 = (w1 * w1 + w2 * w2);
-		    w1 = i_vertexs[2].x - i_vertexs[3].x;
-		    w2 = i_vertexs[2].y - i_vertexs[3].y;
-		    l2 = (w1 * w1 + w2 * w2);
-		    if (l2 > l1) {
-			    l1 = l2;
-		    }
-		    l1 = l1 / 4;
-		    xdiv2 = this._size.w;
-		    while (xdiv2 * xdiv2 < l1) {
-			    xdiv2 *= 2;
-		    }
-		    if (xdiv2 > AR_PATT_SAMPLE_NUM) {
-			    xdiv2 = AR_PATT_SAMPLE_NUM;
-		    }
+        /**
+         * @see INyARColorPatt#pickFromRaster
+         */
+        public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
+        {
+            NyARMat cpara = this.wk_pickFromRaster_cpara;
+            // xdiv2,ydiv2の計算
+            int xdiv2, ydiv2;
+            int l1, l2;
+            int w1, w2;
+            // x計算
+            w1 = i_vertexs[0].x - i_vertexs[1].x;
+            w2 = i_vertexs[0].y - i_vertexs[1].y;
+            l1 = (w1 * w1 + w2 * w2);
+            w1 = i_vertexs[2].x - i_vertexs[3].x;
+            w2 = i_vertexs[2].y - i_vertexs[3].y;
+            l2 = (w1 * w1 + w2 * w2);
+            if (l2 > l1)
+            {
+                l1 = l2;
+            }
+            l1 = l1 / 4;
+            xdiv2 = this._size.w;
+            while (xdiv2 * xdiv2 < l1)
+            {
+                xdiv2 *= 2;
+            }
+            if (xdiv2 > AR_PATT_SAMPLE_NUM)
+            {
+                xdiv2 = AR_PATT_SAMPLE_NUM;
+            }
 
-		    // y計算
-		    w1 = i_vertexs[1].x - i_vertexs[2].x;
-		    w2 = i_vertexs[1].y - i_vertexs[2].y;
-		    l1 = (w1 * w1 + w2 * w2);
-		    w1 = i_vertexs[3].x - i_vertexs[0].x;
-		    w2 = i_vertexs[3].y - i_vertexs[0].y;
-		    l2 = (w1 * w1 + w2 * w2);
-		    if (l2 > l1) {
-			    l1 = l2;
-		    }
-		    ydiv2 = this._size.h;
-		    l1 = l1 / 4;
-		    while (ydiv2 * ydiv2 < l1) {
-			    ydiv2 *= 2;
-		    }
-		    if (ydiv2 > AR_PATT_SAMPLE_NUM) {
-			    ydiv2 = AR_PATT_SAMPLE_NUM;
-		    }
+            // y計算
+            w1 = i_vertexs[1].x - i_vertexs[2].x;
+            w2 = i_vertexs[1].y - i_vertexs[2].y;
+            l1 = (w1 * w1 + w2 * w2);
+            w1 = i_vertexs[3].x - i_vertexs[0].x;
+            w2 = i_vertexs[3].y - i_vertexs[0].y;
+            l2 = (w1 * w1 + w2 * w2);
+            if (l2 > l1)
+            {
+                l1 = l2;
+            }
+            ydiv2 = this._size.h;
+            l1 = l1 / 4;
+            while (ydiv2 * ydiv2 < l1)
+            {
+                ydiv2 *= 2;
+            }
+            if (ydiv2 > AR_PATT_SAMPLE_NUM)
+            {
+                ydiv2 = AR_PATT_SAMPLE_NUM;
+            }
 
-		    // cparaの計算
-		    if (!get_cpara(i_vertexs, cpara)) {
-			    return false;
-		    }
-		    updateExtpat(image, cpara, xdiv2, ydiv2);
+            // cparaの計算
+            if (!get_cpara(i_vertexs, cpara))
+            {
+                return false;
+            }
+            updateExtpat(image, cpara, xdiv2, ydiv2);
 
-		    return true;
-	    }
+            return true;
+        }
         private int[] __updateExtpat_rgbset;
         private int[] __updateExtpat_xc;
         private int[] __updateExtpat_yc;
@@ -206,8 +233,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return;
         }
-        private const double LT_POS = 102.5;
-        private const double SQ_SIZE = 5.0;
+        private static double LT_POS = 102.5;
+        private static double SQ_SIZE = 5.0;
 
         //分割数16未満になると少し遅くなるかも。
         private void updateExtpat(INyARRgbRaster image, NyARMat i_cpara, int i_xdiv2, int i_ydiv2)

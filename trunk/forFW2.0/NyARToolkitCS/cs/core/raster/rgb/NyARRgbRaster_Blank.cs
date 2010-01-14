@@ -36,25 +36,24 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARRgbRaster_Blank : NyARRgbRaster_BasicClass
     {
-        private class PixelReader : INyARRgbPixelReader
-        {
-            public void getPixel(int i_x, int i_y, int[] o_rgb)
-            {
-                o_rgb[0] = 0;// R
-                o_rgb[1] = 0;// G
-                o_rgb[2] = 0;// B
-                return;
-            }
+	    private class PixelReader : INyARRgbPixelReader
+	    {
+		    public void getPixel(int i_x, int i_y, int[] o_rgb)
+		    {
+			    o_rgb[0] = 0;// R
+			    o_rgb[1] = 0;// G
+			    o_rgb[2] = 0;// B
+			    return;
+		    }
 
-            public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
-            {
-                for (int i = i_num - 1; i >= 0; i--)
-                {
-                    o_rgb[i * 3 + 0] = 0;// R
-                    o_rgb[i * 3 + 1] = 0;// G
-                    o_rgb[i * 3 + 2] = 0;// B
-                }
-            }
+		    public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
+		    {
+			    for (int i = i_num - 1; i >= 0; i--) {
+				    o_rgb[i * 3 + 0] = 0;// R
+				    o_rgb[i * 3 + 1] = 0;// G
+				    o_rgb[i * 3 + 2] = 0;// B
+			    }
+		    }
 		    public void setPixel(int i_x, int i_y, int[] i_rgb)
 		    {
 			    NyARException.notImplement();		
@@ -63,25 +62,36 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    {
 			    NyARException.notImplement();		
 		    }
-        }
+		    public void switchBuffer(object i_ref_buffer)
+		    {
+			    NyARException.notImplement();		
+		    }		
+    		
+	    }
 
-        private INyARRgbPixelReader _reader;
-        private INyARBufferReader _buffer_reader;
+	    private INyARRgbPixelReader _reader;
 
         public NyARRgbRaster_Blank(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height))
-        {
-            this._reader = new PixelReader();
-            this._buffer_reader = new NyARBufferReader(null, INyARBufferReader.BUFFERFORMAT_NULL_ALLZERO);
-            return;
-        }
+            : base(new NyARIntSize(i_width, i_height), NyARBufferType.NULL_ALLZERO)
+	    {
+		    this._reader = new PixelReader();
+		    return;
+	    }
         public override INyARRgbPixelReader getRgbPixelReader()
-        {
-            return this._reader;
-        }
-        public override INyARBufferReader getBufferReader()
-        {
-            return this._buffer_reader;
-        }
+	    {
+		    return this._reader;
+	    }
+        public override object getBuffer()
+	    {
+		    return null;
+	    }
+        public override bool hasBuffer()
+	    {
+		    return false;
+	    }
+        public override void wrapBuffer(object i_ref_buf)
+	    {
+		    NyARException.notImplement();
+	    }
     }
 }

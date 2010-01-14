@@ -35,31 +35,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARRasterFilter_EqualizeHist : NyARRasterFilter_CustomToneTable
     {
-        private NyARRasterAnalyzer_Histgram _hist_analyzer;
-        private NyARHistgram _histgram = new NyARHistgram(256);
-        public NyARRasterFilter_EqualizeHist(int i_raster_type, int i_sample_interval)
-            : base(i_raster_type)
-        {
-            this._hist_analyzer = new NyARRasterAnalyzer_Histgram(i_raster_type, i_sample_interval);
-        }
-        public override void doFilter(INyARRaster i_input, INyARRaster i_output)
-        {
-            Debug.Assert(i_input != i_output);
-            //ヒストグラムを得る
-            NyARHistgram hist = this._histgram;
-            this._hist_analyzer.analyzeRaster(i_input, hist);
-            //変換テーブルを作成
-            int hist_total = this._histgram.total_of_data;
-            int min = hist.getMinData();
-            int hist_size = this._histgram.length;
-            int sum = 0;
-            for (int i = 0; i < hist_size; i++)
-            {
-                sum += hist.data[i];
-                this.table[i] = (int)((sum - min) * (hist_size - 1) / ((hist_total - min)));
-            }
-            //変換
-            base.doFilter(i_input, i_output);
-        }
+	    private NyARRasterAnalyzer_Histogram _hist_analyzer;
+	    private NyARHistogram _histogram=new NyARHistogram(256);
+	    public NyARRasterFilter_EqualizeHist(int i_raster_type,int i_sample_interval):base(i_raster_type)
+	    {
+		    this._hist_analyzer=new NyARRasterAnalyzer_Histogram(i_raster_type,i_sample_interval);
+	    }
+	    public override void doFilter(INyARRaster i_input, INyARRaster i_output)
+	    {
+		    //ヒストグラムを得る
+		    NyARHistogram hist=this._histogram;
+		    this._hist_analyzer.analyzeRaster(i_input,hist);
+		    //変換テーブルを作成
+		    int hist_total=this._histogram.total_of_data;
+		    int min=hist.getMinData();
+		    int hist_size=this._histogram.length;
+		    int sum=0;
+		    for(int i=0;i<hist_size;i++){
+			    sum+=hist.data[i];
+			    this.table[i]=(int)((sum-min)*(hist_size-1)/((hist_total-min)));
+		    }
+		    //変換
+		    base.doFilter(i_input, i_output);
+	    }
     }
 }

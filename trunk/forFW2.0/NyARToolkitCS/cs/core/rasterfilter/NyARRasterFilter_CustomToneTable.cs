@@ -40,7 +40,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    protected NyARRasterFilter_CustomToneTable(int i_raster_type)
 	    {
 		    switch (i_raster_type) {
-		    case INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8:
+		    case NyARBufferType.INT1D_GRAY_8:
 			    this._dofilterimpl=new IdoFilterImpl_INT1D_GRAY_8();
 			    break;
 		    default:
@@ -48,23 +48,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    }
 		    this._dofilterimpl._table_ref=this.table;
 	    }
-	    public virtual void doFilter(INyARRaster i_input, INyARRaster i_output)
+	    public virtual void doFilter(INyARRaster i_input, INyARRaster i_output) 
 	    {
 		    Debug.Assert (i_input.getSize().isEqualSize(i_output.getSize()) == true);
-		    this._dofilterimpl.doFilter(i_input.getBufferReader(),i_output.getBufferReader(),i_input.getSize());
+		    this._dofilterimpl.doFilter(i_input,i_output,i_input.getSize());
 	    }
     	
 	    private abstract class IdoFilterImpl
 	    {
 		    public int[] _table_ref;
-		    public abstract void doFilter(INyARBufferReader i_input, INyARBufferReader i_output,NyARIntSize i_size);
+		    public abstract void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size);
     		
 	    }
 	    private class IdoFilterImpl_INT1D_GRAY_8 : IdoFilterImpl
 	    {
-		    public override void doFilter(INyARBufferReader i_input, INyARBufferReader i_output,NyARIntSize i_size)
+		    public override void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size)
 		    {
-			    Debug.Assert(		i_input.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
+			   Debug. Assert(		i_input.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
     			
 			    int[] out_buf = (int[]) i_output.getBuffer();
 			    int[] in_buf = (int[]) i_input.getBuffer();

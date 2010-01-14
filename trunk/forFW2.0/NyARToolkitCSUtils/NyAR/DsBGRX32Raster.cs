@@ -37,17 +37,21 @@ namespace NyARToolkitCSUtils.NyAR
     {
         private class PixelReader : INyARRgbPixelReader
         {
-            private DsBGRX32Raster _parent;
+            private byte[] _ref_buf;
+            private int _stride;
+            private int _height;
 
-            public PixelReader(DsBGRX32Raster i_parent)
+            public PixelReader(byte[] i_ref_buf,int i_stride,int i_height)
             {
-                this._parent = i_parent;
+                this._ref_buf = i_ref_buf;
+                this._stride = i_stride;
+                this._height = i_height;
             }
 
             public void getPixel(int i_x, int i_y, int[] o_rgb)
             {
-                byte[] ref_buf = this._parent._ref_buf;
-                int bp = (i_x + i_y * this._parent._size.w) * 4;
+                byte[] ref_buf = this._ref_buf;
+                int bp = i_x * 4 + i_y * this._stride;
                 o_rgb[0] = ref_buf[bp + 2];// R
                 o_rgb[1] = ref_buf[bp + 1];// G
                 o_rgb[2] = ref_buf[bp + 0];// B
@@ -56,12 +60,12 @@ namespace NyARToolkitCSUtils.NyAR
 
             public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
             {
-                int width = _parent._size.w;
-                byte[] ref_buf = _parent._ref_buf;
+                int stride = this._stride;
+                byte[] ref_buf = this._ref_buf;
                 int bp;
                 for (int i = i_num - 1; i >= 0; i--)
                 {
-                    bp = (i_x[i] + i_y[i] * width) * 4;
+                    bp = i_x[i] * 4 + i_y[i] * stride;
                     o_rgb[i * 3 + 0] = ref_buf[bp + 2];// R
                     o_rgb[i * 3 + 1] = ref_buf[bp + 1];// G
                     o_rgb[i * 3 + 2] = ref_buf[bp + 0];// B
@@ -76,30 +80,40 @@ namespace NyARToolkitCSUtils.NyAR
             {
                 NyARException.notImplement();
             }
+            public void switchBuffer(object i_ref_buffer)
+            {
+                this._ref_buf = (byte[])i_ref_buffer;
+            }
         }
 
         private INyARRgbPixelReader _rgb_reader;
-        private INyARBufferReader _buffer_reader;
-        private byte[] _ref_buf;
+        private byte[] _buf;
         public DsBGRX32Raster(int i_width, int i_height, int i_stride)
-            : base(new NyARIntSize(i_width, i_height))
+            : base(new NyARIntSize(i_width, i_height),NyARBufferType.BYTE1D_B8G8R8X8_32)
         {
             if (i_stride != i_width*4)
             {
                 throw new NyARException();
             }
-            this._ref_buf= new byte[i_height * i_stride];
-            this._rgb_reader = new PixelReader(this);
-            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32);
+            this._buf= new byte[i_height * i_stride];
+            this._rgb_reader = new PixelReader(this._buf,i_stride,i_height);
             return;
         }
         public override INyARRgbPixelReader getRgbPixelReader()
         {
             return this._rgb_reader;
         }
-        public override INyARBufferReader getBufferReader()
+        public override object getBuffer()
         {
-            return this._buffer_reader;
+            return this._buf;
+        }
+        public override bool hasBuffer()
+        {
+            return this._buf != null;
+        }
+        public override void wrapBuffer(object i_ref_buf)
+        {
+            NyARException.notImplement();
         }
         public void setBuffer(IntPtr i_buf,bool i_flip_vertical)
         {
@@ -111,7 +125,7 @@ namespace NyARToolkitCSUtils.NyAR
                 int et = 0;
                 for (int i = this._size.h - 1; i >= 0; i--)
                 {
-                    Marshal.Copy((IntPtr)((int)i_buf + et), this._ref_buf, st, w);
+                    Marshal.Copy((IntPtr)((int)i_buf + et), this._buf, st, w);
                     st -= w;
                     et += w;
                 }
@@ -119,7 +133,7 @@ namespace NyARToolkitCSUtils.NyAR
             else
             {
                 //上下を反転させない。
-                Marshal.Copy(i_buf, this._ref_buf, 0, this._ref_buf.Length);
+                Marshal.Copy(i_buf, this._buf, 0, this._buf.Length);
             }
             return;
         }

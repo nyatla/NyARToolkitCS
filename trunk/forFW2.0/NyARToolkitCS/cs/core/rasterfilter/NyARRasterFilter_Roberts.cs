@@ -38,58 +38,54 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARRasterFilter_Roberts : INyARRasterFilter
     {
-        private IdoFilterImpl _do_filter_impl;
-        public NyARRasterFilter_Roberts(int i_raster_type)
-        {
-            switch (i_raster_type)
-            {
-                case INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8:
-                    this._do_filter_impl = new IdoFilterImpl_GRAY_8();
-                    break;
-                default:
-                    throw new NyARException();
-            }
-        }
-        public void doFilter(INyARRaster i_input, INyARRaster i_output)
-        {
-            this._do_filter_impl.doFilter(i_input.getBufferReader(), i_output.getBufferReader(), i_input.getSize());
-        }
-
-        interface IdoFilterImpl
-        {
-            void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size);
-        }
-        class IdoFilterImpl_GRAY_8 : IdoFilterImpl
-        {
-            public void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size)
-            {
-                Debug.Assert(i_input.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
-                Debug.Assert(i_output.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
-                int[] in_ptr = (int[])i_input.getBuffer();
-                int[] out_ptr = (int[])i_output.getBuffer();
-                int width = i_size.w;
-                int height = i_size.h;
-                for (int y = 0; y < height - 1; y++)
-                {
-                    int idx = y * width;
-                    int p00 = in_ptr[idx];
-                    int p10 = in_ptr[width + idx];
-                    int p01, p11;
-                    for (int x = 0; x < width - 1; x++)
-                    {
-                        p01 = in_ptr[idx + 1];
-                        p11 = in_ptr[idx + width + 1];
-                        int fx = p11 - p00;
-                        int fy = p10 - p01;
-                        out_ptr[idx] = (int)Math.Sqrt(fx * fx + fy * fy) >> 1;
-                        p00 = p01;
-                        p10 = p11;
-                        idx++;
-                    }
-                }
-                return;
-            }
-        }
+	    private IdoFilterImpl _do_filter_impl; 
+	    public NyARRasterFilter_Roberts(int i_raster_type)
+	    {
+		    switch (i_raster_type) {
+		    case NyARBufferType.INT1D_GRAY_8:
+			    this._do_filter_impl=new IdoFilterImpl_GRAY_8();
+			    break;
+		    default:
+			    throw new NyARException();
+		    }
+	    }
+	    public void doFilter(INyARRaster i_input, INyARRaster i_output)
+	    {
+		    this._do_filter_impl.doFilter(i_input,i_output,i_input.getSize());
+	    }
+    	
+	    interface IdoFilterImpl
+	    {
+		    void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size);
+	    }
+	    class IdoFilterImpl_GRAY_8 : IdoFilterImpl
+	    {
+		    public void doFilter(INyARRaster i_input, INyARRaster i_output,NyARIntSize i_size)
+		    {
+			    Debug.Assert (i_input.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
+			    Debug.Assert (i_output.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
+			    int[] in_ptr =(int[])i_input.getBuffer();
+			    int[] out_ptr=(int[])i_output.getBuffer();
+			    int width=i_size.w;
+			    int height=i_size.h;
+			    for(int y=0;y<height-1;y++){
+				    int idx=y*width;
+				    int p00=in_ptr[idx];
+				    int p10=in_ptr[width+idx];
+				    int p01,p11;
+				    for(int x=0;x<width-1;x++){
+					    p01=in_ptr[idx+1];
+					    p11=in_ptr[idx+width+1];
+					    int fx=p11-p00;
+					    int fy=p10-p01;
+					    out_ptr[idx]=(int)Math.Sqrt(fx*fx+fy*fy)>>1;
+					    p00=p01;
+					    p10=p11;
+					    idx++;
+				    }
+			    }
+			    return;
+		    }
+	    }
     }
-
 }

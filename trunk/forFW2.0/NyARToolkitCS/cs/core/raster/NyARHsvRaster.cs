@@ -34,21 +34,29 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARHsvRaster : NyARRaster_BasicClass
+    public sealed class NyARHsvRaster : NyARRaster_BasicClass
     {
 
-	    protected int[] _ref_buf;
-	    private INyARBufferReader _buffer_reader;
-
-        public NyARHsvRaster(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height))
+	    private int[] _ref_buf;
+    	
+	    public NyARHsvRaster(int i_width, int i_height)
+            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D_X7H9S8V8_32)
 	    {
+		    //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
+		   
 		    this._ref_buf = new int[i_height*i_width];
-		    this._buffer_reader=new NyARBufferReader(this._ref_buf,INyARBufferReader.BUFFERFORMAT_INT1D_X7H9S8V8_32);
 	    }
-	    public override INyARBufferReader getBufferReader()
+	    public override object getBuffer()
 	    {
-		    return this._buffer_reader;
+		    return this._ref_buf;
 	    }
+        public override bool hasBuffer()
+	    {
+		    return true;
+	    }
+        public override void wrapBuffer(Object i_ref_buf)
+	    {
+		    NyARException.notImplement();
+	    }	
     }
 }

@@ -53,7 +53,7 @@ namespace CaptureTest
             //ラスタを作る。
             this.m_raster = new DsBGRX32Raster(cap.video_width, cap.video_height, cap.video_width * cap.video_bit_count / 8);
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker(ap, code, 80.0, this.m_raster.getBufferReader().getBufferType());
+            this.m_ar = new NyARSingleDetectMarker(ap, code, 80.0, this.m_raster.getBufferType());
         }
         public void OnBuffer(CaptureDevice i_sender, double i_sample_time, IntPtr i_buffer, int i_buffer_len)
         {
@@ -79,7 +79,6 @@ namespace CaptureTest
                     (MethodInvoker)delegate()
                 {
                     label1.Text = this.m_ar.getConfidence().ToString();
-                    label2.Text = this.m_ar.getDirection().ToString();
                     label3.Text = result_mat.m00.ToString();
                     label4.Text = result_mat.m01.ToString();
                     label5.Text = result_mat.m02.ToString();

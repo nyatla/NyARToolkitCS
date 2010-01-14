@@ -6,9 +6,9 @@ using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
-     * ヒストグラムを格納するクラスです。
-     */
-    public class NyARHistgram
+    * ヒストグラムを格納するクラスです。
+    */
+    public class NyARHistogram
     {
         /**
          * サンプリング値の格納変数
@@ -25,7 +25,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
 
 
-        public NyARHistgram(int i_length)
+        public NyARHistogram(int i_length)
         {
             this.data = new int[i_length];
             this.length = i_length;

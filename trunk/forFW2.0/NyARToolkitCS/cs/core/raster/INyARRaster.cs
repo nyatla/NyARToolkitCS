@@ -30,14 +30,38 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     public interface INyARRaster
     {
-        int getWidth();
-
-        int getHeight();
-
-        NyARIntSize getSize();
-        INyARBufferReader getBufferReader();
+    	
+	    int getWidth();
+	    int getHeight();
+	    NyARIntSize getSize();
+	    /**
+	     * バッファオブジェクトを返します。
+	     * @return
+	     */
+	    object getBuffer();
+	    /**
+	     * バッファオブジェクトのタイプを返します。
+	     * @return
+	     */
+	    int getBufferType();
+	    /**
+	     * バッファのタイプがi_type_valueであるか、チェックします。
+	     * @param i_type_value
+	     * @return
+	     */
+	    bool isEqualBufferType(int i_type_value);
+	    /**
+	     * getBufferがオブジェクトを返せるかの真偽値です。
+	     * @return
+	     */
+	    bool hasBuffer();
+	    /**
+	     * i_ref_bufをラップします。できる限り整合性チェックを行います。
+	     * バッファの再ラッピングが可能な関数のみ、この関数を実装してください。
+	     * @param i_ref_buf
+	     */
+	    void wrapBuffer(object i_ref_buf);
     }
 }

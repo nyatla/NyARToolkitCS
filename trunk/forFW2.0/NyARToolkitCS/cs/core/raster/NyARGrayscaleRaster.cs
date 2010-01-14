@@ -29,75 +29,71 @@
  * 
  */
 using jp.nyatla.nyartoolkit.cs.utils;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARGrayscaleRaster : NyARRaster_BasicClass
     {
-        protected int[] _ref_buf;
-        private INyARBufferReader _buffer_reader;
 
-        public NyARGrayscaleRaster(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height))
-        {
-            this._ref_buf = new int[i_height * i_width];
-            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8);
-        }
-        public override INyARBufferReader getBufferReader()
-        {
-            return this._buffer_reader;
-        }
-        /**
-         * 4近傍の画素ベクトルを取得します。
-         * 0,1,0
-         * 1,x,1
-         * 0,1,0
-         * @param i_raster
-         * @param x
-         * @param y
-         * @param o_v
-         */
-        public void getPixelVector4(int x, int y, NyARIntPoint2d o_v)
-        {
-            int[] buf = this._ref_buf;
-            int w = this._size.w;
-            int idx = w * y + x;
-            o_v.x = buf[idx + 1] - buf[idx - 1];
-            o_v.y = buf[idx + w] - buf[idx - w];
-        }
-        /**
-         * 8近傍画素ベクトル
-         * 1,2,1
-         * 2,x,2
-         * 1,2,1
-         * @param i_raster
-         * @param x
-         * @param y
-         * @param o_v
-         */
-        public void getPixelVector8(int x, int y, NyARIntPoint2d o_v)
-        {
-            int[] buf = this._ref_buf;
-            NyARIntSize s = this._size;
-            int idx_0 = s.w * y + x;
-            int idx_p1 = idx_0 + s.w;
-            int idx_m1 = idx_0 - s.w;
-            int b = buf[idx_m1 - 1];
-            int d = buf[idx_m1 + 1];
-            int h = buf[idx_p1 - 1];
-            int f = buf[idx_p1 + 1];
-            o_v.x = buf[idx_0 + 1] - buf[idx_0 - 1] + (d - b + f - h) / 2;
-            o_v.y = buf[idx_p1] - buf[idx_m1] + (f - d + h - b) / 2;
-        }
+	    protected object _buf;
+	    /**
+	     * バッファオブジェクトがアタッチされていればtrue
+	     */
+	    protected bool _is_attached_buffer;
 
-        public void copyFrom(NyARGrayscaleRaster i_input)
-        {
-            int[] out_buf = (int[])this._ref_buf;
-            int[] in_buf = (int[])i_input._ref_buf;
-            System.Array.Copy(in_buf, 0, out_buf, 0, this._size.h * this._size.w);
-            return;
-        }
-
-
+	    public NyARGrayscaleRaster(int i_width, int i_height)
+            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D_GRAY_8)
+	    {
+		    if(!initInstance(this._size,NyARBufferType.INT1D_GRAY_8,true)){
+			    throw new NyARException();
+		    }
+	    }	
+	    public NyARGrayscaleRaster(int i_width, int i_height,bool i_is_alloc)
+            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D_GRAY_8)
+	    {		   
+		    if(!initInstance(this._size,NyARBufferType.INT1D_GRAY_8,i_is_alloc)){
+			    throw new NyARException();
+		    }
+	    }	
+	    public NyARGrayscaleRaster(int i_width, int i_height,int i_raster_type,bool i_is_alloc)
+            : base(new NyARIntSize(i_width, i_height), i_raster_type)
+	    {
+		    if(!initInstance(this._size,i_raster_type,i_is_alloc)){
+			    throw new NyARException();
+		    }
+	    }
+	    protected bool initInstance(NyARIntSize i_size,int i_buf_type,bool i_is_alloc)
+	    {
+		    switch(i_buf_type)
+		    {
+			    case NyARBufferType.INT1D_GRAY_8:
+				    this._buf =i_is_alloc?new int[i_size.w*i_size.h]:null;
+				    break;
+			    default:
+				    return false;
+		    }
+		    this._is_attached_buffer=i_is_alloc;
+		    return true;
+	    }
+        public override object getBuffer()
+	    {
+		    return this._buf;
+	    }
+	    /**
+	     * インスタンスがバッファを所有するかを返します。
+	     * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
+	     * バッファにアクセスするまえに、バッファの有無をこの関数でチェックしてください。
+	     * @return
+	     */
+        public override bool hasBuffer()
+	    {
+		    return this._buf!=null;
+	    }
+        public override void wrapBuffer(object i_ref_buf)
+	    {
+		    Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
+		    this._buf=i_ref_buf;
+	    }	
     }
 }

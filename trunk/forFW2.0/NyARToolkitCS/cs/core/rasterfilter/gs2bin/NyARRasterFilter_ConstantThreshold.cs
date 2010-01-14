@@ -31,23 +31,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARRasterFilter_ConstantThrshold : INyARRasterFilter_Gs2Bin
+    public class NyARRasterFilter_ConstantThreshold : INyARRasterFilter_Gs2Bin
     {
 	    public int _threshold;
-	    public NyARRasterFilter_ConstantThrshold(int i_initial_threshold)
+	    public NyARRasterFilter_ConstantThreshold(int i_initial_threshold,int i_in_raster_type,int i_out_raster_type)
 	    {
+		    Debug.Assert(i_in_raster_type==NyARBufferType.INT1D_GRAY_8);
+		    Debug.Assert(i_out_raster_type==NyARBufferType.INT1D_BIN_8);
 		    //初期化
 		    this._threshold=i_initial_threshold;
+    		
 	    }
 	    /**
 	     * ２値化の閾値を設定する。
 	     * 暗点<=th<明点となります。
 	     * @throws NyARException
 	     */
-	    public NyARRasterFilter_ConstantThrshold()
+	    public NyARRasterFilter_ConstantThreshold()
 	    {
 		    this._threshold=0;
 	    }
@@ -59,10 +63,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    }
 	    public void doFilter(NyARGrayscaleRaster i_input, NyARBinRaster i_output)
 	    {
-		    INyARBufferReader in_buffer_reader=i_input.getBufferReader();	
-		    INyARBufferReader out_buffer_reader=i_output.getBufferReader();
-		    int[] out_buf = (int[]) out_buffer_reader.getBuffer();
-		    int[] in_buf = (int[]) in_buffer_reader.getBuffer();
+		    Debug.Assert(i_input.getBufferType()==NyARBufferType.INT1D_GRAY_8);
+		    Debug.Assert(i_output.getBufferType()==NyARBufferType.INT1D_BIN_8);
+		    int[] out_buf = (int[]) i_output.getBuffer();
+		    int[] in_buf = (int[]) i_input.getBuffer();
 		    NyARIntSize s=i_input.getSize();
     		
 		    int th=this._threshold;

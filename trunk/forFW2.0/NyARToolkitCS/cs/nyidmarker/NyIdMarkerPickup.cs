@@ -871,10 +871,10 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * RECT(2):[2]=(9-16),[3]=(17-24)
          * RECT(3):[4]=(25-32),[5]=(33-40),[6]=(41-48)
          */
-        int[] _bit_table;
-        int[] _bits = new int[16];
-        int[] _work = new int[16];
-        int _model;
+        private int[] _bit_table;
+        private int[] _bits = new int[16];
+        private int[] _work = new int[16];
+        private int _model;
         public void setBitByBitIndex(int i_index_no, int i_value)
         {
             Debug.Assert(i_value == 0 || i_value == 1);

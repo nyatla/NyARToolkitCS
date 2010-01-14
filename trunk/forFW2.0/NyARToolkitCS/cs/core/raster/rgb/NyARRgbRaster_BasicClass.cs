@@ -39,11 +39,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public abstract class NyARRgbRaster_BasicClass : INyARRgbRaster
     {
         protected NyARIntSize _size;
+        private int _buffer_type;
+
+        protected NyARRgbRaster_BasicClass(NyARIntSize i_size, int i_buffer_type)
+        {
+            this._size = i_size;
+            this._buffer_type = i_buffer_type;
+        }
         public int getWidth()
         {
             return this._size.w;
         }
-
         public int getHeight()
         {
             return this._size.h;
@@ -53,11 +59,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             return this._size;
         }
-        protected NyARRgbRaster_BasicClass(NyARIntSize i_size)
+        public int getBufferType()
         {
-            this._size = i_size;
+            return _buffer_type;
         }
+        public bool isEqualBufferType(int i_type_value)
+        {
+            return this._buffer_type == i_type_value;
+        }
+        public abstract object getBuffer();
+        public abstract bool hasBuffer();
+        public abstract void wrapBuffer(object i_ref_buf);
         public abstract INyARRgbPixelReader getRgbPixelReader();
-        public abstract INyARBufferReader getBufferReader();
     }
 }

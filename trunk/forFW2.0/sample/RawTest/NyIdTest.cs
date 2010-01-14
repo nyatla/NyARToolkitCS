@@ -50,7 +50,7 @@ namespace ConsoleApplication1
 
             public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
             {
-                initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), i_raster_format);
+                initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), 100,i_raster_format);
 
                 //アプリケーションフレームワークの初期化
                 return;
@@ -119,9 +119,10 @@ namespace ConsoleApplication1
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 3);
-            NyARRgbRaster_RGB ra = NyARRgbRaster_RGB.wrap(raw, 320, 240);
+            NyARRgbRaster_RGB ra = new NyARRgbRaster_RGB(320, 240,false);
+            ra.wrapBuffer(raw);
 
-            MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferReader().getBufferType());
+            MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferType());
             pr.detectMarker(ra);
             return;
         }

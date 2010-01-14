@@ -31,25 +31,77 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**このクラスは、単機能のNyARRasterです。
-     * 特定タイプのバッファをラップする、INyARBufferReaderインタフェイスを提供します。
      *
      */
     public class NyARRaster : NyARRaster_BasicClass
     {
-	    private NyARBufferReader _reader;
-	    public override INyARBufferReader getBufferReader()
+	    protected object _buf;
+	    protected int _buf_type;
+	    /**
+	     * バッファオブジェクトがアタッチされていればtrue
+	     */
+	    protected bool _is_attached_buffer;
+	    /**
+	     * 指定したバッファタイプのラスタを作成します。
+	     * @param i_width
+	     * @param i_height
+	     * @param i_buffer_type
+	     * @param i_is_alloc
+	     * @throws NyARException
+	     */
+	    public NyARRaster(int i_width, int i_height,int i_buffer_type,bool i_is_alloc)
+            :base(new NyARIntSize(i_width,i_height),i_buffer_type)
 	    {
-		    return this._reader;
-	    }
-        public NyARRaster(NyARIntSize i_size, object i_ref_buf, int i_buf_type)
-            : base(i_size)
-	    {
-		    this._reader=new NyARBufferReader(i_ref_buf,i_buf_type);
+		    if(!initInstance(this._size,i_buffer_type,i_is_alloc)){
+			    throw new NyARException();
+		    }
 		    return;
+	    }	
+
+	    public NyARRaster(int i_width, int i_height,int i_buffer_type)
+            : base(new NyARIntSize(i_width, i_height), i_buffer_type)
+	    {
+		    if(!initInstance(this._size,i_buffer_type,true)){
+			    throw new NyARException();
+		    }
+		    return;
+	    }	
+	    protected bool initInstance(NyARIntSize i_size,int i_buf_type,bool i_is_alloc)
+	    {
+		    switch(i_buf_type)
+		    {
+			    case NyARBufferType.INT1D_X8R8G8B8_32:
+				    this._buf=i_is_alloc?new int[i_size.w*i_size.h]:null;
+				    break;
+			    default:
+				    return false;
+		    }
+		    this._is_attached_buffer=i_is_alloc;
+		    return true;
+	    }
+        public override object getBuffer()
+	    {
+		    return this._buf;
+	    }
+	    /**
+	     * インスタンスがバッファを所有するかを返します。
+	     * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
+	     * バッファにアクセスするまえに、バッファの有無をこの関数でチェックしてください。
+	     * @return
+	     */
+        public override bool hasBuffer()
+	    {
+		    return this._buf!=null;
+	    }
+        public override void wrapBuffer(object i_ref_buf)
+	    {
+		    Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
+		    this._buf=i_ref_buf;
 	    }
     }
 }

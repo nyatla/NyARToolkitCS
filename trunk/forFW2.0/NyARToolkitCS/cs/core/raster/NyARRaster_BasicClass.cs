@@ -32,26 +32,39 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public abstract class NyARRaster_BasicClass : INyARRaster
     {
-        protected NyARIntSize _size;
-        protected NyARRaster_BasicClass(NyARIntSize i_size)
-        {
-            this._size = i_size;
-        }
+	    protected NyARIntSize _size;
+	    private int _buffer_type;
+	    protected NyARRaster_BasicClass(NyARIntSize i_size,int i_buffer_type)
+	    {
+		    this._size= i_size;
+		    this._buffer_type=i_buffer_type;
+	    }
 
         public int getWidth()
-        {
-            return this._size.w;
-        }
+	    {
+		    return this._size.w;
+	    }
 
         public int getHeight()
-        {
-            return this._size.h;
-        }
+	    {
+		    return this._size.h;
+	    }
 
         public NyARIntSize getSize()
-        {
-            return this._size;
-        }
-        public abstract INyARBufferReader getBufferReader();
+	    {
+		    return this._size;
+	    }
+        public int getBufferType()
+	    {
+		    return _buffer_type;
+	    }
+        public bool isEqualBufferType(int i_type_value)
+	    {
+		    return this._buffer_type==i_type_value;
+	    }
+        public abstract bool hasBuffer();
+        public abstract void wrapBuffer(object i_ref_buf);
+        public abstract object getBuffer();
+
     }
 }
