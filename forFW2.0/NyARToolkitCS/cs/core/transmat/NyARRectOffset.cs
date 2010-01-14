@@ -31,9 +31,49 @@
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public interface INyARRasterFilter_RgbToBin
+
+    /**
+     * 矩形の頂点情報を格納します。
+     */
+    public class NyARRectOffset
     {
-        void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output);
+	    public NyARDoublePoint3d[] vertex=NyARDoublePoint3d.createArray(4);
+	    public static NyARRectOffset[] createArray(int i_number)
+	    {
+		    NyARRectOffset[] ret=new NyARRectOffset[i_number];
+		    for(int i=0;i<i_number;i++)
+		    {
+			    ret[i]=new NyARRectOffset();
+		    }
+		    return ret;
+	    }	
+	    /**
+	     * 中心位置と辺長から、オフセット情報を作成して設定する。
+	     * @param i_width
+	     */
+	    public void setSquare(double i_width)
+	    {
+		    double w_2 = i_width / 2.0;
+    		
+		    NyARDoublePoint3d vertex3d_ptr;
+		    vertex3d_ptr= this.vertex[0];
+		    vertex3d_ptr.x = -w_2;
+		    vertex3d_ptr.y =  w_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[1];
+		    vertex3d_ptr.x = w_2;
+		    vertex3d_ptr.y = w_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[2];
+		    vertex3d_ptr.x =  w_2;
+		    vertex3d_ptr.y = -w_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[3];
+		    vertex3d_ptr.x = -w_2;
+		    vertex3d_ptr.y = -w_2;
+		    vertex3d_ptr.z = 0.0;
+    		
+		    return;
+	    }
     }
 }
-

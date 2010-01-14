@@ -36,10 +36,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public NyARPerspectiveParamGenerator_O1(int i_local_x, int i_local_y, int i_width, int i_height)
             : base(i_local_x, i_local_y, i_width, i_height)
         {
-            this._height = i_height;
-            this._width = i_width;
-            this._local_x = i_local_x;
-            this._local_y = i_local_y;
             return;
         }
         public override bool getParam(NyARIntPoint2d[] i_vertex, double[] o_param)

@@ -38,8 +38,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public interface INyARTransMat
     {
-        void setCenter(double i_x, double i_y);
-	    void transMat(NyARSquare i_square, double i_width, NyARTransMatResult o_result);
-	    void transMatContinue(NyARSquare i_square, double i_width, NyARTransMatResult io_result_conv);
+	    void transMat(NyARSquare i_square,NyARRectOffset i_offset, NyARTransMatResult o_result);
+	    void transMatContinue(NyARSquare i_square,NyARRectOffset i_offset, NyARTransMatResult io_result_conv);
     }
 }

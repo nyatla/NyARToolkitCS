@@ -41,7 +41,7 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
      * 1/4のサイズの画像に変換しながら閾値判定する関数
      * 
      */
-    public class NyARRasterFilter_ARTTh_Quad : INyARRasterFilter_RgbToBin
+    public class NyARRasterFilter_ARTTh_Quad : INyARRasterFilter_Rgb2Bin
     {
         private int _threshold;
 
@@ -56,29 +56,29 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
 
         public void doFilter(INyARRgbRaster i_input, NyARBinRaster i_output)
         {
-            INyARBufferReader in_buffer_reader = i_input.getBufferReader();
-            INyARBufferReader out_buffer_reader = i_output.getBufferReader();
-            int in_buf_type = in_buffer_reader.getBufferType();
+            //INyARBufferReader in_buffer_reader = i_input.getBufferReader();
+            //INyARBufferReader out_buffer_reader = i_output.getBufferReader();
+            int in_buf_type = i_input.getBufferType();
 
             NyARIntSize size = i_output.getSize();
-            Debug.Assert(out_buffer_reader.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT2D_BIN_8));
+            Debug.Assert(i_output.isEqualBufferType(NyARBufferType.INT2D_BIN_8));
             Debug.Assert(checkInputType(in_buf_type) == true);
             Debug.Assert(i_input.getSize().isEqualSize(size.w * 2, size.h * 2) == true);
 
-            int[][] out_buf = (int[][])out_buffer_reader.getBuffer();
-            
+            int[][] out_buf = (int[][])i_output.getBuffer();
 
-            switch (in_buffer_reader.getBufferType())
+
+            switch (i_input.getBufferType())
             {
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
-                    convert24BitRgb((byte[])in_buffer_reader.getBuffer(), out_buf, size);
+                case NyARBufferType.BYTE1D_B8G8R8_24:
+                case NyARBufferType.BYTE1D_R8G8B8_24:
+                    convert24BitRgb((byte[])i_input.getBuffer(), out_buf, size);
                     break;
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
-                    convert32BitRgbx((byte[])in_buffer_reader.getBuffer(), out_buf, size);
+                case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                    convert32BitRgbx((byte[])i_input.getBuffer(), out_buf, size);
                     break;
-                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
-                    convert16BitRgb565word((short[])in_buffer_reader.getBuffer(), out_buf, size);
+                case NyARBufferType.WORD1D_R5G6B5_16LE:
+                    convert16BitRgb565word((short[])i_input.getBuffer(), out_buf, size);
                     break;
                 default:
                     throw new NyARException();
@@ -254,10 +254,10 @@ namespace jp.nyatla.nyartoolkit.cs.sandbox.quadx2
         {
             switch (i_input_type)
             {
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
-           		case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32:
-                case INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE:
+                case NyARBufferType.BYTE1D_B8G8R8_24:
+                case NyARBufferType.BYTE1D_R8G8B8_24:
+                case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                case NyARBufferType.WORD1D_R5G6B5_16LE:
                     return true;
                 default:
                     return false;

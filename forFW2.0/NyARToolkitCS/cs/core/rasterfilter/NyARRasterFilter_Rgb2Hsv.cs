@@ -40,10 +40,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             switch (i_raster_type)
             {
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8_24:
+                case NyARBufferType.BYTE1D_B8G8R8_24:
                     this._dofilterimpl = new IdoFilterImpl_BYTE1D_B8G8R8_24();
                     break;
-                case INyARBufferReader.BUFFERFORMAT_BYTE1D_R8G8B8_24:
+                case NyARBufferType.BYTE1D_R8G8B8_24:
                 default:
                     throw new NyARException();
             }
@@ -51,19 +51,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void doFilter(INyARRaster i_input, INyARRaster i_output)
         {
             Debug.Assert(i_input.getSize().isEqualSize(i_output.getSize()) == true);
-            this._dofilterimpl.doFilter(i_input.getBufferReader(), i_output.getBufferReader(), i_input.getSize());
+            this._dofilterimpl.doFilter(i_input, i_output, i_input.getSize());
         }
 
-        abstract class IdoFilterImpl
+        interface IdoFilterImpl
         {
-            public abstract void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size);
+            void doFilter(INyARRaster i_input, INyARRaster i_output, NyARIntSize i_size);
 
         }
         class IdoFilterImpl_BYTE1D_B8G8R8_24 : IdoFilterImpl
         {
-            public override void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size)
+            public void doFilter(INyARRaster i_input, INyARRaster i_output, NyARIntSize i_size)
             {
-                Debug.Assert(i_input.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_X7H9S8V8_32));
+                Debug.Assert(i_input.isEqualBufferType(NyARBufferType.INT1D_X7H9S8V8_32));
 
                 int[] out_buf = (int[])i_output.getBuffer();
                 byte[] in_buf = (byte[])i_input.getBuffer();

@@ -71,7 +71,7 @@ namespace NyARToolkitCSUtils.Direct3d
          */
         public void CopyFromXRGB32(DsBGRX32Raster i_sample)
         {
-            Debug.Assert(i_sample.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_BYTE1D_B8G8R8X8_32));
+            Debug.Assert(i_sample.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None);
             /*
             int cp_size = this.m_width * 4;
@@ -84,7 +84,7 @@ namespace NyARToolkitCSUtils.Direct3d
                 d_idx -= cp_size;
             }
             */
-            Marshal.Copy((byte[])i_sample.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
+            Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
 
             this.m_surface.UnlockRectangle();
 

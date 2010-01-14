@@ -41,7 +41,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             switch (i_raster_type)
             {
-                case INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8:
+                case NyARBufferType.INT1D_GRAY_8:
                     this._do_filter_impl = new IdoFilterImpl_GRAY_8();
                     break;
                 default:
@@ -51,19 +51,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void doFilter(INyARRaster i_input, INyARRaster i_output)
         {
             Debug.Assert(i_input != i_output);
-            this._do_filter_impl.doFilter(i_input.getBufferReader(), i_output.getBufferReader(), i_input.getSize());
+            this._do_filter_impl.doFilter(i_input, i_output, i_input.getSize());
         }
 
         interface IdoFilterImpl
         {
-            void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size);
+            void doFilter(INyARRaster i_input, INyARRaster i_output, NyARIntSize i_size);
         }
         class IdoFilterImpl_GRAY_8 : IdoFilterImpl
         {
-            public void doFilter(INyARBufferReader i_input, INyARBufferReader i_output, NyARIntSize i_size)
+            public void doFilter(INyARRaster i_input, INyARRaster i_output, NyARIntSize i_size)
             {
-                Debug.Assert(i_input.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
-                Debug.Assert(i_output.isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_GRAY_8));
+                Debug.Assert(i_input.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
+                Debug.Assert(i_output.isEqualBufferType(NyARBufferType.INT1D_GRAY_8));
                 int[] in_ptr = (int[])i_input.getBuffer();
                 int[] out_ptr = (int[])i_output.getBuffer();
                 /* 画像端は捨てる。

@@ -49,6 +49,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int labeling(NyARBinRaster i_raster, NyARLabelingImage o_destination)
         {
+            Debug.Assert(i_raster.getBufferType() == NyARBufferType.INT1D_BIN_8);
             int label_img_ptr1, label_pixel;
             int i, j;
             int n, k; /* work */
@@ -59,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             int lxsize = in_size.w;// lxsize = arUtil_c.arImXsize;
             int lysize = in_size.h;// lysize = arUtil_c.arImYsize;
-            int[] label_img = (int[])o_destination.getBufferReader().getBuffer();
+            int[] label_img = (int[])o_destination.getBuffer();
 
             // 枠作成はインスタンスを作った直後にやってしまう。
 
@@ -67,7 +68,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_destination.reset(true);
 
             int[] label_idxtbl = o_destination.getIndexArray();
-            int[] raster_buf = (int[])i_raster.getBufferReader().getBuffer();
+            int[] raster_buf = (int[])i_raster.getBuffer();
 
             int[] work2_pt;
             int wk_max = 0;
@@ -251,7 +252,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARLabelingLabelStack label_list = o_destination.getLabelStack();
 
             // ラベルバッファを予約
-            label_list.reserv(wlabel_num);
+            label_list.init(wlabel_num);
 
             // エリアと重心、クリップ領域を計算
             NyARLabelingLabel label_pt;

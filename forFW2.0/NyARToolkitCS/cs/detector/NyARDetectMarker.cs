@@ -65,7 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : INyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
         {
             //公開プロパティ
             public NyARDetectMarkerResultStack result_stack = new NyARDetectMarkerResultStack(NyARDetectMarker.AR_SQUARE_MAX);
@@ -106,7 +106,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            public void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
+            public void onSquareDetect(NyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
             {
                 NyARMatchPattResult mr = this.__detectMarkerLite_mr;
                 //輪郭座標から頂点リストに変換
@@ -158,8 +158,6 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 for (int i = 0; i < 4; i++)
                 {
                     int idx = (i + 4 - direction) % 4;
-                    sq.imvertex[i].x = vertex[idx].x;
-                    sq.imvertex[i].y = vertex[idx].y;
                     this._coordline.coord2Line(i_vertex_index[idx], i_vertex_index[(idx + 1) % 4], i_coordx, i_coordy, i_coor_num, sq.line[i]);
                 }
                 for (int i = 0; i < 4; i++)
@@ -183,9 +181,9 @@ namespace jp.nyatla.nyartoolkit.cs.detector
 
         private static int AR_SQUARE_MAX = 300;
         private bool _is_continue = false;
-        private INyARSquareContourDetector _square_detect;
+        private NyARSquareContourDetector _square_detect;
         protected INyARTransMat _transmat;
-        private double[] _marker_width;
+        private NyARRectOffset[] _offset;
 
 
         /**
@@ -233,7 +231,11 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._tobin_filter = new NyARRasterFilter_ARToolkitThreshold(100, i_input_raster_type);
 
             //実サイズ保存
-            this._marker_width = i_marker_width;
+            this._offset = NyARRectOffset.createArray(i_number_of_code);
+            for (int i = 0; i < i_number_of_code; i++)
+            {
+                this._offset[i].setSquare(i_marker_width[i]);
+            }
             //２値画像バッファを作る
             this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
             return;
@@ -241,7 +243,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
 
         private NyARBinRaster _bin_raster;
 
-        private INyARRasterFilter_RgbToBin _tobin_filter;
+        private INyARRasterFilter_Rgb2Bin _tobin_filter;
 
         /**
          * i_imageにマーカー検出処理を実行し、結果を記録します。
@@ -288,11 +290,11 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             // 一番一致したマーカーの位置とかその辺を計算
             if (_is_continue)
             {
-                _transmat.transMatContinue(result.square, _marker_width[result.arcode_id], o_result);
+                _transmat.transMatContinue(result.square, this._offset[result.arcode_id], o_result);
             }
             else
             {
-                _transmat.transMat(result.square, _marker_width[result.arcode_id], o_result);
+                _transmat.transMat(result.square, this._offset[result.arcode_id], o_result);
             }
             return;
         }

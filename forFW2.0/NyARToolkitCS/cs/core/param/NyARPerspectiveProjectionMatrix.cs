@@ -178,7 +178,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //}
             return;
         }
-
+        /**
+         * 現在の行列で３次元座標を射影変換します。
+         * @param i_3dvertex
+         * @param o_2d
+         */
+        public void projectionConvert(NyARDoublePoint3d i_3dvertex, NyARDoublePoint2d o_2d)
+        {
+            double w = i_3dvertex.z * this.m22;
+            o_2d.x = (i_3dvertex.x * this.m00 + i_3dvertex.y * this.m01 + i_3dvertex.z * this.m02) / w;
+            o_2d.y = (i_3dvertex.y * this.m11 + i_3dvertex.z * this.m12) / w;
+            return;
+        }
+        public void projectionConvert(double i_x, double i_y, double i_z, NyARDoublePoint2d o_2d)
+        {
+            double w = i_z * this.m22;
+            o_2d.x = (i_x * this.m00 + i_y * this.m01 + i_z * this.m02) / w;
+            o_2d.y = (i_y * this.m11 + i_z * this.m12) / w;
+            return;
+        }
 
 
 

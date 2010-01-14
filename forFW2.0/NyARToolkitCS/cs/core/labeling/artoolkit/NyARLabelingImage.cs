@@ -38,89 +38,90 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARLabelingImage : NyARRaster_BasicClass
     {
-        private const int MAX_LABELS = 1024 * 32;
-        protected int[] _ref_buf;
-        private INyARBufferReader _buffer_reader;
-        protected NyARLabelingLabelStack _label_list;
-        protected int[] _index_table;
-        protected bool _is_index_table_enable;
-        public NyARLabelingImage(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height))
-        {
-            this._ref_buf = new int[i_height*i_width];
-            this._label_list = new NyARLabelingLabelStack(MAX_LABELS);
-            this._index_table = new int[MAX_LABELS];
-            this._is_index_table_enable = false;
-            this._buffer_reader = new NyARBufferReader(this._ref_buf, INyARBufferReader.BUFFERFORMAT_INT2D);
-            //生成時に枠を書きます。
-            drawFrameEdge();
-            return;
-        }
-        public override INyARBufferReader getBufferReader()
-        {
-            return this._buffer_reader;
-        }
-        /**
-         * エッジを書きます。
-         */
-        public void drawFrameEdge()
-        {
-            int w = this._size.w;
-            int h = this._size.h;
-            // NyLabelingImageのイメージ初期化(枠書き)
-            int[] img = (int[])this._ref_buf;
-            int bottom_ptr = (h - 1) * w;
-            for (int i = 0; i < w; i++)
-            {
-                img[i] = 0;
-                img[bottom_ptr + i] = 0;
-            }
-            for (int i = 0; i < h; i++)
-            {
-                img[i * w] = 0;
-                img[(i + 1) * w - 1] = 0;
-            }
-            return;
-        }
+	    private const int MAX_LABELS = 1024*32;
 
+	    protected int[] _ref_buf;
+	    protected NyARLabelingLabelStack _label_list;
+	    protected int[] _index_table;
+	    protected bool _is_index_table_enable;
+	    public NyARLabelingImage(int i_width, int i_height)
+            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D)
+	    {
+		    this._ref_buf =new int[i_height*i_width];
+		    this._label_list = new NyARLabelingLabelStack(MAX_LABELS);
+		    this._index_table=new int[MAX_LABELS];
+		    this._is_index_table_enable=false;
+		    //生成時に枠を書きます。
+		    drawFrameEdge();
+		    return;
+	    }
+        public override object getBuffer()
+	    {
+		    return this._ref_buf;
+	    }
+        public override bool hasBuffer()
+	    {
+		    return this._ref_buf!=null;
+	    }
+        public override void wrapBuffer(object i_ref_buf)
+	    {
+		    NyARException.notImplement();
+	    }	
+	    /**
+	     * エッジを書きます。
+	     */
+	    public void drawFrameEdge()
+	    {
+		    int w=this._size.w;
+		    int h=this._size.h;
+		    // NyLabelingImageのイメージ初期化(枠書き)
+		    int[] img = (int[]) this._ref_buf;
+		    int bottom_ptr = (h - 1) * w;
+		    for (int i = 0; i < w; i++) {
+			    img[i] = 0;
+			    img[bottom_ptr + i] = 0;
+		    }
+		    for (int i = 0; i < h; i++) {
+			    img[i * w] = 0;
+			    img[(i + 1) * w - 1] = 0;
+		    }
+		    return;
+	    }
 
-        /**
-         * ラベリング結果がインデックステーブルを持つ場合、その配列を返します。
-         * 持たない場合、nullを返します。
-         * 
-         * 値がnullの時はラベル番号そのものがラスタに格納されていますが、
-         * null以外の時はラスタに格納されているのはインデクス番号です。
-         * 
-         * インデクス番号とラベル番号の関係は、以下の式で表されます。
-         * ラベル番号:=value[インデクス番号]
-         * 
-         */
-        public int[] getIndexArray()
-        {
-            return this._is_index_table_enable ? this._index_table : null;
-        }
-
-        public NyARLabelingLabelStack getLabelStack()
-        {
-            return this._label_list;
-        }
-        public void reset(bool i_label_index_enable)
-        {
-            Debug.Assert(i_label_index_enable == true);//非ラベルモードは未実装
-            this._label_list.clear();
-            this._is_index_table_enable = i_label_index_enable;
-            return;
-        }
-
-        protected int[] _getContour_xdir = { 0, 1, 1, 1, 0, -1, -1, -1 };
-        protected int[] _getContour_ydir = { -1, -1, 0, 1, 1, 1, 0, -1 };
-        /**
-         * i_labelのラベルの、クリップ領域が上辺に接しているx座標を返します。
-         * @param i_index
-         * @return
-         */
-        public int getTopClipTangentX(NyARLabelingLabel i_label)
-        {
+	    /**
+	     * ラベリング結果がインデックステーブルを持つ場合、その配列を返します。
+	     * 持たない場合、nullを返します。
+	     * 
+	     * 値がnullの時はラベル番号そのものがラスタに格納されていますが、
+	     * null以外の時はラスタに格納されているのはインデクス番号です。
+	     * 
+	     * インデクス番号とラベル番号の関係は、以下の式で表されます。
+	     * ラベル番号:=value[インデクス番号]
+	     * 
+	     */
+	    public int[] getIndexArray()
+	    {
+		    return this._is_index_table_enable?this._index_table:null;
+	    }
+    	
+	    public NyARLabelingLabelStack getLabelStack()
+	    {
+		    return this._label_list;
+	    }
+	    public void reset(bool i_label_index_enable)
+	    {
+		    Debug.Assert(i_label_index_enable==true);//非ラベルモードは未実装
+		    this._label_list.clear();
+		    this._is_index_table_enable=i_label_index_enable;
+		    return;
+	    }
+	    /**
+	     * i_labelのラベルの、クリップ領域が上辺に接しているx座標を返します。
+	     * @param i_index
+	     * @return
+	     */
+	    public int getTopClipTangentX(NyARLabelingLabel i_label)
+	    {
 		    int pix;
 		    int i_label_id=i_label.id;
 		    int[] index_table=this._index_table;
@@ -136,6 +137,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    }
 		    //あれ？見つからないよ？
 		    throw new NyARException();
-        }
+	    }	
     }
 }

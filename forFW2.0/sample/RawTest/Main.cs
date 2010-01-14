@@ -34,7 +34,7 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             //ここでテストするコードを切り替えてください。
-            int s = 0;
+            int s = 1;
             switch (s)
             {
                 case 0:

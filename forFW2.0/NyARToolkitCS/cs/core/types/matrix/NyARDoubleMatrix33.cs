@@ -94,84 +94,114 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_value[8] = this.m22;
             return;
         }
-	public bool inverse(NyARDoubleMatrix33 i_src)
-	{
-		double a11,a12,a13,a21,a22,a23,a31,a32,a33;
-		double b11,b12,b13,b21,b22,b23,b31,b32,b33;	
-		a11=i_src.m00;a12=i_src.m01;a13=i_src.m02;
-		a21=i_src.m10;a22=i_src.m11;a23=i_src.m12;
-		a31=i_src.m20;a32=i_src.m21;a33=i_src.m22;
-		
-		b11=a22*a33-a23*a32;
-		b12=a32*a13-a33*a12;
-		b13=a12*a23-a13*a22;
-		
-		b21=a23*a31-a21*a33;
-		b22=a33*a11-a31*a13;
-		b23=a13*a21-a11*a23;
-		
-		b31=a21*a32-a22*a31;
-		b32=a31*a12-a32*a11;
-		b33=a11*a22-a12*a21;
-				
-		double det_1=a11*b11+a21*b12+a31*b13;
-		if(det_1==0){
-			return false;
-		}
-		det_1=1/det_1;
+        public bool inverse(NyARDoubleMatrix33 i_src)
+        {
+            double a11, a12, a13, a21, a22, a23, a31, a32, a33;
+            double b11, b12, b13, b21, b22, b23, b31, b32, b33;
+            a11 = i_src.m00; a12 = i_src.m01; a13 = i_src.m02;
+            a21 = i_src.m10; a22 = i_src.m11; a23 = i_src.m12;
+            a31 = i_src.m20; a32 = i_src.m21; a33 = i_src.m22;
 
-		this.m00=b11*det_1;
-		this.m01=b12*det_1;
-		this.m02=b13*det_1;
-		
-		this.m10=b21*det_1;
-		this.m11=b22*det_1;
-		this.m12=b23*det_1;
-		
-		this.m20=b31*det_1;
-		this.m21=b32*det_1;
-		this.m22=b33*det_1;
-		
-		return true;
-	}
-	/**
-	 * この関数は、0-PIの間で値を返します。
-	 * @param o_out
-	 */
-	public void getZXYAngle(NyARDoublePoint3d o_out)
-	{
-		double sina = this.m21;
-		if (sina >= 1.0) {
-			o_out.x = Math.PI / 2;
-			o_out.y = 0;
-			o_out.z = Math.Atan2(-this.m10, this.m00);
-		} else if (sina <= -1.0) {
-			o_out.x = -Math.PI / 2;
-			o_out.y = 0;
-            o_out.z = Math.Atan2(-this.m10, this.m00);
-		} else {
-			o_out.x = Math.Asin(sina);
-            o_out.z = Math.Atan2(-this.m01, this.m11);
-            o_out.y = Math.Atan2(-this.m20, this.m22);
-		}
-	}
-	public void setZXYAngle(double i_x, double i_y, double i_z)
-	{
-		double sina = Math.Sin(i_x);
-		double cosa = Math.Cos(i_x);
-		double sinb = Math.Sin(i_y);
-		double cosb = Math.Cos(i_y);
-		double sinc = Math.Sin(i_z);
-		double cosc = Math.Cos(i_z);
-		this.m00 = cosc * cosb - sinc * sina * sinb;
-		this.m01 = -sinc * cosa;
-		this.m02 = cosc * sinb + sinc * sina * cosb;
-		this.m10 = sinc * cosb + cosc * sina * sinb;
-		this.m11 = cosc * cosa;
-		this.m12 = sinc * sinb - cosc * sina * cosb;
-		this.m20 = -cosa * sinb;
-		this.m21 = sina;
-		this.m22 = cosb * cosa;
-	}
+            b11 = a22 * a33 - a23 * a32;
+            b12 = a32 * a13 - a33 * a12;
+            b13 = a12 * a23 - a13 * a22;
+
+            b21 = a23 * a31 - a21 * a33;
+            b22 = a33 * a11 - a31 * a13;
+            b23 = a13 * a21 - a11 * a23;
+
+            b31 = a21 * a32 - a22 * a31;
+            b32 = a31 * a12 - a32 * a11;
+            b33 = a11 * a22 - a12 * a21;
+
+            double det_1 = a11 * b11 + a21 * b12 + a31 * b13;
+            if (det_1 == 0)
+            {
+                return false;
+            }
+            det_1 = 1 / det_1;
+
+            this.m00 = b11 * det_1;
+            this.m01 = b12 * det_1;
+            this.m02 = b13 * det_1;
+
+            this.m10 = b21 * det_1;
+            this.m11 = b22 * det_1;
+            this.m12 = b23 * det_1;
+
+            this.m20 = b31 * det_1;
+            this.m21 = b32 * det_1;
+            this.m22 = b33 * det_1;
+
+            return true;
+        }
+        /**
+         * この関数は、0-PIの間で値を返します。
+         * @param o_out
+         */
+        public void getZXYAngle(NyARDoublePoint3d o_out)
+        {
+            double sina = this.m21;
+            if (sina >= 1.0)
+            {
+                o_out.x = Math.PI / 2;
+                o_out.y = 0;
+                o_out.z = Math.Atan2(-this.m10, this.m00);
+            }
+            else if (sina <= -1.0)
+            {
+                o_out.x = -Math.PI / 2;
+                o_out.y = 0;
+                o_out.z = Math.Atan2(-this.m10, this.m00);
+            }
+            else
+            {
+                o_out.x = Math.Asin(sina);
+                o_out.z = Math.Atan2(-this.m01, this.m11);
+                o_out.y = Math.Atan2(-this.m20, this.m22);
+            }
+        }
+        public void setZXYAngle(NyARDoublePoint3d i_angle)
+        {
+            setZXYAngle(i_angle.x, i_angle.y, i_angle.z);
+            return;
+        }
+        public void setZXYAngle(double i_x, double i_y, double i_z)
+        {
+            double sina = Math.Sin(i_x);
+            double cosa = Math.Cos(i_x);
+            double sinb = Math.Sin(i_y);
+            double cosb = Math.Cos(i_y);
+            double sinc = Math.Sin(i_z);
+            double cosc = Math.Cos(i_z);
+            this.m00 = cosc * cosb - sinc * sina * sinb;
+            this.m01 = -sinc * cosa;
+            this.m02 = cosc * sinb + sinc * sina * cosb;
+            this.m10 = sinc * cosb + cosc * sina * sinb;
+            this.m11 = cosc * cosa;
+            this.m12 = sinc * sinb - cosc * sina * cosb;
+            this.m20 = -cosa * sinb;
+            this.m21 = sina;
+            this.m22 = cosb * cosa;
+            return;
+        }
+        /**
+         * 回転行列を適応して座標変換します。
+         * @param i_angle
+         * @param o_out
+         */
+        public void transformVertex(NyARDoublePoint3d i_position, NyARDoublePoint3d o_out)
+        {
+            transformVertex(i_position.x, i_position.y, i_position.z, o_out);
+            return;
+        }
+
+        public void transformVertex(double i_x, double i_y, double i_z, NyARDoublePoint3d o_out)
+        {
+            o_out.x = this.m00 * i_x + this.m01 * i_y + this.m02 * i_z;
+            o_out.y = this.m10 * i_x + this.m11 * i_y + this.m12 * i_z;
+            o_out.z = this.m20 * i_x + this.m21 * i_y + this.m22 * i_z;
+            return;
+        }
     }
 }

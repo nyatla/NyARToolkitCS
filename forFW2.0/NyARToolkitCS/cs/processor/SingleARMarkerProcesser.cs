@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : INyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
         {
             //公開プロパティ
             public NyARSquare square = new NyARSquare();
@@ -103,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            public void onSquareDetect(INyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
+            public void onSquareDetect(NyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index)
             {
                 if (this._match_patt == null)
                 {
@@ -192,8 +192,6 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 for (int i = 0; i < 4; i++)
                 {
                     int idx = (i + 4 - dir) % 4;
-                    sq.imvertex[i].x = vertex[idx].x;
-                    sq.imvertex[i].y = vertex[idx].y;
                     this._coordline.coord2Line(i_vertex_index[idx], i_vertex_index[(idx + 1) % 4], i_coordx, i_coordy, i_coor_num, sq.line[i]);
                 }
                 for (int i = 0; i < 4; i++)
@@ -208,17 +206,17 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         }
         /**オーナーが自由に使えるタグ変数です。
          */
-        public object tag;
+        public Object tag;
 
         private int _lost_delay_count = 0;
 
         private int _lost_delay = 5;
 
-        private INyARSquareContourDetector _square_detect;
+        private NyARSquareContourDetector _square_detect;
 
         protected INyARTransMat _transmat;
 
-        private double _marker_width;
+        private NyARRectOffset _offset;
         private int _threshold = 110;
         // [AR]検出結果の保存用
         private NyARBinRaster _bin_raster;
@@ -253,7 +251,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._initialized = true;
             //コールバックハンドラ
             this._detectmarker_cb = new DetectSquareCB(i_param);
-
+            this._offset = new NyARRectOffset();
             return;
         }
 
@@ -276,7 +274,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             }
             //検出するマーカセット、情報、検出器を作り直す。(1ピクセル4ポイントサンプリング,マーカのパターン領域は50%)
             this._detectmarker_cb.setNyARCodeTable(i_ref_code_table, i_code_resolution);
-            this._marker_width = i_marker_width;
+            this._offset.setSquare(i_marker_width);
             return;
         }
 
@@ -341,7 +339,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     // OnEnter
                     this.onEnterHandler(i_code_index);
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._offset, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;
@@ -365,7 +363,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 {// 同じARCodeの再認識
                     // イベント生成
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, this._marker_width, result);
+                    this._transmat.transMat(i_square, this._offset, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;

@@ -53,9 +53,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 int idx = 0;
                 for (int h = 0; h < 4; h++)
                 {
-                    Debug.Assert(o_raster[h].getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32));
+                    Debug.Assert(o_raster[h].isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
                     NyARRaster ra = o_raster[h];
-                    idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBufferReader().getBuffer());
+                    idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBuffer());
                 }
             }
             catch (Exception e)
@@ -74,11 +74,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             int width = o_code.getWidth();
             int height = o_code.getHeight();
-            NyARRaster tmp_raster = new NyARRaster(new NyARIntSize(width, height), new int[width * height], INyARBufferReader.BUFFERFORMAT_INT1D_X8R8G8B8_32);
+            NyARRaster tmp_raster = new NyARRaster(width, height, NyARBufferType.INT1D_X8R8G8B8_32);
             //4個の要素をラスタにセットする。
             try
             {
-                int[] buf = (int[])tmp_raster.getBufferReader().getBuffer();
+                int[] buf = (int[])tmp_raster.getBuffer();
                 string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
                 //GBRAで一度読みだす。
                 int idx=0;

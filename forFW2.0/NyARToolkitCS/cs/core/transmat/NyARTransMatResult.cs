@@ -78,6 +78,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_out.z = this.m20 * i_x + this.m21 * i_y + this.m22 * i_z + this.m23;
             return;
         }
+	    public void transformVertex(NyARDoublePoint3d i_in,NyARDoublePoint3d o_out)
+	    {
+		    transformVertex(i_in.x,i_in.y,i_in.z,o_out);
+	    }
     }
 
 }

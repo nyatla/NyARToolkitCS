@@ -33,7 +33,7 @@ using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-    public class NyARSquareContourDetector_ARToolKit : INyARSquareContourDetector
+    public class NyARSquareContourDetector_ARToolKit : NyARSquareContourDetector
     {
         private const int AR_AREA_MAX = 100000;// #define AR_AREA_MAX 100000
         private const int AR_AREA_MIN = 70;// #define AR_AREA_MIN 70

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -28,35 +28,27 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-    public class NyARBufferReader : INyARBufferReader
-    {
-        private object _buffer;
-        private int _buffer_type;
-        private NyARBufferReader()
-        {
-            return;
-        }
-        public NyARBufferReader(object i_buffer, int i_buffer_type)
-        {
-            this._buffer = i_buffer;
-            this._buffer_type = i_buffer_type;
-            return;
-        }
-        public override object getBuffer()
-        {
-            return this._buffer;
-        }
-        public override int getBufferType()
-        {
-            return _buffer_type;
-        }
-        public override bool isEqualBufferType(int i_type_value)
-        {
-            return this._buffer_type == i_type_value;
-        }
+    public interface INyARRotMatrixOptimize
+{
+	/**
+	 * @param io_rot
+	 * 初期回転行列
+	 * @param i_trans
+	 * 初期並進ベクトル
+	 * @param i_vertex3d
+	 * 初期3次元座標
+	 * @param i_vertex2d
+	 * 画面上の頂点群
+	 * @return
+	 * エラーレート
+	 * @throws NyARException
+	 */
+    double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d);
     }
-
 }

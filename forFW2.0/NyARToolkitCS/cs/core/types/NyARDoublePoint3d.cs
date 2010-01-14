@@ -30,7 +30,7 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
+    using System;
     public class NyARDoublePoint3d
     {
         public double x;
@@ -57,5 +57,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    this.z=i_in.z;
 		    return;
 	    }
+        /**
+         * i_pointとのベクトルから距離を計算します。
+         * @return
+         */
+        public double dist(NyARDoublePoint3d i_point)
+        {
+            double x, y, z;
+            x = this.x - i_point.x;
+            y = this.y - i_point.y;
+            z = this.z - i_point.z;
+            return Math.Sqrt(x * x + y * y + z * z);
+        }
     }
 }

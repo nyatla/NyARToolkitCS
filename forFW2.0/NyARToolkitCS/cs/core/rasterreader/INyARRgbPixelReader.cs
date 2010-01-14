@@ -72,6 +72,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * @throws NyARException
 	     */
 	    void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+	    /**
+	     * 参照しているバッファをi_ref_bufferへ切り替えます。
+	     * 内部パラメータのチェックは、実装依存です。
+	     * @param i_ref_buffer
+	     * @throws NyARException
+	     */
+	    void switchBuffer(object i_ref_buffer);
+
     }
 
 }

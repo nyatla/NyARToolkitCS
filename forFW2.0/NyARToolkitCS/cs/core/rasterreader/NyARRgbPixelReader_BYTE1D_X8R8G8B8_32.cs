@@ -33,15 +33,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace jp.nyatla.nyartoolkit.cs.core
+namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
 {
-    public class NyARRgbPixelReader_INT1D_X8R8G8B8_32 : INyARRgbPixelReader
+    /**
+     * byte[]配列に、パディング無しの8bit画素値が、XRGBXRGBの順で並んでいる
+     * バッファに使用できるピクセルリーダー
+     *
+     */
+    public class NyARRgbPixelReader_BYTE1D_X8R8G8B8_32 : INyARRgbPixelReader
     {
-	    protected int[] _ref_buf;
+	    protected byte[] _ref_buf;
 
 	    private NyARIntSize _size;
 
-	    public NyARRgbPixelReader_INT1D_X8R8G8B8_32(int[] i_buf, NyARIntSize i_size)
+	    public NyARRgbPixelReader_BYTE1D_X8R8G8B8_32(byte[] i_buf, NyARIntSize i_size)
 	    {
 		    this._ref_buf = i_buf;
 		    this._size = i_size;
@@ -49,28 +54,30 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
 	    public void getPixel(int i_x, int i_y, int[] o_rgb)
 	    {
-		    int rgb= this._ref_buf[i_x + i_y * this._size.w];
-		    o_rgb[0] = (rgb>>16)&0xff;// R
-		    o_rgb[1] = (rgb>>8)&0xff;// G
-		    o_rgb[2] = rgb&0xff;// B
+		    byte[] ref_buf = this._ref_buf;
+		    int bp = (i_x + i_y * this._size.w) * 4;
+		    o_rgb[0] = (ref_buf[bp + 1] & 0xff);// R
+		    o_rgb[1] = (ref_buf[bp + 2] & 0xff);// G
+		    o_rgb[2] = (ref_buf[bp + 3] & 0xff);// B
 		    return;
 	    }
 
 	    public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
 	    {
+		    int bp;
 		    int width = this._size.w;
-		    int[] ref_buf = this._ref_buf;
-		    for (int i = i_num - 1; i >= 0; i--){
-			    int rgb=ref_buf[i_x[i] + i_y[i] * width];
-			    o_rgb[i * 3 + 0] = (rgb>>16)&0xff;// R
-			    o_rgb[i * 3 + 1] = (rgb>>8)&0xff;// G
-			    o_rgb[i * 3 + 2] = rgb&0xff;// B
+		    byte[] ref_buf = this._ref_buf;
+		    for (int i = i_num - 1; i >= 0; i--) {
+			    bp = (i_x[i] + i_y[i] * width) * 4;
+			    o_rgb[i * 3 + 0] = (ref_buf[bp + 1] & 0xff);// R
+			    o_rgb[i * 3 + 1] = (ref_buf[bp + 2] & 0xff);// G
+			    o_rgb[i * 3 + 2] = (ref_buf[bp + 3] & 0xff);// B
 		    }
 		    return;
 	    }
 	    public void setPixel(int i_x, int i_y, int[] i_rgb)
 	    {
-		    this._ref_buf[i_x + i_y * this._size.w]=((i_rgb[0]<<16)&0xff)|((i_rgb[1]<<8)&0xff)|((i_rgb[2])&0xff);
+		    NyARException.notImplement();		
 	    }
 	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
 	    {
@@ -78,9 +85,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    }
 	    public void switchBuffer(Object i_ref_buffer)
 	    {
-		    Debug.Assert(((int[])i_ref_buffer).Length>=this._size.w*this._size.h);
-		    this._ref_buf=(int[])i_ref_buffer;
-	    }	
+		    Debug.Assert(((byte[])i_ref_buffer).Length>=this._size.w*this._size.h*4);
+		    this._ref_buf=(byte[])i_ref_buffer;
+	    }
     }
-
 }

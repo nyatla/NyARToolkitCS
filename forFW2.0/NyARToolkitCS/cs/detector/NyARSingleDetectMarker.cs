@@ -60,12 +60,12 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public NyARSingleDetectMarker(NyARParam i_param, NyARCode i_code, double i_marker_width, int i_input_raster_type, int i_profile_id)
         {
-            initInstance(i_param, i_code, i_marker_width, i_input_raster_type, i_profile_id);
+            initialize(i_param, i_code, i_marker_width, i_input_raster_type, i_profile_id);
             return;
         }
         public NyARSingleDetectMarker(NyARParam i_param, NyARCode i_code, double i_marker_width, int i_input_raster_type)
         {
-            initInstance(i_param, i_code, i_marker_width, i_input_raster_type, PF_NYARTOOLKIT);
+            initialize(i_param, i_code, i_marker_width, i_input_raster_type, PF_NYARTOOLKIT);
             return;
         }
         /**
@@ -77,7 +77,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * @param i_profile_id
          * @throws NyARException
          */
-        protected void initInstance(
+        protected void initialize(
             NyARParam i_ref_param,
             NyARCode i_ref_code,
             double i_marker_width,
@@ -86,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         {
             NyARRasterFilter_ARToolkitThreshold th = new NyARRasterFilter_ARToolkitThreshold(100, i_input_raster_type);
             INyARColorPatt patt_inst;
-            INyARSquareContourDetector sqdetect_inst;
+            NyARSquareContourDetector sqdetect_inst;
             INyARTransMat transmat_inst;
 
             switch (i_profile_id)
