@@ -100,7 +100,6 @@
     <Compile Include="cs\core\rasterreader\NyARVectorReader_INT1D_GRAY_8.cs" />
     <Compile Include="cs\core\raster\INyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARBinRaster.cs" />
-    <Compile Include="cs\core\raster\NyARBufferType.cs" />
     <Compile Include="cs\core\raster\NyARGrayscaleRaster.cs" />
     <Compile Include="cs\core\raster\NyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARRaster_BasicClass.cs" />
@@ -139,6 +138,7 @@
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix33.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix34.cs" />
     <Compile Include="cs\core\types\matrix\NyARDoubleMatrix44.cs" />
+    <Compile Include="cs\core\types\NyARBufferType.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint2d.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint3d.cs" />
     <Compile Include="cs\core\types\NyARHistogram.cs" />
