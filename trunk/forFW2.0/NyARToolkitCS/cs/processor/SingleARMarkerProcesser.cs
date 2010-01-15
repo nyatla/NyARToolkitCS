@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.IDetectMarkerCallback
         {
             //公開プロパティ
             public NyARSquare square = new NyARSquare();
