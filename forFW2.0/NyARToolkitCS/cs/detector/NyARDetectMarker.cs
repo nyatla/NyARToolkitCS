@@ -65,7 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.IDetectMarkerCallback
         {
             //公開プロパティ
             public NyARDetectMarkerResultStack result_stack = new NyARDetectMarkerResultStack(NyARDetectMarker.AR_SQUARE_MAX);

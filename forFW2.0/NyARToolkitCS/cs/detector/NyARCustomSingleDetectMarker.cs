@@ -47,7 +47,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquareCB : NyARSquareContourDetector.DetectMarkerCallback
+        private class DetectSquareCB : NyARSquareContourDetector.IDetectMarkerCallback
         {
             //公開プロパティ
             public double confidence;

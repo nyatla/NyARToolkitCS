@@ -78,7 +78,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         private int[] __detectMarker_mkvertex = new int[4];
 
-        public override void detectMarkerCB(NyARBinRaster i_raster, DetectMarkerCallback i_callback)
+        public override void detectMarkerCB(NyARBinRaster i_raster, IDetectMarkerCallback i_callback)
         {
             RleLabelFragmentInfoStack flagment = this._stack;
             LabelOverlapChecker<RleLabelFragmentInfoStack.RleLabelFragmentInfo> overlap = this._overlap_checker;

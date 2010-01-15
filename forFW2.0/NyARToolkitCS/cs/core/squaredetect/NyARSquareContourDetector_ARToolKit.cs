@@ -84,7 +84,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 抽出した正方形候補を格納するリスト
          * @throws NyARException
          */
-        public override void detectMarkerCB(NyARBinRaster i_raster, DetectMarkerCallback i_callback)
+        public override void detectMarkerCB(NyARBinRaster i_raster, IDetectMarkerCallback i_callback)
         {
             NyARLabelingImage limage = this._limage;
 
