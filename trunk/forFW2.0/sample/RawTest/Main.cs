@@ -34,23 +34,15 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             //ここでテストするコードを切り替えてください。
-            int s = 1;
-            switch (s)
             {
-                case 0:
-                    {
-                        RawFileTest rf;
-                        rf = new RawFileTest();
-                        rf.Test();
-                    }
-                    break;
-                case 1:
-                    {
-                        NyIdTest rf;
-                        rf = new NyIdTest();
-                        rf.Test();
-                    }
-                    break;
+                RawFileTest rf;
+                rf = new RawFileTest();
+                rf.Test();
+            }
+            {
+                NyIdTest rf;
+                rf = new NyIdTest();
+                rf.Test();
             }
         }
     }

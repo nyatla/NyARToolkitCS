@@ -157,7 +157,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this.m_raster = i_resource.createARRaster();
 
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
+            this.m_ar = new NyARSingleDetectMarker(i_resource.ar_param, code, 80.0, this.m_raster.getBufferType());
             this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);

@@ -78,10 +78,10 @@ namespace NyARToolkitCSUtils.Direct3d
         }
         public void CopyFromRaster(DsRGB565Raster i_raster)
         {
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
             int pitch;
             GraphicsStream gs = this._surface.LockRectangle(this.m_src_rect,LockFlags.None, out pitch);
-            Marshal.Copy((short[])i_raster.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width * 2 * this._height);
+            Marshal.Copy((short[])i_raster.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width * 2 * this._height);
 
             this._surface.UnlockRectangle();
 

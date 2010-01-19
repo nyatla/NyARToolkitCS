@@ -68,7 +68,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         }
         public void CopyFromRaster(DsRGB565Raster i_raster)
         {
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
             int pitch;
             GraphicsStream gs = this._surface.LockRectangle(this._src_rect, LockFlags.None, out pitch);
             /*
@@ -82,7 +82,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 d_idx -= cp_size;
             }
             */
-            Marshal.Copy((short[])i_raster.getBufferReader().getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width  * this._height);
+            Marshal.Copy((short[])i_raster.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this._width  * this._height);
 
             this._surface.UnlockRectangle();
 
@@ -139,11 +139,11 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         public void CopyFromRaster(DsRGB565Raster i_raster)
         {
             //BUFFERFORMAT_WORD1D_R5G6B5_16LEしか受けられません。
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
             int pi;
             int w = this._width;
             GraphicsStream gs = this._texture.LockRectangle(0, LockFlags.None, out pi);
-            short[] buf = (short[])i_raster.getBufferReader().getBuffer();
+            short[] buf = (short[])i_raster.getBuffer();
             int st = this._width;
             int s_idx = 0;
             int d_idx = 0;
