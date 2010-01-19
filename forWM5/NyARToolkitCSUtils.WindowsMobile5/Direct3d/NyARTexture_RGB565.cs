@@ -103,11 +103,11 @@ namespace NyARToolkitCSUtils.Direct3d
         public void CopyFromRaster(DsRGB565Raster i_raster)
         {
             //BUFFERFORMAT_WORD1D_R5G6B5_16LEしか受けられません。
-            Debug.Assert(i_raster.getBufferReader().isEqualBufferType(INyARBufferReader.BUFFERFORMAT_WORD1D_R5G6B5_16LE));
+            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
             int pi;
             int w = this.m_width;
             GraphicsStream gs = this._texture.LockRectangle(0, LockFlags.None, out pi);
-            short[] buf = (short[])i_raster.getBufferReader().getBuffer();
+            short[] buf = (short[])i_raster.getBuffer();
             int st = this.m_width;
             int s_idx = 0;
             int d_idx = 0;
