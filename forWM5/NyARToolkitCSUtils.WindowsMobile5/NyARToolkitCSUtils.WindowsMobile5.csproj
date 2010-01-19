@@ -36,7 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <DefineConstants>TRACE;PocketPC;NyartoolkitCS_FRAMEWORK_CFW</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -55,8 +55,12 @@
   <ItemGroup>
     <Compile Include="Direct3d\NyARSurface_RGB565.cs" />
     <Compile Include="Direct3d\NyARTexture_RGB565.cs" />
-    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\DsRGB565Raster.cs" ><Link>NyAR\DsRGB565Raster.cs</Link></Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\NyARD3dUtil.cs" ><Link>NyAR\D3dARParam.cs</Link></Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\DsRGB565Raster.cs">
+      <Link>NyAR\DsRGB565Raster.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\NyARD3dUtil.cs">
+      <Link>NyAR\D3dARParam.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
