@@ -1,7 +1,7 @@
 ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008-2010 Ryo Iizuka
 
-version 2.5.0
+version 2.5.1
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
@@ -14,7 +14,7 @@ wm(at)nyatla.jp
 NyARToolkitCSは、純粋なC#で実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 2.5.0
+ARToolkit 2.72.1及び、NyARToolkit version 2.5.1
 をベースにしています。
 
 ※sandboxの一部のクラスは未実装です。
@@ -112,8 +112,14 @@ SimpleLiteDirect3d (./sample/SimpleLiteDirect3d)
   キャプチャデバイスの設定からマーカーの検出後のDirect3Dへの出力までの、
   一連の流れを追うことが出来ます。
 
+SingleARMarker (./sample/SingleARMarker)
+  同時に１個のARマーカを認識するサンプルです。いくつかのマーカを
+  切り替えながら、それぞれのマーカに別のオブジェクトを表示する
+  アプリケーションの適しています。
+
 SingleNyIdMarkerDirect3d (./sample/SingleNyIdMarkerDirect3d)
-  １種類のNyIdマーカを認識するサンプルです。
+  同時に１個のNyIdマーカを認識するサンプルです。SingleARMarker
+  のARマーカの代わりに、NyIdマーカを使うものです。
 
 
 

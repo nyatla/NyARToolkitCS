@@ -59,8 +59,8 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             public NyARSquare square = new NyARSquare();
             public double confidence = 0.0;
             public int code_index = -1;
-            public double cf_threshold_new = 0.30;
-            public double cf_threshold_exist = 0.15;
+            public double cf_threshold_new = 0.50;
+            public double cf_threshold_exist = 0.30;
 
             //参照
             private INyARRgbRaster _ref_raster;
@@ -89,12 +89,14 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 }
             }
             private NyARIntPoint2d[] __tmp_vertex = NyARIntPoint2d.createArray(4);
+            private int _target_id;
             /**
-             * Initialize call back handler.
-             */
-            public void init(INyARRgbRaster i_raster)
+              * Initialize call back handler.
+              */
+            public void init(INyARRgbRaster i_raster, int i_target_id)
             {
                 this._ref_raster = i_raster;
+                this._target_id = i_target_id;
                 this.code_index = -1;
                 this.confidence = Double.MinValue;
             }
@@ -147,7 +149,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 }
 
                 //認識処理
-                if (this.code_index == -1)
+                if (this._target_id == -1)
                 { // マーカ未認識
                     //現在は未認識
                     if (c1 < this.cf_threshold_new)
@@ -166,7 +168,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 {
                     //現在はマーカ認識中				
                     // 現在のマーカを認識したか？
-                    if (lcode_index != this.code_index)
+                    if (lcode_index != this._target_id)
                     {
                         // 認識中のマーカではないので無視
                         return;
@@ -181,6 +183,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     {
                         return;
                     }
+                    this.code_index = this._target_id;
                 }
                 //新しく認識、または継続認識中に更新があったときだけ、Square情報を更新する。
                 //ココから先はこの条件でしか実行されない。
@@ -300,7 +303,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._tobin_filter.doFilter(i_raster, this._bin_raster);
 
             // スクエアコードを探す
-            this._detectmarker_cb.init(i_raster);
+            this._detectmarker_cb.init(i_raster, this._current_arcode_index);
             this._square_detect.detectMarkerCB(this._bin_raster, this._detectmarker_cb);
 
             // 認識状態を更新
@@ -316,7 +319,16 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
             return;
         }
-
+        /**
+         * 
+         * @param i_new_detect_cf
+         * @param i_exist_detect_cf
+         */
+        public void setConfidenceThreshold(double i_new_cf, double i_exist_cf)
+        {
+            this._detectmarker_cb.cf_threshold_exist = i_exist_cf;
+            this._detectmarker_cb.cf_threshold_new = i_new_cf;
+        }
         private NyARTransMatResult __NyARSquare_result = new NyARTransMatResult();
 
         /**	オブジェクトのステータスを更新し、必要に応じてハンドル関数を駆動します。
@@ -363,7 +375,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 {// 同じARCodeの再認識
                     // イベント生成
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, this._offset, result);
+                    this._transmat.transMatContinue(i_square, this._offset, result);
                     // OnUpdate
                     this.onUpdateHandler(i_square, result);
                     this._lost_delay_count = 0;

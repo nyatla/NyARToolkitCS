@@ -15,7 +15,7 @@ using NyARToolkitCSUtils.NyAR;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace SingleNyIdMarkerDirect3d
+namespace SingleARMarker
 {
     class TextPanel
     {
@@ -43,7 +43,7 @@ namespace SingleNyIdMarkerDirect3d
      * 
      *
      */
-    class MarkerProcessor : SingleNyIdMarkerProcesser
+    class MarkerProcessor : SingleARMarkerProcesser
     {
         public Matrix transmat = new Matrix();
         private NyARD3dUtil _ref_utils;
@@ -52,30 +52,16 @@ namespace SingleNyIdMarkerDirect3d
         public MarkerProcessor(NyARParam i_cparam, int i_raster_format, NyARD3dUtil i_ref_utils)
         {
             //アプリケーションフレームワークの初期化
-            initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(),100, i_raster_format);
+            initInstance(i_cparam, i_raster_format);
             this._ref_utils=i_ref_utils;
             return;
         }
         /**
          * アプリケーションフレームワークのハンドラ（マーカ出現）
          */
-        protected override void onEnterHandler(INyIdMarkerData i_code)
+        protected override void onEnterHandler(int i_code)
         {
-            NyIdMarkerData_RawBit code = (NyIdMarkerData_RawBit)i_code;
-            if (code.length > 4)
-            {
-                //4バイト以上の時はint変換しない。
-                this.current_id = -1;//undefined_id
-            }
-            else
-            {
-                this.current_id = 0;
-                //最大4バイト繋げて１個のint値に変換
-                for (int i = 0; i < code.length; i++)
-                {
-                    this.current_id = (this.current_id << 8) | code.packet[i];
-                }
-            }
+            this.current_id = i_code;
         }
         /**
          * アプリケーションフレームワークのハンドラ（マーカ消滅）
@@ -98,7 +84,8 @@ namespace SingleNyIdMarkerDirect3d
     {
         private const int SCREEN_WIDTH = 640;
         private const int SCREEN_HEIGHT = 480;
-        private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
+        private const String AR_CODE_FILE1 = "../../../../../data/patt.hiro";
+        private const String AR_CODE_FILE2 = "../../../../../data/patt.kanji";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         //DirectShowからのキャプチャ
         private CaptureDevice _cap;
@@ -213,7 +200,12 @@ namespace SingleNyIdMarkerDirect3d
 
             //プロセッサの準備
             this._processor = new MarkerProcessor(ap, this._raster.getBufferType(),this._utils);
-            this._processor.setMarkerWidth(100);
+            NyARCode[] codes = new NyARCode[2];
+            codes[0] = new NyARCode(16, 16);
+            codes[1] = new NyARCode(16, 16);
+            codes[0].loadARPattFromFile(AR_CODE_FILE1);
+            codes[1].loadARPattFromFile(AR_CODE_FILE2);
+            this._processor.setARCodeTable(codes,16,80.0);
 
 
             //3dデバイスを準備する

@@ -44,7 +44,6 @@ namespace ConsoleApplication1
     {
         public class MarkerProcessor : SingleNyIdMarkerProcesser
         {
-            private Object _sync_object = new Object();
             public NyARTransMatResult transmat = null;
             public int current_id = -1;
 
@@ -60,36 +59,30 @@ namespace ConsoleApplication1
              */
             protected override void onEnterHandler(INyIdMarkerData i_code)
             {
-                lock (this._sync_object)
+                NyIdMarkerData_RawBit code = (NyIdMarkerData_RawBit)i_code;
+                if (code.length > 4)
                 {
-                    NyIdMarkerData_RawBit code = (NyIdMarkerData_RawBit)i_code;
-                    if (code.length > 4)
-                    {
-                        //4バイト以上の時はint変換しない。
-                        this.current_id = -1;//undefined_id
-                    }
-                    else
-                    {
-                        this.current_id = 0;
-                        //最大4バイト繋げて１個のint値に変換
-                        for (int i = 0; i < code.length; i++)
-                        {
-                            this.current_id = (this.current_id << 8) | code.packet[i];
-                        }
-                    }
-                    this.transmat = null;
+                    //4バイト以上の時はint変換しない。
+                    this.current_id = -1;//undefined_id
                 }
+                else
+                {
+                    this.current_id = 0;
+                    //最大4バイト繋げて１個のint値に変換
+                    for (int i = 0; i < code.length; i++)
+                    {
+                        this.current_id = (this.current_id << 8) | code.packet[i];
+                    }
+                }
+                this.transmat = null;
             }
             /**
              * アプリケーションフレームワークのハンドラ（マーカ消滅）
              */
             protected override void onLeaveHandler()
             {
-                lock (this._sync_object)
-                {
-                    this.current_id = -1;
-                    this.transmat = null;
-                }
+                this.current_id = -1;
+                this.transmat = null;
                 return;
             }
             /**
@@ -97,10 +90,7 @@ namespace ConsoleApplication1
              */
             protected override void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result)
             {
-                lock (this._sync_object)
-                {
-                    this.transmat = result;
-                }
+                this.transmat = result;
             }
         }
         private const String data_file = "../../../../../data/320x240NyId.raw";
