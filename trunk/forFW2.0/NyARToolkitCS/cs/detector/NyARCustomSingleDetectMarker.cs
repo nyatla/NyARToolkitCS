@@ -225,6 +225,14 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             return;
         }
         /**
+         * 現在の矩形を返します。
+         * @return
+         */
+        public NyARSquare refSquare()
+        {
+            return this._detect_cb.square;
+        }
+        /**
          * 検出したマーカーの一致度を返します。
          * 
          * @return マーカーの一致度を返します。0～1までの値をとります。 一致度が低い場合には、誤認識の可能性が高くなります。

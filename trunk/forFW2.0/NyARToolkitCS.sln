@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleNyIdMarkerDirect3d", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptureTest", "sample\CaptureTest\CaptureTest.csproj", "{BAB42EC0-98F1-464E-AB3D-39B1E7FE0AB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleARMarkerDirect3d", "sample\SingleARMarker\SingleARMarkerDirect3d.csproj", "{0A33E3B7-E3B8-425C-B8F9-BFEE8DC1850F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{BAB42EC0-98F1-464E-AB3D-39B1E7FE0AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB42EC0-98F1-464E-AB3D-39B1E7FE0AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB42EC0-98F1-464E-AB3D-39B1E7FE0AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A33E3B7-E3B8-425C-B8F9-BFEE8DC1850F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A33E3B7-E3B8-425C-B8F9-BFEE8DC1850F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A33E3B7-E3B8-425C-B8F9-BFEE8DC1850F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A33E3B7-E3B8-425C-B8F9-BFEE8DC1850F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
