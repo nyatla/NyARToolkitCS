@@ -56,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 
          * @param i_param
          */
-        public NyARSquareContourDetector_Rle(NyARCameraDistortionFactor i_dist_factor_ref, NyARIntSize i_size)
+        public NyARSquareContourDetector_Rle(NyARIntSize i_size)
         {
             this._width = i_size.w;
             this._height = i_size.h;

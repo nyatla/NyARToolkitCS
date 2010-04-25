@@ -41,21 +41,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     */
 	    protected bool _is_attached_buffer;
 	    public NyARBinRaster(int i_width, int i_height,int i_raster_type,bool i_is_alloc)
-            :base(new NyARIntSize(i_width,i_height),i_raster_type)
+            : base(i_width, i_height, i_raster_type)
 	    {
 		    if(!initInstance(this._size,i_raster_type,i_is_alloc)){
 			    throw new NyARException();
 		    }
 	    }
 	    public NyARBinRaster(int i_width, int i_height,bool i_is_alloc)
-            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D_BIN_8)
+            :base(i_width,i_height,NyARBufferType.INT1D_BIN_8)
 	    {
 		    if(!initInstance(this._size,NyARBufferType.INT1D_BIN_8,i_is_alloc)){
 			    throw new NyARException();
 		    }
 	    }
         public NyARBinRaster(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height), NyARBufferType.INT1D_BIN_8)
+            : base(i_width, i_height, NyARBufferType.INT1D_BIN_8)
 	    {
 		    if(!initInstance(this._size,NyARBufferType.INT1D_BIN_8,true)){
 			    throw new NyARException();

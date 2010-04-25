@@ -182,14 +182,14 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             return;
         }
         private bool _initialized = false;
-        protected void initInstance(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, int i_marker_width, int i_raster_format)
+        protected void initInstance(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, double i_marker_width, int i_raster_format)
         {
             //初期化済？
             Debug.Assert(this._initialized == false);
 
             NyARIntSize scr_size = i_param.getScreenSize();
             // 解析オブジェクトを作る
-            this._square_detect = new NyARSquareContourDetector_Rle(i_param.getDistortionFactor(), scr_size);
+            this._square_detect = new NyARSquareContourDetector_Rle(scr_size);
             this._transmat = new NyARTransMat(i_param);
             this._callback = new DetectSquareCB(i_param, i_encoder);
 
