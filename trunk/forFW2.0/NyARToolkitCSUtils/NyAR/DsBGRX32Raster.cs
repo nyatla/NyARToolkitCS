@@ -89,7 +89,7 @@ namespace NyARToolkitCSUtils.NyAR
         private INyARRgbPixelReader _rgb_reader;
         private byte[] _buf;
         public DsBGRX32Raster(int i_width, int i_height, int i_stride)
-            : base(new NyARIntSize(i_width, i_height),NyARBufferType.BYTE1D_B8G8R8X8_32)
+            : base(i_width, i_height,NyARBufferType.BYTE1D_B8G8R8X8_32)
         {
             if (i_stride != i_width*4)
             {

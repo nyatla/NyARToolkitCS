@@ -72,7 +72,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    private INyARRgbPixelReader _reader;
 
         public NyARRgbRaster_Blank(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height), NyARBufferType.NULL_ALLZERO)
+            : base(i_width, i_height, NyARBufferType.NULL_ALLZERO)
 	    {
 		    this._reader = new PixelReader();
 		    return;

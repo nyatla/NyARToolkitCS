@@ -40,7 +40,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    private int[] _ref_buf;
     	
 	    public NyARHsvRaster(int i_width, int i_height)
-            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D_X7H9S8V8_32)
+            :base(i_width,i_height,NyARBufferType.INT1D_X7H9S8V8_32)
 	    {
 		    //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
 		   

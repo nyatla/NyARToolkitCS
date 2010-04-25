@@ -70,8 +70,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    det=1/det;
 		    this.m00=a22*det;
 		    this.m01=-a12*det;
-		    this.m10=a21*det;
-		    this.m11=-a11*det;
+		    this.m10=-a21*det;
+		    this.m11=a11*det;
 		    return true;
 	    }
     }

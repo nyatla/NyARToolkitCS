@@ -41,9 +41,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected NyARIntSize _size;
         private int _buffer_type;
 
-        protected NyARRgbRaster_BasicClass(NyARIntSize i_size, int i_buffer_type)
+        protected NyARRgbRaster_BasicClass(int i_width, int i_height, int i_buffer_type)
         {
-            this._size = i_size;
+            this._size = new NyARIntSize(i_width, i_height);
             this._buffer_type = i_buffer_type;
         }
         public int getWidth()

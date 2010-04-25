@@ -92,7 +92,7 @@ namespace NyARToolkitCSUtils.NyAR
         private INyARRgbPixelReader _rgb_reader;
         private short[] _buf;
         public DsRGB565Raster(int i_width, int i_height)
-            : base(new NyARIntSize(i_width, i_height),NyARBufferType.WORD1D_R5G6B5_16LE)
+            : base(i_width, i_height,NyARBufferType.WORD1D_R5G6B5_16LE)
         {
             if (i_width % 4 != 0)
             {

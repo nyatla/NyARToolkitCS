@@ -55,7 +55,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * @throws NyARException
 	     */
 	    public NyARRaster(int i_width, int i_height,int i_buffer_type,bool i_is_alloc)
-            :base(new NyARIntSize(i_width,i_height),i_buffer_type)
+            :base(i_width,i_height,i_buffer_type)
 	    {
 		    if(!initInstance(this._size,i_buffer_type,i_is_alloc)){
 			    throw new NyARException();
@@ -64,7 +64,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    }	
 
 	    public NyARRaster(int i_width, int i_height,int i_buffer_type)
-            : base(new NyARIntSize(i_width, i_height), i_buffer_type)
+            : base(i_width, i_height, i_buffer_type)
 	    {
 		    if(!initInstance(this._size,i_buffer_type,true)){
 			    throw new NyARException();

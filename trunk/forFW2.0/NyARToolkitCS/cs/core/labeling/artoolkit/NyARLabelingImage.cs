@@ -45,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    protected int[] _index_table;
 	    protected bool _is_index_table_enable;
 	    public NyARLabelingImage(int i_width, int i_height)
-            :base(new NyARIntSize(i_width,i_height),NyARBufferType.INT1D)
+            :base(i_width,i_height,NyARBufferType.INT1D)
 	    {
 		    this._ref_buf =new int[i_height*i_width];
 		    this._label_list = new NyARLabelingLabelStack(MAX_LABELS);
