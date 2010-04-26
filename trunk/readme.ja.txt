@@ -1,7 +1,7 @@
 ARToolkit C# class library NyARToolkitCS.
 Copyright (C)2008-2010 Ryo Iizuka
 
-version 2.5.1
+version 2.5.2
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
@@ -14,7 +14,7 @@ wm(at)nyatla.jp
 NyARToolkitCSは、純粋なC#で実装したNyARToolkit互換の
 クラスライブラリです。
 
-ARToolkit 2.72.1及び、NyARToolkit version 2.5.1
+ARToolkit 2.72.1及び、NyARToolkit version 2.5.2
 をベースにしています。
 
 ※sandboxの一部のクラスは未実装です。
