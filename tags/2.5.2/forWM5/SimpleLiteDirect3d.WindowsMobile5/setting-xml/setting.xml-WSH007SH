@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<version>MobileSimpleLite/0.1</version>
+	<config>
+		<camera file="data\camera_para.dat" width="240" height="320" vertical="false"></camera>
+		<patt file="data\patt.hiro" size="16"></patt>
+		<direct3d background="surface"/>
+	</config>
+</root>
