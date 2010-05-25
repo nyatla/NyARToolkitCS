@@ -40,8 +40,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 return false;
             }
             //パケット数計算
-            int resolution_len = (i_data.model + 1);
-            int packet_length = (resolution_len * resolution_len) / 8 + 1;
+		    int resolution_len=(i_data.model+i_data.model-1);      //データドットの数
+		    int packet_length=(resolution_len*resolution_len)/8+1;
             int sum = 0;
             for (int i = 0; i < packet_length; i++)
             {
