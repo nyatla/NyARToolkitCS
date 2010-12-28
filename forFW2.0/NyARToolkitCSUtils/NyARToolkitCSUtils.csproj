@@ -49,16 +49,31 @@
     <Compile Include="Capture\CaptureListener.cs" />
     <Compile Include="Direct3d\NyARSurface_XRGB32.cs" />
     <Compile Include="Direct3d\NyARTexture_XRGB32.cs" />
+    <Compile Include="NyARBitmapRaster.cs" />
     <Compile Include="NyAR\NyARD3dUtil.cs" />
     <Compile Include="NyAR\DsBGRX32Raster.cs" />
     <Compile Include="NyAR\DsRGB565Raster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
+      <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
+      <Name>NyARToolkitCS.rpf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Capture\rpf\NyARRealitySource_DShow.cs" />
+    <Compile Include="Capture\VideoFormat.cs" />
+    <Compile Include="Capture\VideoFormatList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Capture\NyARRealitySource_JavaImage.java" />
+    <Compile Include="NyAR\NyARD3dDrawUtil.cs" />
+    <Compile Include="Direct3d\rpf\NyARRealityD3d.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
