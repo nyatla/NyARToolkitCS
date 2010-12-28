@@ -36,10 +36,25 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
      */
     public class NyIdMarkerPattern
     {
-        public int model;
-        public int ctrl_domain;
-        public int ctrl_mask;
-        public int check;
-        public int[] data = new int[32];
+	    /**
+	     * マーカのModel番号
+	     */
+	    public int model;
+	    /**
+	     * コントロールビットのDoamin番号
+	     */
+	    public int ctrl_domain;
+	    /**
+	     * コントロールビットのマスク番号
+	     */
+	    public int ctrl_mask;
+	    /**
+	     * コントロールビットのチェック値
+	     */
+	    public int check;
+	    /**
+	     * データパケットの値
+	     */
+	    public int[] data=new int[32];
     }
 }

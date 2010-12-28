@@ -35,57 +35,50 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARVectorReader_INT1D_GRAY_8
+    public class NyARRgbPixelReader_INT1D_GRAY_8 : INyARRgbPixelReader
     {
-        private int[] _ref_buf;
-        private NyARIntSize _ref_size;
-        public NyARVectorReader_INT1D_GRAY_8(INyARRaster i_ref_raster)
-        {
-            Debug.Assert(i_ref_raster.getBufferType() == NyARBufferType.INT1D_GRAY_8);
-            this._ref_buf = (int[])(i_ref_raster.getBuffer());
-            this._ref_size = i_ref_raster.getSize();
-        }
-        /**
-         * 4近傍の画素ベクトルを取得します。
-         * 0,1,0
-         * 1,x,1
-         * 0,1,0
-         * @param i_raster
-         * @param x
-         * @param y
-         * @param o_v
-         */
-        public void getPixelVector4(int x, int y, NyARIntPoint2d o_v)
-        {
-            int[] buf = this._ref_buf;
-            int w = this._ref_size.w;
-            int idx = w * y + x;
-            o_v.x = buf[idx + 1] - buf[idx - 1];
-            o_v.y = buf[idx + w] - buf[idx - w];
-        }
-        /**
-         * 8近傍画素ベクトル
-         * 1,2,1
-         * 2,x,2
-         * 1,2,1
-         * @param i_raster
-         * @param x
-         * @param y
-         * @param o_v
-         */
-        public void getPixelVector8(int x, int y, NyARIntPoint2d o_v)
-        {
-            int[] buf = this._ref_buf;
-            NyARIntSize s = this._ref_size;
-            int idx_0 = s.w * y + x;
-            int idx_p1 = idx_0 + s.w;
-            int idx_m1 = idx_0 - s.w;
-            int b = buf[idx_m1 - 1];
-            int d = buf[idx_m1 + 1];
-            int h = buf[idx_p1 - 1];
-            int f = buf[idx_p1 + 1];
-            o_v.x = buf[idx_0 + 1] - buf[idx_0 - 1] + (d - b + f - h) / 2;
-            o_v.y = buf[idx_p1] - buf[idx_m1] + (f - d + h - b) / 2;
-        }
+	    protected int[] _ref_buf;
+
+	    private NyARIntSize _size;
+
+	    public NyARRgbPixelReader_INT1D_GRAY_8(int[] i_buf, NyARIntSize i_size)
+	    {
+		    this._ref_buf = i_buf;
+		    this._size = i_size;
+	    }
+
+	    public void getPixel(int i_x, int i_y, int[] o_rgb)
+	    {
+		    o_rgb[0] = o_rgb[1]=o_rgb[2]=this._ref_buf[i_x + i_y * this._size.w];
+		    return;
+	    }
+
+	    public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
+	    {
+		    int width = this._size.w;
+		    int[] ref_buf = this._ref_buf;
+		    for (int i = i_num - 1; i >= 0; i--){
+			    o_rgb[i * 3 + 0] = o_rgb[i * 3 + 1]=o_rgb[i * 3 + 2]=ref_buf[i_x[i] + i_y[i] * width];
+		    }
+		    return;
+	    }
+	    public void setPixel(int i_x, int i_y, int[] i_rgb)
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void setPixel(int i_x, int i_y, int i_r,int i_g,int i_b)
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+	    {
+		    NyARException.notImplement();		
+	    }
+	    public void switchBuffer(Object i_ref_buffer)
+	    {
+		    Debug.Assert(((int[])i_ref_buffer).Length>=this._size.w*this._size.h);
+		    this._ref_buf=(int[])i_ref_buffer;
+	    }	
     }
+
 }

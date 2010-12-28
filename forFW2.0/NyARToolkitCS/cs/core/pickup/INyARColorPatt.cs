@@ -49,7 +49,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * ラスターの取得に成功するとTRUE/失敗するとFALSE
 	     * @throws NyARException
 	     */
-        //	public bool pickFromRaster(INyARRgbRaster image, NyARSquare i_square) throws NyARException;
-        bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs);
+	    bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs);
     }
 }

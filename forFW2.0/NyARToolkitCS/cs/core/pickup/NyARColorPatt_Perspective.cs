@@ -29,7 +29,7 @@ using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    /**
+     /**
      * 遠近法を使ったパースペクティブ補正をかけて、ラスタ上の四角形から
      * 任意解像度の矩形パターンを作成します。
      *
@@ -38,24 +38,24 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
 	    protected int[] _patdata;
 	    protected NyARIntPoint2d _pickup_lt=new NyARIntPoint2d();	
+	    protected NyARIntSize _pickup_wh=new NyARIntSize();	
 	    protected int _resolution;
 	    protected NyARIntSize _size;
-	    protected NyARPerspectiveParamGenerator_O1 _perspective_gen;
+	    protected NyARPerspectiveParamGenerator _perspective_gen;
 	    private NyARRgbPixelReader_INT1D_X8R8G8B8_32 _pixelreader;
-	    private const int LOCAL_LT=1;
-	    private const int BUFFER_FORMAT=NyARBufferType.INT1D_X8R8G8B8_32;
+	    private static int LOCAL_LT=1;
+	    private static int BUFFER_FORMAT=NyARBufferType.INT1D_X8R8G8B8_32;
     	
 	    private void initializeInstance(int i_width, int i_height,int i_point_per_pix)
 	    {
 		    Debug.Assert(i_width>2 && i_height>2);
-		    this._resolution=i_point_per_pix;	
 		    this._size=new NyARIntSize(i_width,i_height);
 		    this._patdata = new int[i_height*i_width];
 		    this._pixelreader=new NyARRgbPixelReader_INT1D_X8R8G8B8_32(this._patdata,this._size);
 		    return;		
 	    }
 	    /**
-	     * 例えば、64
+	     * コンストラクタです。サンプリングサイズを指定して、
 	     * @param i_width
 	     * 取得画像の解像度幅
 	     * @param i_height
@@ -101,13 +101,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    Debug.Assert(i_x_edge>=0);
 		    Debug.Assert(i_y_edge>=0);
 		    //Perspectiveパラメタ計算器を作成
-		    this._perspective_gen=new NyARPerspectiveParamGenerator_O1(
-			    LOCAL_LT,LOCAL_LT,
-			    (i_x_edge*2+this._size.w)*i_resolution,
-			    (i_y_edge*2+this._size.h)*i_resolution);
+		    this._perspective_gen=new NyARPerspectiveParamGenerator_O1(LOCAL_LT,LOCAL_LT);
 		    //ピックアップ開始位置を計算
-		    this._pickup_lt.x=i_x_edge*i_resolution+LOCAL_LT;
-		    this._pickup_lt.y=i_y_edge*i_resolution+LOCAL_LT;
+		    this._pickup_lt.setValue(i_x_edge*i_resolution+LOCAL_LT,i_y_edge*i_resolution+LOCAL_LT);
+		    this._pickup_wh.setValue((i_x_edge*2+this._size.w)*i_resolution,(i_y_edge*2+this._size.h)*i_resolution);
+		    this._resolution=i_resolution;	
 		    return;
 	    }
 	    public void setEdgeSizeByPercent(int i_x_percent,int i_y_percent,int i_resolution)
@@ -123,11 +121,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    {
 		    return this._size.w;
 	    }
-	    public int getHeight()
+        public int getHeight()
 	    {
 		    return this._size.h;
 	    }
-	    public NyARIntSize getSize()
+        public NyARIntSize getSize()
 	    {
 		    return 	this._size;
 	    }
@@ -143,15 +141,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    {
 		    return this._patdata!=null;
 	    }
-	    public void wrapBuffer(Object i_ref_buf)
+	    public void wrapBuffer(object i_ref_buf)
 	    {
 		    NyARException.notImplement();
 	    }
-	    public int getBufferType()
+        public int getBufferType()
 	    {
 		    return BUFFER_FORMAT;
 	    }
-	    public bool isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
 	    {
 		    return BUFFER_FORMAT==i_type_value;
 	    }
@@ -161,11 +159,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    /**
 	     * @see INyARColorPatt#pickFromRaster
 	     */
-	    public virtual bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)
+	    public bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)
 	    {
 		    //遠近法のパラメータを計算
 		    double[] cpara = this.__pickFromRaster_cpara;
-		    if (!this._perspective_gen.getParam(i_vertexs, cpara)) {
+		    if (!this._perspective_gen.getParam(this._pickup_wh,i_vertexs, cpara)) {
 			    return false;
 		    }
     		

@@ -36,7 +36,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARRasterThresholdAnalyzer
     {
-        int analyzeRaster(INyARRaster i_input);
+	    int analyzeRaster(INyARRaster i_input);
+	    int analyzeRaster(INyARRaster i_input,NyARIntRect i_area);
     }
 
 }

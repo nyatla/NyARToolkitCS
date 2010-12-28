@@ -54,6 +54,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				    o_rgb[i * 3 + 2] = 0;// B
 			    }
 		    }
+		    public void setPixel(int i_x, int i_y, int i_r,int i_g,int i_b)
+		    {
+			    NyARException.notImplement();			
+		    }
 		    public void setPixel(int i_x, int i_y, int[] i_rgb)
 		    {
 			    NyARException.notImplement();		
@@ -77,21 +81,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    this._reader = new PixelReader();
 		    return;
 	    }
-        public override INyARRgbPixelReader getRgbPixelReader()
+	    public override INyARRgbPixelReader getRgbPixelReader()
 	    {
 		    return this._reader;
 	    }
-        public override object getBuffer()
+	    public override object getBuffer()
 	    {
 		    return null;
 	    }
-        public override bool hasBuffer()
+	    public override bool hasBuffer()
 	    {
 		    return false;
 	    }
-        public override void wrapBuffer(object i_ref_buf)
+	    public override void wrapBuffer(object i_ref_buf)
 	    {
 		    NyARException.notImplement();
 	    }
     }
+
 }

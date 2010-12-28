@@ -32,15 +32,16 @@ using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARSquareStack : NyObjectStack<NyARSquare>
+    public class NyARSquareStack : NyARObjectStack<NyARSquare>
     {
-        public NyARSquareStack(int i_length): base(i_length)
-        {
-        }
-        protected override NyARSquare createElement()
-        {
-            return new NyARSquare();
-        }
+	    public NyARSquareStack(int i_length)
+	    {
+		    base.initInstance(i_length);
 
+	    }
+	    protected override NyARSquare createElement()
+	    {
+		    return new NyARSquare();
+	    }	
     }
 }

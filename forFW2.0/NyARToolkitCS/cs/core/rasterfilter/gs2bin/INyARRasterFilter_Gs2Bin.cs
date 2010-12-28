@@ -32,6 +32,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public interface INyARRasterFilter_Gs2Bin
     {
-        void doFilter(NyARGrayscaleRaster i_input, NyARBinRaster i_output);
+	    void doFilter(NyARGrayscaleRaster i_input, NyARBinRaster i_output);
+
     }
 }

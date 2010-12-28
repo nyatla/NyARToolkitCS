@@ -34,33 +34,91 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
+    /**
+     * int型の二次元の点を格納します。
+     *
+     */
     public class NyARIntPoint2d
     {
-        public int x;
+	    public int x;
 
-        public int y;
-        /**
-         * 配列ファクトリ
-         * @param i_number
-         * @return
-         */
-        public static NyARIntPoint2d[] createArray(int i_number)
-        {
-            NyARIntPoint2d[] ret = new NyARIntPoint2d[i_number];
-            for (int i = 0; i < i_number; i++)
-            {
-                ret[i] = new NyARIntPoint2d();
-            }
-            return ret;
-        }
-        public static void copyArray(NyARIntPoint2d[] i_from, NyARIntPoint2d[] i_to)
-        {
-            for (int i = i_from.Length - 1; i >= 0; i--)
-            {
-                i_to[i].x = i_from[i].x;
-                i_to[i].y = i_from[i].y;
-            }
-            return;
-        }
+	    public int y;
+	    /**
+	     * 配列ファクトリ
+	     * @param i_number
+	     * @return
+	     */
+	    public static NyARIntPoint2d[] createArray(int i_number)
+	    {
+		    NyARIntPoint2d[] ret=new NyARIntPoint2d[i_number];
+		    for(int i=0;i<i_number;i++)
+		    {
+			    ret[i]=new NyARIntPoint2d();
+		    }
+		    return ret;
+	    }
+	    /**
+	     * i_fromからi_toへ配列をコピーします。
+	     * @param i_from
+	     * @param i_to
+	     */
+	    public static void copyArray(NyARIntPoint2d[] i_from,NyARIntPoint2d[] i_to)
+	    {
+		    for(int i=i_from.Length-1;i>=0;i--)
+		    {
+			    i_to[i].x=i_from[i].x;
+			    i_to[i].y=i_from[i].y;
+		    }
+		    return;
+	    }
+	    /**
+	     * p2-p1間の距離の二乗値を計算します。
+	     * @param i_p1
+	     * @param i_p2
+	     * @return
+	     */
+        public int sqDist(NyARIntPoint2d i_p1)
+	    {
+		    int x=this.x-i_p1.x;
+		    int y=this.y-i_p1.y;
+		    return x*x+y*y;
+	    }
+    	
+	    /**
+	     * 中心位置を計算して設定する。
+	     * @param i_point
+	     * @param i_number_of_vertex
+	     */
+        public void setCenterPos(NyARIntPoint2d[] i_point, int i_number_of_vertex)
+	    {
+		    int cx,cy;
+		    cx=cy=0;
+		    for(int i=i_number_of_vertex-1;i>=0;i--){
+			    cx+=i_point[i].x;
+			    cy+=i_point[i].y;
+		    }
+		    this.x=cx/i_number_of_vertex;
+		    this.y=cy/i_number_of_vertex;
+	    }
+	    /**
+	     * i_sourceの値を、thisへセットします。
+	     * @param i_source
+	     */
+	    public void setValue(NyARIntPoint2d i_source)
+	    {
+		    this.x=i_source.x;
+		    this.y=i_source.y;
+	    }
+        public void setValue(NyARDoublePoint2d i_source)
+	    {
+		    this.x=(int)i_source.x;
+		    this.y=(int)i_source.y;
+	    }
+        public void setValue(int i_x, int i_y)
+	    {
+		    this.x=i_x;
+		    this.y=i_y;
+	    }
     }
+
 }

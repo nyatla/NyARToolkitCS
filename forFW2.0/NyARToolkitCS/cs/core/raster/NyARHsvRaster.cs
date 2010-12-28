@@ -54,7 +54,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    {
 		    return true;
 	    }
-        public override void wrapBuffer(Object i_ref_buf)
+        public override void wrapBuffer(object i_ref_buf)
 	    {
 		    NyARException.notImplement();
 	    }	

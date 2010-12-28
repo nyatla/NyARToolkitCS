@@ -31,30 +31,41 @@
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
-    * R8G8B8でピクセルを読み出すインタフェイス
-    * 
-    */
+     * R8G8B8でピクセルを読み出すインタフェイス
+     * 
+     */
     public interface INyARRgbPixelReader
     {
-        /**
-         * 1ピクセルをint配列にして返します。
-         * 
-         * @param i_x
-         * @param i_y
-         * @param i_rgb
-         */
-        void getPixel(int i_x, int i_y, int[] i_rgb);
+	    /**
+	     * 1ピクセルをint配列にして返します。
+	     * 
+	     * @param i_x
+	     * @param i_y
+	     * @param i_rgb
+	     */
+	    void getPixel(int i_x, int i_y, int[] i_rgb);
 
-        /**
-         * 複数のピクセル値をint配列に返します。
-         * 配列には、[R1][G1][B1][R2][G2][B2]の順でピクセル値が格納されます。
-         * 
-         * @param i_x
-         * xのインデックス配列
-         * @param i_y
-         * yのインデックス配列
-         */
-        void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+	    /**
+	     * 複数のピクセル値をint配列に返します。
+	     * 配列には、[R1][G1][B1][R2][G2][B2]の順でピクセル値が格納されます。
+	     * 
+	     * @param i_x
+	     * xのインデックス配列
+	     * @param i_y
+	     * yのインデックス配列
+	     */
+	    void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+	    /**
+	     * 1ピクセルを設定します。
+	     * @param i_x
+	     * @param i_y
+	     * @param i_r
+	     * @param i_g
+	     * @param i_b
+	     * @throws NyARException
+	     */
+	    void setPixel(int i_x, int i_y, int i_r,int i_g,int i_b);
+    	
 	    /**
 	     * 1ピクセルを設定します。
 	     * @param i_x
@@ -79,7 +90,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * @throws NyARException
 	     */
 	    void switchBuffer(object i_ref_buffer);
-
     }
+
 
 }

@@ -32,15 +32,16 @@ using jp.nyatla.nyartoolkit.cs.utils;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARIntRectStack : NyObjectStack<NyARIntRect>
+    public class NyARIntRectStack : NyARObjectStack<NyARIntRect>
     {
-        public NyARIntRectStack(int i_length): base(i_length)
-        {
-
-        }
-        protected override NyARIntRect createElement()
-        {
-            return new NyARIntRect();
-        }
+	    public NyARIntRectStack(int i_length)
+	    {
+		    base.initInstance(i_length);
+	    }
+	    protected override NyARIntRect createElement()
+	    {
+		    return new NyARIntRect();
+	    }
+    	
     }
 }

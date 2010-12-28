@@ -34,15 +34,51 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-    public class NyARLabelingLabelStack : NyARLabelInfoStack<NyARLabelingLabel>
+    /**
+     * NyLabelの予約型動的配列
+     * 
+     */
+    public class NyARLabelingLabelStack : NyARObjectStack<NyARLabelingLabel>
     {
-        public NyARLabelingLabelStack(int i_max_array_size)
-            : base(i_max_array_size)
-        {
-        }
-        protected override NyARLabelingLabel createElement()
-        {
-            return new NyARLabelingLabel();
-        }
+	    public NyARLabelingLabelStack(int i_max_array_size):base()
+	    {
+		    base.initInstance(i_max_array_size);
+	    }
+	    protected override NyARLabelingLabel createElement()
+	    {
+		    return new NyARLabelingLabel();
+	    }
+	    /**
+	     * 配列をエリアでソートする。
+	     * @param i_array
+	     * @param i_length
+	     */
+	    public void sortByArea()
+	    {
+		    int len=this._length;
+		    if(len<1){
+			    return;
+		    }
+		    int h = len *13/10;
+		    NyARLabelingLabel[] item=this._items;
+		    for(;;){
+		        int swaps = 0;
+		        for (int i = 0; i + h < len; i++) {
+		            if (item[i + h].area > item[i].area) {
+		                NyARLabelingLabel temp = item[i + h];
+		                item[i + h] = item[i];
+		                item[i] = temp;
+		                swaps++;
+		            }
+		        }
+		        if (h == 1) {
+		            if (swaps == 0){
+		        	    break;
+		            }
+		        }else{
+		            h=h*10/13;
+		        }
+		    }		
+	    }	
     }
 }

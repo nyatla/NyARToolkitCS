@@ -31,16 +31,21 @@
 using jp.nyatla.nyartoolkit.cs.utils;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-    public class NyARIntPointStack : NyObjectStack<NyARIntPoint2d>
+    /**
+     * NyARIntPoint2då^ÇÃâ¬ïœí∑îzóÒÇ≈Ç∑ÅB
+     *
+     */
+    public class NyARIntPointStack : NyARObjectStack<NyARIntPoint2d>
     {
-        public NyARIntPointStack(int i_length): base(i_length)
-        {
-        }
-
-        protected override NyARIntPoint2d createElement()
-        {
-            return new NyARIntPoint2d();
-        }
+	    public NyARIntPointStack(int i_length)
+	    {
+		    base.initInstance(i_length);
+		    return;
+	    }
+	    protected override NyARIntPoint2d createElement()
+	    {
+		    return new NyARIntPoint2d();
+	    }	
     }
+
 }

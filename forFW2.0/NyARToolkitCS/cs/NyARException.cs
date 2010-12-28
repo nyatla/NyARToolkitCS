@@ -33,34 +33,66 @@ using System.Collections.Generic;
 
 namespace jp.nyatla.nyartoolkit.cs
 {
+    /**
+     * NyARToolkitライブラリが生成するExceptionのクラスです。
+     * このクラスは、NyARToolkitライブラリ内でのみ使用します。
+     *
+     */
     public class NyARException : Exception
     {
-        public NyARException()
-            : base()
-        {
-            return;
-        }
 
+	    /**
+	     * コンストラクタです。例外オブジェクトを生成します。
+	     */
+	    public NyARException()
+            :base()
+	    {
+	    }
+	    /**
+	     * コンストラクタです。例外オブジェクト継承して、例外を生成します。
+	     * @param e
+	     * 継承する例外オブジェクト
+	     */
         public NyARException(Exception e)
-            : base("NyARException", e)
-        {
-            return;
-        }
-
+            : base()
+	    {
+	    }
+	    /**
+	     * コンストラクタです。メッセージを指定して、例外を生成します。
+	     * @param m
+	     */
         public NyARException(String m)
             : base(m)
-        {
-            return;
-        }
+	    {
+	    }
+	    /**
+	     * ライブラリ開発者向けの関数です。メッセージを指定して、例外をスローします。
+	     * この関数は、NyARToolkitの仕様外動作を補足するために使います。
+	     * @param m
+	     * @throws NyARException
+	     */
 
-        public static void trap(String m)
+	    public static void trap(String m)
+	    {
+		    throw new NyARException("トラップ:" + m);
+	    }
+	    /**
+	     * ライブラリ開発者向けの関数です。"Not Implement!"メッセージを指定して、例外をスローします。
+	     * この関数は、NyARToolkitの未実装部分に記述して使います。
+	     * @throws NyARException
+	     */
+	    public static void notImplement()
         {
-            throw new NyARException("トラップ:" + m);
-        }
-
-        public static void notImplement()
-        {
-            throw new NyARException("Not Implement!");
-        }
+		    throw new NyARException("Not Implement!");
+	    }
+	    /**
+	     * この関数は使用不能です。（別の関数を使用してください。）
+	     * @throws NyARException
+	     */
+	    public static void unavailability()
+	    {
+		    throw new NyARException("unavailability!");
+	    }
     }
+
 }

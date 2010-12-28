@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
+namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * byte[]配列に、パディング無しの8bit画素値が、XRGBXRGBの順で並んでいる
@@ -79,13 +79,17 @@ namespace jp.nyatla.nyartoolkit.cs.core.rasterreader
 	    {
 		    NyARException.notImplement();		
 	    }
+	    public void setPixel(int i_x, int i_y, int i_r,int i_g,int i_b)
+	    {
+		    NyARException.notImplement();		
+	    }
 	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
 	    {
 		    NyARException.notImplement();		
 	    }
 	    public void switchBuffer(Object i_ref_buffer)
 	    {
-		    Debug.Assert(((byte[])i_ref_buffer).Length>=this._size.w*this._size.h*4);
+            Debug.Assert(((byte[])i_ref_buffer).Length >= this._size.w * this._size.h * 4);
 		    this._ref_buf=(byte[])i_ref_buffer;
 	    }
     }

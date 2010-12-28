@@ -22,7 +22,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    /**
 	     * RGB24フォーマットで、全ての画素が0
 	     */
-	    public const int NULL_ALLZERO = 0x00000001;
+        public const int NULL_ALLZERO = 0x00000001;
 	    /**
 	     * USER - USER+0xFFFFはユーザー定義型。実験用に。
 	     */
@@ -78,23 +78,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    /**
 	     * int[]で0-255のグレイスケール画像
 	     */
-	    public const int INT1D_GRAY_8 = T_INT1D|0x0001;
+        public const int INT1D_GRAY_8 = T_INT1D | 0x0001;
 	    /**
 	     * int[]で0/1の2値画像
 	     * これは、階調1bitのINT1D_GRAY_1と同じです。
 	     */
-	    public const int INT1D_BIN_8  = T_INT1D|0x0002;
+        public const int INT1D_BIN_8 = T_INT1D | 0x0002;
     	
     	
 	    /**
 	     * int[]で、XRGB32の32ビットで画素が格納されている。
-	     */	
-        public const int INT1D_X8R8G8B8_32=T_INT1D|0x0102;
+	     */
+        public const int INT1D_X8R8G8B8_32 = T_INT1D | 0x0102;
 
 	    /**
 	     * H:9bit(0-359),S:8bit(0-255),V(0-255)
 	     */
-	    public const int INT1D_X7H9S8V8_32=T_INT1D|0x0103;
+        public const int INT1D_X7H9S8V8_32 = T_INT1D | 0x0103;
         
 
         /**
@@ -113,7 +113,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    /**
 	     * ActionScript3のBitmapDataを格納するラスタ
 	     */
-	    public const int OBJECT_AS3_BitmapData= OBJECT_AS3|0x01;
+        public const int OBJECT_AS3_BitmapData = OBJECT_AS3 | 0x01;
 
     }
+
 }
