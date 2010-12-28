@@ -47,6 +47,7 @@ namespace NyARToolkitCSUtils.Capture
         private CaptureListener m_cap_listener  = null;
         //
         private VideoInfoHeader m_video_info    =null;
+        private AMMediaType _capture_mediatype=new AMMediaType();
 
         public CaptureDevice(DsDevice i_dev)
         {
@@ -63,9 +64,41 @@ namespace NyARToolkitCSUtils.Capture
             //フィルタオブジェクトをクリーンアップ
             CleanupGraphiObjects();
         }
+        //private void getVideoFormatList(VideoFormatList o_list)
+        //{ throw new Exception();
+        //}
+        ///** キャプチャイメージのフォーマットを指定します。
+        //    この関数は、ST_IDLEステータスのときだけ使用可能です。
+        //*/
+        //private bool setVideoFormat(int i_width, int i_height, MediaSubType i_media_subtype, double i_rate);
+        ///** キャプチャイメージのフォーマットを指定します。
+        //    この関数は、ST_IDLEステータスのときだけ使用可能です。
+        //*/
+        //private bool setVideoFormat(VideoFormat i_format,double i_rate)
+        //{ throw new Exception();
+        //}
+        ///** i_formatのmedia_subtypeフィールドを強制してキャプチャイメージのフォーマットを指定します。
+        //    この関数は、ST_IDLEステータスのときだけ使用可能です。
+        //*/
+        //private bool setVideoFormat(VideoFormat i_format,MediaSubType i_media_subtype,double i_rate)
+        //{ throw new Exception();
+        //}
+
+	    private AMMediaType getMediaType()
+	    {
+		    //if(this->_status!=ST_RUN){
+			//    throw NyWin32CaptureException();
+		    //}
+		    return this._capture_mediatype;
+	    }
+
+
+
+
+
         public int video_width
         {
-            get { return m_video_info.BmiHeader.Width; } 
+            get { return this.m_video_info.BmiHeader.Width; } 
         }
         public int video_height
         {
@@ -219,10 +252,10 @@ namespace NyARToolkitCSUtils.Capture
                     hr = m_FilterGraph.Connect(m_pinStill, pSampleIn);
                     DsError.ThrowExceptionForHR(hr);
                 }
-
-                //CaptureHolderを作成
-                VideoInfoHeader out_vih = GetOutVideoInfoHeader(sampGrabber);
-                this.m_video_info = out_vih;
+                hr = sampGrabber.GetConnectedMediaType(this._capture_mediatype);
+                DsError.ThrowExceptionForHR(hr);
+                //ビデオフォーマット等の更新
+                upateVideoInfo(sampGrabber);
             }
             finally
             {
@@ -345,7 +378,7 @@ namespace NyARToolkitCSUtils.Capture
                 media = null;
             }
         }
-        private VideoInfoHeader GetOutVideoInfoHeader(ISampleGrabber sampGrabber)
+        private void upateVideoInfo(ISampleGrabber sampGrabber)
         {
             // Get the media type from the SampleGrabber
             AMMediaType media = new AMMediaType();
@@ -360,10 +393,10 @@ namespace NyARToolkitCSUtils.Capture
             }
 
             // Grab the size info
-            VideoInfoHeader videoInfoHeader = (VideoInfoHeader)Marshal.PtrToStructure(media.formatPtr, typeof(VideoInfoHeader));
+            this.m_video_info = (VideoInfoHeader)Marshal.PtrToStructure(media.formatPtr, typeof(VideoInfoHeader));
+            //pUnkを含むいくつかのフィールドは無効化される。
             DsUtils.FreeAMMediaType(media);
-            media = null;
-            return videoInfoHeader;
+            this._capture_mediatype = media;
         }
         /// <summary> sample callback, NOT USED. </summary>
         int ISampleGrabberCB.SampleCB(double SampleTime, IMediaSample pSample)
