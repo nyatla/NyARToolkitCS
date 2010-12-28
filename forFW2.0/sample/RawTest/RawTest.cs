@@ -83,6 +83,10 @@ namespace ConsoleApplication1
                 ar.detectMarkerLite(ra, 100);
                 ar.getTransmationMatrix(result_mat);
             }
+            Console.WriteLine(result_mat.m00 + "," + result_mat.m01 + ","+result_mat.m02+","+result_mat.m03);
+            Console.WriteLine(result_mat.m10 + "," + result_mat.m11 + ","+result_mat.m12+","+result_mat.m13);
+            Console.WriteLine(result_mat.m20 + "," + result_mat.m21 + ","+result_mat.m22+","+result_mat.m23);
+            Console.WriteLine(result_mat.m30 + "," + result_mat.m31 + ","+result_mat.m32+","+result_mat.m33);
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds + "[ms]");
             return;

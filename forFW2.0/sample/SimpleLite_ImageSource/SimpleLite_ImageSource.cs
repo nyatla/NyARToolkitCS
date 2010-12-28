@@ -29,30 +29,32 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
+using NyARToolkitCSUtils;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
 
-namespace SimpleLiteDirect3d
+namespace SimpleLite_ImageSource
 {
 
-    public partial class SimpleLiteD3d : IDisposable, CaptureListener
+    public partial class SimpleLite_ImageSource : IDisposable
     {
         private const int SCREEN_WIDTH=320;
         private const int SCREEN_HEIGHT=240;
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
+        private const String TEST_IMAGE = "../../../../../data/320x240ABGR.png";
         //DirectShowからのキャプチャ
-        private CaptureDevice  _cap;
         //NyAR
         private NyARSingleDetectMarker _ar;
-        private DsBGRX32Raster _raster;
+        private NyARBitmapRaster _raster;
         //背景テクスチャ
         private NyARSurface_XRGB32 _surface;
         /// Direct3D デバイス
@@ -62,50 +64,6 @@ namespace SimpleLiteDirect3d
         private NyARTransMatResult __OnBuffer_nyar_transmat = new NyARTransMatResult();
         private bool _is_marker_enable;
         private Matrix _trans_mat;
-        /* 非同期イベントハンドラ
-          * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
-          */
-        public void OnBuffer(CaptureDevice i_sender, double i_sample_time, IntPtr i_buffer, int i_buffer_len)
-        {
-            int w = i_sender.video_width;
-            int h = i_sender.video_height;
-            int s = w * (i_sender.video_bit_count / 8);
-            NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
-            
-            //テクスチャにRGBを取り込み()
-            lock (this)
-            {
-                //カメラ映像をARのバッファにコピー
-                this._raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
-                
-                //マーカーは見つかったかな？
-                bool is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
-                if (is_marker_enable)
-                {
-                    //あればMatrixを計算
-                    this._ar.getTransmationMatrix(nyar_transmat);
-                    NyARD3dUtil.toD3dMatrix(nyar_transmat, 1f, ref this._trans_mat);
-                }
-                this._is_marker_enable=is_marker_enable;
-                //テクスチャ内容を更新
-                this._surface.CopyFromXRGB32(this._raster);
-            }
-            return;
-        }
-        /* キャプチャを開始する関数
-         */
-        public void StartCap()
-        {
-            this._cap.StartCapture();
-            return;
-        }
-        /* キャプチャを停止する関数
-         */
-        public void StopCap()
-        {
-            this._cap.StopCapture();
-            return;
-        }
 
 
         /* Direct3Dデバイスを準備する関数
@@ -139,18 +97,16 @@ namespace SimpleLiteDirect3d
             }
         }
 
-        public bool InitializeApplication(Form1 topLevelForm,CaptureDevice i_cap_device)
+        public bool InitializeApplication(Form1 topLevelForm)
         {
-            topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);
-            //キャプチャを作る(QVGAでフレームレートは30)
-            i_cap_device.SetCaptureListener(this);
-            i_cap_device.PrepareCapture(SCREEN_WIDTH, SCREEN_HEIGHT, 30);
-            this._cap = i_cap_device;
-            
-            //ARの設定
+            topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);            
+            //画像読み込み
 
-            //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height);
+            Image bmp = Bitmap.FromFile(TEST_IMAGE);
+            BitmapData bmd=((Bitmap)bmp).LockBits(new Rectangle(0,0,bmp.Width,bmp.Height),ImageLockMode.ReadOnly,PixelFormat.Format32bppArgb);
+            this._raster = new NyARBitmapRaster(bmp.Width, bmp.Height, bmd.PixelFormat);
+            this._raster.setBitmapData(bmd);
+            ((Bitmap)bmp).UnlockBits(bmd);
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
@@ -194,11 +150,21 @@ namespace SimpleLiteDirect3d
             //カラーキューブの描画インスタンス
             this._cube = new ColorCube(this._device, 40);
 
-
             //背景サーフェイスを作成
             this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-            this._is_marker_enable = false;
+            NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
+            //マーカの認識
+            bool is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
+            if (is_marker_enable)
+            {
+                //あればMatrixを計算
+                this._ar.getTransmationMatrix(nyar_transmat);
+                NyARD3dUtil.toD3dMatrix(nyar_transmat, 1f, ref this._trans_mat);
+            }
+            this._is_marker_enable = is_marker_enable;
+            //サーフェイスへ背景をコピー
+            this._surface.CopyFromXRGB32(this._raster);
             return true;
         }
         //メインループ処理

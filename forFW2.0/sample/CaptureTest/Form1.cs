@@ -10,7 +10,7 @@ using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
 using NyARToolkitCSUtils.Capture;
-using NyARToolkitCSUtils.NyAR;
+using NyARToolkitCSUtils.Direct3d;
 
 namespace CaptureTest
 {
@@ -50,7 +50,7 @@ namespace CaptureTest
             cap.PrepareCapture(320, 240,30);
             this.m_cap = cap;
             //ラスタを作る。
-            this.m_raster = new DsBGRX32Raster(cap.video_width, cap.video_height, cap.video_width * cap.video_bit_count / 8);
+            this.m_raster = new DsBGRX32Raster(cap.video_width, cap.video_height);
             //１パターンのみを追跡するクラスを作成
             this.m_ar = new NyARSingleDetectMarker(ap, code, 80.0, this.m_raster.getBufferType());
             this.m_ar.setContinueMode(false);
