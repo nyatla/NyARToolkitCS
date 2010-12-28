@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
-using NyARToolkitCSUtils.NyAR;
+using NyARToolkitCSUtils.Direct3d;
 
 namespace NyARToolkitCSUtils.Capture
 {

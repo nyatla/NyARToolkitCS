@@ -31,7 +31,6 @@ using jp.nyatla.nyartoolkit.cs.core;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using NyARToolkitCSUtils.NyAR;
 
 namespace NyARToolkitCSUtils.Direct3d
 {

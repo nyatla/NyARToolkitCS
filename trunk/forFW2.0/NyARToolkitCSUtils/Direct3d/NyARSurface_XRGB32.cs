@@ -29,7 +29,6 @@ using System.Drawing;
 using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using NyARToolkitCSUtils.NyAR;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -69,7 +68,7 @@ namespace NyARToolkitCSUtils.Direct3d
         }
         /* DsXRGB32Rasterの内容を保持しているサーフェイスにコピーします。
          */
-        public void CopyFromXRGB32(DsBGRX32Raster i_sample)
+        public void CopyFromXRGB32(INyARRgbRaster i_sample)
         {
             Debug.Assert(i_sample.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None);

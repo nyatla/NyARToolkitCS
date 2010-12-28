@@ -13,17 +13,17 @@ namespace NyARToolkitCSUtils
      * 特定のピクセルフォーマットと互換性のあるバッファを持つNyARRasterです。
      * 初期化時にPixelFormatを指定します。
      */
-    class NyARBitmapRaster : NyARRgbRaster
+    public class NyARBitmapRaster : NyARRgbRaster
     {
         private static int pixelFormat2BufType(PixelFormat pixel_formet)
         {
             switch(pixel_formet){
             case PixelFormat.Format24bppRgb:
-                return NyARBufferType.BYTE1D_R8G8B8_24;
+                return NyARBufferType.BYTE1D_B8G8R8_24;
             case PixelFormat.Format32bppRgb:
             case PixelFormat.Format32bppPArgb:
             case PixelFormat.Format32bppArgb:
-                return NyARBufferType.INT1D_X8R8G8B8_32;
+                return NyARBufferType.BYTE1D_B8G8R8X8_32;
             default:
                 throw new NyARException();
             }
@@ -35,11 +35,12 @@ namespace NyARToolkitCSUtils
             this._pixel_format = pixel_formet;
 		    switch(this.getBufferType())
 		    {
-		    case NyARBufferType.BYTE1D_R8G8B8_24:{
+		    case NyARBufferType.BYTE1D_B8G8R8_24:{
 			    this._buf=new byte[3*i_width*i_height];
 			    break;
             }
-		    case NyARBufferType.INT1D_X8R8G8B8_32:{
+            case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                {
 			    this._buf=new byte[4*i_width*i_height];
 			    break;
             }
@@ -48,6 +49,7 @@ namespace NyARToolkitCSUtils
 			    throw new NyARException();
 		    }
 		    //内部参照に切り替える。
+            this.wrapBuffer(this._buf);
 		    this._is_attached_buffer=true;
 		    return;
         }
