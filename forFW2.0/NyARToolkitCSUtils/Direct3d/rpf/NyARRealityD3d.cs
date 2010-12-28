@@ -27,7 +27,6 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
-using NyARToolkitCSUtils.NyAR;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -41,7 +40,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 #endif
 
-namespace NyARToolkitCSUtils.Direct3d
+namespace NyARToolkitCSUtils.Direct3d.rpf
 {
 
     /**

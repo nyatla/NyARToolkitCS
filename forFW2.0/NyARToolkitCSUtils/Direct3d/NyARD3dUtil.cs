@@ -37,7 +37,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 #endif
 
-namespace NyARToolkitCSUtils.NyAR
+namespace NyARToolkitCSUtils.Direct3d
 {
     public class NyARD3dUtil
     {

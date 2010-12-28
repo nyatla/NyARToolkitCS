@@ -30,7 +30,7 @@ using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using System.IO;
 
-namespace NyARToolkitCSUtils.NyAR
+namespace NyARToolkitCSUtils.Direct3d
 {
     public class DsRGB565Raster : NyARRgbRaster_BasicClass
     {
