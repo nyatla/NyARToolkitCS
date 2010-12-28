@@ -30,13 +30,18 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     /**
      * このインタフェイスは、RGBラスタをグレースケールラスタに変換します。
      *
      */
     public interface INyARRasterFilter_Rgb2Gs
     {
-        void doFilter(INyARRgbRaster i_input, NyARGrayscaleRaster i_output);
+	    /**
+	     * 同一サイズのラスタi_inputとi_outputの間で、フィルタ処理を実行します。
+	     * @param i_input
+	     * @param i_output
+	     * @throws NyARException
+	     */
+	    void doFilter(INyARRgbRaster i_input, NyARGrayscaleRaster i_output);
     }
 }

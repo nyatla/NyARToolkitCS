@@ -30,12 +30,10 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-
     /**
      * 矩形の頂点情報を格納します。
      */
-    public class NyARRectOffset
+    sealed public class NyARRectOffset
     {
 	    public NyARDoublePoint3d[] vertex=NyARDoublePoint3d.createArray(4);
 	    public static NyARRectOffset[] createArray(int i_number)
@@ -48,8 +46,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    return ret;
 	    }	
 	    /**
-	     * 中心位置と辺長から、オフセット情報を作成して設定する。
+	     * 辺長から、オフセット情報を作成して設定します。
+	     * 作成するオフセット情報は、マーカ中心を0,0としたi_width*i_widthのマーカです。
 	     * @param i_width
+	     * マーカの縦横サイズ(mm単位)
 	     */
 	    public void setSquare(double i_width)
 	    {
@@ -72,8 +72,40 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    vertex3d_ptr.x = -w_2;
 		    vertex3d_ptr.y = -w_2;
 		    vertex3d_ptr.z = 0.0;
-    		
 		    return;
 	    }
+	    /**
+	     * 辺長から、オフセット情報を作成して設定します。
+	     * 作成するオフセット情報は、マーカ中心を0,0としたi_width*i_heightのマーカです。
+	     * @param i_width
+	     * マーカの横サイズ(mm単位)
+	     * @param i_height
+	     * マーカの縦サイズ(mm単位)
+	     */
+	    public void setSquare(double i_width,double i_height)
+	    {
+		    double w_2 = i_width / 2.0;
+		    double h_2 = i_height / 2.0;
+    		
+		    NyARDoublePoint3d vertex3d_ptr;
+		    vertex3d_ptr= this.vertex[0];
+		    vertex3d_ptr.x = -w_2;
+		    vertex3d_ptr.y =  h_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[1];
+		    vertex3d_ptr.x = w_2;
+		    vertex3d_ptr.y = h_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[2];
+		    vertex3d_ptr.x =  w_2;
+		    vertex3d_ptr.y = -h_2;
+		    vertex3d_ptr.z = 0.0;
+		    vertex3d_ptr= this.vertex[3];
+		    vertex3d_ptr.x = -w_2;
+		    vertex3d_ptr.y = -h_2;
+		    vertex3d_ptr.z = 0.0;
+		    return;		
+	    }
     }
+
 }

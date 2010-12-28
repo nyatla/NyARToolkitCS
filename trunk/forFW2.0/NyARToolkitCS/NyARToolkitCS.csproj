@@ -50,10 +50,10 @@
     <Compile Include="cs\core\labeling\artoolkit\NyARLabelingLabelStack.cs" />
     <Compile Include="cs\core\labeling\artoolkit\NyARLabeling_ARToolKit.cs" />
     <Compile Include="cs\core\labeling\NyARLabelInfo.cs" />
-    <Compile Include="cs\core\labeling\NyARLabelInfoStack.cs" />
-    <Compile Include="cs\core\labeling\NyLabelOverlapChecker.cs" />
+    <Compile Include="cs\core\labeling\NyARLabelOverlapChecker.cs" />
     <Compile Include="cs\core\labeling\rlelabeling\NyARLabeling_Rle.cs" />
-    <Compile Include="cs\core\labeling\rlelabeling\NyRleLabelFragmentInfoStack.cs" />
+    <Compile Include="cs\core\labeling\rlelabeling\NyARRleLabelFragmentInfo.cs" />
+    <Compile Include="cs\core\labeling\rlelabeling\NyARRleLabelFragmentInfoPtrStack.cs" />
     <Compile Include="cs\core\match\INyARMatchPatt.cs" />
     <Compile Include="cs\core\match\NyARMatchPattDeviationBlackWhiteData.cs" />
     <Compile Include="cs\core\match\NyARMatchPattDeviationColorData.cs" />
@@ -61,8 +61,8 @@
     <Compile Include="cs\core\match\NyARMatchPatt_BlackWhite.cs" />
     <Compile Include="cs\core\match\NyARMatchPatt_Color_WITHOUT_PCA.cs" />
     <Compile Include="cs\core\NyARCode.cs" />
-    <Compile Include="cs\core\param\INyARCameraDistortionFactor.cs" />
     <Compile Include="cs\core\param\NyARCameraDistortionFactor.cs" />
+    <Compile Include="cs\core\param\NyARFrustum.cs" />
     <Compile Include="cs\core\param\NyARObserv2IdealMap.cs" />
     <Compile Include="cs\core\param\NyARParam.cs" />
     <Compile Include="cs\core\param\NyARPerspectiveProjectionMatrix.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="cs\core\rasterfilter\rgb2bin\INyARRasterFilter_Rgb2Bin.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2bin\NyARRasterFilter_ARToolkitThreshold.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2gs\INyARRasterFilter_Rgb2Gs.cs" />
-    <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_AveAdd.cs" />
+    <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_RgbAve192.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_RgbCube.cs" />
     <Compile Include="cs\core\rasterfilter\rgb2gs\NyARRasterFilter_Rgb2Gs_YCbCr.cs" />
     <Compile Include="cs\core\rasterfilter\NyARRasterFilter_EqualizeHist.cs" />
@@ -92,12 +92,13 @@
     <Compile Include="cs\core\rasterfilter\NyARRasterFilter_SimpleSmooth.cs" />
     <Compile Include="cs\core\rasterfilter\NyARRasterFilter_ToneTable.cs" />
     <Compile Include="cs\core\rasterreader\INyARRgbPixelReader.cs" />
-    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_BYTE1D_B8G8R8X8.cs" />
+    <Compile Include="cs\core\rasterreader\NyARPerspectiveRasterReader.cs" />
+    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_BYTE1D_B8G8R8X8_32.cs" />
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_BYTE1D_R8G8B8_24.cs" />
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_BYTE1D_X8R8G8B8_32.cs" />
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_INT1D_GRAY_8.cs" />
     <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_INT1D_X8R8G8B8_32.cs" />
-    <Compile Include="cs\core\rasterreader\NyARVectorReader_INT1D_GRAY_8.cs" />
+    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_WORD1D_R5G6B5_16LE.cs" />
     <Compile Include="cs\core\raster\INyARRaster.cs" />
     <Compile Include="cs\core\raster\NyARBinRaster.cs" />
     <Compile Include="cs\core\raster\NyARGrayscaleRaster.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_Blank.cs" />
     <Compile Include="cs\core\raster\rgb\NyARRgbRaster_RGB.cs" />
     <Compile Include="cs\core\raster\NyARHsvRaster.cs" />
+    <Compile Include="cs\core\squaredetect\NyARContourPickup_ARToolKit.cs" />
     <Compile Include="cs\core\squaredetect\NyARSquare.cs" />
     <Compile Include="cs\core\squaredetect\NyARSquareContourDetector.cs" />
     <Compile Include="cs\core\squaredetect\NyARSquareContourDetector_ARToolKit.cs" />
@@ -142,23 +144,28 @@
     <Compile Include="cs\core\types\NyARDoublePoint2d.cs" />
     <Compile Include="cs\core\types\NyARDoublePoint3d.cs" />
     <Compile Include="cs\core\types\NyARHistogram.cs" />
-    <Compile Include="cs\core\types\NyARIntPoint.cs" />
+    <Compile Include="cs\core\types\NyARIntCoordinates.cs" />
     <Compile Include="cs\core\types\NyARIntPoint2d.cs" />
     <Compile Include="cs\core\types\NyARIntRect.cs" />
     <Compile Include="cs\core\types\NyARIntSize.cs" />
     <Compile Include="cs\core\types\NyARLinear.cs" />
+    <Compile Include="cs\core\types\NyARVecLinear2d.cs" />
     <Compile Include="cs\core\types\stack\NyARIntPointStack.cs" />
     <Compile Include="cs\core\types\stack\NyARIntRectStack.cs" />
     <Compile Include="cs\core\types\stack\NyARObjectStack.cs" />
+    <Compile Include="cs\core\types\stack\NyARPointerStack.cs" />
+    <Compile Include="cs\core\utils\NyARDistMap.cs" />
     <Compile Include="cs\core\utils\NyAREquationSolver.cs" />
+    <Compile Include="cs\core\utils\NyARManagedObject.cs" />
+    <Compile Include="cs\core\utils\NyARManagedObjectPool.cs" />
     <Compile Include="cs\core\utils\NyARMath.cs" />
+    <Compile Include="cs\core\utils\NyARObjectPool.cs" />
     <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator.cs" />
     <Compile Include="cs\core\utils\NyARPerspectiveParamGenerator_O1.cs" />
     <Compile Include="cs\core\utils\NyARSystemOfLinearEquationsProcessor.cs" />
     <Compile Include="cs\detector\NyARCustomSingleDetectMarker.cs" />
     <Compile Include="cs\NyARException.cs" />
     <Compile Include="cs\core\NyARMat.cs" />
-    <Compile Include="cs\core\NyARVersion.cs" />
     <Compile Include="cs\core\NyARVec.cs" />
     <Compile Include="cs\detector\NyARDetectMarker.cs" />
     <Compile Include="cs\detector\NyARSingleDetectMarker.cs" />
@@ -197,6 +204,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cs\core\rasterreader\NyARRgbPixelReader_BYTE1D_B8G8R8_24.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cs\core\INyARDisposable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

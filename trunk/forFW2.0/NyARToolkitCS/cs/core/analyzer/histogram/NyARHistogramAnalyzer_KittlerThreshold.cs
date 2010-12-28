@@ -36,11 +36,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
      * kittlerThresholdの方式で閾値を求めます。
-     * @param i_histogram
-     * @return
      */
     public class NyARHistogramAnalyzer_KittlerThreshold : INyARHistogramAnalyzer_Threshold
     {
+	    /**
+	     * @override
+	     */
 	    public int getThreshold(NyARHistogram i_histogram)
 	    {
 		    int i;		
@@ -104,6 +105,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    }
 		    return th;//129//7.506713872738873
 	    }
-
+        /*
+	    public static void main(String[] args)
+	    {
+		    NyARHistogram data=new NyARHistogram(256);
+		    for(int i=0;i<256;i++){
+			    data.data[i]=128-i>0?128-i:i-128;
+		    }
+		    data.total_of_data=data.getTotal(0,255);
+		    NyARHistogramAnalyzer_KittlerThreshold an=new NyARHistogramAnalyzer_KittlerThreshold();
+		    int th=an.getThreshold(data);
+		    System.out.print(th);
+		    return;
+	    }*/
     }
 }

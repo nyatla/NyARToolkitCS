@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     /**
      * typedef struct { int xsize, ysize; double mat[3][4]; double dist_factor[4]; } ARParam;
      * NyARの動作パラメータを格納するクラス
@@ -41,74 +40,97 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARParam
     {
-        protected NyARIntSize _screen_size = new NyARIntSize();
-        private int SIZE_OF_PARAM_SET = 4 + 4 + (3 * 4 * 8) + (4 * 8);
-        private NyARCameraDistortionFactor _dist = new NyARCameraDistortionFactor();
-        private NyARPerspectiveProjectionMatrix _projection_matrix = new NyARPerspectiveProjectionMatrix();
+	    protected NyARIntSize _screen_size=new NyARIntSize();
+	    private const int SIZE_OF_PARAM_SET = 4 + 4 + (3 * 4 * 8) + (4 * 8);
+	    private NyARCameraDistortionFactor _dist=new NyARCameraDistortionFactor();
+	    private NyARPerspectiveProjectionMatrix _projection_matrix=new NyARPerspectiveProjectionMatrix();
 
-        public NyARIntSize getScreenSize()
-        {
-            return this._screen_size;
-        }
+	    public NyARIntSize getScreenSize()
+	    {
+		    return this._screen_size;
+	    }
 
-        public NyARPerspectiveProjectionMatrix getPerspectiveProjectionMatrix()
-        {
-            return this._projection_matrix;
-        }
-        public NyARCameraDistortionFactor getDistortionFactor()
-        {
-            return this._dist;
-        }
+	    /**
+	     * ARToolKit形式の透視変換行列を返します。
+	     * @return
+	     */
+	    public NyARPerspectiveProjectionMatrix getPerspectiveProjectionMatrix()
+	    {
+		    return this._projection_matrix;
+	    }
+	    /**
+	     * ARToolKit形式の歪み補正パラメータを返します。
+	     * @return
+	     */
+	    public NyARCameraDistortionFactor getDistortionFactor()
+	    {
+		    return this._dist;
+	    }
+	    /**
+	     * 
+	     * @param i_factor
+	     * NyARCameraDistortionFactorにセットする配列を指定する。要素数は4であること。
+	     * @param i_projection
+	     * NyARPerspectiveProjectionMatrixセットする配列を指定する。要素数は12であること。
+	     */
+	    public void setValue(double[] i_factor,double[] i_projection)
+	    {
+		    this._dist.setValue(i_factor);
+		    this._projection_matrix.setValue(i_projection);
+		    return;
+	    }
 
-        /**
-         * ARToolKit標準ファイルから1個目の設定をロードする。
-         * 
-         * @param i_filename
-         * @throws NyARException
-         */
-        public void loadARParamFromFile(string i_filename)
-        {
-            try
-            {
+	    /**
+	     * ARToolKit標準ファイルから1個目の設定をロードする。
+	     * 
+	     * @param i_filename
+	     * @throws NyARException
+	     */
+	    public void loadARParamFromFile(String i_filename)
+	    {
+		    try {
                 loadARParam(new StreamReader(i_filename).BaseStream);
-            }
-            catch (Exception e)
-            {
-                throw new NyARException(e);
-            }
-        }
+		    } catch (Exception e) {
+			    throw new NyARException(e);
+		    }
+	    }
 
-        /**
-         * int arParamChangeSize( ARParam *source, int xsize, int ysize, ARParam *newparam );
-         * 関数の代替関数 サイズプロパティをi_xsize,i_ysizeに変更します。
-         * @param i_xsize
-         * @param i_ysize
-         * @param newparam
-         * @return
-         * 
-         */
-        public void changeScreenSize(int i_xsize, int i_ysize)
-        {
-            double scale = (double)i_xsize / (double)(this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
-            //スケールを変更
-            this._dist.changeScale(scale);
-            this._projection_matrix.changeScale(scale);
-            //for (int i = 0; i < 4; i++) {
-            //	array34[0 * 4 + i] = array34[0 * 4 + i] * scale;// newparam->mat[0][i]=source->mat[0][i]* scale;
-            //	array34[1 * 4 + i] = array34[1 * 4 + i] * scale;// newparam->mat[1][i]=source->mat[1][i]* scale;
-            //	array34[2 * 4 + i] = array34[2 * 4 + i];// newparam->mat[2][i] = source->mat[2][i];
-            //}
-
-
-            this._screen_size.w = i_xsize;// newparam->xsize = xsize;
-            this._screen_size.h = i_ysize;// newparam->ysize = ysize;
-            return;
-        }
-
+	    /**
+	     * int arParamChangeSize( ARParam *source, int xsize, int ysize, ARParam *newparam );
+	     * 関数の代替関数 サイズプロパティをi_xsize,i_ysizeに変更します。
+	     * @param i_xsize
+	     * @param i_ysize
+	     * @param newparam
+	     * @return
+	     * 
+	     */
+	    public void changeScreenSize(int i_xsize, int i_ysize)
+	    {
+		    double scale = (double) i_xsize / (double) (this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
+		    //スケールを変更
+		    this._dist.changeScale(scale);
+		    this._projection_matrix.changeScale(scale);
+		    this._screen_size.w = i_xsize;// newparam->xsize = xsize;
+		    this._screen_size.h = i_ysize;// newparam->ysize = ysize;
+		    return;
+	    }
+	    /**
+	     * 右手系の視錐台を作ります。
+	     * 計算結果を多用するときは、キャッシュするようにして下さい。
+	     * @param i_dist_min
+	     * @param i_dist_max
+	     * @param o_frustum
+	     */
+	    public void makeCameraFrustumRH(double i_dist_min,double i_dist_max,NyARDoubleMatrix44 o_frustum)
+	    {
+		    this._projection_matrix.makeCameraFrustumRH(this._screen_size.w, this._screen_size.h, i_dist_min, i_dist_max, o_frustum);
+		    return;
+	    }
         public void loadARParam(Stream i_stream)
         {
             loadARParam(new BinaryReader(i_stream));
         }
+
         /**
          * int arParamLoad( const char *filename, int num, ARParam *param, ...);
          * i_streamの入力ストリームからi_num個の設定を読み込み、パラメタを配列にして返します。
@@ -121,7 +143,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             try
             {
                 byte[] buf = new byte[SIZE_OF_PARAM_SET];
-                double[] tmp = new double[12];
+                double[] tmp = new double[16];
 
                 // バッファを加工
                 this._screen_size.w = endianConv(i_reader.ReadInt32());
@@ -131,6 +153,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 {
                     tmp[i] = endianConv(i_reader.ReadDouble());
                 }
+                //パディング
+                tmp[12] = tmp[13] = tmp[14] = 0;
+                tmp[15] = 1;
                 //Projectionオブジェクトにセット
                 this._projection_matrix.setValue(tmp);
                 //double値を4個読み込む
@@ -151,32 +176,32 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void saveARParam(StreamWriter i_stream)
         {
             NyARException.trap("未チェックの関数");
-/*            byte[] buf = new byte[SIZE_OF_PARAM_SET];
-            // バッファをラップ
-            ByteBuffer bb = ByteBuffer.wrap(buf);
-            bb.order(ByteOrder.BIG_ENDIAN);
+            /*            byte[] buf = new byte[SIZE_OF_PARAM_SET];
+                        // バッファをラップ
+                        ByteBuffer bb = ByteBuffer.wrap(buf);
+                        bb.order(ByteOrder.BIG_ENDIAN);
 
-            // 書き込み
-            bb.putInt(this._screen_size.w);
-            bb.putInt(this._screen_size.h);
-            double[] tmp = new double[12];
-            //Projectionを読み出し
-            this._projection_matrix.getValue(tmp);
-            //double値を12個書き込む
-            for (int i = 0; i < 12; i++)
-            {
-                tmp[i] = bb.getDouble();
-            }
-            //Factorを読み出し
-            this._dist.getValue(tmp);
-            //double値を4個書き込む
-            for (int i = 0; i < 4; i++)
-            {
-                tmp[i] = bb.getDouble();
-            }
-            i_stream.write(buf);
-            return;
- */
+                        // 書き込み
+                        bb.putInt(this._screen_size.w);
+                        bb.putInt(this._screen_size.h);
+                        double[] tmp = new double[12];
+                        //Projectionを読み出し
+                        this._projection_matrix.getValue(tmp);
+                        //double値を12個書き込む
+                        for (int i = 0; i < 12; i++)
+                        {
+                            tmp[i] = bb.getDouble();
+                        }
+                        //Factorを読み出し
+                        this._dist.getValue(tmp);
+                        //double値を4個書き込む
+                        for (int i = 0; i < 4; i++)
+                        {
+                            tmp[i] = bb.getDouble();
+                        }
+                        i_stream.write(buf);
+                        return;
+             */
         }
         private static double endianConv(double i_val)
         {

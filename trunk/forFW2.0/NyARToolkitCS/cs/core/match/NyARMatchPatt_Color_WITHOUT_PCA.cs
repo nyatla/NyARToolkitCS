@@ -39,90 +39,86 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARMatchPatt_Color_WITHOUT_PCA : INyARMatchPatt
     {
-        protected NyARCode _code_patt;
+	    protected NyARCode _code_patt;
 
-        protected int _optimize_for_mod;
-        protected int _rgbpixels;
-        public NyARMatchPatt_Color_WITHOUT_PCA(NyARCode i_code_ref)
-        {
-            int w = i_code_ref.getWidth();
-            int h = i_code_ref.getHeight();
-            //最適化定数の計算
-            this._rgbpixels = w * h * 3;
-            this._optimize_for_mod = this._rgbpixels - (this._rgbpixels % 16);
-            this.setARCode(i_code_ref);
-            return;
-        }
-        public NyARMatchPatt_Color_WITHOUT_PCA(int i_width, int i_height)
-        {
-            //最適化定数の計算
-            this._rgbpixels = i_height * i_width * 3;
-            this._optimize_for_mod = this._rgbpixels - (this._rgbpixels % 16);
-            return;
-        }
-        /**
-         * 比較対象のARCodeをセットします。
-         * @throws NyARException
-         */
-        public void setARCode(NyARCode i_code_ref)
-        {
-            this._code_patt = i_code_ref;
-            return;
-        }
-        /**
-         * 現在セットされているARコードとi_pattを比較します。
-         */
+	    protected int _optimize_for_mod;
+	    protected int _rgbpixels;
+	    public NyARMatchPatt_Color_WITHOUT_PCA(NyARCode i_code_ref)
+	    {
+		    int w=i_code_ref.getWidth();
+		    int h=i_code_ref.getHeight();
+		    //最適化定数の計算
+		    this._rgbpixels=w*h*3;
+		    this._optimize_for_mod=this._rgbpixels-(this._rgbpixels%16);
+		    this.setARCode(i_code_ref);
+		    return;
+	    }
+	    public NyARMatchPatt_Color_WITHOUT_PCA(int i_width, int i_height)
+	    {
+		    //最適化定数の計算
+		    this._rgbpixels=i_height*i_width*3;
+		    this._optimize_for_mod=this._rgbpixels-(this._rgbpixels%16);		
+		    return;
+	    }
+	    /**
+	     * 比較対象のARCodeをセットします。
+	     * @throws NyARException
+	     */
+	    public void setARCode(NyARCode i_code_ref)
+	    {
+		    this._code_patt=i_code_ref;
+		    return;
+	    }
+	    /**
+	     * 現在セットされているARコードとi_pattを比較します。
+	     */
         public bool evaluate(NyARMatchPattDeviationColorData i_patt, NyARMatchPattResult o_result)
-        {
-            Debug.Assert(this._code_patt != null);
-            //
-            int[] linput = i_patt.refData();
-            int sum;
-            double max = Double.MinValue;
-            int res = NyARMatchPattResult.DIRECTION_UNKNOWN;
-            int for_mod = this._optimize_for_mod;
-            for (int j = 0; j < 4; j++)
-            {
-                //合計値初期化
-                sum = 0;
-                NyARMatchPattDeviationColorData code_patt = this._code_patt.getColorData(j);
-                int[] pat_j = code_patt.refData();
-                //<全画素について、比較(FORの1/16展開)>
-                int i;
-                for (i = this._rgbpixels - 1; i >= for_mod; i--)
-                {
-                    sum += linput[i] * pat_j[i];
-                }
-                for (; i >= 0; )
-                {
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                    sum += linput[i] * pat_j[i]; i--;
-                }
-                //<全画素について、比較(FORの1/16展開)/>
-                double sum2 = sum / code_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
-                if (sum2 > max)
-                {
-                    max = sum2;
-                    res = j;
-                }
-            }
-            o_result.direction = res;
-            o_result.confidence = max / i_patt.getPow();
-            return true;
-        }
+	    {
+		    Debug.Assert(this._code_patt!=null);
+		    //
+		    int[] linput = i_patt.refData();
+		    int sum;
+		    double max = Double.MinValue;
+		    int res = NyARMatchPattResult.DIRECTION_UNKNOWN;
+		    int for_mod=this._optimize_for_mod;
+		    for (int j = 0; j < 4; j++) {
+			    //合計値初期化
+			    sum=0;
+			    NyARMatchPattDeviationColorData code_patt=this._code_patt.getColorData(j);
+			    int[] pat_j = code_patt.refData();
+			    //<全画素について、比較(FORの1/16展開)>
+			    int i;
+			    for(i=this._rgbpixels-1;i>=for_mod;i--){
+				    sum += linput[i] * pat_j[i];
+			    }
+			    for (;i>=0;) {
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+				    sum += linput[i] * pat_j[i];i--;
+			    }
+			    //<全画素について、比較(FORの1/16展開)/>
+			    double sum2 = sum / code_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
+			    if (sum2 > max) {
+				    max = sum2;
+				    res = j;
+			    }
+		    }
+		    o_result.direction = res;
+		    o_result.confidence= max/i_patt.getPow();
+		    return true;		
+	    }
     }
 }

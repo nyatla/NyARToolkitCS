@@ -70,5 +70,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    this._raster_analyzer.analyzeRaster(i_input, this._histogram);
 		    return this._sptile.getThreshold(this._histogram);
 	    }
+	    public int analyzeRaster(INyARRaster i_input,NyARIntRect i_area)
+	    {
+		    throw new NyARException();
+	    }
+    	
     }
 }

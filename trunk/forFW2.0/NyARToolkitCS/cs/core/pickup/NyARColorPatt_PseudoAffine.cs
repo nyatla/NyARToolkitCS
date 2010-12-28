@@ -66,7 +66,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    {
 		    return this._patdata!=null;
 	    }
-	    public void wrapBuffer(Object i_ref_buf)
+	    public void wrapBuffer(object i_ref_buf)
 	    {
 		    NyARException.notImplement();
 	    }

@@ -34,13 +34,18 @@ using System.Text;
 
 namespace jp.nyatla.nyartoolkit.cs.core
 {
+    /**
+     * 敷居値判別ヒストグラム分析器の、標準的なインタフェイスを定義します。
+     *
+     */
     public interface INyARHistogramAnalyzer_Threshold
     {
         /**
          * ヒストグラムから閾値探索をします。
          * @param i_histogram
-         * ヒストグラム
+         * 分析するヒストグラムオブジェクト
          * @return
+         * 敷居値を返します。
          */
         int getThreshold(NyARHistogram i_histogram);
     }

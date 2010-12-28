@@ -81,15 +81,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    int idx=(i_y*this._size.w+i_x)*3;
 		    ref_buf[idx + 0] = (byte)i_rgb[0];// R
 		    ref_buf[idx + 1] = (byte)i_rgb[1];// G
-		    ref_buf[idx + 2] = (byte)i_rgb[2];// B		
+		    ref_buf[idx + 2] = (byte)i_rgb[2];// B
+	    }
+	    public void setPixel(int i_x, int i_y, int i_r,int i_g,int i_b)
+	    {
+		    byte[] ref_buf = this._ref_buf;
+		    int idx=(i_y*this._size.w+i_x)*3;
+		    ref_buf[idx + 0] = (byte)i_r;// R
+		    ref_buf[idx + 1] = (byte)i_g;// G
+		    ref_buf[idx + 2] = (byte)i_b;// B
 	    }
 	    public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
 	    {
 		    NyARException.notImplement();		
 	    }
-	    public void switchBuffer(object i_ref_buffer)
+	    public void switchBuffer(Object i_ref_buffer)
 	    {
-		    Debug.Assert(((byte[])i_ref_buffer).Length>=this._size.w*this._size.h*3);
+            Debug.Assert(((byte[])i_ref_buffer).Length >= this._size.w * this._size.h * 3);
 		    this._ref_buf=(byte[])i_ref_buffer;
 	    }	
     }

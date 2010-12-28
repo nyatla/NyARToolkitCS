@@ -41,7 +41,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARRaster : NyARRaster_BasicClass
     {
 	    protected object _buf;
-	    protected int _buf_type;
 	    /**
 	     * バッファオブジェクトがアタッチされていればtrue
 	     */
@@ -51,19 +50,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * @param i_width
 	     * @param i_height
 	     * @param i_buffer_type
+	     * NyARBufferTypeに定義された定数値を指定してください。
 	     * @param i_is_alloc
 	     * @throws NyARException
 	     */
-	    public NyARRaster(int i_width, int i_height,int i_buffer_type,bool i_is_alloc)
-            :base(i_width,i_height,i_buffer_type)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type, bool i_is_alloc)
+            : base(i_width, i_height, i_buffer_type)
 	    {
 		    if(!initInstance(this._size,i_buffer_type,i_is_alloc)){
 			    throw new NyARException();
 		    }
 		    return;
-	    }	
+	    }
 
-	    public NyARRaster(int i_width, int i_height,int i_buffer_type)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type)
             : base(i_width, i_height, i_buffer_type)
 	    {
 		    if(!initInstance(this._size,i_buffer_type,true)){
@@ -75,16 +75,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	    {
 		    switch(i_buf_type)
 		    {
+			    case NyARBufferType.INT1D:
 			    case NyARBufferType.INT1D_X8R8G8B8_32:
 				    this._buf=i_is_alloc?new int[i_size.w*i_size.h]:null;
 				    break;
+    				
 			    default:
 				    return false;
 		    }
 		    this._is_attached_buffer=i_is_alloc;
 		    return true;
 	    }
-        public override object getBuffer()
+	    public override object getBuffer()
 	    {
 		    return this._buf;
 	    }
@@ -93,12 +95,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
 	     * バッファにアクセスするまえに、バッファの有無をこの関数でチェックしてください。
 	     * @return
-	     */
-        public override bool hasBuffer()
+	     */	
+	    public override bool hasBuffer()
 	    {
 		    return this._buf!=null;
 	    }
-        public override void wrapBuffer(object i_ref_buf)
+	    public override void wrapBuffer(object i_ref_buf)
 	    {
 		    Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
 		    this._buf=i_ref_buf;

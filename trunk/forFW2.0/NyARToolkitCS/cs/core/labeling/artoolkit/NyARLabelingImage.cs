@@ -137,6 +137,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		    }
 		    //あれ？見つからないよ？
 		    throw new NyARException();
-	    }	
+	    }
+
     }
 }

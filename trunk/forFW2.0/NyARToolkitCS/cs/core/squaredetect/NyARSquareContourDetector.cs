@@ -36,17 +36,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
     public abstract class NyARSquareContourDetector
     {
-        public interface IDetectMarkerCallback
-        {
-            void onSquareDetect(NyARSquareContourDetector i_sender, int[] i_coordx, int[] i_coordy, int i_coor_num, int[] i_vertex_index);
-        }
-        /**
-         *
-         * @param i_raster
-         * @param o_square_stack
-         * @throws NyARException
-         */
-        public abstract void detectMarkerCB(NyARBinRaster i_raster, IDetectMarkerCallback i_callback);
+	    /**
+	     * @param i_raster
+	     * @param o_square_stack
+	     * @throws NyARException
+	     */
+	    public abstract void detectMarker(NyARBinRaster i_raster);
+	    /**
+	     * 通知ハンドラです。
+	     * この関数は、detectMarker関数のコールバック関数として機能します。
+	     * 継承先のクラスで、矩形の発見時の処理をここに記述してください。
+	     * @param i_coord
+	     * @param i_coor_num
+	     * @param i_vertex_index
+	     * @throws NyARException
+	     */
+	    protected abstract void onSquareDetect(NyARIntCoordinates i_coord,int[] i_vertex_index);
     }
 
 }
