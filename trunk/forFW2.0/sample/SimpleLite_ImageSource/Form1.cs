@@ -1,5 +1,5 @@
 ﻿/* 
- * PROJECT: Capture Test NyARToolkitCSサンプルプログラム
+ * Capture Test NyARToolkitCSサンプルプログラム
  * --------------------------------------------------------------------------------
  * The MIT License
  * Copyright (c) 2008 nyatla
@@ -25,31 +25,21 @@
  * 
  */
 using System;
-using System.IO;
-using System.Diagnostics;
-namespace ConsoleApplication1
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace SimpleLite_ImageSource
 {
-    class MainApp
+    public partial class Form1 : Form
     {
-        static void Main(string[] args)
+        public Form1()
         {
-            //ここでテストするコードを切り替えてください。
-            {
-                RawFileTest rf;
-                rf = new RawFileTest();
-                rf.Test();
-            }
-            {
-                NyIdTest rf;
-                rf = new NyIdTest();
-                rf.Test();
-            }
-            {
-                RpfTest rp;
-                rp = new RpfTest();
-                rp.Test();
-            }
-            return;
+            InitializeComponent();
+            this.ClientSize = new Size(320,240);
         }
     }
 }

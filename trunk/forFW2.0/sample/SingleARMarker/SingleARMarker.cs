@@ -11,7 +11,6 @@ using jp.nyatla.nyartoolkit.cs.processor;
 using jp.nyatla.nyartoolkit.cs.utils;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
-using NyARToolkitCSUtils.NyAR;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
@@ -46,14 +45,12 @@ namespace SingleARMarker
     class MarkerProcessor : SingleARMarkerProcesser
     {
         public Matrix transmat = new Matrix();
-        private NyARD3dUtil _ref_utils;
         public int current_id = -1;
 
-        public MarkerProcessor(NyARParam i_cparam, int i_raster_format, NyARD3dUtil i_ref_utils)
+        public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
         {
             //アプリケーションフレームワークの初期化
             initInstance(i_cparam, i_raster_format);
-            this._ref_utils=i_ref_utils;
             return;
         }
         /**
@@ -76,7 +73,7 @@ namespace SingleARMarker
          */
         protected override void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result)
         {
-            this._ref_utils.toD3dMatrix(result,ref this.transmat);
+            NyARD3dUtil.toD3dMatrix(result,1f, ref this.transmat);
         }
     }
 
@@ -92,7 +89,6 @@ namespace SingleARMarker
         private MarkerProcessor _processor;
         //NyAR
         private DsBGRX32Raster _raster;
-        private NyARD3dUtil _utils;
         //背景テクスチャ
         private NyARSurface_XRGB32 _surface;
         /// Direct3D デバイス
@@ -188,7 +184,7 @@ namespace SingleARMarker
             this._cap = i_cap_device;
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height, i_cap_device.video_width * i_cap_device.video_bit_count / 8);
+            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height);
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
@@ -196,10 +192,9 @@ namespace SingleARMarker
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //Direct3d用のユーティリティ準備
-            this._utils = new NyARD3dUtil();
 
             //プロセッサの準備
-            this._processor = new MarkerProcessor(ap, this._raster.getBufferType(),this._utils);
+            this._processor = new MarkerProcessor(ap, this._raster.getBufferType());
             NyARCode[] codes = new NyARCode[2];
             codes[0] = new NyARCode(16, 16);
             codes[1] = new NyARCode(16, 16);
@@ -226,7 +221,7 @@ namespace SingleARMarker
             this._text = new TextPanel(this._device, 1);
             //カメラProjectionの設定
             Matrix tmp = new Matrix();
-            this._utils.toCameraFrustumRH(ap, ref tmp);
+            NyARD3dUtil.toCameraFrustumRH(ap,10,10000, ref tmp);
             this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)

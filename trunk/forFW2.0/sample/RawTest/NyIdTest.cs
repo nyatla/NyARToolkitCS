@@ -114,6 +114,11 @@ namespace ConsoleApplication1
 
             MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferType());
             pr.detectMarker(ra);
+            Console.WriteLine(pr.transmat.m00 + "," + pr.transmat.m01 + "," + pr.transmat.m02 + "," + pr.transmat.m03);
+            Console.WriteLine(pr.transmat.m10 + "," + pr.transmat.m11 + "," + pr.transmat.m12 + "," + pr.transmat.m13);
+            Console.WriteLine(pr.transmat.m20 + "," + pr.transmat.m21 + "," + pr.transmat.m22 + "," + pr.transmat.m23);
+            Console.WriteLine(pr.transmat.m30 + "," + pr.transmat.m31 + "," + pr.transmat.m32 + "," + pr.transmat.m33);
+            Console.WriteLine(pr.current_id);
             return;
         }
     }
