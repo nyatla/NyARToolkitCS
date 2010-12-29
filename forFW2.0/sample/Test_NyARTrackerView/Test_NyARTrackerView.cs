@@ -69,6 +69,10 @@ namespace Test_NyARTrackerView
             {
                 //カメラ映像をARのバッファにコピー
                 this._raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
+                this.filter.doFilter(this._raster, this.gs);
+                this.tracksource.wrapBuffer(this.gs);
+                this.tracker.progress(this.tracksource);
+
             }
             return;
         }
@@ -110,7 +114,8 @@ namespace Test_NyARTrackerView
             this.gs = new NyARGrayscaleRaster(i_cap_device.video_width, i_cap_device.video_height);
             this.filter = new NyARRasterFilter_Rgb2Gs_RgbAve192(this._raster.getBufferType());
 
-
+            this.tracker = new NyARTracker(100, 1, 10);
+            this.tracksource = new NyARTrackerSource_Reference(100, null, i_cap_device.video_width, i_cap_device.video_height,2, false);
             return true;
         }
         //メインループ処理
@@ -125,43 +130,45 @@ namespace Test_NyARTrackerView
                 //背景描画
                 this._bmp.UnlockBits(bmd);
                 Graphics g = this._top_form.CreateGraphics();
-                g.DrawImage(this._bmp,0,0);
-    	        for(int i=this.tracker._targets.getLength()-1;i>=0;i--){
+                Graphics g2 = Graphics.FromImage(this._bmp);
+
+
+                for(int i=this.tracker._targets.getLength()-1;i>=0;i--){
     		        switch(this.tracker._targets.getItem(i)._st_type)
     		        {
     		        case NyARTargetStatus.ST_CONTURE:
-            	        drawContourTarget(this.tracker._targets.getItem(i),g,Color.Blue);
+                        drawContourTarget(this.tracker._targets.getItem(i), g2);
     			        break;
     		        case NyARTargetStatus.ST_IGNORE:
-            	        drawIgnoreTarget(this.tracker._targets.getItem(i),g,Color.Red);
+                        drawIgnoreTarget(this.tracker._targets.getItem(i), g2);
     			        break;
     		        case NyARTargetStatus.ST_NEW:
-            	        drawNewTarget(this.tracker._targets.getItem(i),g,Color.Green);
+                        drawNewTarget(this.tracker._targets.getItem(i), g2);
     			        break;
     		        case NyARTargetStatus.ST_RECT:
-    			        drawRectTarget(this.tracker._targets.getItem(i),g,Color.Cyan);
+                        drawRectTarget(this.tracker._targets.getItem(i), g2);
     			        break;
     		        }
     	        }
-
+                g2.Dispose();
+                g.DrawImage(this._bmp, 0, 0);
+                g.Dispose();
             }
             return;
         }
         /**
          * RectTargetを表示します。
          */
-        private void drawRectTarget(NyARTarget t,Graphics sink,Color c)
+        private void drawRectTarget(NyARTarget t,Graphics sink)
         {
             Font f = new Font("System", 14);
-            Pen p=new Pen(c,2);
-
     	    //サンプリング結果の表示
 		    NyARRectTargetStatus s=(NyARRectTargetStatus)t._ref_status;
-            sink.DrawString("RT:" + t._serial + "(" + s.detect_type + ")" + "-" + t._delay_tick, f, p, new PointF(t._sample_area.x, t._sample_area.y));
-            sink.DrawRectangle(p, (int)s.vertex[0].x - 1, (int)s.vertex[0].y - 1, 2, 2);
+            sink.DrawString("RT:" + t._serial + "(" + s.detect_type + ")" + "-" + t._delay_tick, f, Brushes.Cyan, new PointF(t._sample_area.x, t._sample_area.y));
+            sink.DrawRectangle(Pens.Cyan, (int)s.vertex[0].x - 1, (int)s.vertex[0].y - 1, 2, 2);
 		    for(int i2=0;i2<4;i2++){
 //				g.fillRect((int)st.vecpos[i2].x-1, (int)st.vecpos[i2].y-1,2,2);
-                sink.DrawLine(p,
+                sink.DrawLine(Pens.Cyan,
 				    (int)s.vertex[i2].x,
 				    (int)s.vertex[i2].y,
 				    (int)s.vertex[(i2+1)%4].x,
@@ -172,11 +179,10 @@ namespace Test_NyARTrackerView
         /**
          * ContourTargetを表示します。
          */
-        private void drawContourTarget(NyARTarget t, Graphics sink, Color c)
+        private void drawContourTarget(NyARTarget t, Graphics sink)
         {
             Font f = new Font("System", 14);
-            Pen p = new Pen(c, 2);
-		    g.drawString("CT",t._sample_area.x,t._sample_area.y);
+            sink.DrawString("CT",f, Brushes.Blue, new PointF(t._sample_area.x, t._sample_area.y));
     //		g.drawRect(t._sample_area.x,t._sample_area.y,t._sample_area.w,t._sample_area.h);
 		    NyARContourTargetStatus st=(NyARContourTargetStatus)t._ref_status;
 		    VecLinearCoordinatesOperator vp=new VecLinearCoordinatesOperator();
@@ -184,16 +190,16 @@ namespace Test_NyARTrackerView
 		    for(int i2=0;i2<st.vecpos.length;i2++){
     //		for(int i2=43;i2<44;i2++){
     //			g.drawString(i2+":"+"-"+t._delay_tick,(int)st.vecpos.items[i2].x-1, (int)st.vecpos.items[i2].y-1);
-                sink.FillRectangle(p,(int)st.vecpos.items[i2].x, (int)st.vecpos.items[i2].y, 1, 1);
+                sink.FillRectangle(Brushes.Blue,(int)st.vecpos.items[i2].x, (int)st.vecpos.items[i2].y, 1, 1);
 			    double co,si;
 			    co=st.vecpos.items[i2].dx;
 			    si=st.vecpos.items[i2].dy;
-			    double p=Math.sqrt(co*co+si*si);
+			    double p=Math.Sqrt(co*co+si*si);
 			    co/=p;
 			    si/=p;
 			    double ss=st.vecpos.items[i2].scalar*3;
 			    sink.DrawLine(
-                    p,
+                    Pens.Blue,
 				    (int)st.vecpos.items[i2].x,
 				    (int)st.vecpos.items[i2].y,
 				    (int)(co*ss)+(int)st.vecpos.items[i2].x,(int)(si*ss)+(int)st.vecpos.items[i2].y);
@@ -207,25 +213,23 @@ namespace Test_NyARTrackerView
         /**
          * IgnoreTargetを表示します。
          */
-        private void drawIgnoreTarget(NyARTarget t, Graphics sink, Color c)
+        private void drawIgnoreTarget(NyARTarget t, Graphics sink)
         {
             Font f = new Font("System", 14);
-            Pen p = new Pen(c, 2);
             //サンプリング結果の表示
-            sink.DrawString("IG" + "-" + t._delay_tick, f, p, new PointF(t._sample_area.x, t._sample_area.y));
-            sink.drawRect(t._sample_area.x, t._sample_area.y, t._sample_area.w, t._sample_area.h);
+            sink.DrawString("IG" + "-" + t._delay_tick, f, Brushes.Red, new PointF(t._sample_area.x, t._sample_area.y));
+            sink.DrawRectangle(Pens.Red,t._sample_area.x, t._sample_area.y, t._sample_area.w, t._sample_area.h);
         }
             
         /**
          * Newtargetを表示します。
          */
-        private void drawNewTarget(NyARTarget t, Graphics sink, Color c)
+        private void drawNewTarget(NyARTarget t, Graphics sink)
         {
             Font f = new Font("System", 14);
-            Pen p = new Pen(c, 2);
     	    //サンプリング結果の表示
-		    sink.DrawString("NW"+"-"+t._delay_tick,f,p,new PointF(t._sample_area.x,t._sample_area.y));
-            sink.drawRect(t._sample_area.x, t._sample_area.y, t._sample_area.w, t._sample_area.h);
+            sink.DrawString("NW" + "-" + t._delay_tick, f, Brushes.Green, new PointF(t._sample_area.x, t._sample_area.y));
+            sink.DrawRectangle(Pens.Green,t._sample_area.x, t._sample_area.y, t._sample_area.w, t._sample_area.h);
         }
         // リソースの破棄をするために呼ばれる
         public void Dispose()
