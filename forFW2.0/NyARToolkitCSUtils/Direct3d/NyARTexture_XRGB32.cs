@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
+using NyARToolkitCSUtils.Capture;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
