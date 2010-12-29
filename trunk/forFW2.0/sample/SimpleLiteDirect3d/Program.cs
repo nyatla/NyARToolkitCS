@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 using NyARToolkitCSUtils.Capture;
+using NyARToolkitCSUtils.Capture.dialog;
 /**
  * 
  * このサンプルプログラムは、NyARToolkitのSimpleLite相当のサンプルプログラムです。
@@ -64,7 +65,7 @@ namespace SimpleLiteDirect3d
             }
             //キャプチャデバイスを選択してもらう。
             int cdevice_number = 0;
-            using (Form2 frm2 = new Form2())
+            using (CameraSelectDialog frm2 = new CameraSelectDialog())
             {
                 frm2.ShowDialog(capture_device_list, out cdevice_number);
             }
