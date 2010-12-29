@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{58DB6E91-4B1F-4C08-8925-E02A79708272}</ProjectGuid>
+    <ProjectGuid>{B529FFD3-10CA-42C9-8E77-497B3DAD5FA2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SingleNyIdMarkerDirect3d</RootNamespace>
-    <AssemblyName>SingleNyIdMarkerDirect3d</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>Test_NyARTrackerView</RootNamespace>
+    <AssemblyName>Test_NyARTrackerView</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,10 +36,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\extlib\DirectShowLibV2\lib\DirectShowLib-2005.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -73,9 +79,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SingleNyIdMarker.cs" />
+    <Compile Include="Test_NyARTrackerView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
+      <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
+      <Name>NyARToolkitCS.rpf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NyARToolkitCSUtils\NyARToolkitCSUtils.csproj">
       <Project>{1D202933-65C8-4568-9756-87E57D294132}</Project>
       <Name>NyARToolkitCSUtils</Name>

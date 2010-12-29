@@ -1,5 +1,5 @@
 ﻿/* 
- * Capture Test NyARToolkitCSサンプルプログラム
+ * PROJECT: NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
  * --------------------------------------------------------------------------------
  * The MIT License
  * Copyright (c) 2008 nyatla
@@ -26,44 +26,40 @@
  */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Windows.Forms;
-using NyARToolkitCSUtils.Capture;
+using System.Runtime.InteropServices;
+using jp.nyatla.nyartoolkit.cs;
+using jp.nyatla.nyartoolkit.cs.core;
+using System.IO;
 
-namespace SingleARMarker
+namespace NyARToolkitCSUtils.Capture
 {
-    public partial class Form2 : Form
+    public class DsBGRX32Raster : NyARRgbRaster
     {
-        public Form2()
+        public DsBGRX32Raster(int i_width, int i_height)
+            : base(i_width, i_height, NyARBufferType.BYTE1D_B8G8R8X8_32)
         {
-            InitializeComponent();
         }
-        public DialogResult ShowDialog(CaptureDeviceList i_clist,out int o_selected_no)
+        public void setBuffer(IntPtr i_buf,bool i_flip_vertical)
         {
-            if (i_clist.count < 1)
+            if (i_flip_vertical)
             {
-                throw new Exception("カメラが無いのに選ぼうとしてはいけない。");
+                //上下反転させる
+                int w = this._size.w*4;
+                int st = w * (this._size.h - 1);
+                int et = 0;
+                for (int i = this._size.h - 1; i >= 0; i--)
+                {
+                    Marshal.Copy((IntPtr)((int)i_buf + et),(byte[])this._buf, st, w);
+                    st -= w;
+                    et += w;
+                }
             }
-            for (int i = 0; i < i_clist.count; i++)
+            else
             {
-                this.comboBox1.Items.Add(i_clist[i].name + ":");
+                //上下を反転させない。
+                Marshal.Copy(i_buf, (byte[])this._buf, 0, ((byte[])this._buf).Length);
             }
-            this.comboBox1.SelectedIndex = 0;
-            DialogResult ret=base.ShowDialog();
-            o_selected_no = this.comboBox1.SelectedIndex;
-            return ret;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            this.Close();
+            return;
         }
     }
 }
