@@ -71,7 +71,28 @@ namespace NyARToolkitCSUtils.Direct3d
         public void CopyFromXRGB32(INyARRgbRaster i_sample)
         {
             Debug.Assert(i_sample.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
-            GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None);
+            int pitch;
+            GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None, out pitch);
+            int s_stride=this.m_width * 4;
+            if (pitch % s_stride == 0)
+            {
+                Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
+            }
+            else
+            {
+                int s_idx = 0;
+                int d_idx = (int)gs.InternalData;
+                for (int i = this.m_height - 1; i >= 0; i--)
+                {
+                    //どう考えてもポインタです。
+                    Marshal.Copy((byte[])i_sample.getBuffer(), s_idx, (IntPtr)(d_idx), s_stride);
+                    s_idx += s_stride;
+                    d_idx += pitch;
+                }
+            }
+
+             
+
             /*
             int cp_size = this.m_width * 4;
             int s_idx=0;
@@ -82,8 +103,8 @@ namespace NyARToolkitCSUtils.Direct3d
                 s_idx += cp_size;
                 d_idx -= cp_size;
             }
-            */
-            Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
+             
+*/          
 
             this.m_surface.UnlockRectangle();
 

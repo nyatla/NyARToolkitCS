@@ -131,7 +131,7 @@ namespace SimpleLite_ImageSource
 
             //カメラProjectionの設定
             Matrix tmp = new Matrix();
-            NyARD3dUtil.toCameraFrustumRH(ap,10,1000,ref tmp);
+            NyARD3dUtil.toCameraFrustumRH(ap, 10, 1000, ref tmp);
             this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)
@@ -160,7 +160,7 @@ namespace SimpleLite_ImageSource
             {
                 //あればMatrixを計算
                 this._ar.getTransmationMatrix(nyar_transmat);
-                NyARD3dUtil.toD3dMatrix(nyar_transmat, 1f, ref this._trans_mat);
+                NyARD3dUtil.toD3dCameraView(nyar_transmat, 1f, ref this._trans_mat);
             }
             this._is_marker_enable = is_marker_enable;
             //サーフェイスへ背景をコピー
@@ -189,7 +189,7 @@ namespace SimpleLite_ImageSource
 
 
                     //立方体を20mm上（マーカーの上）にずらしておく
-                    Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
+                    Matrix transform_mat2 = Matrix.Translation(0f,0f,20.0f);
 
                     //変換行列を掛ける
                     transform_mat2 *= this._trans_mat;

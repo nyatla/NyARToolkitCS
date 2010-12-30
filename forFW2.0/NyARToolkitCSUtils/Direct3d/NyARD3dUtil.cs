@@ -44,11 +44,22 @@ namespace NyARToolkitCSUtils.Direct3d
         private NyARD3dUtil()
         {//生成の禁止
         }
+
         /* カメラのプロジェクションMatrix(RH)を返します。
          * このMatrixはMicrosoft.DirectX.Direct3d.Device.Transform.Projectionに設定できます。
          */
+        public static void toCameraFrustumRH(NyARPerspectiveProjectionMatrix i_promat, NyARIntSize i_size, double i_scale, double i_near, double i_far, ref Matrix o_d3d_projection)
+        {
+            NyARDoubleMatrix44 m = new NyARDoubleMatrix44();
+            i_promat.makeCameraFrustumRH(i_size.w, i_size.h, i_near * i_scale, i_far * i_scale, m);
+            NyARD3dUtil.mat44ToD3dMatrixT(m, ref o_d3d_projection);
+            return;
+        }
+
         public static void toCameraFrustumRH(NyARParam i_arparam, double i_near, double i_far, ref Matrix o_d3d_projection)
         {
+
+
             NyARMat trans_mat = new NyARMat(3, 4);
             NyARMat icpara_mat = new NyARMat(3, 4);
             double[,] p = new double[3, 3], q = new double[4, 4];
@@ -113,7 +124,60 @@ namespace NyARToolkitCSUtils.Direct3d
             o_d3d_projection.M44 = (float)(q[3, 0] * trans[0][3] + q[3, 1] * trans[1][3] + q[3, 2] * trans[2][3] + q[3, 3]);
             return;
         }
-        public static void toD3dMatrix(NyARDoubleMatrix44 i_ny_result, float i_scale, ref Matrix o_result)
+        /**
+         * 
+         */
+        public static void mat44ToD3dMatrix(NyARDoubleMatrix44 i_src,ref Matrix o_dst)
+        {
+            o_dst.M11 = (float)i_src.m00;
+            o_dst.M12 = (float)i_src.m01;
+            o_dst.M13 = (float)i_src.m02;
+            o_dst.M14 = (float)i_src.m03;
+
+            o_dst.M21 = (float)i_src.m10;
+            o_dst.M22 = (float)i_src.m11;
+            o_dst.M23 = (float)i_src.m12;
+            o_dst.M24 = (float)i_src.m13;
+
+            o_dst.M31 = (float)i_src.m20;
+            o_dst.M32 = (float)i_src.m21;
+            o_dst.M33 = (float)i_src.m22;
+            o_dst.M34 = (float)i_src.m23;
+
+            o_dst.M41 = (float)i_src.m30;
+            o_dst.M42 = (float)i_src.m31;
+            o_dst.M43 = (float)i_src.m32;
+            o_dst.M44 = (float)i_src.m33;
+            return;
+        }
+        public static void mat44ToD3dMatrixT(NyARDoubleMatrix44 i_src, ref Matrix o_dst)
+        {
+            o_dst.M11 = (float)i_src.m00;
+            o_dst.M21 = (float)i_src.m01;
+            o_dst.M31 = (float)i_src.m02;
+            o_dst.M41 = (float)i_src.m03;
+
+            o_dst.M12 = (float)i_src.m10;
+            o_dst.M22 = (float)i_src.m11;
+            o_dst.M32 = (float)i_src.m12;
+            o_dst.M42 = (float)i_src.m13;
+
+            o_dst.M13 = (float)i_src.m20;
+            o_dst.M23 = (float)i_src.m21;
+            o_dst.M33 = (float)i_src.m22;
+            o_dst.M43 = (float)i_src.m23;
+
+            o_dst.M14 = (float)i_src.m30;
+            o_dst.M24 = (float)i_src.m31;
+            o_dst.M34 = (float)i_src.m32;
+            o_dst.M44 = (float)i_src.m33;
+            return;
+        }
+
+        /**
+         * Direct3d形式のカメラビュー行列に変換します。
+         */
+        public static void toD3dCameraView(NyARDoubleMatrix44 i_ny_result, float i_scale, ref Matrix o_result)
         {
             Matrix m;
             m.M11 = (float)i_ny_result.m00;

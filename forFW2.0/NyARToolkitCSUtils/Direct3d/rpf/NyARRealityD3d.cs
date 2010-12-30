@@ -49,22 +49,11 @@ namespace NyARToolkitCSUtils.Direct3d.rpf
      */
     public class NyARRealityD3d : NyARReality
     {
-        private Matrix _gl_frustum_rh = new Matrix();
-        /**
-         * ARToolKitスタイルのModelView行列を、OpenGLスタイルのモデルビュー行列に変換します。
-         * @param i_ny_style_mat
-         * @param o_gl_style_mat
-         */
-        public static void toD3dViewMat(NyARDoubleMatrix44 i_ny_style_mat, Matrix o_d3d_style_mat)
-        {
-            NyARD3dUtil.toD3dMatrix(i_ny_style_mat,1.0f, ref o_d3d_style_mat);
-        }
+        private NyARDoubleMatrix44 _gl_frustum_rh = new NyARDoubleMatrix44();
 
         public NyARRealityD3d(NyARParam i_param, double i_near, double i_far, int i_max_known_target, int i_max_unknown_target)
             : base(i_param, i_near, i_far, i_max_known_target, i_max_unknown_target)
         {
-            //カメラパラメータを取得しておく。
-//            this._frustum.refMatrix().getValueT(this._gl_frustum_rh);
         }
         /**
          * 透視投影行列と視錐体パラメータを元に、インスタンスを作成します。
@@ -86,29 +75,25 @@ namespace NyARToolkitCSUtils.Direct3d.rpf
         public NyARRealityD3d(NyARPerspectiveProjectionMatrix i_prjmat, NyARIntSize i_screen_size, double i_near, double i_far, int i_max_known_target, int i_max_unknown_target)
             : base(i_screen_size, i_near, i_far, i_prjmat, null, i_max_known_target, i_max_unknown_target)
         {
-            //カメラパラメータを取得しておく。
-//            this._frustum.refMatrix().getValueT(this._gl_frustum_rh);
         }
 
-        private Matrix _temp = new Matrix();
         /**
-         * NyARToolKitの姿勢変換行列をデバイスにセットします。
+         * 
+         * NyARToolKitの姿勢変換行列を返します。
          * @throws NyARException 
          */
-        public void d3dLoadModelViewMatrix(Microsoft.DirectX.Direct3D.Device i_dev, NyARDoubleMatrix44 i_mat)
+        public void getD3dModelViewMatrix(NyARDoubleMatrix44 i_nyar_mat,ref Matrix o_mat)
         {
-            NyARD3dUtil.toD3dMatrix(i_mat,1f,ref  this._temp);
-            i_dev.SetTransform(TransformType.World, this._temp);
+            NyARD3dUtil.toD3dCameraView(i_nyar_mat, 1f,ref o_mat);
             return;
         }
 
         /**
-         * projection行列をDirectXのProjectionへロードします。
+         * DirectXスタイルのProjectionMatrixを返却します。
          */
-        public void d3dLoadCameraFrustum(Microsoft.DirectX.Direct3D.Device i_dev)
+        public void getD3dCameraFrustum(ref Matrix o_mat)
         {
-            i_dev.Transform.Projection = this._gl_frustum_rh;
-            return;
+            NyARD3dUtil.mat44ToD3dMatrixT(this._frustum.refMatrix(), ref o_mat);
         }
         /**
          * 現在のViewPortに、i_rtsourceの内容を描画します。
@@ -117,10 +102,10 @@ namespace NyARToolkitCSUtils.Direct3d.rpf
          * @param i_raster
          * @throws NyARException
          */
-        public void d3dDrawRealitySource(Microsoft.DirectX.Direct3D.Device i_dev, NyARRealitySource i_rtsource)
-        {
+//        public void d3dDrawRealitySource(Microsoft.DirectX.Direct3D.Device i_dev, NyARRealitySource i_rtsource)
+//        {
 //            NyARGLDrawUtil.drawBackGround(i_dev, i_rtsource.refRgbSource(), 1.0);
-            return;
-        }
+//            return;
+//        }
     }
 }
