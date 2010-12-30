@@ -87,7 +87,7 @@ namespace SingleNyIdMarkerDirect3d
          */
         protected override void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result)
         {
-            NyARD3dUtil.toD3dMatrix(result, 1f, ref this.transmat);
+            NyARD3dUtil.toD3dCameraView(result, 1f, ref this.transmat);
         }
     }
 
@@ -228,7 +228,8 @@ namespace SingleNyIdMarkerDirect3d
             this._text = new TextPanel(this._device, 1);
             //カメラProjectionの設定
             Matrix tmp = new Matrix();
-            NyARD3dUtil.toCameraFrustumRH(ap,10,10000, ref tmp);
+            NyARD3dUtil.toCameraFrustumRH(ap.getPerspectiveProjectionMatrix(), ap.getScreenSize(), 1, 10, 10000, ref tmp);
+
             this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)

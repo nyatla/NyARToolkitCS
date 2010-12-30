@@ -44,8 +44,8 @@ namespace SimpleLiteDirect3d
 
     public partial class SimpleLiteD3d : IDisposable, CaptureListener
     {
-        private const int SCREEN_WIDTH=320;
-        private const int SCREEN_HEIGHT=240;
+        private const int SCREEN_WIDTH=640;
+        private const int SCREEN_HEIGHT=480;
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         //DirectShowからのキャプチャ
@@ -84,7 +84,7 @@ namespace SimpleLiteDirect3d
                 {
                     //あればMatrixを計算
                     this._ar.getTransmationMatrix(nyar_transmat);
-                    NyARD3dUtil.toD3dMatrix(nyar_transmat, 1f, ref this._trans_mat);
+                    NyARD3dUtil.toD3dCameraView(nyar_transmat, 1f, ref this._trans_mat);
                 }
                 this._is_marker_enable=is_marker_enable;
                 //テクスチャ内容を更新
@@ -175,7 +175,7 @@ namespace SimpleLiteDirect3d
 
             //カメラProjectionの設定
             Matrix tmp = new Matrix();
-            NyARD3dUtil.toCameraFrustumRH(ap,10,1000,ref tmp);
+            NyARD3dUtil.toCameraFrustumRH(ap.getPerspectiveProjectionMatrix(),ap.getScreenSize(),1, 10, 10000,ref tmp);
             this._device.Transform.Projection = tmp;
 
             // ビュー変換の設定(左手座標系ビュー行列で設定する)
@@ -223,7 +223,8 @@ namespace SimpleLiteDirect3d
 
 
                     //立方体を20mm上（マーカーの上）にずらしておく
-                    Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
+                    Matrix transform_mat2 = Matrix.Translation(10,20,20.0f);
+                    transform_mat2 *= Matrix.RotationYawPitchRoll(2, 3, 5);
 
                     //変換行列を掛ける
                     transform_mat2 *= this._trans_mat;

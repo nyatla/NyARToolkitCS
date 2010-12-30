@@ -9,7 +9,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
 using NyARToolkitCSUtils.Direct3d;
 
-namespace NyARToolkitCSUtils.Capture
+namespace NyARToolkitCSUtils.Capture.rpf
 {
     /**
      * このクラスは、JMFと互換性のあるNyARRealitySourceです。
