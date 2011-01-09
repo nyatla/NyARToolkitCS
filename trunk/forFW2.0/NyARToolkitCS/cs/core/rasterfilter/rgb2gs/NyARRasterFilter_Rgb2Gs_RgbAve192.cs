@@ -41,6 +41,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 			    case NyARBufferType.INT1D_X8R8G8B8_32:
 				    this._do_filter_impl=new doThFilterImpl_BUFFERFORMAT_INT1D_X8R8G8B8_32();
 				    break;
+			    case NyARBufferType.WORD1D_R5G6B5_16LE:
+                    this._do_filter_impl = new doThFilterImpl_BUFFERFORMAT_WORD1D_R5G6B5_16LE();
+                    break;
 			    default:
 				    return false;
 			    }
@@ -313,6 +316,46 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				    bp+=row_padding;
 			    }
 		    }
+	    }
+	    class doThFilterImpl_BUFFERFORMAT_WORD1D_R5G6B5_16LE : IdoThFilterImpl
+	    {
+            public void doCutFilter(INyARRaster i_input, int l, int t, int i_st, NyARGrayscaleRaster o_output)
+            {
+                NyARException.notImplement();
+            }
+            public void doFilter(INyARRaster i_input, int[] o_output, int l, int t, int w, int h)
+		    {
+                Debug.Assert(i_input.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
+                short[] input = (short[])i_input.getBuffer();
+                NyARIntSize s = i_input.getSize();
+			    int skip_dst=(s.w-w);
+			    int skip_src=skip_dst;
+			    int pix_count=w;
+			    int pix_mod_part=pix_count-(pix_count%8);			
+			    //左上から1行づつ走査していく
+			    int pt_dst=(t*s.w+l);
+			    int pt_src=pt_dst;
+			    for (int y = h-1; y >=0 ; y-=1){
+				    int x,v;
+				    for (x = pix_count-1; x >=pix_mod_part; x--){
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+				    }
+				    for (;x>=0;x-=8){
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+                        v = (int)input[pt_src++]; o_output[pt_dst++] = (((v & 0xf800) >> 8) + ((v & 0x07e0) >> 3) + ((v & 0x001f) << 3)) >> 2;
+				    }
+				    //スキップ
+				    pt_src+=skip_src;
+				    pt_dst+=skip_dst;
+			    }
+			    return;	
+	        }
 	    }
 
     }
