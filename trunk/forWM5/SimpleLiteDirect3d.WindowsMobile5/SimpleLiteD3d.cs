@@ -34,7 +34,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using Microsoft.WindowsMobile.DirectX;
 using Microsoft.WindowsMobile.DirectX.Direct3D;
-using NyARToolkitCSUtils.NyAR;
+using NyARToolkitCSUtils.WMCapture;
 using NyARToolkitCSUtils.Direct3d;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -46,99 +46,17 @@ using jp.nyatla.cs.NyWMCapture;
 
 namespace SimpleLiteDirect3d.WindowsMobile5
 {
-    public class D3dCube:IDisposable
-    {
-        private D3dManager _d3dmgr;
-
-        // 頂点バッファ/インデックスバッファ/インデックスバッファの各頂点番号配列
-        private VertexBuffer _vertexBuffer = null;
-        private IndexBuffer _indexBuffer = null;
-        private static Int16[] _vertexIndices = new Int16[] { 2, 0, 1, 1, 3, 2, 4, 0, 2, 2, 6, 4, 5, 1, 0, 0, 4, 5, 7, 3, 1, 1, 5, 7, 6, 2, 3, 3, 7, 6, 4, 6, 7, 7, 5, 4 };
-        public D3dCube(D3dManager i_d3dmgr)
-        {
-            this._d3dmgr = i_d3dmgr;
-            Device dev = i_d3dmgr.d3d_device;
-            //立方体（頂点数8）の準備
-            this._vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored),
-                8, dev, Usage.None, CustomVertex.PositionColored.Format, Pool.SystemMemory);
-
-            //8点の情報を格納するためのメモリを確保
-            CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[8];
-            const float CUBE_SIZE = 20.0f;//1辺40[mm]
-            //頂点を設定
-            vertices[0] = new CustomVertex.PositionColored(-CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, Color.Yellow.ToArgb());
-            vertices[1] = new CustomVertex.PositionColored(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, Color.Gray.ToArgb());
-            vertices[2] = new CustomVertex.PositionColored(-CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE, Color.Purple.ToArgb());
-            vertices[3] = new CustomVertex.PositionColored(CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE, Color.Red.ToArgb());
-            vertices[4] = new CustomVertex.PositionColored(-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE, Color.SkyBlue.ToArgb());
-            vertices[5] = new CustomVertex.PositionColored(CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE, Color.Orange.ToArgb());
-            vertices[6] = new CustomVertex.PositionColored(-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE, Color.Green.ToArgb());
-            vertices[7] = new CustomVertex.PositionColored(CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE, Color.Blue.ToArgb());
-
-            //頂点バッファをロックする
-            using (GraphicsStream data = this._vertexBuffer.Lock(0, 0, LockFlags.None))
-            {
-                // 頂点データを頂点バッファにコピーします
-                data.Write(vertices);
-
-                // 頂点バッファのロックを解除します
-                this._vertexBuffer.Unlock();
-            }
-
-            // インデックスバッファの作成
-            // 第２引数の数値は(三角ポリゴンの数)*(ひとつの三角ポリゴンの頂点数)*
-            // (16 ビットのインデックスサイズ(2byte))
-            this._indexBuffer = new IndexBuffer(dev, 12 * 3 * 2, Usage.WriteOnly, Pool.SystemMemory, true);
-
-            // インデックスバッファをロックする
-            using (GraphicsStream data = this._indexBuffer.Lock(0, 0, LockFlags.None))
-            {
-                // インデックスデータをインデックスバッファにコピーします
-                data.Write(_vertexIndices);
-
-                // インデックスバッファのロックを解除します
-                this._indexBuffer.Unlock();
-            }
-            return;
-        }
-        public void draw()
-        {
-            Device dev = this._d3dmgr.d3d_device;
-            // 頂点バッファをデバイスのデータストリームにバインド
-            dev.SetStreamSource(0, this._vertexBuffer, 0);
-            // インデックスバッファをセット
-            dev.Indices = this._indexBuffer;
-            // レンダリング（描画）
-            dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
-            return;
-        }
-        public void Dispose()
-        {
-            // 頂点バッファを解放
-            if (this._vertexBuffer != null)
-            {
-                this._vertexBuffer.Dispose();
-            }
-            // インデックスバッファを解放
-            if (this._indexBuffer != null)
-            {
-                this._indexBuffer.Dispose();
-            }
-            return;
-        }
-    }
 
 
     public partial class SimpleLiteD3d : IDisposable, IWmCaptureListener
     {
         private D3dManager _d3dmgr;
-        private D3dCube _d3dcube;
+        private ColorCube _d3dcube;
         private ID3dBackground _back_ground;
         private WmCapture _capture;
         //NyAR
         private NyARSingleDetectMarker m_ar;
         private DsRGB565Raster m_raster;
-        private NyARD3dUtil _utils = new NyARD3dUtil();
 
         public SimpleLiteD3d(NyARToolkitCS topLevelForm, ResourceBuilder i_resource)
         {
@@ -148,7 +66,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
             this._d3dmgr = i_resource.createD3dManager(topLevelForm);
             this._back_ground = i_resource.createBackGround(this._d3dmgr);
-            this._d3dcube = new D3dCube(this._d3dmgr);
+            this._d3dcube = new ColorCube(this._d3dmgr.d3d_device,40);
 
 
             //AR用のパターンコードを読み出
@@ -158,7 +76,6 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
             //１パターンのみを追跡するクラスを作成
             this.m_ar = new NyARSingleDetectMarker(i_resource.ar_param, code, 80.0, this.m_raster.getBufferType());
-            this._utils = new NyARD3dUtil();
             //計算モードの設定
             this.m_ar.setContinueMode(false);
 
@@ -186,7 +103,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 {
                     //あればMatrixを計算
                     this.m_ar.getTransmationMatrix(trans_result);
-                    this._utils.toD3dMatrix(trans_result, ref trans_matrix);
+                    NyARD3dUtil.toD3dCameraView(trans_result,1, ref trans_matrix);
                 }
             }
             Thread.Sleep(0);
@@ -205,30 +122,6 @@ namespace SimpleLiteDirect3d.WindowsMobile5
             this._capture.stop();
         }
 
-/*
-        public bool InitializeApplication(NyARToolkitCS topLevelForm, ResourceBuilder i_resource)
-        {
-            NyMath.initialize();
-
-
-            this._d3dmgr = i_resource.createD3dManager(topLevelForm);
-            this._back_ground = i_resource.createBackGround(this._d3dmgr);
-            this._d3dcube = new D3dCube(this._d3dmgr);
-            //ARの設定
-
-            //AR用のパターンコードを読み出
-            NyARCode code = i_resource.createNyARCode();
-
-            //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this.m_raster = i_resource.createARRaster();
-            //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker_X2(i_resource.ar_param, code, 80.0, this.m_raster.getBufferReader().getBufferType());
-            this._utils = new NyARD3dUtil();
-            //計算モードの設定
-            this.m_ar.setContinueMode(false);
-
-            return true;
-        }*/
         private bool is_marker_enable=false;
         private Matrix trans_matrix = new Matrix();
         private NyARTransMatResult trans_result = new NyARTransMatResult();
@@ -242,8 +135,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                 this._d3dmgr.d3d_device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 // 3Dオブジェクトの描画はここから
                 this._d3dmgr.d3d_device.BeginScene();
-                this._back_ground.drawBackGround();
-                this._d3dmgr.d3d_device.RenderState.CullMode = Cull.Clockwise;
+                this._back_ground.drawBackGround(this._d3dmgr.d3d_device);
 
 
                 //マーカーが見つかっていて、0.3より一致してたら描画する。
@@ -258,7 +150,7 @@ namespace SimpleLiteDirect3d.WindowsMobile5
                     // 計算したマトリックスで座標変換
                     this._d3dmgr.d3d_device.SetTransform(TransformType.World, transform_mat2);
                     //描画
-                    this._d3dcube.draw();
+                    this._d3dcube.draw(this._d3dmgr.d3d_device);
                 }
 
                 // 描画はここまで

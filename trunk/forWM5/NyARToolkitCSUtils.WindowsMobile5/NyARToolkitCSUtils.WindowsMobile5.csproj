@@ -53,20 +53,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WMCapture\rpf\NyARRealitySource_WMCapture.cs" />
+    <Compile Include="WMCapture\WmCapture.cs" />
+    <Compile Include="Direct3d\D3dBackground.cs" />
     <Compile Include="Direct3d\NyARSurface_RGB565.cs" />
     <Compile Include="Direct3d\NyARTexture_RGB565.cs" />
-    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\DsRGB565Raster.cs">
-      <Link>NyAR\DsRGB565Raster.cs</Link>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\Capture\DsRGB565Raster.cs">
+      <Link>Capture\DsRGB565Raster.cs</Link>
     </Compile>
-    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\NyAR\NyARD3dUtil.cs">
-      <Link>NyAR\D3dARParam.cs</Link>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\Direct3d\draw\ColorCube.cs">
+      <Link>Direct3d\draw\ColorCube.cs</Link>
     </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\Direct3d\draw\NyARD3dDrawUtil.cs">
+      <Link>Direct3d\draw\NyARD3dDrawUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\Direct3d\NyARD3dUtil.cs">
+      <Link>Direct3d\NyARD3dUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\forFW2.0\NyARToolkitCSUtils\Direct3d\rpf\NyARRealityD3d.cs">
+      <Link>Direct3d\rpf\NyARRealityD3d.cs</Link>
+    </Compile>    
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extlib\NyWMCapture\inc.cs\NyWMCaptureCS\NyWMCaptureCS.csproj">
       <Project>{1E0E5B5A-7B06-4B6A-AE42-383CCB83F746}</Project>
       <Name>NyWMCaptureCS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NyARToolkitCS.WindowsMobile5.rpf\NyARToolkitCS.WindowsMobile5.rpf.csproj">
+      <Project>{E7D51927-5329-49C9-83E0-46B5F0D00F24}</Project>
+      <Name>NyARToolkitCS.WindowsMobile5.rpf</Name>
     </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS.WindowsMobile5\NyARToolkitCS.WindowsMobile5.csproj">
       <Project>{EF09E3D5-B9D3-417B-9A94-C35B87FE5634}</Project>

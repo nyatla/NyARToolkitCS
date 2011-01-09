@@ -33,37 +33,36 @@ using Microsoft.WindowsMobile.DirectX;
 using NyARToolkitCSUtils.Direct3d;
 using jp.nyatla.cs.NyWMCapture;
 using jp.nyatla.nyartoolkit.cs.core;
-using NyARToolkitCSUtils.NyAR;
+using NyARToolkitCSUtils.WMCapture;
 using System.Runtime.InteropServices;
 
-namespace SimpleLiteDirect3d.WindowsMobile5
+namespace NyARToolkitCSUtils.Direct3d
 {
     public interface ID3dBackground : IDisposable
     {
-        void drawBackGround();
+        void drawBackGround(Device i_dev);
         void CopyFromRaster(DsRGB565Raster i_raster);
     }
     public class D3dSurfaceBackground : ID3dBackground
     {
         private int _width;
         private int _height;
-        private D3dManager _d3dm;
         private Surface _surface;
         private Rectangle _src_rect;
-        public D3dSurfaceBackground(D3dManager i_mgr)
+        public D3dSurfaceBackground(Device i_dev,int i_width,int i_height)
         {
-            this._d3dm = i_mgr;
-            this._height = i_mgr.background_size.Height;
-            this._width = i_mgr.background_size.Width;
-            this._surface = i_mgr.d3d_device.CreateImageSurface(this._width, this._height, Format.R5G6B5);
+            this._height = i_height;
+            this._width = i_width;
+            this._surface = i_dev.CreateImageSurface(this._width, this._height, Format.R5G6B5);
             this._src_rect = new Rectangle(0, 0, this._width, this._height);
             return;
         }
-        public void drawBackGround()
+        public void drawBackGround(Device i_dev)
         {
             //背景描画
-            Surface dest_surface = this._d3dm.d3d_device.GetBackBuffer(0, BackBufferType.Mono);
-            this._d3dm.d3d_device.StretchRectangle(this._surface, this._src_rect, dest_surface, this._d3dm.view_rect, TextureFilter.None);
+            Surface dest_surface = i_dev.GetBackBuffer(0, BackBufferType.Mono);
+            Viewport vp = i_dev.Viewport;
+            i_dev.StretchRectangle(this._surface, this._src_rect, dest_surface, new Rectangle(vp.X, vp.Y, vp.Width, vp.Height), TextureFilter.None);
             return;
         }
         public void CopyFromRaster(DsRGB565Raster i_raster)
@@ -88,6 +87,8 @@ namespace SimpleLiteDirect3d.WindowsMobile5
 
             return;
         }
+
+        
         public void Dispose()
         {
             if (this._surface != null)
@@ -104,31 +105,28 @@ namespace SimpleLiteDirect3d.WindowsMobile5
         private int _height;
         private int _texture_width;
         private int _texture_height;
-        private D3dManager _d3dm;
         private Rectangle _src_rect;
         private Texture _texture;
         private Sprite _sprite;
         private Vector3 _pos_vec;
         private Matrix _scaling;
-        public D3dTextureBackground(D3dManager i_mgr)
+        public D3dTextureBackground(Device i_dev, int i_width, int i_height,float i_scale)
         {
-            this._d3dm = i_mgr;
-            float scale = this._d3dm.scale;
-            this._height = this._d3dm.background_size.Height;
-            this._width  = this._d3dm.background_size.Width;
-            this._scaling=Matrix.Scaling(this._d3dm.scale, this._d3dm.scale, 0f);
-            this._pos_vec = new Vector3(this._d3dm.d3d_device.Viewport.X / scale, this._d3dm.d3d_device.Viewport.Y / scale, 0);
+            this._height = i_height;
+            this._width = i_width;
+            this._scaling = Matrix.Scaling(i_scale, i_scale, 0f);
+            this._pos_vec = new Vector3(i_dev.Viewport.X / i_scale, i_dev.Viewport.Y / i_scale, 0);
             this._src_rect = new Rectangle(0, 0, this._width, this._height);
 
             //テクスチャサイズの確定(2^n)
             this._texture_height = getSquareSize(this._height);
             this._texture_width = getSquareSize(this._width);
-            this._sprite = new Sprite(this._d3dm.d3d_device);
+            this._sprite = new Sprite(i_dev);
             //テクスチャを作るよ！
-            this._texture = new Texture(i_mgr.d3d_device, this._texture_width, this._texture_height, 0, Usage.None|Usage.Lockable , Format.R5G6B5, Pool.Managed);
+            this._texture = new Texture(i_dev, this._texture_width, this._texture_height, 0, Usage.None | Usage.Lockable, Format.R5G6B5, Pool.Managed);
             return;
         }
-        public void drawBackGround()
+        public void drawBackGround(Device i_dev)
         {
             this._sprite.Begin(SpriteFlags.None);
             this._sprite.Transform = this._scaling;

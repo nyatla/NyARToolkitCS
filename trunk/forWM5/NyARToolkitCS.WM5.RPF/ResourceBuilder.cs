@@ -37,7 +37,7 @@ using NyARToolkitCSUtils.Direct3d;
 using System.Windows.Forms;
 using Microsoft.WindowsMobile.DirectX;
 
-namespace SimpleLiteDirect3d.WindowsMobile5
+namespace NyARToolkitCS.WM5.RPF
 {
     public class ResourceBuilder
     {

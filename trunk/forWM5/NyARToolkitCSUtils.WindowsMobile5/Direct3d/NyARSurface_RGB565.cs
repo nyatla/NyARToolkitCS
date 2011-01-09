@@ -33,8 +33,8 @@ using Microsoft.WindowsMobile.DirectX.Direct3D;
 using System.Runtime.InteropServices;
 using jp.nyatla.cs.NyWMCapture;
 using jp.nyatla.nyartoolkit.cs.core;
-using NyARToolkitCSUtils.NyAR;
 using System.Diagnostics;
+using NyARToolkitCSUtils.WMCapture;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
