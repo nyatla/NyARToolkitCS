@@ -223,8 +223,7 @@ namespace SimpleLiteDirect3d
 
 
                     //立方体を20mm上（マーカーの上）にずらしておく
-                    Matrix transform_mat2 = Matrix.Translation(10,20,20.0f);
-                    transform_mat2 *= Matrix.RotationYawPitchRoll(2, 3, 5);
+                    Matrix transform_mat2 = Matrix.Translation(0,0,20.0f);
 
                     //変換行列を掛ける
                     transform_mat2 *= this._trans_mat;
