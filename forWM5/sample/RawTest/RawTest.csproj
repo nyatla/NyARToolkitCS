@@ -67,6 +67,17 @@
       <Name>NyARToolkitCS.WindowsMobile5</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\data\camera_para.dat">
+      <Link>data\camera_para.dat</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\data\patt.hiro">
+      <Link>data\patt.hiro</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\data\320x240ABGR.raw">
+      <Link>data\320x240ABGR.raw</Link>
+    </EmbeddedResource>    
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

@@ -25,6 +25,12 @@
  * 
  */
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Reflection;
 using System.IO;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
@@ -42,26 +48,29 @@ namespace ConsoleApplication1
      */
     public class RawFileTest
     {
-        private const String code_file = "\\Program Files\\rawtest\\data\\patt.hiro";
-        private const String data_file = "\\Program Files\\rawtest\\data\\320x240ABGR.raw";
-        private const String camera_file = "\\Program Files\\rawtest\\data\\camera_para.dat";
+        private const String RES_PATT = "RawTest.data.patt.hiro";
+        private const String RES_CAMERA = "RawTest.data.camera_para.dat";
+        private const String RES_DATA = "RawTest.data.320x240ABGR.raw";
         public RawFileTest()
         {
             NyMath.initialize();
         }
         public void Test_arDetectMarkerLite()
         {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(camera_file);
+            ap.loadARParam(assembly.GetManifestResourceStream(RES_CAMERA));
             ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadARPattFromFile(code_file);
+            Stream sr1=assembly.GetManifestResourceStream(RES_PATT);
+            code.loadARPatt(new StreamReader(sr1));
 
             //試験イメージの読み出し(320x240 BGRAのRAWデータ)
-            StreamReader sr = new StreamReader(data_file);
+            StreamReader sr = new StreamReader(assembly.GetManifestResourceStream(RES_DATA));
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
             NyARRgbRaster_BGRA ra = new NyARRgbRaster_BGRA(320, 240,false);
