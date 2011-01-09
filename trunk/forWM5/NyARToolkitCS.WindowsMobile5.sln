@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NyARToolkitCS.WindowsMobile
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NyARToolkitCS.WM5.RPF", "NyARToolkitCS.WM5.RPF\NyARToolkitCS.WM5.RPF.csproj", "{BCD6B46F-79DB-4EFE-A837-56F8E37DADED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C266BDAC-AEBD-4545-ADE5-3162767B82CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,5 +142,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BCD6B46F-79DB-4EFE-A837-56F8E37DADED} = {C266BDAC-AEBD-4545-ADE5-3162767B82CD}
+		{5FCA49BD-55A4-4401-A071-C477B5642AAA} = {C266BDAC-AEBD-4545-ADE5-3162767B82CD}
+		{9B2B0E64-37D7-40FE-AE54-D04116A71E8A} = {C266BDAC-AEBD-4545-ADE5-3162767B82CD}
 	EndGlobalSection
 EndGlobal
