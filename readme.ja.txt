@@ -175,6 +175,40 @@ forFW2.0
   RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
   NyARRealityD3dと、RawbitSerialIdTableのサンプルプログラムでもあります。
 
+forWM5
+
+ * NyARToolkitCS.WindowsMobile5
+   NyARToolkitライブラリの本体です。基本的は.Net Compact Framework 2.0規格の
+   コードです。forFW2.0との差はありません。
+   
+ * NyARToolkitCS.rpf.WindowsMobile5
+   NyARToolkitライブラリのRPFモジュールです。NyARToolkit/3.0で追加した
+   RPFモジュールのコードです。forFW2.0との差はありません。
+   
+ * NyARToolkitCSUtils.WindowsMobile5
+  .Net Compact Frameworkに依存するコードをまとめたプロジェクトです。
+  MobileManagedDirectX向けのコードと、NyWMCapture向けのクラスがあります。
+  ManagedDirectXと、NyWMCaptureに依存します。
+
+ * NyARToolkitCS.sandbox.WindowsMobile5
+  実験的なコードをまとめたプロジェクトです。
+  このプロジェクトはコンパイルできないかもしれません。
+
+ * NyWMCaptureCS
+  WindowsMobile用のキャプチャライブラリNyWMCaptureのC#インタフェイス
+  です。
+
+ * Sample/NyARToolkitCS.WM5.RPF
+  WindowsMobile用の、Test_NyARRealityD3d_ARMarker相当のサンプルプログラムです。
+
+ * Sample/RawTest
+  WindowsMobile用の、RawTest相当のサンプルプログラムです。
+  ただし、計測回数は10回です。
+
+ * Sample/SimpleLiteDirect3d.WindowsMobile5
+  WindowsMobile用の、Sample/SingleNyIdMarkerDirect3d相当のサンプルプログラムです。
+
+  
 ----------------------------------------------------------------------
  既知の不具合
 ----------------------------------------------------------------------
