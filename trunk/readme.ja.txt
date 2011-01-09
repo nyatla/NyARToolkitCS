@@ -1,219 +1,196 @@
-ARToolkit C# class library NyARToolkitCS.
-Copyright (C)2008-2010 Ryo Iizuka
+======================================================================
+NyARToolkitCS
+ version 3.0.0
+======================================================================
 
-version 2.5.2
+Copyright (C)2008-2010 Ryo Iizuka
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
 wm(at)nyatla.jp
---------------------------------------------------
 
 
-・NyARToolkitCS
+----------------------------------------------------------------------
+ About NyARToolkit
+----------------------------------------------------------------------
+ * NyARToolkitCSは、NyARToolKit 3.0.0のAPIを基盤としたARアプリケーション向けの
+   クラスライブラリです。
+ * .Net Framework 2.0以上と、.net Compact Framework 2.0以上に対応しています。
+ * ライブラリの構成は、ARToolKitの基本機能と、NyARToolKitオリジナルの拡張機能、
+   アプリケーション向けのフレームワークです。
+ * ライブラリは、NyARTookitを純粋に移植したNyARToolkitCS、NyARToolkitの
+   RPF(Reality Platform)クラスのあるNyARToolkitCS.rpf,C#向けの拡張クラスのある、
+   NyARToolkitCSUtils,サンプルで構成されています。
+ * このSDKが提供する3Dレンダラアダプタは、Managed Direct3Dのみです。他の3Dレンダラ
+   アダプタに対応するときの参考にして下さい。
+ * sampleモジュールは、いくつかの動作チェックプログラムと、RPFを使ったサンプルアプ
+   リケーションがあります。
 
-NyARToolkitCSは、純粋なC#で実装したNyARToolkit互換の
-クラスライブラリです。
-
-ARToolkit 2.72.1及び、NyARToolkit version 2.5.2
-をベースにしています。
-
-※sandboxの一部のクラスは未実装です。
-
-ARToolkitは加藤博一先生とHuman Interface Technology Labにより
-開発されたAugmented Reality (AR) ライブラリです。
-詳しくはこちらをご覧下さい。
-http://www.hitl.washington.edu/artoolkit/
-
-NyARToolkitはARToolkit 2.72.1をベースに開発された、ARToolKit互換の
-機能を持つ、Javaクラスライブラリです。
-詳しくはこちらをご覧下さい。
-http://nyatla.jp/nyartoolkit/
-
-
-・動作/開発環境
-
-NyARToolkitCS
- .Net Framework 2.0以上が必要です。
- コンパイルには、VisualC# 2008 Express Edition以上が必要です。
-
-NyARToolkitCSforWM5
- .Net Compact Framework 3.5 以上が必要です。
- コンパイルには、VisualC# 2008 Professional Edition以上が必要です。
- ※Compact Frameworkで開発すれば、Express Editionでもコンパイル自体は出来ます。
- 
-・ディレクトリ構成
-
-./data
-  マーカーファイル/カメラ設定ファイルがあります。
-./extlib
-  外部ライブラリがあります。
-  DirectShowLibV2….NET FW用のDirectshowライブラリ(LGPL)です。
-  NyWMCapture    …Windows Mobile用のキャプチャライブラリです。
-
-./forFW2.0
-  .Net2.0以降用のプロジェクトです。
-
-./forWM5
-  WindowsMobile5用のプロジェクトです。
+ ARToolKitについては、下記のURLをご覧ください。
+ http://www.hitl.washington.edu/artoolkit/
 
 
+----------------------------------------------------------------------
+NyARToolkitCSの特徴
+----------------------------------------------------------------------
+NyARToolkitCSの特徴を紹介します。
+
+ * System.Drawing.Bitmapから、NyARToolkit内部形式への変換をサポートしています。
+ * ロジックレベルでは、ARToolKitよりも高速です。
+ * 次の項目について、高速な機能が利用できます。(ラべリング、姿勢最適化、
+   画像処理、行列計算、方程式計算)
+ * NyId規格のIDマーカが使用できます。
+ * RPF(RealityPlatform - マーカ状態管理システム)が利用できます。
+
+(注意)
+ * RPFの不具合の為、RPFを使用してアプリケーションを作成すると、小さなマーカ
+   の認識率が低くなります。修正まで、しばらくお待ちください。
+   
+
+----------------------------------------------------------------------
+ NyARToolkitAS3 License
+----------------------------------------------------------------------
 
 
-・forFW2.0
+NyARToolkitCSは、商用ライセンスとGPLv3以降のデュアルライセンスを採用して
+います。
 
-.Net Framework 2.0以降で動作するように設定したプロジェクト群です。
-
-・・モジュール構成
-
-+------------------------------------------------------+
-|                      Application                     |
-+---------------------------+--------+-----------------+
-|     NyARToolkitCSUtil     |        |                 |
-+-----------------+---------+        |                 |
-|DirectShowLibNET |     Direct3D     |  NyARToolKitCS  |
-+-----------------+------------------+                 |
-|     Camera      |        3D        |                 |
--------------------------------------------------------+
-
-NyARToolkitがNyARToolkitCSの本体です。
-
-NyARToolkitCSUtilは、DirectShowLibNET及びDirect3DをNyARToolkitCS
-から使いやすくするためのユーティリティクラス群です。
-
-DirectShowLibNET（LGPLライセンス）は、DirectShowのマネージドクラス群です。
-こちらのURLで配布されているものを使っています。
-http://sourceforge.net/projects/directshownet/
-
-3D出力部分はManaged Direct3Dをそのまま使用しています。
+GPLv3を承諾された場合には、商用、非商用にかかわらず、無償でご利用にな
+れます。GPLv3を承諾できない場合には、商用ライセンスの購入をご検討くだ
+さい。
 
 
+ * GPLv3
+   GPLv3については、LICENCE.txtをお読みください。
 
-・・ソースコード構成
+ * 商用ライセンス(日本国)
+   株式会社 エム・ソフトにお問い合わせください。
+   http://www.msoft.co.jp/pressrelease/press090928-1.html
 
-.NyARToolkitCS.slnを開くと、5つのプロジェクトがあります。
+ * 商用ライセンス(その他の国)
+   商用ライセンスについては、ARToolWorks社に管理を委託しております。
+   http://www.artoolworks.com/Home.html
 
-NyARToolkitCS,NyARToolkitCSUtilsはクラスライブラリ、NyARToolkitCS.sandbox
-は試験中のクラスライブラリ群、他の３つはサンプルプログラムです。
-
-NyARToolkitCS.sandbox
-　固定小数点計算クラスや、結果値の互換性を無視した高速化を行った
-　クラス、実験中のクラス群があります。
-
-RawTest (./sample/RawTest)
-  ライブラリのベンチマークプログラムです。固定画像にあるマーカーを
-  1000回認識させ、その計算時間を表示します。
-
-CaptureTest (./sample/CaptureTest)
-  Direct3Dを使用しない、キャプチャとNyARToolKitの試験用のプログラムです。
-  カメラ映像からマーカーを検出し、その計算結果を表示します。
-
-SimpleLiteDirect3d (./sample/SimpleLiteDirect3d)
-  SimpleLiteを移植したものです。
-  キャプチャデバイスの設定からマーカーの検出後のDirect3Dへの出力までの、
-  一連の流れを追うことが出来ます。
-
-SingleARMarker (./sample/SingleARMarker)
-  同時に１個のARマーカを認識するサンプルです。いくつかのマーカを
-  切り替えながら、それぞれのマーカに別のオブジェクトを表示する
-  アプリケーションの適しています。
-
-SingleNyIdMarkerDirect3d (./sample/SingleNyIdMarkerDirect3d)
-  同時に１個のNyIdマーカを認識するサンプルです。SingleARMarker
-  のARマーカの代わりに、NyIdマーカを使うものです。
+----------------------------------------------------------------------
+ インストール
+----------------------------------------------------------------------
+開発環境は、それぞれ、以下のものが必要です。
+ * .Net Framefork
+	Visual Stadio 2008 Express以上
+ * .Net Compact Framefork
+	Visual Stadio 2008 Professional以上
+	(注)Express Editionで、Compact Frameworkで開発すればコンパイル自体は出来ます。
 
 
+それぞれの環境で使用できるソリューションファイルが以下の場所にあります。
+ * .Net Framefork
+    forFW2.0
+ * .Net Framefork
+    forWM5
 
-・forWM5
+(注意)
+ 64bit環境でコンパイルした場合、例外が発生し、「は有効な Win32 アプ
+ リケーションではありません。」とメッセージと共に、プログラムが停止
+ する事があります。この現象は、プロジェクトのプラットフォームターゲット
+ を、x86にすることで解決します。
 
-.Net Compact Framework 3.5以降で動作するように設定した
-プロジェクト群です。
+----------------------------------------------------------------------
+ 外部ライブラリ
+----------------------------------------------------------------------
 
-※.Net Compact Frameworkを使うように設定したプロジェクトファイル
-　を用意すれば、Express Editionでもコンパイルできます。
+*DirectShowLibNET
 
+ NyARToolkitCSの.Net Framework版では、カメラ映像の取得にDirectShowLibNET
+ （ライセンスはLGPL）を使用します。このライブラリはextlib/DirectShowLibV2
+ フォルダにあります。
 
-・・モジュール構成
+ DirectShowLibNETは、こちらのURLからダウンロードできます。
+ http://sourceforge.net/projects/directshownet/
 
-+------------------------------------------------------+
-|                      Application                     |
-+---------------------------+--------+-----------------+
-|     NyARToolkitCSUtil.WM5 |        |                 |
-+-----------------+---------+        |                 |
-|    NyWMCapture  | Mobile  Direct3D |  NyARToolKitCS  |
-+-----------------+------------------+                 |
-|     Camera      |        3D        |                 |
--------------------------------------------------------+
+*NyWMCapture
 
-NyARToolkitがNyARToolkitCSの本体です。.Net版との差異は、参照
-するモジュールの違いと、サンプルのコメントアウト部分のみです。
+ NyARToolkitCSの.Net Compact Framework版では、カメラ映像の取得にNyWMCapture
+ （ライセンスはMIT）を使用します。このライブラリはextlib/NyWMCapture
+ フォルダにあります。
 
+ このモジュールをモバイルデバイスにインストールする方法は、NyWMCaptureの
+ readme.ja.txtを参照してください。
 
-NyARToolkitCSUtil.WMは、NyWMCapture及びMobile  Direct3Dを
-NyARToolkitCSから使いやすくするためのユーティリティクラス群です。
-
-
-NyWMCapture（MITライセンス）は、WindowsMobileのカメラ制御用の
-COMオブジェクトです。
-
-3D出力部分はManaged Direct3Dをそのまま使用しています。
-
+----------------------------------------------------------------------
+ プロジェクトの概要
+----------------------------------------------------------------------
+プロジェクトの概要を説明します。
 
 
-・・ソースコード構成
+forFW2.0
 
-NyARToolkitCS.WindowsMobile5.slnを開くと、5つのプロジェクトがあります。
+ * NyARToolkitCS
+   NyARToolkitライブラリの本体です。基本的は.Net Framework 2.0規格の
+   コードです。依存する外部ライブラリはありません。 
+   
+ * NyARToolkitCS.rpf
+   NyARToolkitライブラリのRPFモジュールです。NyARToolkit/3.0で追加した
+   RPFモジュールのコードです。依存する外部ライブラリはありません。 
+   
+ * NyARToolkitCSUtils
+  .NetFrameworkに依存するコードをまとめたプロジェクトです。
+  ManagedDirectX向けのコードと、DirectShow向けのクラスがあります。
+  ManagedDirectXと、DirectShowNetに依存します。
 
-NyARToolkitCS.WindowsMobile5,NyARToolkitCSUtils.WindowsMobile5,
-NyWMCaptureはクラスライブラリ、NyARToolkitCS.WindowsMobile5.sandboxは
-実験中のクラスライブラリ群、SimpleLiteDirect3d.WindowsMobile5がサンプル
-プログラムです。
-
-NyARToolkitCS.WindowsMobile5.sandboxには、固定小数点対応のクラス群があります。
-モバイルデバイスでの開発では、このクラス郡を使用することにより、浮動小数点版
-の約5倍の高速化が可能です。
-
-SimpleLiteDirect3d.WindowsMobile5
-  SimpleLiteをWindowsMobile用に移植したものです。
-　
-  ※注意※
-  サンプルを実行するには、NyWMCapture.dllをシステムに登録する必要があります。
-
-  NyWMCapture.dllをモバイルデバイスの\Windowsへコピーして、regsvrce
-  等でレジストリに登録して下さい。
-
-  手書きで登録をする場合は、以下の情報を登録してください。
+ * NyARToolkitCS.sandbox
+  実験的なコードをまとめたプロジェクトです。
+  このプロジェクトはコンパイルできないかもしれません。
   
-  [HKEY_CLASSES_ROOT\CLSID\{32F37E70-B633-4253-B8E0-A99A1BBEEA84}]
-  @="NyWMCapture"
+ * Sample/CaptureTest
+  カメラキャプチャの実験プログラムです。DirectShowNetに依存します。
+ 
+ * Sample/RawTest
+  NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出
+  処理をして、処理時間を計測します。
+ 
+ * Sample/SimpleLite_ImageSource
+  静止画からマーカ検出をするサンプルプログラムです。
+  NyARSingleDetectMarkerのサンプルプログラムでもあります。
+ 
+ * Sample/SimpleLiteDirect3d
+  ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示する
+  プログラムです。
+  NyARSingleDetectMarkerのサンプルプログラムでもあります。
+ 
+ * Sample/SingleARMarkerDirect3d
+  ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
+  に、マーカ番号を表示するプログラムです。
+  SingleARMarkerProcesserのサンプルプログラムでもあります。
+ 
+ * Sample/SingleNyIdMarkerDirect3d
+  ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
+  に、Idマーカ番号を表示するプログラムです。
+  SingleNyIdMarkerProcesserのサンプルプログラムでもあります。
 
-  [HKEY_CLASSES_ROOT\CLSID\{32F37E70-B633-4253-B8E0-A99A1BBEEA84}\InprocServer32]
-  @="NyWMCapture.dll"
-  "ThreadingModel"="Both"
+ * Sample/Test_NyARRealityD3d_ARMarker
+  RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
+  NyARRealityD3dと、ARTKMarkerTableのサンプルプログラムでもあります。
+ 
+ * Sample/Test_NyARRealityD3d_IdMarker
+  RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
+  NyARRealityD3dと、RawbitSerialIdTableのサンプルプログラムでもあります。
 
+----------------------------------------------------------------------
+ 既知の不具合
+----------------------------------------------------------------------
+ 1.RPFの姿勢フィードバックが未実装。
+ 2.RPFの輪郭線抽出系のノイズ処理が最小二乗法の為、遅延が大きい。
+ 3.RPFの輪郭線抽出系のアルゴリズム不備で輪郭線のドリフトが発生し、トラッキング
+   性能が低下する。
+ 4.RPFの二次元系追跡機能の性能が低い。
+ 5.RPFのエッジ抽出が、ブラーに弱い。
+ 6.RPFの初期検出性能が、旧NyARToolkit系と比較して、低い。
 
+----------------------------------------------------------------------
+ Special thanks
+----------------------------------------------------------------------
+加藤博一先生 (Hirokazu Kato, Ph. D.)
+ http://www.hitl.washington.edu/artoolkit/
 
-
-
-
-・NyARToolkitとの差分
-
-NyARToolkitのクラス構造・演算結果に互換性があります。
-システムクラスについては、.NETとjavaでそれぞれ異なったものを使用しています。
-
-
-
-・ライセンス
-
-NyARToolkitCS本体は、商用ライセンスとGPLv3以降のデュアルライセンスを採用しています。
-(Version/2.4.0より、GPLv3ライセンスになりました。)
-extlib以下のものは、各モジュールのライセンスに従ってください。
-
- -GPL
- GPLについては、LICENCE.txtをお読みください。
-
- -商用ライセンス
- 商用ライセンスについては、ARToolWorks社に管理を委託しております。
- http://www.artoolworks.com/Home.html
-
- 日本国内での販売については、下記にお問い合わせ下さい。
- http://www.msoft.co.jp/pressrelease/press090928-1.html
+Prof. Mark Billinghurst
+ http://www.hitlabnz.org/
