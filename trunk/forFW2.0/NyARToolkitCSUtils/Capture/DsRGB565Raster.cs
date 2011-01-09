@@ -30,7 +30,12 @@ using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using System.IO;
 
+//参照元のプロジェクトによって、別の名前空間に配置。
+#if NyartoolkitCS_FRAMEWORK_CFW
+namespace NyARToolkitCSUtils.WMCapture
+#else
 namespace NyARToolkitCSUtils.Capture
+#endif
 {
     public class DsRGB565Raster : NyARRgbRaster_BasicClass
     {

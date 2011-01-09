@@ -45,16 +45,22 @@ namespace NyARToolkitCSUtils.Direct3d
      */
     public class ColorCube : IDisposable
     {
+#if NyartoolkitCS_FRAMEWORK_CFW
+        private const Pool _pool_mode=Pool.SystemMemory;
+#else
+        private const Pool _pool_mode=Pool.Managed;
+#endif
+
         //private static TextRenderer _tr=new TextRenderer(new Font("SansSerif", Font.PLAIN, 10));
         private static Int16[] _vertexIndices = new Int16[] { 2, 0, 1, 1, 3, 2, 4, 0, 2, 2, 6, 4, 5, 1, 0, 0, 4, 5, 7, 3, 1, 1, 5, 7, 6, 2, 3, 3, 7, 6, 4, 6, 7, 7, 5, 4 };
 
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
-        public ColorCube(Microsoft.DirectX.Direct3D.Device i_dev, int i_size)
+        public ColorCube(Device i_dev, int i_size)
         {
             //立方体（頂点数8）の準備
             this._vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored),
-                8, i_dev, Usage.None, CustomVertex.PositionColored.Format, Pool.Managed);
+                8, i_dev, Usage.None, CustomVertex.PositionColored.Format, _pool_mode);
             //8点の情報を格納するためのメモリを確保
             CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[8];
             const float CUBE_SIZE = 20.0f;//1辺40[mm]の
@@ -81,7 +87,7 @@ namespace NyARToolkitCSUtils.Direct3d
             // 第２引数の数値は(三角ポリゴンの数)*(ひとつの三角ポリゴンの頂点数)*
             // (16 ビットのインデックスサイズ(2byte))
             this._indexBuffer = new IndexBuffer(i_dev, 12 * 3 * 2, Usage.WriteOnly,
-                Pool.Managed, true);
+                _pool_mode, true);
 
             // インデックスバッファをロックする
             using (GraphicsStream data = this._indexBuffer.Lock(0, 0, LockFlags.None))
@@ -94,26 +100,31 @@ namespace NyARToolkitCSUtils.Direct3d
             }
             return;
         }
-        public void draw(Microsoft.DirectX.Direct3D.Device i_dev)
+        public void draw(Device i_dev)
         {
-            VertexFormats old_VertexFormat = i_dev.VertexFormat;
             IndexBuffer old_Indices;
             Cull old_CullMode;
-            // 頂点バッファをデバイスのデータストリームにバインド
-            i_dev.SetStreamSource(0, this._vertexBuffer, 0);
-
-            // 描画する頂点のフォーマットをセット
-            i_dev.VertexFormat = CustomVertex.PositionColored.Format;
-
-            // インデックスバッファをセット
+            old_CullMode = i_dev.RenderState.CullMode;
             old_Indices = i_dev.Indices;
+            i_dev.RenderState.CullMode = Cull.Clockwise;
             i_dev.Indices = this._indexBuffer;
 
+#if NyartoolkitCS_FRAMEWORK_CFW
+            // 頂点バッファをデバイスのデータストリームにバインド
+            i_dev.SetStreamSource(0, this._vertexBuffer, 0);
             // レンダリング（描画）
-            old_CullMode = i_dev.RenderState.CullMode;
-            i_dev.RenderState.CullMode = Cull.Clockwise;
+            i_dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
+            i_dev.Indices = old_Indices;
+            i_dev.RenderState.CullMode = old_CullMode;
+#else
+            VertexFormats old_VertexFormat = i_dev.VertexFormat;
+            // 頂点バッファをデバイスのデータストリームにバインド
+            i_dev.SetStreamSource(0, this._vertexBuffer, 0);
+            // 描画する頂点のフォーマットをセット
+            i_dev.VertexFormat = CustomVertex.PositionColored.Format;
             i_dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 8, 0, 12);
             i_dev.VertexFormat = old_VertexFormat;
+#endif
             i_dev.Indices = old_Indices;
             i_dev.RenderState.CullMode = old_CullMode;
             return;
@@ -133,4 +144,5 @@ namespace NyARToolkitCSUtils.Direct3d
             }
         }
     }
+//#endif
 }
