@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,57 +28,65 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+
+
+
+/**
+ * このクラスは、NyARLabelingLabelの動的配列です。
+ * {@link NyARLabeling_ARToolKit}が使います。
+ * {@link NyARObjectStack}からの追加機能として、配列要素のソート機能があります。
+ */
+public class NyARLabelingLabelStack : NyARObjectStack<NyARLabelingLabel>
 {
-    /**
-     * NyLabelの予約型動的配列
-     * 
-     */
-    public class NyARLabelingLabelStack : NyARObjectStack<NyARLabelingLabel>
-    {
-	    public NyARLabelingLabelStack(int i_max_array_size):base()
-	    {
-		    base.initInstance(i_max_array_size);
-	    }
-	    protected override NyARLabelingLabel createElement()
-	    {
-		    return new NyARLabelingLabel();
-	    }
-	    /**
-	     * 配列をエリアでソートする。
-	     * @param i_array
-	     * @param i_length
-	     */
-	    public void sortByArea()
-	    {
-		    int len=this._length;
-		    if(len<1){
-			    return;
+	/**
+	 * コンストラクタです。
+	 * @param i_max_array_size
+	 * 配列の最大サイズ。
+	 * @throws NyARException
+	 */
+	public NyARLabelingLabelStack(int i_max_array_size)
+	{
+		super();
+		super.initInstance(i_max_array_size,NyARLabelingLabel.class);
+	}
+	/** {@link NyARLabelingLabel}要素を返します。*/
+	protected NyARLabelingLabel createElement()
+	{
+		return new NyARLabelingLabel();
+	}
+	/**
+	 * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
+	 */
+	sealed public void sortByArea()
+	{
+		int len=this._length;
+		if(len<1){
+			return;
+		}
+		int h = len *13/10;
+		NyARLabelingLabel[] item=this._items;
+		for(;;){
+		    int swaps = 0;
+		    for (int i = 0; i + h < len; i++) {
+		        if (item[i + h].area > item[i].area) {
+		            sealed NyARLabelingLabel temp = item[i + h];
+		            item[i + h] = item[i];
+		            item[i] = temp;
+		            swaps++;
+		        }
 		    }
-		    int h = len *13/10;
-		    NyARLabelingLabel[] item=this._items;
-		    for(;;){
-		        int swaps = 0;
-		        for (int i = 0; i + h < len; i++) {
-		            if (item[i + h].area > item[i].area) {
-		                NyARLabelingLabel temp = item[i + h];
-		                item[i + h] = item[i];
-		                item[i] = temp;
-		                swaps++;
-		            }
+		    if (h == 1) {
+		        if (swaps == 0){
+		        	break;
 		        }
-		        if (h == 1) {
-		            if (swaps == 0){
-		        	    break;
-		            }
-		        }else{
-		            h=h*10/13;
-		        }
-		    }		
-	    }	
-    }
+		    }else{
+		        h=h*10/13;
+		    }
+		}		
+	}	
 }
+	

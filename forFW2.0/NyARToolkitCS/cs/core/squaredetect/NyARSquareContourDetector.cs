@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,30 +28,27 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
-{
-    public abstract class NyARSquareContourDetector
-    {
-	    /**
-	     * @param i_raster
-	     * @param o_square_stack
-	     * @throws NyARException
-	     */
-	    public abstract void detectMarker(NyARBinRaster i_raster);
-	    /**
-	     * 通知ハンドラです。
-	     * この関数は、detectMarker関数のコールバック関数として機能します。
-	     * 継承先のクラスで、矩形の発見時の処理をここに記述してください。
-	     * @param i_coord
-	     * @param i_coor_num
-	     * @param i_vertex_index
-	     * @throws NyARException
-	     */
-	    protected abstract void onSquareDetect(NyARIntCoordinates i_coord,int[] i_vertex_index);
-    }
 
+
+
+
+
+/**
+ * このクラスは、矩形検出器のベースクラスです。
+ * 矩形検出機能を提供する関数を定義します。
+ */
+public abstract class NyARSquareContourDetector
+{
+	/**
+	 * この関数は、自己コールバック関数です。{@link #detectMarker}が検出矩形を通知するために使います。
+	 * 実装クラスでは、ここに矩形の発見時の処理を記述してください。
+	 * @param i_coord
+	 * 輪郭線オブジェクト
+	 * @param i_vertex_index
+	 * 矩形の４頂点に対応する、輪郭線オブジェクトのインデクス番号。
+	 * @throws NyARException
+	 */
+	protected abstract void onSquareDetect(NyARIntCoordinates i_coord,int[] i_vertex_index) ;
 }
+

@@ -1,14 +1,8 @@
 /* 
- * PROJECT: NyARToolkitCS
- * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * PROJECT: NyARToolkitCS(Extension)
+ * -------------------------------------------------------------------------------
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,14 +23,23 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-{
 
-    /**
-     * 8bitRGBを表現できるラスタ
-     * 
-     */
-    public interface INyARRgbRaster : INyARRaster
-    {
-        INyARRgbPixelReader getRgbPixelReader();
-    }
+
+
+
+
+/**
+ * このインタフェイスは、{@link INyARRaster}に、カラー画像へアクセスする機能を追加します。
+ */
+public interface INyARRgbRaster : INyARRaster
+{
+	/**
+	 * この関数は、画素形式によらない画素アクセスを行うオブジェクトへの参照値を返します。
+	 * 実装クラスでは、所有するバッファに関連したラスタ読出しオブジェクトを返す処理を実装してください。
+	 * @return
+	 * オブジェクトの参照値
+	 * @throws NyARException
+	 */
+	public INyARRgbPixelDriver getRgbPixelDriver();
+
 }

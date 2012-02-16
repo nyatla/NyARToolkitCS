@@ -1,14 +1,8 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
- * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+/* 
+ * PROJECT: NyARToolkitCS(Extension)
+ * -------------------------------------------------------------------------------
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,35 +22,60 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
-{
-    public sealed class NyARHsvRaster : NyARRaster_BasicClass
-    {
 
-	    private int[] _ref_buf;
-    	
-	    public NyARHsvRaster(int i_width, int i_height)
-            :base(i_width,i_height,NyARBufferType.INT1D_X7H9S8V8_32)
-	    {
-		    //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
-		   
-		    this._ref_buf = new int[i_height*i_width];
-	    }
-	    public override object getBuffer()
-	    {
-		    return this._ref_buf;
-	    }
-        public override bool hasBuffer()
-	    {
-		    return true;
-	    }
-        public override void wrapBuffer(object i_ref_buf)
-	    {
-		    NyARException.notImplement();
-	    }	
-    }
+
+
+
+/**
+ * このクラスは、HSV画像を格納するラスタクラスです。
+ * 内部バッファのみに対応します。
+ */
+public sealed class NyARHsvRaster : NyARRaster_BasicClass
+{
+
+	private int[] _ref_buf;
+	/**
+	 * コンストラクタです。ラスタのサイズを指定して、インスタンスを生成します。
+	 * @param i_width
+	 * ラスタのサイズです。
+	 * @param i_height
+	 * ラスタのサイズです。
+	 */
+	public NyARHsvRaster(int i_width, int i_height)
+	{
+		//このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
+		super(i_width,i_height,NyARBufferType.INT1D_X7H9S8V8_32);
+		this._ref_buf = new int[i_height*i_width];
+	}
+	/**
+	 * この関数は、ラスタのバッファへの参照値を返します。
+	 * バッファの形式{@link NyARBufferType#INT1D_X7H9S8V8_32}です。
+	 */
+	public Object getBuffer()
+	{
+		return this._ref_buf;
+	}
+	/**
+	 * この関数は、インスタンスがバッファを所有するかを返します。
+	 * このクラスでは内部参照バッファのみをサポートするため、常にtrueです。
+	 */	
+	public bool hasBuffer()
+	{
+		return true;
+	}
+
+	/**
+	 * この関数は、ラスタに外部参照バッファをセットします。
+	 * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
+	 */	
+	public void wrapBuffer(Object i_ref_buf)
+	{
+		NyARException.notImplement();
+	}
+	@Override
+	public Object createInterface(Class<?> iIid)
+	{
+		throw new NyARException();
+	}	
 }

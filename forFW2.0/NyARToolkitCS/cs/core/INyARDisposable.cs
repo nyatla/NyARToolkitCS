@@ -7,8 +7,8 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,16 +28,19 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System.IO;
 using System;
-using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
+    /**
+     * このインタフェイスは、オブジェクト破棄のタイミングを受け取る関数を定義します。
+     * アンマネージリソースの破棄コントロールや、オブジェクトプールの制御に使います。
+     */
     public interface INyARDisposable
     {
         /**
-         * オブジェクトの終期化のタイミングを与えます。オブジェクトの終期化に必要な処理を実装します。
+         * オブジェクトの終期化のタイミングを与えます。
+         * オブジェクトの終期化に必要な処理を実装しでください。
          */
-        void dispose();
+        public void dispose();
     }
 }

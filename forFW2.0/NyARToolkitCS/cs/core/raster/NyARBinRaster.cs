@@ -1,13 +1,7 @@
 /* 
- * PROJECT: NyARToolkitCS
+ * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,70 +22,69 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using jp.nyatla.nyartoolkit.cs.utils;
-using System.Diagnostics;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+import jp.nyatla.nyartoolkit.core.labeling.rlelabeling.NyARLabeling_Rle;
+
+
+
+
+
+/**
+ * ã“ã®ã‚¯ãƒ©ã‚¹ã¯ã€0/ 255 ã®äºŒå€¤GrayscaleRasterã§ã™ã€‚
+ */
+public class NyARBinRaster : NyARGrayscaleRaster
 {
-    public class NyARBinRaster : NyARRaster_BasicClass
-    {
-	    protected object _buf;
-	    /**
-	     * ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚ê‚Îtrue
-	     */
-	    protected bool _is_attached_buffer;
-	    public NyARBinRaster(int i_width, int i_height,int i_raster_type,bool i_is_alloc)
-            : base(i_width, i_height, i_raster_type)
-	    {
-		    if(!initInstance(this._size,i_raster_type,i_is_alloc)){
-			    throw new NyARException();
-		    }
-	    }
-	    public NyARBinRaster(int i_width, int i_height,bool i_is_alloc)
-            :base(i_width,i_height,NyARBufferType.INT1D_BIN_8)
-	    {
-		    if(!initInstance(this._size,NyARBufferType.INT1D_BIN_8,i_is_alloc)){
-			    throw new NyARException();
-		    }
-	    }
-        public NyARBinRaster(int i_width, int i_height)
-            : base(i_width, i_height, NyARBufferType.INT1D_BIN_8)
-	    {
-		    if(!initInstance(this._size,NyARBufferType.INT1D_BIN_8,true)){
-			    throw new NyARException();
-		    }
-	    }	
-	    protected bool initInstance(NyARIntSize i_size,int i_buf_type,bool i_is_alloc)
-	    {
-		    switch(i_buf_type)
-		    {
-			    case NyARBufferType.INT1D_BIN_8:
-				    this._buf = i_is_alloc?new int[i_size.w*i_size.h]:null;
-				    break;
-			    default:
-				    return false;
-		    }
-		    this._is_attached_buffer=i_is_alloc;
-		    return true;
-	    }
-        public override object getBuffer()
-	    {
-		    return this._buf;
-	    }
-	    /**
-	     * ƒCƒ“ƒXƒ^ƒ“ƒX‚ªƒoƒbƒtƒ@‚ğŠ—L‚·‚é‚©‚ğ•Ô‚µ‚Ü‚·B
-	     * ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Åi_is_alloc‚ğfalse‚É‚µ‚Äƒ‰ƒXƒ^‚ğì¬‚µ‚½ê‡A
-	     * ƒoƒbƒtƒ@‚ÉƒAƒNƒZƒX‚·‚é‚Ü‚¦‚ÉAƒoƒbƒtƒ@‚Ì—L–³‚ğ‚±‚ÌŠÖ”‚Åƒ`ƒFƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B
-	     * @return
-	     */
-        public override bool hasBuffer()
-	    {
-		    return this._buf!=null;
-	    }
-        public override void wrapBuffer(object i_ref_buf)
-	    {
-		    Debug.Assert(!this._is_attached_buffer);//ƒoƒbƒtƒ@‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚½‚ç‹@”\‚µ‚È‚¢B
-		    this._buf=i_ref_buf;
-	    }	
-    }
+	/**
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ã™ã€‚
+	 * ç”»åƒã®ã‚µã‚¤ã‚ºãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŒ‡å®šã—ã¦ã€{@link NyARBufferType#INT2D_BIN_8}å½¢å¼ã®ãƒãƒƒãƒ•ã‚¡ã‚’æŒã¤ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã—ã¾ã™ã€‚
+	 * ã“ã®ãƒ©ã‚¹ã‚¿ã¯ã€å†…éƒ¨å‚ç…§ãƒãƒƒãƒ•ã‚¡ã‚’æŒã¡ã¾ã™ã€‚
+	 * @param i_width
+	 * ãƒ©ã‚¹ã‚¿ã®ã‚µã‚¤ã‚º
+	 * @param i_height
+	 * ãƒ©ã‚¹ã‚¿ã®ã‚µã‚¤ã‚º
+	 * @throws NyARException
+	 */
+	public NyARBinRaster(int i_width, int i_height)
+	{
+		super(i_width,i_height,NyARBufferType.INT1D_BIN_8,true);
+	}
+	/*
+	 * ã“ã®é–¢æ•°ã¯ã€ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®åˆæœŸåŒ–ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã‚’å®Ÿè£…ã—ã¾ã™ã€‚
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‹ã‚‰å‘¼ã³å‡ºã—ã¾ã™ã€‚
+	 * @param i_size
+	 * ãƒ©ã‚¹ã‚¿ã®ã‚µã‚¤ã‚º
+	 * @param i_buf_type
+	 * ãƒãƒƒãƒ•ã‚¡å½¢å¼å®šæ•°
+	 * @param i_is_alloc
+	 * å†…éƒ¨ãƒãƒƒãƒ•ã‚¡/å¤–éƒ¨ãƒãƒƒãƒ•ã‚¡ã®ãƒ•ãƒ©ã‚°
+	 * @return
+	 * åˆæœŸåŒ–ã«æˆåŠŸã™ã‚‹ã¨true
+	 * @throws NyARException 
+	 */
+	protected void initInstance(NyARIntSize i_size,int i_buf_type,bool i_is_alloc)
+	{
+		switch(i_buf_type)
+		{
+			case NyARBufferType.INT1D_BIN_8:
+				this._buf = i_is_alloc?new int[i_size.w*i_size.h]:null;
+				break;
+			default:
+				super.initInstance(i_size, i_buf_type, i_is_alloc);
+				return;
+		}
+		this._pixdrv=NyARGsPixelDriverFactory.createDriver(this);
+		this._is_attached_buffer=i_is_alloc;
+		return;
+	}
+	public Object createInterface(Class<?> i_iid)
+	{
+		if(i_iid==NyARLabeling_Rle.IRasterDriver.class){
+			return NyARLabeling_Rle.RasterDriverFactory.createDriver(this);
+		}
+		if(i_iid==NyARContourPickup.IRasterDriver.class){
+			return NyARContourPickup.ImageDriverFactory.createDriver(this);
+		}
+		throw new NyARException();
+	}
 }

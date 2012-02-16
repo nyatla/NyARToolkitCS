@@ -1,7 +1,7 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,27 +22,21 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
-    /**
-     * [[Strage class]]
-     * マーカを抽出した時のパラメータを格納するクラスです。
-     *
-     */
-    public class NyIdMarkerParam
-    {
-        /**
-         * マーカの方位値です。
-         */
-        public int direction;
-        /**
-         * マーカ周辺のパターン閾値です。
-         */
-        public int threshold;
-
-    }
+    
+/**
+ * このクラスは、NyIdマーカを抽出した時の画像処理パラメータを格納します。
+ * {@link NyIdMarkerPickup#pickFromRaster}関数の返却値を受け取るために使います。
+ */
+public class NyIdMarkerParam
+{
+	/**
+	 * ARToolKit準拠のマーカの方位値です。
+	 */
+	public int direction;
+	/**
+	 * マーカから求められたラべリング用閾値です。
+	 */
+	public int threshold; 
 }

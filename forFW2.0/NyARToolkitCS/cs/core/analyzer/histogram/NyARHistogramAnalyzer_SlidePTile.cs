@@ -1,13 +1,7 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,62 +22,60 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
 namespace jp.nyatla.nyartoolkit.cs.core
-{
-    /**
-     * PTileを使った敷居値決定クラスです。
-     * 明点と暗点を双方向からPTile法で敷居値を計算し、その中央値を閾値とします。
-     * 
-     * 
-     */
-    public class NyARHistogramAnalyzer_SlidePTile : INyARHistogramAnalyzer_Threshold
-    {
-	    private int _persentage;
-	    /**
-	     * コンストラクタです。
-	     * @param i_persentage
-	     * 敷居値とする、PTileのパーセンテージ値を指定します。
-	     */
-	    public NyARHistogramAnalyzer_SlidePTile(int i_persentage)
-	    {
-		    Debug.Assert (0 <= i_persentage && i_persentage <= 50);
-		    //初期化
-		    this._persentage=i_persentage;
-	    }	
-	    public int getThreshold(NyARHistogram i_histogram)
-	    {
-		    //総ピクセル数を計算
-		    int n=i_histogram.length;
-		    int sum_of_pixel=i_histogram.total_of_data;
-		    int[] hist=i_histogram.data;
-		    // 閾値ピクセル数確定
-		    int th_pixcels = sum_of_pixel * this._persentage / 100;
-		    int th_wk;
-		    int th_w, th_b;
 
-		    // 黒点基準
-		    th_wk = th_pixcels;
-		    for (th_b = 0; th_b < n-2; th_b++) {
-			    th_wk -= hist[th_b];
-			    if (th_wk <= 0) {
-				    break;
-			    }
-		    }
-		    // 白点基準
-		    th_wk = th_pixcels;
-		    for (th_w = n-1; th_w > 1; th_w--) {
-			    th_wk -= hist[th_w];
-			    if (th_wk <= 0) {
-				    break;
-			    }
-		    }
-		    // 閾値の保存
-		    return (th_w + th_b) / 2;
-	    }
-    }
+
+
+
+/**
+ * このクラスは、明点・暗点のPTail法で求めた敷居値を合算して、敷居値を計算します。
+ * <p>敷居値決定のアルゴリズム - 明点・暗点両側からPTail法を用いて一定割合の画素を取り除き、その中間値を求めます。</p>
+ */
+public class NyARHistogramAnalyzer_SlidePTile : INyARHistogramAnalyzer_Threshold
+{
+	private int _persentage;
+	/**
+	 * コンストラクタです。
+	 * @param i_persentage
+	 * 明点、暗点の両側から取り除く、画素の割合を指定します。0&lt;n&lt;50の範囲で指定します。
+	 */
+	public NyARHistogramAnalyzer_SlidePTile(int i_persentage)
+	{
+		assert (0 <= i_persentage && i_persentage <= 50);
+		//初期化
+		this._persentage=i_persentage;
+	}
+	/**
+	 * この関数は、SlidePTileを用いて敷居値を1個求めます。敷居値の範囲は、i_histogram引数の範囲と同じです。
+	 */	
+	public int getThreshold(NyARHistogram i_histogram)
+	{
+		//総ピクセル数を計算
+		int n=i_histogram.length;
+		int sum_of_pixel=i_histogram.total_of_data;
+		int[] hist=i_histogram.data;
+		// 閾値ピクセル数確定
+		sealed int th_pixcels = sum_of_pixel * this._persentage / 100;
+		int th_wk;
+		int th_w, th_b;
+
+		// 黒点基準
+		th_wk = th_pixcels;
+		for (th_b = 0; th_b < n-2; th_b++) {
+			th_wk -= hist[th_b];
+			if (th_wk <= 0) {
+				break;
+			}
+		}
+		// 白点基準
+		th_wk = th_pixcels;
+		for (th_w = n-1; th_w > 1; th_w--) {
+			th_wk -= hist[th_w];
+			if (th_wk <= 0) {
+				break;
+			}
+		}
+		// 閾値の保存
+		return (th_w + th_b) / 2;
+	}
 }

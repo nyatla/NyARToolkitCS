@@ -1,14 +1,8 @@
 /* 
- * PROJECT: NyARToolkitCS
- * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * PROJECT: NyARToolkitCS(Extension)
+ * -------------------------------------------------------------------------------
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,39 +23,81 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+
+
+/**
+ * このインタフェイスは、２次元ラスタにアクセスする関数を定義します。
+ * 二次元ラスタは、任意形式のバッファと、サイズ、バッファ形式を持つオブジェクトです。
+ */
+public interface INyARRaster
 {
-    public interface INyARRaster
-    {
-    	
-	    int getWidth();
-	    int getHeight();
-	    NyARIntSize getSize();
-	    /**
-	     * �o�b�t�@�I�u�W�F�N�g��Ԃ��܂��B
-	     * @return
-	     */
-	    object getBuffer();
-	    /**
-	     * �o�b�t�@�I�u�W�F�N�g�̃^�C�v��Ԃ��܂��B
-	     * @return
-	     */
-	    int getBufferType();
-	    /**
-	     * �o�b�t�@�̃^�C�v��i_type_value�ł��邩�A�`�F�b�N���܂��B
-	     * @param i_type_value
-	     * @return
-	     */
-	    bool isEqualBufferType(int i_type_value);
-	    /**
-	     * getBuffer���I�u�W�F�N�g��Ԃ��邩�̐^�U�l�ł��B
-	     * @return
-	     */
-	    bool hasBuffer();
-	    /**
-	     * i_ref_buf�����b�v���܂��B�ł�����萮�����`�F�b�N���s���܂��B
-	     * �o�b�t�@�̍ă��b�s���O���\�Ȋ֐��̂݁A���̊֐����������Ă��������B
-	     * @param i_ref_buf
-	     */
-	    void wrapBuffer(object i_ref_buf);
-    }
+	/**
+	 * この関数は、ラスタの幅を返します。
+	 * 実装クラスでは、ラスタの幅を返す処理を実装してください。
+	 * @return
+	 * ラスタの幅
+	 */
+	public int getWidth();
+	/**
+	 * この関数は、ラスタの高さを返します。
+	 * 実装クラスでは、ラスタの幅を返す処理を実装してください。
+	 * @return
+	 * ラスタの高さ
+	 */
+	public int getHeight();
+	/**
+	 * この関数は、ラスタのサイズを格納したオブジェクトの参照値を返します。
+	 * 実装クラスでは、サイズオブジェクトの参照値を返す処理を実装してください。
+	 * @return
+	 * [read only]ラスタサイズの参照値
+	 */
+	public NyARIntSize getSize();
+	/**
+	 * この関数は、バッファオブジェクトを返します。
+	 * 実装クラスでは、バッファを格納したオブジェクトを返してください。
+	 * @return
+	 * バッファを格納したオブジェクト。
+	 */
+	public Object getBuffer();
+	/**
+	 * この関数は、バッファの画素形式を返します。
+	 * 実装クラスでは、{@link #getBuffer}の返すバッファの形式を返してください。
+	 * @return
+	 * バッファの形式。{@link NyARBufferType}の定義値です。
+	 */
+	public int getBufferType();
+	/**
+	 * この関数は、画素形式がi_type_valueであるか、チェックします。
+	 * 実装クラスでは、格納しているバッファの画素形式がi_type_valueと等しいかを確認してください。
+	 * @param i_type_value
+	 * バッファタイプ値。{@link NyARBufferType}の定義値です。
+	 * @return
+	 * 真偽値。画素形式が一致していればtrue。
+	 */
+	public bool isEqualBufferType(int i_type_value);
+	/**
+	 * この関数は、{@link #getBuffer}がオブジェクトを返せるかを真偽値返します。
+	 * 外部参照バッファを使用できるクラスで使います。
+	 * 実装クラスでは、{@link #getBuffer}がオブジェクトを返せるかの判定値を返してください。
+	 * @return
+	 * 真偽値。{@link #getBuffer}が利用可能ならtrue。
+	 */
+	public bool hasBuffer();
+	/**
+	 * この関数は、外部参照バッファをラップして、ラスタのバッファにします。
+	 * 実装クラスでは、できる限り整合性チェックをしたうえで、バッファを切り替える処理を実装してください。
+	 * この関数は、実装しなくともかまいません。その場合は、{@link NyARException}例外を発生させてください。
+	 * @param i_ref_buf
+	 * 切り替える外部参照バッファオブジェクト。
+	 */
+	public void wrapBuffer(Object i_ref_buf);
+	/**
+	 * ARTKに必要なラスタドライバインタフェイスを返す。
+	 * @return
+	 */
+	public Object createInterface(Class<?> i_iid)throws NyARException;
+
 }

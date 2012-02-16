@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,14 +29,20 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+/**
+ * このインタフェイスは、パターンマッチ処理の共通関数を定義します。
+ * パターンマッチクラスは、基準{@link NyARCode}パターンと、入力した画像の比較機能を提供します。
+ * 比較関数の多くが実体クラスに移動したため、現在このインタフェイスは意味を失っています。
+ */
+public interface INyARMatchPatt
 {
-
-    /**
-     * ARCodeとINyARColorPattの間で一致計算をするインタフェイスです。
-     */
-    public interface INyARMatchPatt
-    {
-        void setARCode(NyARCode i_code);
-    }
-
+	/**
+	 * この関数は、インスタンスに基準となるARマーカオブジェクトをセットします。
+	 * @param i_code
+	 * セットするARマーカ
+	 */
+	public void setARCode(NyARCode i_code);
 }

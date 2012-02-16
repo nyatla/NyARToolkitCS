@@ -1,7 +1,7 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,196 +22,184 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+
+
+
+
+
+
+
+/**
+ * このクラスは、入力サイズ制限の無いPerspectiveReaderです。
+ *
+ */
+public class NyARColorPatt_Perspective : INyARColorPatt
 {
-     /**
-     * 遠近法を使ったパースペクティブ補正をかけて、ラスタ上の四角形から
-     * 任意解像度の矩形パターンを作成します。
-     *
-     */
-    public class NyARColorPatt_Perspective : INyARColorPatt
-    {
-	    protected int[] _patdata;
-	    protected NyARIntPoint2d _pickup_lt=new NyARIntPoint2d();	
-	    protected NyARIntSize _pickup_wh=new NyARIntSize();	
-	    protected int _resolution;
-	    protected NyARIntSize _size;
-	    protected NyARPerspectiveParamGenerator _perspective_gen;
-	    private NyARRgbPixelReader_INT1D_X8R8G8B8_32 _pixelreader;
-	    private static int LOCAL_LT=1;
-	    private static int BUFFER_FORMAT=NyARBufferType.INT1D_X8R8G8B8_32;
-    	
-	    private void initializeInstance(int i_width, int i_height,int i_point_per_pix)
-	    {
-		    Debug.Assert(i_width>2 && i_height>2);
-		    this._size=new NyARIntSize(i_width,i_height);
-		    this._patdata = new int[i_height*i_width];
-		    this._pixelreader=new NyARRgbPixelReader_INT1D_X8R8G8B8_32(this._patdata,this._size);
-		    return;		
-	    }
-	    /**
-	     * コンストラクタです。サンプリングサイズを指定して、
-	     * @param i_width
-	     * 取得画像の解像度幅
-	     * @param i_height
-	     * 取得画像の解像度高さ
-	     * @param i_point_per_pix
-	     * 1ピクセルあたりの縦横サンプリング数。2なら2x2=4ポイントをサンプリングする。
-	     */
-	    public NyARColorPatt_Perspective(int i_width, int i_height,int i_point_per_pix)
-	    {
-		    initializeInstance(i_width,i_height,i_point_per_pix);
-		    setEdgeSize(0,0,i_point_per_pix);
-		    return;
-	    }
-	    /**
-	     * 例えば、64
-	     * @param i_width
-	     * 取得画像の解像度幅
-	     * @param i_height
-	     * 取得画像の解像度高さ
-	     * @param i_edge_percentage
-	     * エッジ幅の割合(ARToolKit標準と同じなら、25)
-	     */
-	    public NyARColorPatt_Perspective(int i_width, int i_height,int i_point_per_pix,int i_edge_percentage)
-	    {
-		    //入力制限
-		    initializeInstance(i_width,i_height,i_point_per_pix);
-		    setEdgeSizeByPercent(i_edge_percentage,i_edge_percentage,i_point_per_pix);
-		    return;
-	    }	
-	    /**
-	     * 矩形領域のエッジサイズを指定します。
-	     * エッジの計算方法は以下の通りです。
-	     * 1.マーカ全体を(i_x_edge*2+width)x(i_y_edge*2+height)の解像度でパラメタを計算します。
-	     * 2.ピクセルの取得開始位置を(i_x_edge/2,i_y_edge/2)へ移動します。
-	     * 3.開始位置から、width x height個のピクセルを取得します。
-	     * 
-	     * ARToolKit標準マーカの場合は、width/2,height/2を指定してください。
-	     * @param i_x_edge
-	     * @param i_y_edge
-	     */
-	    public void setEdgeSize(int i_x_edge,int i_y_edge,int i_resolution)
-	    {
-		    Debug.Assert(i_x_edge>=0);
-		    Debug.Assert(i_y_edge>=0);
-		    //Perspectiveパラメタ計算器を作成
-		    this._perspective_gen=new NyARPerspectiveParamGenerator_O1(LOCAL_LT,LOCAL_LT);
-		    //ピックアップ開始位置を計算
-		    this._pickup_lt.setValue(i_x_edge*i_resolution+LOCAL_LT,i_y_edge*i_resolution+LOCAL_LT);
-		    this._pickup_wh.setValue((i_x_edge*2+this._size.w)*i_resolution,(i_y_edge*2+this._size.h)*i_resolution);
-		    this._resolution=i_resolution;	
-		    return;
-	    }
-	    public void setEdgeSizeByPercent(int i_x_percent,int i_y_percent,int i_resolution)
-	    {
-		    Debug.Assert(i_x_percent>=0);
-		    Debug.Assert(i_y_percent>=0);
-		    setEdgeSize(this._size.w*i_x_percent/50,this._size.h*i_y_percent/50,i_resolution);
-		    return;
-	    }
+	private NyARIntPoint2d _edge=new NyARIntPoint2d();
+	/** パターン格納用のバッファ*/
+	protected int[] _patdata;
+	/** サンプリング解像度*/
+	protected int _sample_per_pixel;
+	/** このラスタのサイズ*/	
+	protected NyARIntSize _size;
+	private INyARRgbPixelDriver _pixelreader;
+	private static sealed int BUFFER_FORMAT=NyARBufferType.INT1D_X8R8G8B8_32;
+	private void initInstance(int i_width, int i_height,int i_point_per_pix)
+	{
+		assert i_width>2 && i_height>2;
+		this._sample_per_pixel=i_point_per_pix;	
+		this._size=new NyARIntSize(i_width,i_height);
+		this._patdata = new int[i_height*i_width];
+		this._pixelreader=NyARRgbPixelDriverFactory.createDriver(this);
+		return;
+	}
 
-    	
-	    public int getWidth()
-	    {
-		    return this._size.w;
-	    }
-        public int getHeight()
-	    {
-		    return this._size.h;
-	    }
-        public NyARIntSize getSize()
-	    {
-		    return 	this._size;
-	    }
-	    public INyARRgbPixelReader getRgbPixelReader()
-	    {
-		    return this._pixelreader;
-	    }
-	    public object getBuffer()
-	    {
-		    return this._patdata;
-	    }
-	    public bool hasBuffer()
-	    {
-		    return this._patdata!=null;
-	    }
-	    public void wrapBuffer(object i_ref_buf)
-	    {
-		    NyARException.notImplement();
-	    }
-        public int getBufferType()
-	    {
-		    return BUFFER_FORMAT;
-	    }
-        public bool isEqualBufferType(int i_type_value)
-	    {
-		    return BUFFER_FORMAT==i_type_value;
-	    }
-	    private int[] __pickFromRaster_rgb_tmp = new int[3];
-	    protected double[] __pickFromRaster_cpara=new double[8];
-    	
-	    /**
-	     * @see INyARColorPatt#pickFromRaster
-	     */
-	    public bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)
-	    {
-		    //遠近法のパラメータを計算
-		    double[] cpara = this.__pickFromRaster_cpara;
-		    if (!this._perspective_gen.getParam(this._pickup_wh,i_vertexs, cpara)) {
-			    return false;
-		    }
-    		
-		    int resolution=this._resolution;
-		    int img_x = image.getWidth();
-		    int img_y = image.getHeight();
-		    int res_pix=resolution*resolution;
+	/**
+	 * コンストラクタです。
+	 * エッジサイズ0,入力ラスタタイプの制限無しでインスタンスを作成します。
+	 *　高速化が必要な時は、入力ラスタタイプを制限するコンストラクタを使ってください。
+	 * @param i_width
+	 * 取得画像の解像度幅
+	 * @param i_height
+	 * 取得画像の解像度高さ
+	 * @param i_point_per_pix
+	 * 1ピクセルあたりの縦横サンプリング数。2なら2x2=4ポイントをサンプリングする。
+	 * @throws NyARException 
+	 */
+	public NyARColorPatt_Perspective(int i_width, int i_height,int i_point_per_pix)
+	{
+		this.initInstance(i_width,i_height,i_point_per_pix);
+		this._edge.setValue(0,0);
+		return;
+	}
+	/**
+	 * コンストラクタです。
+	 * エッジサイズ,入力ラスタタイプの制限を指定してインスタンスを作成します。
+	 * @param i_width
+	 * 取得画像の解像度幅
+	 * @param i_height
+	 * 取得画像の解像度高さ
+	 * @param i_point_per_pix
+	 * 1ピクセルあたりの解像度
+	 * @param i_edge_percentage
+	 * エッジ幅の割合(ARToolKit標準と同じなら、25)
+	 * @throws NyARException 
+	 */
+	public NyARColorPatt_Perspective(int i_width, int i_height,int i_point_per_pix,int i_edge_percentage)
+	{
+		this.initInstance(i_width,i_height,i_point_per_pix);
+		this._edge.setValue(i_edge_percentage, i_edge_percentage);
+		return;
+	}
+	/**
+	 * 矩形領域のエッジ（枠）サイズを、割合で指定します。
+	 * @param i_x_percent
+	 * 左右のエッジの割合です。0から50の間の数で指定します。
+	 * @param i_y_percent
+	 * 上下のエッジの割合です。0から50の間の数で指定します。
+	 * @param i_sample_per_pixel
+	 * 1ピクセルあたりの縦横サンプリング数。2なら2x2=4ポイントをサンプリングする。
+	 */
+	public void setEdgeSizeByPercent(int i_x_percent,int i_y_percent,int i_sample_per_pixel)
+	{
+		assert(i_x_percent>=0);
+		assert(i_y_percent>=0);
+		this._edge.setValue(i_x_percent, i_y_percent);
+		this._sample_per_pixel=i_sample_per_pixel;
+		return;
+	}
+	/**
+	 * この関数はラスタの幅を返します。
+	 */
+	public sealed int getWidth()
+	{
+		return this._size.w;
+	}
+	/**
+	 * この関数はラスタの高さを返します。
+	 */
+	public sealed int getHeight()
+	{
+		return this._size.h;
+	}
+	/**
+	 * この関数はラスタのサイズの参照値を返します。
+	 */
+	public sealed NyARIntSize getSize()
+	{
+		return 	this._size;
+	}
+	/**
+	 * この関数は、ラスタの画素読み取りオブジェクトの参照値を返します。
+	 */	
+	public sealed INyARRgbPixelDriver getRgbPixelDriver()
+	{
+		return this._pixelreader;
+	}
+	/**
+	 * この関数は、ラスタ画像のバッファを返します。
+	 * バッファ形式は、{@link NyARBufferType#INT1D_X8R8G8B8_32}(int[])です。
+	 */	
+	public Object getBuffer()
+	{
+		return this._patdata;
+	}
+	/**
+	 * この関数は、インスタンスがバッファを所有しているかを返します。基本的にtrueです。
+	 */	
+	public bool hasBuffer()
+	{
+		return this._patdata!=null;
+	}
+	/**
+	 * この関数は使用不可能です。
+	 */
+	public void wrapBuffer(Object i_ref_buf)
+	{
+		NyARException.notImplement();
+	}
+	/**
+	 * この関数は、バッファタイプの定数を返します。
+	 */
+	public sealed int getBufferType()
+	{
+		return BUFFER_FORMAT;
+	}
+	/**
+	 * この関数は、インスタンスのバッファタイプが引数のものと一致しているか判定します。
+	 */	
+	public sealed bool isEqualBufferType(int i_type_value)
+	{
+		return BUFFER_FORMAT==i_type_value;
+	}
+	private INyARRgbRaster _last_input_raster=null;
+	private INyARPerspectiveCopy _raster_driver;
+	/**
+	 * この関数は、ラスタのi_vertexsで定義される四角形からパターンを取得して、インスタンスに格納します。
+	 */
+	public bool pickFromRaster(INyARRgbRaster image,NyARIntPoint2d[] i_vertexs)throws NyARException
+	{
+		if(this._last_input_raster!=image){
+			this._raster_driver=(INyARPerspectiveCopy) image.createInterface(INyARPerspectiveCopy.class);
+			this._last_input_raster=image;
+		}
+		//遠近法のパラメータを計算
+		return this._raster_driver.copyPatt(i_vertexs,this._edge.x,this._edge.y,this._sample_per_pixel, this);
+	}
 
-		    int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
-
-		    //ピクセルリーダーを取得
-		    INyARRgbPixelReader reader=image.getRgbPixelReader();
-		    int p=0;
-		    for(int iy=0;iy<this._size.h*resolution;iy+=resolution){
-			    //解像度分の点を取る。
-			    for(int ix=0;ix<this._size.w*resolution;ix+=resolution){
-				    int r,g,b;
-				    r=g=b=0;
-				    for(int i2y=iy;i2y<iy+resolution;i2y++){
-					    int cy=this._pickup_lt.y+i2y;
-					    for(int i2x=ix;i2x<ix+resolution;i2x++){
-						    //1ピクセルを作成
-						    int cx=this._pickup_lt.x+i2x;
-						    double d=cpara[6]*cx+cpara[7]*cy+1.0;
-						    int x=(int)((cpara[0]*cx+cpara[1]*cy+cpara[2])/d);
-						    int y=(int)((cpara[3]*cx+cpara[4]*cy+cpara[5])/d);
-						    if(x<0){x=0;}
-						    if(x>=img_x){x=img_x-1;}
-						    if(y<0){y=0;}
-						    if(y>=img_y){y=img_y-1;}
-    						
-						    reader.getPixel(x, y, rgb_tmp);
-						    r+=rgb_tmp[0];
-						    g+=rgb_tmp[1];
-						    b+=rgb_tmp[2];
-					    }
-				    }
-				    r/=res_pix;
-				    g/=res_pix;
-				    b/=res_pix;
-				    this._patdata[p]=((r&0xff)<<16)|((g&0xff)<<8)|((b&0xff));
-				    p++;
-			    }
-		    }
-			    //ピクセル問い合わせ
-			    //ピクセルセット
-		    return true;
-	    }
-
-    }
+	@Override
+	public Object createInterface(Class<?> iIid)
+	{
+		if(iIid==INyARPerspectiveCopy.class){
+			return NyARPerspectiveCopyFactory.createDriver(this);
+		}
+		if(iIid==NyARMatchPattDeviationColorData.IRasterDriver.class){
+			return NyARMatchPattDeviationColorData.RasterDriverFactory.createDriver(this);
+		}		
+		throw new NyARException();
+	}
 }

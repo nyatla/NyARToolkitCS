@@ -1,14 +1,8 @@
 /* 
- * PROJECT: NyARToolkitCS
- * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * PROJECT: NyARToolkitCS(Extension)
+ * -------------------------------------------------------------------------------
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,71 +22,91 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+
+
+/**
+ * このクラスは、RGBラスタクラスの基本処理を実装します。
+ */
+public abstract class NyARRgbRaster_BasicClass : INyARRgbRaster
 {
-
-    /**
-     * NyARRasterインタフェイスの基本関数/メンバを実装したクラス
-     * 
-     * 
-     */
-    public abstract class NyARRgbRaster_BasicClass : INyARRgbRaster
-    {
-	    protected NyARIntSize _size;
-	    private int _buffer_type;
-	    protected NyARRgbRaster_BasicClass(int i_width,int i_height,int i_buffer_type)
-	    {
-		    this._size= new NyARIntSize(i_width,i_height);
-		    this._buffer_type=i_buffer_type;
-	    }
-        public int getWidth()
-	    {
-		    return this._size.w;
-	    }
-        public int getHeight()
-	    {
-		    return this._size.h;
-	    }
-
-        public NyARIntSize getSize()
-	    {
-		    return this._size;
-	    }
-        public int getBufferType()
-	    {
-		    return _buffer_type;
-	    }
-        public bool isEqualBufferType(int i_type_value)
-	    {
-		    return this._buffer_type==i_type_value;
-	    }
-	    /**
-	     * ラスタのコピーを実行します。
-	     * この関数は暫定です。低速なので注意してください。
-	     * @param i_input
-	     * @param o_output
-	     * @throws NyARException 
-	     */
-	    public static void copy(INyARRgbRaster i_input,INyARRgbRaster o_output)
-	    {
-		    Debug.Assert(i_input.getSize().isEqualSize(o_output.getSize()));
-		    int width=i_input.getWidth();
-		    int height=i_input.getHeight();
-		    int[] rgb=new int[3];
-		    INyARRgbPixelReader inr=i_input.getRgbPixelReader();
-		    INyARRgbPixelReader outr=o_output.getRgbPixelReader();
-		    for(int i=height-1;i>=0;i--){
-			    for(int i2=width-1;i2>=0;i2--){
-				    inr.getPixel(i2,i,rgb);
-				    outr.setPixel(i2,i,rgb);
-			    }
-		    }
-	    }
-        public abstract INyARRgbPixelReader getRgbPixelReader();
-        public abstract object getBuffer();
-        public abstract bool hasBuffer();
-        public abstract void wrapBuffer(object i_ref_buf);    	
-    }
-
+	/** ラスタのサイズを格納します。*/
+	protected sealed NyARIntSize _size;
+	protected int _buffer_type;
+	/**
+	 * コンストラクタです。
+	 * @param i_width
+	 * ラスタの幅に設定する値
+	 * @param i_height
+	 * ラスタの高さに設定する値
+	 * @param i_buffer_type
+	 * バッファタイプ値に設定する値
+	 */
+	protected NyARRgbRaster_BasicClass(int i_width,int i_height,int i_buffer_type)
+	{
+		this._size= new NyARIntSize(i_width,i_height);
+		this._buffer_type=i_buffer_type;
+	}
+	/**
+	 * この関数は、ラスタの幅を返します。
+	 */	
+	sealed public int getWidth()
+	{
+		return this._size.w;
+	}
+	/**
+	 * この関数は、ラスタの高さを返します。
+	 */	
+	sealed public int getHeight()
+	{
+		return this._size.h;
+	}
+	/**
+	 * この関数は、ラスタのサイズを格納したオブジェクトを返します。
+	 */
+	sealed public NyARIntSize getSize()
+	{
+		return this._size;
+	}
+	/**
+	 * この関数は、ラスタのバッファへの参照値を返します。
+	 * バッファの形式は、コンストラクタに指定した形式と同じです。
+	 */	
+	sealed public int getBufferType()
+	{
+		return _buffer_type;
+	}
+	/**
+	 * この関数は、ラスタの幅を返します。
+	 */	
+	sealed public bool isEqualBufferType(int i_type_value)
+	{
+		return this._buffer_type==i_type_value;
+	}
+	/**
+	 * ラスタのコピーを実行します。
+	 * この関数は暫定です。低速なので注意してください。
+	 * @param i_input
+	 * @param o_output
+	 * @throws NyARException 
+	 */
+	public static void copy(INyARRgbRaster i_input,INyARRgbRaster o_output)
+	{
+		assert(i_input.getSize().isEqualSize(o_output.getSize()));
+		int width=i_input.getWidth();
+		int height=i_input.getHeight();
+		int[] rgb=new int[3];
+		INyARRgbPixelDriver inr=i_input.getRgbPixelDriver();
+		INyARRgbPixelDriver outr=o_output.getRgbPixelDriver();
+		for(int i=height-1;i>=0;i--){
+			for(int i2=width-1;i2>=0;i2--){
+				inr.getPixel(i2,i,rgb);
+				outr.setPixel(i2,i,rgb);
+			}
+		}
+	}
+	
 }

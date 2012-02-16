@@ -1,7 +1,7 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,15 +22,33 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
-    public interface INyIdMarkerDataEncoder
-    {
-        bool encode(NyIdMarkerPattern i_data, INyIdMarkerData o_dest);
-        INyIdMarkerData createDataInstance();
-    }
+
+
+
+/**
+ * このインタフェイスは、マーカパターンデータのエンコーダに共通な関数を定義します。
+ * NyIdのマーカデータを、利用可能な他形式のデータに変換します。
+ */
+public interface INyIdMarkerDataEncoder
+{
+	/**
+	 * この関数は、マーカパターンデータを他形式のデータに変換します。
+	 * 実装クラスでは、{@link NyIdMarkerPattern}に格納されるデータを変換する処理を実装してください。
+	 * @param i_data
+	 * 変換元のデータ
+	 * @param o_dest
+	 * 変換先のデータ
+	 * @return
+	 * 変換に成功するとtrueを返します。
+	 */
+	public bool encode(NyIdMarkerPattern i_data,INyIdMarkerData o_dest);
+	/**
+	 * この関数は、このエンコーダの出力形式のオブジェクトを生成して返します。
+	 * 実装クラスでは、そのクラスの{@link #encode}に入力できるオブジェクトを生成してください。
+	 * @return
+	 * 新しいオブジェクト
+	 */
+	public INyIdMarkerData createDataInstance();
 }
