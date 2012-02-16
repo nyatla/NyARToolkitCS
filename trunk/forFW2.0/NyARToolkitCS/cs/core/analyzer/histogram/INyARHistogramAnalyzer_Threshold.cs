@@ -1,13 +1,7 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,25 +22,21 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+/**
+ * このインタフェイスは、ヒストグラムから敷居値を探索する関数を定義します。
+ */
+public interface INyARHistogramAnalyzer_Threshold
 {
-    /**
-     * 敷居値判別ヒストグラム分析器の、標準的なインタフェイスを定義します。
-     *
-     */
-    public interface INyARHistogramAnalyzer_Threshold
-    {
-        /**
-         * ヒストグラムから閾値探索をします。
-         * @param i_histogram
-         * 分析するヒストグラムオブジェクト
-         * @return
-         * 敷居値を返します。
-         */
-        int getThreshold(NyARHistogram i_histogram);
-    }
+	/**
+	 * ヒストグラムから閾値を１個探索する関数を実装します。
+	 * @param i_histogram
+	 * 分析するヒストグラムオブジェクト
+	 * @return
+	 * 敷居値を返します。値範囲は、{@link NyARHistogram}のプロパティから決定します。
+	 */
+	public int getThreshold(NyARHistogram i_histogram);
 }

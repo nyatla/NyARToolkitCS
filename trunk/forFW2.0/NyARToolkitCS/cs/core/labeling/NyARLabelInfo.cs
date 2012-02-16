@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,20 +28,29 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+/**
+ * このクラスは、ラべリング結果１個を格納するデータ型です。
+ * ラベル１個の領域情報を格納します。
+ *
+ */
+public class NyARLabelInfo
 {
-    public class NyARLabelInfo
-    {
-        public int area;
-        public int clip_r;
-        public int clip_l;
-        public int clip_b;
-        public int clip_t;
-        public double pos_x;
-        public double pos_y;
-    }
+	/** 領域の画素数*/
+	public int area;
+	/** 領域範囲の右端*/
+	public int clip_r;
+	/** 領域範囲の左端*/
+	public int clip_l;
+	/** 領域範囲の下端*/
+	public int clip_b;
+	/** 領域範囲の上端*/
+	public int clip_t;
+	/** 領域の中心位置(x)*/
+	public double pos_x;
+	/** 領域の中心位置(y)*/
+	public double pos_y;
+
 }

@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,24 +28,34 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using jp.nyatla.nyartoolkit.cs.utils;
 namespace jp.nyatla.nyartoolkit.cs.core
-{
-    /**
-     * NyARIntPoint2d�^�̉ϒ��z��ł��B
-     *
-     */
-    public class NyARIntPointStack : NyARObjectStack<NyARIntPoint2d>
-    {
-	    public NyARIntPointStack(int i_length)
-	    {
-		    base.initInstance(i_length);
-		    return;
-	    }
-	    protected override NyARIntPoint2d createElement()
-	    {
-		    return new NyARIntPoint2d();
-	    }	
-    }
 
+
+
+
+
+/**
+ * このクラスは、{@link NyARIntPoint2d}型の可変長配列です。
+ */
+public class NyARIntPointStack : NyARObjectStack<NyARIntPoint2d>
+{
+	/**
+	 * コンストラクタです。
+	 * 配列の最大長さを指定して、インスタンスを生成します。
+	 * @param i_length
+	 * 配列の最大長さ
+	 * @throws NyARException
+	 */
+	public NyARIntPointStack(int i_length)
+	{
+		super.initInstance(i_length,NyARIntPoint2d.class);
+		return;
+	}
+	/**
+	 * この関数は、配列要素を作成します。
+	 */
+	protected NyARIntPoint2d createElement()
+	{
+		return new NyARIntPoint2d();
+	}	
 }

@@ -1,7 +1,7 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS(Extension)
  * --------------------------------------------------------------------------------
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,26 +22,27 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
-    public interface INyIdMarkerData
-    {
-        /**
-         * i_targetのマーカデータと自身のデータが等しいかを返します。
-         * @param i_target
-         * 比較するマーカオブジェクト
-         * @return
-         * 等しいかの真偽値
-         */
-        bool isEqual(INyIdMarkerData i_target);
-        /**
-         * i_sourceからマーカデータをコピーします。
-         * @param i_source
-         */
-        void copyFrom(INyIdMarkerData i_source);
-    }
+
+
+/**
+ * このインタフェイスは、エンコード済みマーカデータ格納クラスの共通関数を定義します。
+ */
+public interface INyIdMarkerData
+{
+	/**
+	 * この関数は、i_targetのマーカデータとインスタンスのデータを比較します。
+	 * @param i_target
+	 * 比較するマーカオブジェクト
+	 * @return
+	 * 内容が等しいかの真偽値。等しければtrue
+	 */
+	public bool isEqual(INyIdMarkerData i_target);
+	/**
+	 * この関数は、i_sourceからインスタンスにマーカデータをコピーします。
+	 * @param i_source
+	 * コピー元のオブジェクト。
+	 */
+	public void copyFrom(INyIdMarkerData i_source);
 }

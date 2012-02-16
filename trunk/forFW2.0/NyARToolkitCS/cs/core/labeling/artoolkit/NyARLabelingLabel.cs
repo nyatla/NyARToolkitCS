@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,17 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+
+/**
+ * このクラスは、{@link NyARLabelingImage}クラスの使うデータ型です。
+ * ラベル１個分のデータを格納します。
+ * {@link NyARLabelInfo}にラベル番号が追加されています。
+ */
+public class NyARLabelingLabel : NyARLabelInfo
 {
+	/** ラベルのID番号。この番号については、{@link NyARLabelingImage}を参照してください。*/
+	public int id;
 
-    public class NyARLabelingLabel : NyARLabelInfo
-    {
-	    public int id; // �t���O�����g���x���̃C���f�N�X
-
-    }
 }

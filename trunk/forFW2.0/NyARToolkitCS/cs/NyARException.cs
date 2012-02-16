@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,8 +7,8 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,71 +28,71 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
+package jp.nyatla.nyartoolkit;
 
-namespace jp.nyatla.nyartoolkit.cs
+/**
+ * NyARToolkitライブラリが生成するExceptionのクラスです。
+ * このクラスは、NyARToolkitライブラリでのみ使用します。
+ */
+public class NyARException : Exception
 {
-    /**
-     * NyARToolkitライブラリが生成するExceptionのクラスです。
-     * このクラスは、NyARToolkitライブラリ内でのみ使用します。
-     *
-     */
-    public class NyARException : Exception
-    {
+	private static sealed long serialVersionUID = 1L;
 
-	    /**
-	     * コンストラクタです。例外オブジェクトを生成します。
-	     */
-	    public NyARException()
-            :base()
-	    {
-	    }
-	    /**
-	     * コンストラクタです。例外オブジェクト継承して、例外を生成します。
-	     * @param e
-	     * 継承する例外オブジェクト
-	     */
-        public NyARException(Exception e)
-            : base()
-	    {
-	    }
-	    /**
-	     * コンストラクタです。メッセージを指定して、例外を生成します。
-	     * @param m
-	     */
-        public NyARException(String m)
-            : base(m)
-	    {
-	    }
-	    /**
-	     * ライブラリ開発者向けの関数です。メッセージを指定して、例外をスローします。
-	     * この関数は、NyARToolkitの仕様外動作を補足するために使います。
-	     * @param m
-	     * @throws NyARException
-	     */
-
-	    public static void trap(String m)
-	    {
-		    throw new NyARException("トラップ:" + m);
-	    }
-	    /**
-	     * ライブラリ開発者向けの関数です。"Not Implement!"メッセージを指定して、例外をスローします。
-	     * この関数は、NyARToolkitの未実装部分に記述して使います。
-	     * @throws NyARException
-	     */
-	    public static void notImplement()
-        {
-		    throw new NyARException("Not Implement!");
-	    }
-	    /**
-	     * この関数は使用不能です。（別の関数を使用してください。）
-	     * @throws NyARException
-	     */
-	    public static void unavailability()
-	    {
-		    throw new NyARException("unavailability!");
-	    }
-    }
-
+	/**
+	 * コンストラクタです。
+	 * 例外オブジェクトを生成します。
+	 */
+	public NyARException()
+	{
+		super();
+	}
+	/**
+	 * コンストラクタです。
+	 * 例外オブジェクト継承して、例外を生成します。
+	 * @param e
+	 * 継承する例外オブジェクト
+	 */
+	public NyARException(Exception e)
+	{
+		super(e);
+	}
+	/**
+	 * コンストラクタです。
+	 * メッセージを指定して、例外を生成します。
+	 * @param m
+	 */
+	public NyARException(String m)
+	{
+		super(m);
+	}
+	/**
+	 * ライブラリ開発者向けの関数です。
+	 * 意図的に例外を発生するときに、コードに埋め込みます。
+	 * @param m
+	 * 例外メッセージを指定します。
+	 * @throws NyARException
+	 */
+	public static void trap(String m)
+	{
+		throw new NyARException("トラップ:" + m);
+	}
+	/**
+	 * ライブラリ開発者向けの関数です。
+	 * "Not Implement!"メッセージを指定して、例外をスローします。
+	 * この関数は、NyARToolkitの未実装部分に埋め込みます。
+	 * @throws NyARException
+	 */
+	public static void notImplement()
+	{
+		throw new NyARException("Not Implement!");
+	}
+	/**
+	 * ライブラリ開発者向けの関数です。
+	 * 関数が使用不能である事を、例外で通知します。
+	 * @throws NyARException
+	 */
+	public static void unavailability()
+	{
+		throw new NyARException("unavailability!");
+	}
 }

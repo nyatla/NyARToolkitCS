@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jp.nyatla.nyartoolkit.cs.utils
+namespace jp.nyatla.nyartoolkit.cs.core
 {/*
     public class Array2<T> where T : new()
     {

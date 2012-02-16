@@ -1,14 +1,8 @@
 /* 
- * PROJECT: NyARToolkitCS
- * --------------------------------------------------------------------------------
- * This work is based on the original ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
- *
- * The NyARToolkitCS is C# edition ARToolKit class library.
- * Copyright (C)2008-2009 Ryo Iizuka
+ * PROJECT: NyARToolkitCS(Extension)
+ * -------------------------------------------------------------------------------
+ * The NyARToolkitCS is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,206 +22,199 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using jp.nyatla.nyartoolkit.cs.utils;
-using System.Diagnostics;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+import jp.nyatla.nyartoolkit.core.labeling.rlelabeling.NyARLabeling_Rle;
+
+
+
+
+
+
+
+/**
+ * このクラスは、グレースケース画像を格納するラスタクラスです。
+ * 外部バッファ、内部バッファの両方に対応します。
+ */
+public class NyARGrayscaleRaster : INyARGrayscaleRaster
 {
-    /**
-     * 1���̃O���[�X�P�[���摜���`����N���X�ł��B�摜�f�[�^�͓����ێ�/�O���ێ����I���\�ł��B
-     */
-    public class NyARGrayscaleRaster : NyARRaster_BasicClass
-    {
-	    private IdoFilterImpl _impl;
-	    protected object _buf;
-	    /**
-	     * �o�b�t�@�I�u�W�F�N�g���A�^�b�`����Ă����true
-	     */
-	    protected bool _is_attached_buffer;
+	protected sealed NyARIntSize _size;
+	protected int _buffer_type;
+	/**
+	 * この関数は、ラスタの幅を返します。
+	 */
+	public sealed int getWidth()
+	{
+		return this._size.w;
+	}
+	/**
+	 * この関数は、ラスタの高さを返します。
+	 */
+	sealed public int getHeight()
+	{
+		return this._size.h;
+	}
+	/**
+	 * この関数は、ラスタのサイズを格納したオブジェクトを返します。
+	 */
+	sealed public NyARIntSize getSize()
+	{
+		return this._size;
+	}
+	/**
+	 * この関数は、ラスタのバッファへの参照値を返します。
+	 * バッファの形式は、コンストラクタに指定した形式と同じです。
+	 */	
+	sealed public int getBufferType()
+	{
+		return _buffer_type;
+	}
+	/**
+	 * この関数は、ラスタの幅を返します。
+	 */
+	sealed public bool isEqualBufferType(int i_type_value)
+	{
+		return this._buffer_type==i_type_value;
+	}
+	public INyARGsPixelDriver getGsPixelDriver()
+	{
+		return this._pixdrv;
+	}
+	
+	/** バッファオブジェクト*/
+	protected Object _buf;
+	/** バッファオブジェクトがアタッチされていればtrue*/
+	protected bool _is_attached_buffer;
+	protected INyARGsPixelDriver _pixdrv;
+	
+	/**
+	 * コンストラクタです。
+	 * 内部参照のバッファ（{@link NyARBufferType#INT1D_GRAY_8}形式）を持つインスタンスを生成します。
+	 * @param i_width
+	 * ラスタのサイズ
+	 * @param i_height
+	 * ラスタのサイズ
+	 * @throws NyARException
+	 */
+	public NyARGrayscaleRaster(int i_width, int i_height)
+	{
+		this._size= new NyARIntSize(i_width,i_height);
+		this._buffer_type=NyARBufferType.INT1D_GRAY_8;		
+		initInstance(this._size, NyARBufferType.INT1D_GRAY_8, true);
+	}
+	/**
+	 * コンストラクタです。
+	 * 画像のサイズパラメータとバッファ参照方式を指定して、インスタンスを生成します。
+	 * バッファの形式は、{@link NyARBufferType#INT1D_GRAY_8}です。
+	 * @param i_width
+	 * ラスタのサイズ
+	 * @param i_height
+	 * ラスタのサイズ
+	 * @param i_is_alloc
+	 * バッファを外部参照にするかのフラグ値。
+	 * trueなら内部バッファ、falseなら外部バッファを使用します。
+	 * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
+	 * @throws NyARException
+	 */
+	public NyARGrayscaleRaster(int i_width, int i_height, bool i_is_alloc)
+			throws NyARException
+	{
+		this._size= new NyARIntSize(i_width,i_height);
+		this._buffer_type=NyARBufferType.INT1D_GRAY_8;		
+		initInstance(this._size, NyARBufferType.INT1D_GRAY_8, i_is_alloc);
+	}
 
-        public NyARGrayscaleRaster(int i_width, int i_height)
-            : base(i_width, i_height, NyARBufferType.INT1D_GRAY_8)
-	    {
-		    if (!initInstance(this._size, NyARBufferType.INT1D_GRAY_8, true))
-		    {
-			    throw new NyARException();
-		    }
-	    }
-	    /**
-	     * 
-	     * @param i_width
-	     * @param i_height
-	     * @param i_is_alloc
-	     * �摜�o�b�t�@������ێ��ɂ��邩�̃t���O�l�Btrue�Ȃ�A�C���X�^���X���o�b�t�@���m�ۂ��܂��Bfalse�Ȃ�A
-	     * �摜�o�b�t�@�͊O���Q�ƂɂȂ�AwrapBuffer�֐����g�p�ł��܂��B
-	     * @throws NyARException
-	     */
-        public NyARGrayscaleRaster(int i_width, int i_height, bool i_is_alloc)
-            : base(i_width, i_height, NyARBufferType.INT1D_GRAY_8)
-	    {
-		    if (!initInstance(this._size, NyARBufferType.INT1D_GRAY_8, i_is_alloc))
-		    {
-			    throw new NyARException();
-		    }
-	    }
+	/**
+	 * コンストラクタです。
+	 * 画像のサイズパラメータとバッファ形式を指定して、インスタンスを生成します。
+	 * @param i_width
+	 * ラスタのサイズ
+	 * @param i_height
+	 * ラスタのサイズ
+	 * @param i_raster_type
+	 * ラスタのバッファ形式。
+	 * {@link NyARBufferType}に定義された定数値を指定してください。指定できる値は、以下の通りです。
+	 * <ul>
+	 * <li>{@link NyARBufferType#INT1D_GRAY_8}
+	 * <ul>
+	 * @param i_is_alloc
+	 * バッファを外部参照にするかのフラグ値。
+	 * trueなら内部バッファ、falseなら外部バッファを使用します。
+	 * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
+	 * @throws NyARException
+	 */
+	public NyARGrayscaleRaster(int i_width, int i_height, int i_raster_type,bool i_is_alloc)
+	{
+		this._size= new NyARIntSize(i_width,i_height);
+		this._buffer_type=i_raster_type;
+		initInstance(this._size, i_raster_type, i_is_alloc);
+	}
 
-	    /**
-	     * @param i_width
-	     * @param i_height
-	     * @param i_raster_type
-	     *            NyARBufferType�ɒ�`���ꂽ�萔�l���w�肵�Ă��������B
-	     * @param i_is_alloc
-	     * @throws NyARException
-	     */
-        public NyARGrayscaleRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc)
-            : base(i_width, i_height, i_raster_type)
-	    {
-		    if (!initInstance(this._size, i_raster_type, i_is_alloc)) {
-			    throw new NyARException();
-		    }
-	    }
+	/**
+	 * このクラスの初期化シーケンスです。コンストラクタから呼び出します。初期化に失敗すると、例外を発生します。
+	 * @param i_size
+	 * ラスタサイズ
+	 * @param i_raster_type
+	 * バッファ形式
+	 * @param i_is_alloc
+	 * バッファ参照方法値
+	 * @throws NyARException 
+	 */
+	protected void initInstance(NyARIntSize i_size, int i_raster_type,bool i_is_alloc)
+	{
+		switch (i_raster_type) {
+		case NyARBufferType.INT1D_GRAY_8:
+			this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
+			break;
+		default:
+			throw new NyARException();
+		}
+		this._is_attached_buffer = i_is_alloc;
+		//ピクセルドライバの生成
+		this._pixdrv=NyARGsPixelDriverFactory.createDriver(this);
+	}
+	public Object createInterface(Class<?> i_iid)
+	{
+		if(i_iid==NyARLabeling_Rle.IRasterDriver.class){
+			return NyARLabeling_Rle.RasterDriverFactory.createDriver(this);
+		}
+		if(i_iid==NyARContourPickup.IRasterDriver.class){
+			return NyARContourPickup.ImageDriverFactory.createDriver(this);
+		}
+		if(i_iid==INyARHistogramFromRaster.class){
+			return NyARHistogramFromRasterFactory.createInstance(this);
+		}
+		throw new NyARException();
+	}	
+	/**
+	 * この関数は、ラスタのバッファへの参照値を返します。
+	 * バッファの形式は、コンストラクタに指定した形式と同じです。
+	 */	
+	public Object getBuffer()
+	{
+		return this._buf;
+	}
 
-	    /**
-	     * ���̃N���X�̏������V�[�P���X�ł��B�R���X�g���N�^����Ăяo���܂��B
-	     * @param i_size
-	     * @param i_buf_type
-	     * @param i_is_alloc
-	     * @return
-	     */
-	    protected bool initInstance(NyARIntSize i_size, int i_buf_type,bool i_is_alloc)
-	    {
-		    switch (i_buf_type) {
-		    case NyARBufferType.INT1D_GRAY_8:
-			    this._impl=new IdoFilterImpl_INT1D_GRAY_8();
-			    this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
-			    break;
-		    default:
-			    return false;
-		    }
-		    this._is_attached_buffer = i_is_alloc;
-		    return true;
-	    }
-	    public override object getBuffer()
-	    {
-		    return this._buf;
-	    }
-
-	    /**
-	     * �C���X�^���X���o�b�t�@�����L���邩��Ԃ��܂��B �R���X�g���N�^��i_is_alloc��false�ɂ��ă��X�^���쐬�����ꍇ�A
-	     * �o�b�t�@�ɃA�N�Z�X����܂��ɁA�o�b�t�@�̗L�������̊֐��Ń`�F�b�N���Ă��������B
-	     * @return
-	     */
-	    public override bool hasBuffer()
-	    {
-		    return this._buf != null;
-	    }
-	    /**
-	     *�@�ǉ��@�\-�����B
-	     * @throws NyARException 
-	     */
-        public override void wrapBuffer(object i_ref_buf)
-	    {
-		    Debug.Assert (!this._is_attached_buffer);// �o�b�t�@���A�^�b�`����Ă�����@�\���Ȃ��B
-		    this._buf = i_ref_buf;
-	    }
-
-	    /**
-	     * �w�肵�����l�Ń��X�^�𖄂߂܂��B
-	     * ���̊֐��͍��������Ă��܂���B
-	     * @param i_value
-	     */
-	    public void fill(int i_value)
-	    {
-		   Debug.Assert (this.isEqualBufferType(this.getBufferType()));
-		    this._impl.fill(this,i_value);
-	    }
-
-	    /**
-	     * ���X�^�̈ى𑜓x�ԃR�s�[�����܂��B
-	     * @param i_input
-	     * ���̓��X�^
-	     * @param i_top
-	     * ���̓��X�^�̍���_���w�肵�܂��B
-	     * @param i_left
-	     * ���̓��X�^�̍���_���w�肵�܂��B
-	     * @param i_skip
-	     * skip�l�B1�Ȃ瓙�{�A2�Ȃ�1/2�{�A3�Ȃ�1/3�{�̕Ώd�̉摜���o�͂��܂��B
-	     * @param o_output
-	     * �o�͐惉�X�^�B���̃��X�^�̉𑜓x�́Aw=(i_input.w-i_left)/i_skip,h=(i_input.h-i_height)/i_skip�𖞂����K�v������܂��B
-	     * �o�͐惉�X�^�Ɠ��̓��X�^�̃o�b�t�@�^�C�v�́A�����ł���K�v������܂��B
-	     */
-	    public void copyTo(int i_left,int i_top,int i_skip, NyARGrayscaleRaster o_output)
-	    {
-		    Debug.Assert (this.getSize().isInnerSize(i_left + o_output.getWidth() * i_skip, i_top+ o_output.getHeight() * i_skip));		
-		    Debug.Assert (this.isEqualBufferType(o_output.getBufferType()));
-		    this._impl.copyTo(this, i_left, i_top, i_skip, o_output);
-		    return;
-	    }
-	    ////////////////////////////////////////////////////////////////////////////////
-	    //�������烉�X�^�h���C�o
-    	
-	    interface IdoFilterImpl
-	    {
-		    void fill(NyARGrayscaleRaster i_raster,int i_value);
-		    void copyTo(NyARGrayscaleRaster i_input, int i_left,int i_top,int i_skip, NyARGrayscaleRaster o_output);
-	    }
-    	
-	    sealed class IdoFilterImpl_INT1D_GRAY_8 : IdoFilterImpl
-	    {
-		    public void fill(NyARGrayscaleRaster i_raster,int i_value)
-		    {
-			    Debug.Assert (i_raster._buffer_type == NyARBufferType.INT1D_GRAY_8);
-			    int[] buf = (int[]) i_raster._buf;
-			    for (int i = i_raster._size.h * i_raster._size.w - 1; i >= 0; i--) {
-				    buf[i] = i_value;
-			    }			
-		    }
-
-		    public void copyTo(NyARGrayscaleRaster i_input, int i_left,int i_top,int i_skip, NyARGrayscaleRaster o_output)
-		    {
-			    Debug.Assert (i_input.getSize().isInnerSize(i_left + o_output.getWidth() * i_skip, i_top+ o_output.getHeight() * i_skip));		
-			    int[] input = (int[]) i_input.getBuffer();
-			    int[] output = (int[]) o_output.getBuffer();
-			    int pt_src, pt_dst;
-			    NyARIntSize dest_size = o_output.getSize();
-			    NyARIntSize src_size = i_input.getSize();
-			    int skip_src_y = (src_size.w - dest_size.w * i_skip) + src_size.w * (i_skip - 1);
-			    int pix_count = dest_size.w;
-			    int pix_mod_part = pix_count - (pix_count % 8);
-			    // ���ォ��1�s�Â������Ă���
-			    pt_dst = 0;
-			    pt_src = (i_top * src_size.w + i_left);
-			    for (int y = dest_size.h - 1; y >= 0; y -= 1) {
-				    int x;
-				    for (x = pix_count - 1; x >= pix_mod_part; x--) {
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-				    }
-				    for (; x >= 0; x -= 8) {
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-					    output[pt_dst++] = input[pt_src];
-					    pt_src += i_skip;
-				    }
-				    // �X�L�b�v
-				    pt_src += skip_src_y;
-			    }
-			    return;
-		    }
-	    }	
-    	
-    }
+	/**
+	 * この関数は、インスタンスがバッファを所有するかを返します。
+	 * 内部参照バッファの場合は、常にtrueです。
+	 * 外部参照バッファの場合は、バッファにアクセスする前に、このパラメタを確認してください。
+	 */
+	public bool hasBuffer()
+	{
+		return this._buf != null;
+	}
+	/**
+	 * この関数は、ラスタに外部参照バッファをセットします。
+	 * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
+	 */
+	public void wrapBuffer(Object i_ref_buf)
+	{
+		assert (!this._is_attached_buffer);// バッファがアタッチされていたら機能しない。
+		//ラスタの形式は省略。
+		this._pixdrv.switchRaster(this);
+		this._buf = i_ref_buf;
+	}
 
 }

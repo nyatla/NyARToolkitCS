@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,20 +28,21 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
+
+
+/**
+ * このクラスは、{@link NyARMatchPatt_BlackWhite}や{@link NyARMatchPatt_Color_WITHOUT_PCA}のevaluate
+ * 関数の戻り値を格納します。
+ */
+public class NyARMatchPattResult
 {
-    /**
-     * [[Strage class]]
-     *
-     */
-    public class NyARMatchPattResult
-    {
-    	public const int DIRECTION_UNKNOWN=-1;
-        public double confidence;
-        public int direction;
-    }
+	/** {@link #direction}の初期値。方位不明である事を表します。*/
+	public static sealed int DIRECTION_UNKNOWN=-1;
+	/** パターンの一致率。0から1.0までの数値です。高い方が、一致率が高いことを示します。*/
+	public double confidence;
+	/** ARToolKit準拠の方位定数です。
+	 *  画像の右上位置が、0=1象限、1=2象限、、2=3象限、、3=4象限の位置にあることを示します。
+	 */
+	public int direction;
 }

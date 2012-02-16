@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * PROJECT: NyARToolkitCS
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,27 +28,33 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace jp.nyatla.nyartoolkit.cs.core
-{
-    public interface INyARRotMatrixOptimize
+
+
+
+
+
+/**
+ * このクラスは、ARToolKit由来の回転行列最適化関数を定義します。
+ *
+ */
+public interface INyARRotMatrixOptimize
 {
 	/**
+	 * この関数は、回転行列を最適化します。
+	 * 実装クラスでは、ARToolKitと互換性のある値を返す、回転行列の最適化処理を書きます。
 	 * @param io_rot
-	 * 初期回転行列
+	 * 最適化する回転行列を指定します。
 	 * @param i_trans
-	 * 初期並進ベクトル
+	 * 平行移動量
 	 * @param i_vertex3d
-	 * 初期3次元座標
+	 * 三次元オフセット座標
 	 * @param i_vertex2d
-	 * 画面上の頂点群
+	 * 理想座標系の頂点座標
 	 * @return
 	 * エラーレート
 	 * @throws NyARException
 	 */
-    double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d);
-    }
+	public double modifyMatrix(NyARRotMatrix_ARToolKit io_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d);
+	
 }

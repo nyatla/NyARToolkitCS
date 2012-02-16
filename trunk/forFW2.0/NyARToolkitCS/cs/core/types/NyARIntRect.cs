@@ -7,7 +7,7 @@
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
  *
- * The NyARToolkitCS is C# edition ARToolKit class library.
+ * The NyARToolkitCS is Java edition ARToolKit class library.
  * Copyright (C)2008-2009 Ryo Iizuka
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,207 +28,289 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
+
+/**
+ * このクラスは、基点x,yと、幅、高さで矩形を定義します。
+ */
+public class NyARIntRect
 {
-    /**
-     * ��_x,y�ƁA���A�����ŋ�`���`���܂��B
-     *
-     */
-    public class NyARIntRect
-    {
-	    public int x;
+	/** 矩形の左上の点(X)*/
+	public int x;
+	/** 矩形の左上の点(Y)*/
+	public int y;
+	/** 矩形の幅(X)*/
+	public int w;
+	/** 矩形の高さ(Y)*/
+	public int h;
+	/**
+	 * コンストラクタです。
+	 * 未初期化のインスタンスを生成します。
+	 */
+	public NyARIntRect()
+	{
+	}	
+	/**
+	 * コンストラクタです。初期値を指定してインスタンスを生成します。
+	 * @param i_x
+	 * {@link #x}の値
+	 * @param i_y
+	 * {@link #y}の値
+	 * @param i_w
+	 * {@link #w}の値
+	 * @param i_h
+	 * {@link #h}の値
+	 */
+	public NyARIntRect(int i_x,int i_y,int i_w,int i_h)
+	{
+		this.setValue(i_x, i_y, i_w, i_h);
+	}
+	/**
+	 * この関数は、頂点集合を包括する矩形を計算して、インスタンスにセットします。
+	 * @param i_vertex
+	 * 頂点集合を格納した配列
+	 * @param i_num_of_vertex
+	 * 計算対象とする要素の数
+	 */
+	public sealed void setAreaRect(NyARDoublePoint2d[] i_vertex,int i_num_of_vertex)
+	{
+		//エリアを求める。
+		int xmax,xmin,ymax,ymin;
+		xmin=xmax=(int)i_vertex[i_num_of_vertex-1].x;
+		ymin=ymax=(int)i_vertex[i_num_of_vertex-1].y;
+		for(int i=i_num_of_vertex-2;i>=0;i--){
+			if(i_vertex[i].x<xmin){
+				xmin=(int)i_vertex[i].x;
+			}else if(i_vertex[i].x>xmax){
+				xmax=(int)i_vertex[i].x;
+			}
+			if(i_vertex[i].y<ymin){
+				ymin=(int)i_vertex[i].y;
+			}else if(i_vertex[i].y>ymax){
+				ymax=(int)i_vertex[i].y;
+			}
+		}
+		this.h=ymax-ymin+1;
+		this.x=xmin;
+		this.w=xmax-xmin+1;
+		this.y=ymin;
+	}
+	/**
+	 * この関数は、頂点集合を包括する矩形を計算して、インスタンスにセットします。
+	 * @param i_vertex
+	 * 頂点集合を格納した配列
+	 * @param i_num_of_vertex
+	 * 計算対象とする要素の数
+	 */
+	public sealed void setAreaRect(NyARIntPoint2d[] i_vertex,int i_num_of_vertex)
+	{
+		//エリアを求める。
+		int xmax,xmin,ymax,ymin;
+		xmin=xmax=(int)i_vertex[i_num_of_vertex-1].x;
+		ymin=ymax=(int)i_vertex[i_num_of_vertex-1].y;
+		for(int i=i_num_of_vertex-2;i>=0;i--){
+			if(i_vertex[i].x<xmin){
+				xmin=(int)i_vertex[i].x;
+			}else if(i_vertex[i].x>xmax){
+				xmax=(int)i_vertex[i].x;
+			}
+			if(i_vertex[i].y<ymin){
+				ymin=(int)i_vertex[i].y;
+			}else if(i_vertex[i].y>ymax){
+				ymax=(int)i_vertex[i].y;
+			}
+		}
+		this.h=ymax-ymin+1;
+		this.x=xmin;
+		this.w=xmax-xmin+1;
+		this.y=ymin;
+	}
 
-	    public int y;
+	/**
+	 * この関数は、矩形を領域内にクリップします。
+	 * @param i_left
+	 * クリップする左辺
+	 * @param i_top
+	 * クリップする上辺
+	 * @param i_right
+	 * クリップする右辺
+	 * @param i_bottom
+	 * クリップする下辺
+	 */
+	public sealed void clip(int i_left,int i_top,int i_right,int i_bottom)
+	{
+		int x=this.x;
+		int y=this.y;
+		int r=x+this.w-1;
+		int b=y+this.h-1;
+		if(x<i_left){
+			x=i_left;
+		}else if(x>i_right){
+			x=i_right;	
+		}
+		if(y<i_top){
+			y=i_top;
+		}else if(y>i_bottom){
+			y=i_bottom;			
+		}
+		int l;
+		l=(r>i_right)?i_right-x:r-x;
+		if(l<0){
+			this.w=0;
+		}else{
+			this.w=l+1;
+		}
+		l=(b>i_bottom)?i_bottom-y:b-y;
+		if(l<0){
+			this.h=0;
+		}else{
+			this.h=l+1;
+		}
+		this.x=x;
+		this.y=y;
+		return;
+	}
 
-	    public int w;
+	/**
+	 * この関数は、点が矩形の範囲内にあるか判定します。
+	 * @param i_x
+	 * 調査する座標(X)
+	 * @param i_y
+	 * 調査する座標(Y)
+	 * @return
+	 *　点が矩形の中にあれば、trueを返します。
+	 */
+	public sealed bool isInnerPoint(int i_x,int i_y)
+	{
+		int x=i_x-this.x;
+		int y=i_y-this.y;
+		
+		return (0<=x && x<this.w && 0<=y && y<this.h);
+	}
+	/**
+	 * この関数は、点が矩形の範囲内にあるか判定します。
+	 * @param i_pos
+	 * 調査する座標
+	 * @return
+	 *　点が矩形の中にあれば、trueを返します。
+	 */
+	public sealed bool isInnerPoint(NyARDoublePoint2d i_pos)
+	{
+		int x=(int)i_pos.x-this.x;
+		int y=(int)i_pos.y-this.y;
+		return (0<=x && x<this.w && 0<=y && y<this.h);
+	}
+	/**
+	 * この関数は、点が矩形の範囲内にあるか判定します。
+	 * @param i_pos
+	 * 調査する座標
+	 * @return
+	 *　点が矩形の中にあれば、trueを返します。
+	 */
+	public sealed bool isInnerPoint(NyARIntPoint2d i_pos)
+	{
+		int x=i_pos.x-this.x;
+		int y=i_pos.y-this.y;
+		return (0<=x && x<this.w && 0<=y && y<this.h);
+	}
+	/**
+	 * この関数は、引数の矩形が、この矩形内にあるか判定します。
+	 * @param i_rect
+	 * 内側にあるか調べる矩形
+	 * @return
+	 *　矩形が内側にあれば、trueを返します。
+	 */
+	public sealed bool isInnerRect(NyARIntRect i_rect)
+	{
+		assert(i_rect.w>=0 && i_rect.h>=0);
+		int lx=i_rect.x-this.x;
+		int ly=i_rect.y-this.y;
+		int lw=lx+i_rect.w;
+		int lh=ly+i_rect.h;
+		return (0<=lx && lx<this.w && 0<=ly && ly<this.h && lw<=this.w && lh<=this.h);
+	}
+	/**
+	 * この関数は、引数で定義される矩形が、この矩形内にあるか判定します。
+	 * @param i_x
+	 * 内側にあるか調べる矩形の左上座標(X)
+	 * @param i_y
+	 * 内側にあるか調べる矩形の左上座標(Y)
+	 * @param i_w
+	 * 内側にあるか調べる矩形の幅
+	 * @param i_h
+	 * 内側にあるか調べる矩形の高さ
+	 * @return
+	 *　矩形が内側にあれば、trueを返します。
+	 */
+	public sealed bool isInnerRect(int i_x,int i_y,int i_w,int i_h)
+	{
+		assert(i_w>=0 && i_h>=0);
+		int lx=i_x-this.x;
+		int ly=i_y-this.y;
+		int lw=lx+i_w;
+		int lh=ly+i_h;
+		return (0<=lx && lx<this.w && 0<=ly && ly<this.h && lw<=this.w && lh<=this.h);
+	}
+	/**
+	 * この関数は、２つの矩形の対角点同士の距離の二乗値を計算します。
+	 * @param i_rect2
+	 * 比較する矩形
+	 * @return
+	 * 左上、右下の点同士の距離の二乗値
+	 */
+	public sealed int sqDiagonalPointDiff(NyARIntRect i_rect2)
+	{
+		int w1,w2;
+		int ret;
+		w1=this.x-i_rect2.x;
+		w2=this.y-i_rect2.y;
+		ret=w1*w1+w2*w2;
+		w1+=this.w-i_rect2.w;
+		w2+=this.h-i_rect2.h;
+		ret+=w1*w1+w2*w2;
+		return ret;
+	}
+	/**
+	 * この関数は、矩形の対角距離の二乗距離を返します。
+	 * @return
+	 * 矩形の対角距離の二乗値。
+	 */
+	public sealed int getDiagonalSqDist()
+	{
+		int lh=this.h;
+		int lw=this.w;
+		return lh*lh+lw*lw;
+	}
 
-	    public int h;
-	    /**
-	     * ���_������RECT���v�Z���܂��B
-	     * @param i_vertex
-	     * @param i_num_of_vertex
-	     * @param o_rect
-	     */
-        public void setAreaRect(NyARDoublePoint2d[] i_vertex, int i_num_of_vertex)
-	    {
-		    //�G���A�����߂�B
-		    int xmax,xmin,ymax,ymin;
-		    xmin=xmax=(int)i_vertex[i_num_of_vertex-1].x;
-		    ymin=ymax=(int)i_vertex[i_num_of_vertex-1].y;
-		    for(int i=i_num_of_vertex-2;i>=0;i--){
-			    if(i_vertex[i].x<xmin){
-				    xmin=(int)i_vertex[i].x;
-			    }else if(i_vertex[i].x>xmax){
-				    xmax=(int)i_vertex[i].x;
-			    }
-			    if(i_vertex[i].y<ymin){
-				    ymin=(int)i_vertex[i].y;
-			    }else if(i_vertex[i].y>ymax){
-				    ymax=(int)i_vertex[i].y;
-			    }
-		    }
-		    this.h=ymax-ymin+1;
-		    this.x=xmin;
-		    this.w=xmax-xmin+1;
-		    this.y=ymin;
-	    }
-        public void setAreaRect(NyARIntPoint2d[] i_vertex, int i_num_of_vertex)
-	    {
-		    //�G���A�����߂�B
-		    int xmax,xmin,ymax,ymin;
-		    xmin=xmax=(int)i_vertex[i_num_of_vertex-1].x;
-		    ymin=ymax=(int)i_vertex[i_num_of_vertex-1].y;
-		    for(int i=i_num_of_vertex-2;i>=0;i--){
-			    if(i_vertex[i].x<xmin){
-				    xmin=(int)i_vertex[i].x;
-			    }else if(i_vertex[i].x>xmax){
-				    xmax=(int)i_vertex[i].x;
-			    }
-			    if(i_vertex[i].y<ymin){
-				    ymin=(int)i_vertex[i].y;
-			    }else if(i_vertex[i].y>ymax){
-				    ymax=(int)i_vertex[i].y;
-			    }
-		    }
-		    this.h=ymax-ymin+1;
-		    this.x=xmin;
-		    this.w=xmax-xmin+1;
-		    this.y=ymin;
-	    }
-
-	    /**
-	     * ��`���w�肵���̈���ɃN���b�v���܂��B
-	     * @param top
-	     * @param bottom
-	     * @param left
-	     * @param right
-	     */
-	    public void clip(int i_left,int i_top,int i_right,int i_bottom)
-	    {
-		    int x=this.x;
-		    int y=this.y;
-		    int r=x+this.w-1;
-		    int b=y+this.h-1;
-		    if(x<i_left){
-			    x=i_left;
-		    }else if(x>i_right){
-			    x=i_right;	
-		    }
-		    if(y<i_top){
-			    y=i_top;
-		    }else if(y>i_bottom){
-			    y=i_bottom;			
-		    }
-		    int l;
-		    l=(r>i_right)?i_right-x:r-x;
-		    if(l<0){
-			    this.w=0;
-		    }else{
-			    this.w=l+1;
-		    }
-		    l=(b>i_bottom)?i_bottom-y:b-y;
-		    if(l<0){
-			    this.h=0;
-		    }else{
-			    this.h=l+1;
-		    }
-		    this.x=x;
-		    this.y=y;
-		    return;
-	    }
-
-	    /**
-	     * �_��RECT�͈͓̔��ł��邩���肵�܂��B
-	     * @param i_x
-	     * @param i_y
-	     * @return
-	     */
-	    public bool isInnerPoint(int i_x,int i_y)
-	    {
-		    int x=i_x-this.x;
-		    int y=i_y-this.y;
-    		
-		    return (0<=x && x<this.w && 0<=y && y<this.h);
-	    }
-	    public bool isInnerPoint(NyARDoublePoint2d i_pos)
-	    {
-		    int x=(int)i_pos.x-this.x;
-		    int y=(int)i_pos.y-this.y;
-		    return (0<=x && x<this.w && 0<=y && y<this.h);
-	    }
-	    public bool isInnerPoint(NyARIntPoint2d i_pos)
-	    {
-		    int x=i_pos.x-this.x;
-		    int y=i_pos.y-this.y;
-		    return (0<=x && x<this.w && 0<=y && y<this.h);
-	    }
-	    /**
-	     * RECT������RECT�͈͓̔��ł��邩���肵�܂��B
-	     * @param i_rect
-	     * @param i_y
-	     * @return
-	     */
-	    public bool isInnerRect(NyARIntRect i_rect)
-	    {
-            Debug.Assert(i_rect.w >= 0 && i_rect.h >= 0);
-		    int lx=i_rect.x-this.x;
-		    int ly=i_rect.y-this.y;
-		    int lw=lx+i_rect.w;
-		    int lh=ly+i_rect.h;
-		    return (0<=lx && lx<this.w && 0<=ly && ly<this.h && lw<=this.w && lh<=this.h);
-	    }
-	    public bool isInnerRect(int i_x,int i_y,int i_w,int i_h)
-	    {
-            Debug.Assert(i_w >= 0 && i_h >= 0);
-		    int lx=i_x-this.x;
-		    int ly=i_y-this.y;
-		    int lw=lx+i_w;
-		    int lh=ly+i_h;
-		    return (0<=lx && lx<this.w && 0<=ly && ly<this.h && lw<=this.w && lh<=this.h);
-	    }
-	    /**
-	     * RECT1��RECT2�̍����l���v�Z���܂��B
-	     * �����l�́A��`���m�̑Ίp�_�Q�_(����,�E��)�̋����̓��̍��v�l�ł��B
-	     * @param i_rect1
-	     * @param i_rect2
-	     * @return
-	     */
-	    public int sqDiagonalPointDiff(NyARIntRect i_rect2)
-	    {
-		    int w1,w2;
-		    int ret;
-		    w1=this.x-i_rect2.x;
-		    w2=this.y-i_rect2.y;
-		    ret=w1*w1+w2*w2;
-		    w1+=this.w-i_rect2.w;
-		    w2+=this.h-i_rect2.h;
-		    ret+=w1*w1+w2*w2;
-		    return ret;
-	    }
-	    /**
-	     * �Ίp���̓�拗����Ԃ��܂��B
-	     * @return
-	     */
-	    public int getDiagonalSqDist()
-	    {
-		    int lh=this.h;
-		    int lw=this.w;
-		    return lh*lh+lw*lw;
-	    }
-
-	    /**
-	     * i_source�̒l��this�ɃZ�b�g���܂��B
-	     * @param i_source
-	     */
-	    public void setValue(NyARIntRect i_source)
-	    {
-		    this.x=i_source.x;
-		    this.y=i_source.y;
-		    this.h=i_source.h;
-		    this.w=i_source.w;
-	    }
-
-    }
+	/**
+	 * この関数は、オブジェクトの値をインスタンスにセットします。
+	 * @param i_source
+	 * セットする値を格納したオブジェクト。
+	 */
+	public sealed void setValue(NyARIntRect i_source)
+	{
+		this.x=i_source.x;
+		this.y=i_source.y;
+		this.h=i_source.h;
+		this.w=i_source.w;
+	}
+	/**
+	 * この関数は、インスタンスに値をセットします。
+	 * @param i_x
+	 * 新しい{@link #x}の値
+	 * @param i_y
+	 * 新しい{@link #y}の値
+	 * @param i_w
+	 * 新しい{@link #w}の値
+	 * @param i_h
+	 * 新しい{@link #h}の値
+	 */
+	public sealed void setValue(int i_x,int i_y,int i_w,int i_h)
+	{
+		this.x=i_x;
+		this.y=i_y;
+		this.h=i_h;
+		this.w=i_w;
+	}
 
 }
