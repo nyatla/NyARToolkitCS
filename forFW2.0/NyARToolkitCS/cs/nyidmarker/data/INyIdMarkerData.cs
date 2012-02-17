@@ -26,23 +26,24 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
 
 
-/**
- * このインタフェイスは、エンコード済みマーカデータ格納クラスの共通関数を定義します。
- */
-public interface INyIdMarkerData
-{
-	/**
-	 * この関数は、i_targetのマーカデータとインスタンスのデータを比較します。
-	 * @param i_target
-	 * 比較するマーカオブジェクト
-	 * @return
-	 * 内容が等しいかの真偽値。等しければtrue
-	 */
-	public bool isEqual(INyIdMarkerData i_target);
-	/**
-	 * この関数は、i_sourceからインスタンスにマーカデータをコピーします。
-	 * @param i_source
-	 * コピー元のオブジェクト。
-	 */
-	public void copyFrom(INyIdMarkerData i_source);
+    /**
+     * このインタフェイスは、エンコード済みマーカデータ格納クラスの共通関数を定義します。
+     */
+    public interface INyIdMarkerData
+    {
+        /**
+         * この関数は、i_targetのマーカデータとインスタンスのデータを比較します。
+         * @param i_target
+         * 比較するマーカオブジェクト
+         * @return
+         * 内容が等しいかの真偽値。等しければtrue
+         */
+        bool isEqual(INyIdMarkerData i_target);
+        /**
+         * この関数は、i_sourceからインスタンスにマーカデータをコピーします。
+         * @param i_source
+         * コピー元のオブジェクト。
+         */
+        void copyFrom(INyIdMarkerData i_source);
+    }
 }

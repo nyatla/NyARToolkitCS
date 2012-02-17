@@ -29,32 +29,35 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-/**
- * このクラスは、{@link NyARSquare}の動的配列御定義します。
- */
-public class NyARSquareStack : NyARObjectStack<NyARSquare>
 {
-	/**
-	 * コンストラクタ。
-	 * サイズを指定して、配列を作成します。
-	 * @param i_length
-	 * 配列の最大長さ
-	 * @throws NyARException
-	 */
-	public NyARSquareStack(int i_length)
-	{
-		super.initInstance(i_length,NyARSquare.class);
 
-	}
-	/**
-	 * 要素のオブジェクトを生成します。
-	 */
-	protected NyARSquare createElement()
-	{
-		return new NyARSquare();
-	}	
+
+
+
+    /**
+     * このクラスは、{@link NyARSquare}の動的配列御定義します。
+     */
+    public class NyARSquareStack : NyARObjectStack<NyARSquare>
+    {
+        /**
+         * コンストラクタ。
+         * サイズを指定して、配列を作成します。
+         * @param i_length
+         * 配列の最大長さ
+         * @
+         */
+        public NyARSquareStack(int i_length)
+        {
+            super.initInstance(i_length, NyARSquare);
+
+        }
+        /**
+         * 要素のオブジェクトを生成します。
+         */
+        protected NyARSquare createElement()
+        {
+            return new NyARSquare();
+        }
+    }
+
 }

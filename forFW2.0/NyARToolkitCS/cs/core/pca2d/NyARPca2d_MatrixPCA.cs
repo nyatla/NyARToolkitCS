@@ -29,44 +29,47 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-/**
- * このクラスは、ARToolKitと同じ手順で主成分分析を行います。
- */
-public class NyARPca2d_MatrixPCA : INyARPca2d
 {
-	private sealed NyARMatPca __pca_input = new NyARMatPca(1, 2);
-	private sealed NyARMat __pca_evec = new NyARMat(2, 2);
-	private sealed NyARVec __pca_ev = new NyARVec(2);
-	private sealed NyARVec __pca_mean = new NyARVec(2);	
-	//override
-	public void pca(double[] i_v1,double[] i_v2,int i_number_of_point,NyARDoubleMatrix22 o_evec, double[] o_ev,double[] o_mean)
-	{
-		sealed NyARMatPca input = this.__pca_input;// 次処理で初期化される。		
-		// pcaの準備
-		input.realloc(i_number_of_point, 2);
-		sealed double[][] input_array=input.getArray();
-		for(int i=0;i<i_number_of_point;i++){
-			input_array[i][0]=i_v1[i];
-			input_array[i][1]=i_v2[i];
-		}
-		// 主成分分析
-		input.pca(this.__pca_evec, this.__pca_ev, this.__pca_mean);
-		sealed double[] mean_array = this.__pca_mean.getArray();
-		sealed double[][] evec_array = this.__pca_evec.getArray();
-		sealed double[] ev_array=this.__pca_ev.getArray();
-		o_evec.m00=evec_array[0][0];
-		o_evec.m01=evec_array[0][1];
-		o_evec.m10=evec_array[1][0];
-		o_evec.m11=evec_array[1][1];
-		o_ev[0]=ev_array[0];
-		o_ev[1]=ev_array[1];
-		o_mean[0]=mean_array[0];
-		o_mean[1]=mean_array[1];
-		return;
-	}
+
+
+
+
+
+    /**
+     * このクラスは、ARToolKitと同じ手順で主成分分析を行います。
+     */
+    public class NyARPca2d_MatrixPCA : INyARPca2d
+    {
+        private readonly NyARMatPca __pca_input = new NyARMatPca(1, 2);
+        private readonly NyARMat __pca_evec = new NyARMat(2, 2);
+        private readonly NyARVec __pca_ev = new NyARVec(2);
+        private readonly NyARVec __pca_mean = new NyARVec(2);
+        //override
+        public void pca(double[] i_v1, double[] i_v2, int i_number_of_point, NyARDoubleMatrix22 o_evec, double[] o_ev, double[] o_mean)
+        {
+            const NyARMatPca input = this.__pca_input;// 次処理で初期化される。		
+            // pcaの準備
+            input.realloc(i_number_of_point, 2);
+            const double[][] input_array = input.getArray();
+            for (int i = 0; i < i_number_of_point; i++)
+            {
+                input_array[i][0] = i_v1[i];
+                input_array[i][1] = i_v2[i];
+            }
+            // 主成分分析
+            input.pca(this.__pca_evec, this.__pca_ev, this.__pca_mean);
+            const double[] mean_array = this.__pca_mean.getArray();
+            const double[][] evec_array = this.__pca_evec.getArray();
+            const double[] ev_array = this.__pca_ev.getArray();
+            o_evec.m00 = evec_array[0][0];
+            o_evec.m01 = evec_array[0][1];
+            o_evec.m10 = evec_array[1][0];
+            o_evec.m11 = evec_array[1][1];
+            o_ev[0] = ev_array[0];
+            o_ev[1] = ev_array[1];
+            o_mean[0] = mean_array[0];
+            o_mean[1] = mean_array[1];
+            return;
+        }
+    }
 }

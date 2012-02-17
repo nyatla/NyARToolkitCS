@@ -29,140 +29,140 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-
-import jp.nyatla.nyartoolkit.core.labeling.artoolkit.NyARLabeling_ARToolKit;
-
-
-
-
-
-
-/**
- * このクラスは、{@link NyARLabeling_ARToolKit}クラスを用いた矩形検出器です。
- * 検出した矩形を、自己コールバック関数{@link #onSquareDetect}へ通知します。
- * 継承クラスで自己コールバック関数{@link #onSquareDetect}を実装する必要があります。
- */
-public abstract class NyARSquareContourDetector_ARToolKit : NyARSquareContourDetector
 {
-	private static sealed int AR_AREA_MAX = 100000;// #define AR_AREA_MAX 100000
-	private static sealed int AR_AREA_MIN = 70;// #define AR_AREA_MIN 70
-	private sealed int _width;
-	private sealed int _height;
 
-	private sealed NyARLabeling_ARToolKit _labeling;
 
-	private sealed NyARLabelingImage _limage;
+    /**
+     * このクラスは、{@link NyARLabeling_ARToolKit}クラスを用いた矩形検出器です。
+     * 検出した矩形を、自己コールバック関数{@link #onSquareDetect}へ通知します。
+     * 継承クラスで自己コールバック関数{@link #onSquareDetect}を実装する必要があります。
+     */
+    public abstract class NyARSquareContourDetector_ARToolKit : NyARSquareContourDetector
+    {
+        private const int AR_AREA_MAX = 100000;// #define AR_AREA_MAX 100000
+        private const int AR_AREA_MIN = 70;// #define AR_AREA_MIN 70
+        private readonly int _width;
+        private readonly int _height;
 
-	private sealed NyARLabelOverlapChecker<NyARLabelingLabel> _overlap_checker = new NyARLabelOverlapChecker<NyARLabelingLabel>(32,NyARLabelingLabel.class);
-	private sealed NyARContourPickup_ARToolKit _cpickup=new NyARContourPickup_ARToolKit();
-	private sealed NyARCoord2SquareVertexIndexes _coord2vertex=new NyARCoord2SquareVertexIndexes();
+        private readonly NyARLabeling_ARToolKit _labeling;
 
-	private sealed NyARIntCoordinates _coord;
-	private sealed int[] __detectMarker_mkvertex = new int[4];
-	/**
-	 * コンストラクタです。
-	 * 入力画像のサイズを指定して、インスタンスを生成します。
-	 * @param i_size
-	 * 入力画像のサイズ
-	 */
-	public NyARSquareContourDetector_ARToolKit(NyARIntSize i_size)
-	{
-		this._width = i_size.w;
-		this._height = i_size.h;
-		this._labeling = new NyARLabeling_ARToolKit();
-		this._limage = new NyARLabelingImage(this._width, this._height);
+        private readonly NyARLabelingImage _limage;
 
-		// 輪郭の最大長は画面に映りうる最大の長方形サイズ。
-		int number_of_coord = (this._width + this._height) * 2;
+        private readonly NyARLabelOverlapChecker<NyARLabelingLabel> _overlap_checker = new NyARLabelOverlapChecker<NyARLabelingLabel>(32, NyARLabelingLabel);
+        private readonly NyARContourPickup_ARToolKit _cpickup = new NyARContourPickup_ARToolKit();
+        private readonly NyARCoord2SquareVertexIndexes _coord2vertex = new NyARCoord2SquareVertexIndexes();
 
-		// 輪郭バッファは頂点変換をするので、輪郭バッファの２倍取る。
-		this._coord=new NyARIntCoordinates(number_of_coord);
-		return;
-	}
-	/**
-	 * この関数は、ラスタから矩形を検出して、自己コールバック関数{@link #onSquareDetect}で通知します。
-	 * 実装クラスでは、矩形検出処理をして、結果を通知する処理を実装してください。
-	 * @param i_raster
-	 * 検出元のラスタ画像
-	 * @throws NyARException
-	 */
-	public sealed void detectMarker(NyARBinRaster i_raster)
-	{
-		sealed NyARLabelingImage limage = this._limage;
+        private readonly NyARIntCoordinates _coord;
+        private readonly int[] __detectMarker_mkvertex = new int[4];
+        /**
+         * コンストラクタです。
+         * 入力画像のサイズを指定して、インスタンスを生成します。
+         * @param i_size
+         * 入力画像のサイズ
+         */
+        public NyARSquareContourDetector_ARToolKit(NyARIntSize i_size)
+        {
+            this._width = i_size.w;
+            this._height = i_size.h;
+            this._labeling = new NyARLabeling_ARToolKit();
+            this._limage = new NyARLabelingImage(this._width, this._height);
 
-		// ラベル数が0ならここまで
-		sealed int label_num = this._labeling.labeling(i_raster,this._limage);
-		if (label_num < 1) {
-			return;
-		}
+            // 輪郭の最大長は画面に映りうる最大の長方形サイズ。
+            int number_of_coord = (this._width + this._height) * 2;
 
-		sealed NyARLabelingLabelStack stack = limage.getLabelStack();
-		//ラベルをソートしておく
-		stack.sortByArea();
-		//
-		sealed NyARLabelingLabel[] labels = stack.getArray();
+            // 輪郭バッファは頂点変換をするので、輪郭バッファの２倍取る。
+            this._coord = new NyARIntCoordinates(number_of_coord);
+            return;
+        }
+        /**
+         * この関数は、ラスタから矩形を検出して、自己コールバック関数{@link #onSquareDetect}で通知します。
+         * 実装クラスでは、矩形検出処理をして、結果を通知する処理を実装してください。
+         * @param i_raster
+         * 検出元のラスタ画像
+         * @
+         */
+        public sealed override void detectMarker(NyARBinRaster i_raster)
+        {
+            NyARLabelingImage limage = this._limage;
 
-		// デカいラベルを読み飛ばし
-		int i;
-		for (i = 0; i < label_num; i++) {
-			// 検査対象内のラベルサイズになるまで無視
-			if (labels[i].area <= AR_AREA_MAX) {
-				break;
-			}
-		}
-		sealed int xsize = this._width;
-		sealed int ysize = this._height;
-		sealed NyARIntCoordinates coord = this._coord;
-		sealed int[] mkvertex =this.__detectMarker_mkvertex;
-		
-		sealed NyARLabelOverlapChecker<NyARLabelingLabel> overlap = this._overlap_checker;
+            // ラベル数が0ならここまで
+            int label_num = this._labeling.labeling(i_raster, this._limage);
+            if (label_num < 1)
+            {
+                return;
+            }
 
-		//重なりチェッカの最大数を設定
-		overlap.setMaxLabels(label_num);
-		for (; i < label_num; i++) {
-			sealed NyARLabelingLabel label_pt = labels[i];
-			sealed int label_area = label_pt.area;
-			// 検査対象サイズよりも小さくなったら終了
-			if (label_area < AR_AREA_MIN) {
-				break;
-			}
-			// クリップ領域が画面の枠に接していれば除外
-			if (label_pt.clip_l == 1 || label_pt.clip_r == xsize - 2) {// if(wclip[i*4+0] == 1 || wclip[i*4+1] ==xsize-2){
-				continue;
-			}
-			if (label_pt.clip_t == 1 || label_pt.clip_b == ysize - 2) {// if( wclip[i*4+2] == 1 || wclip[i*4+3] ==ysize-2){
-				continue;
-			}
-			// 既に検出された矩形との重なりを確認
-			if (!overlap.check(label_pt)) {
-				// 重なっているようだ。
-				continue;
-			}
-			// 輪郭を取得
-			if(!this._cpickup.getContour(limage,limage.getTopClipTangentX(label_pt),label_pt.clip_t, coord)){
-				continue;
-			}
-			//輪郭線をチェックして、矩形かどうかを判定。矩形ならばmkvertexに取得
-			if (!this._coord2vertex.getVertexIndexes(coord,label_area, mkvertex)) {
-				// 頂点の取得が出来なかった
-				continue;
-			}
-			//矩形を発見したことをコールバック関数で通知
-			this.onSquareDetect(coord,mkvertex);
+            NyARLabelingLabelStack stack = limage.getLabelStack();
+            //ラベルをソートしておく
+            stack.sortByArea();
+            //
+            const NyARLabelingLabel[] labels = stack.getArray();
 
-			// 検出済の矩形の属したラベルを重なりチェックに追加する。
-			overlap.push(label_pt);
-			
-		}
-		return;
-	}
+            // デカいラベルを読み飛ばし
+            int i;
+            for (i = 0; i < label_num; i++)
+            {
+                // 検査対象内のラベルサイズになるまで無視
+                if (labels[i].area <= AR_AREA_MAX)
+                {
+                    break;
+                }
+            }
+            int xsize = this._width;
+            int ysize = this._height;
+            NyARIntCoordinates coord = this._coord;
+            int[] mkvertex = this.__detectMarker_mkvertex;
 
+            NyARLabelOverlapChecker<NyARLabelingLabel> overlap = this._overlap_checker;
+
+            //重なりチェッカの最大数を設定
+            overlap.setMaxLabels(label_num);
+            for (; i < label_num; i++)
+            {
+                NyARLabelingLabel label_pt = labels[i];
+                int label_area = label_pt.area;
+                // 検査対象サイズよりも小さくなったら終了
+                if (label_area < AR_AREA_MIN)
+                {
+                    break;
+                }
+                // クリップ領域が画面の枠に接していれば除外
+                if (label_pt.clip_l == 1 || label_pt.clip_r == xsize - 2)
+                {// if(wclip[i*4+0] == 1 || wclip[i*4+1] ==xsize-2){
+                    continue;
+                }
+                if (label_pt.clip_t == 1 || label_pt.clip_b == ysize - 2)
+                {// if( wclip[i*4+2] == 1 || wclip[i*4+3] ==ysize-2){
+                    continue;
+                }
+                // 既に検出された矩形との重なりを確認
+                if (!overlap.check(label_pt))
+                {
+                    // 重なっているようだ。
+                    continue;
+                }
+                // 輪郭を取得
+                if (!this._cpickup.getContour(limage, limage.getTopClipTangentX(label_pt), label_pt.clip_t, coord))
+                {
+                    continue;
+                }
+                //輪郭線をチェックして、矩形かどうかを判定。矩形ならばmkvertexに取得
+                if (!this._coord2vertex.getVertexIndexes(coord, label_area, mkvertex))
+                {
+                    // 頂点の取得が出来なかった
+                    continue;
+                }
+                //矩形を発見したことをコールバック関数で通知
+                this.onSquareDetect(coord, mkvertex);
+
+                // 検出済の矩形の属したラベルを重なりチェックに追加する。
+                overlap.push(label_pt);
+
+            }
+            return;
+        }
+
+    }
 }
-
 
 

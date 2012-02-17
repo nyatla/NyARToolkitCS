@@ -29,75 +29,77 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-/**
- * このクラスはデータ型です。
- * ３次元の浮動小数点座標を格納します。
- */
-public class NyARDoublePoint3d
 {
-	/** X座標の値です。*/
-	public double x;
-	/** Y座標の値です。*/
-	public double y;
-	/** Z座標の値です。*/	
-	public double z;
-	/**
-	 * この関数は、オブジェクトの一次配列を作ります。
-	 * @param i_number
-	 * 作成する配列の長さ
-	 * @return
-	 * 新しい配列。
-	 */
-	public static NyARDoublePoint3d[] createArray(int i_number)
-	{
-		NyARDoublePoint3d[] ret=new NyARDoublePoint3d[i_number];
-		for(int i=0;i<i_number;i++)
-		{
-			ret[i]=new NyARDoublePoint3d();
-		}
-		return ret;
-	}
-	/**
-	 * この関数は、オブジェクトからインスタンスに値をセットします。
-	 * @param i_in
-	 * コピー元のオブジェクト。
-	 */	
-	public sealed void setValue(NyARDoublePoint3d i_in)
-	{
-		this.x=i_in.x;
-		this.y=i_in.y;
-		this.z=i_in.z;
-		return;
-	}
-	/**
-	 * この関数は、インスタンスの座標と、指定点との距離の２乗値を返します。
-	 * @param i_p1
-	 * 点の座標
-	 * @return
-	 * i_p1との距離の二乗値
-	 */		
-	public sealed double sqDist(NyARDoublePoint3d i_p1)
-	{
-		double x,y,z;
-		x=this.x-i_p1.x;
-		y=this.y-i_p1.y;
-		z=this.z-i_p1.z;
-		return x*x+y*y+z*z;
-	}
-	/**
-	 * この関数は、頂点を移動します。
-	 * @param i_tx
-	 * 移動する距離x
-	 * @param i_ty
-	 * 移動する距離y
-	 * @param i_tz
-	 * 移動する距離z
-	 */
-	public void translate(double i_tx,double i_ty,double i_tz)
-	{
-		this.x+=i_tx;
-		this.y+=i_ty;
-		this.z+=i_tz;
-	}
-		
+    /**
+     * このクラスはデータ型です。
+     * ３次元の浮動小数点座標を格納します。
+     */
+    public class NyARDoublePoint3d
+    {
+        /** X座標の値です。*/
+        public double x;
+        /** Y座標の値です。*/
+        public double y;
+        /** Z座標の値です。*/
+        public double z;
+        /**
+         * この関数は、オブジェクトの一次配列を作ります。
+         * @param i_number
+         * 作成する配列の長さ
+         * @return
+         * 新しい配列。
+         */
+        public static NyARDoublePoint3d[] createArray(int i_number)
+        {
+            NyARDoublePoint3d[] ret = new NyARDoublePoint3d[i_number];
+            for (int i = 0; i < i_number; i++)
+            {
+                ret[i] = new NyARDoublePoint3d();
+            }
+            return ret;
+        }
+        /**
+         * この関数は、オブジェクトからインスタンスに値をセットします。
+         * @param i_in
+         * コピー元のオブジェクト。
+         */
+        public void setValue(NyARDoublePoint3d i_in)
+        {
+            this.x = i_in.x;
+            this.y = i_in.y;
+            this.z = i_in.z;
+            return;
+        }
+        /**
+         * この関数は、インスタンスの座標と、指定点との距離の２乗値を返します。
+         * @param i_p1
+         * 点の座標
+         * @return
+         * i_p1との距離の二乗値
+         */
+        public double sqDist(NyARDoublePoint3d i_p1)
+        {
+            double x, y, z;
+            x = this.x - i_p1.x;
+            y = this.y - i_p1.y;
+            z = this.z - i_p1.z;
+            return x * x + y * y + z * z;
+        }
+        /**
+         * この関数は、頂点を移動します。
+         * @param i_tx
+         * 移動する距離x
+         * @param i_ty
+         * 移動する距離y
+         * @param i_tz
+         * 移動する距離z
+         */
+        public void translate(double i_tx, double i_ty, double i_tz)
+        {
+            this.x += i_tx;
+            this.y += i_ty;
+            this.z += i_tz;
+        }
+
+    }
 }

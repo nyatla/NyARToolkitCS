@@ -22,8 +22,11 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-package jp.nyatla.nyartoolkit.core.rasterfilter.rgb2gs;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
 
-public interface INyARRgb2GsFilterRgbAve extends INyARRgb2GsFilter{
+    public interface INyARRgb2GsFilterRgbAve : INyARRgb2GsFilter
+    {
 
+    }
 }

@@ -29,33 +29,35 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-/**
- * このクラスは、{@link NyARIntPoint2d}型の可変長配列です。
- */
-public class NyARIntPointStack : NyARObjectStack<NyARIntPoint2d>
 {
-	/**
-	 * コンストラクタです。
-	 * 配列の最大長さを指定して、インスタンスを生成します。
-	 * @param i_length
-	 * 配列の最大長さ
-	 * @throws NyARException
-	 */
-	public NyARIntPointStack(int i_length)
-	{
-		super.initInstance(i_length,NyARIntPoint2d.class);
-		return;
-	}
-	/**
-	 * この関数は、配列要素を作成します。
-	 */
-	protected NyARIntPoint2d createElement()
-	{
-		return new NyARIntPoint2d();
-	}	
+
+
+
+
+
+    /**
+     * このクラスは、{@link NyARIntPoint2d}型の可変長配列です。
+     */
+    public class NyARIntPointStack : NyARObjectStack<NyARIntPoint2d>
+    {
+        /**
+         * コンストラクタです。
+         * 配列の最大長さを指定して、インスタンスを生成します。
+         * @param i_length
+         * 配列の最大長さ
+         * @
+         */
+        public NyARIntPointStack(int i_length)
+        {
+            super.initInstance(i_length, NyARIntPoint2d);
+            return;
+        }
+        /**
+         * この関数は、配列要素を作成します。
+         */
+        protected NyARIntPoint2d createElement()
+        {
+            return new NyARIntPoint2d();
+        }
+    }
 }

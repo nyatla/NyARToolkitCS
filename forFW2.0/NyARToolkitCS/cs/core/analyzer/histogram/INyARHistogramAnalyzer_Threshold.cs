@@ -23,20 +23,21 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-/**
- * このインタフェイスは、ヒストグラムから敷居値を探索する関数を定義します。
- */
-public interface INyARHistogramAnalyzer_Threshold
 {
-	/**
-	 * ヒストグラムから閾値を１個探索する関数を実装します。
-	 * @param i_histogram
-	 * 分析するヒストグラムオブジェクト
-	 * @return
-	 * 敷居値を返します。値範囲は、{@link NyARHistogram}のプロパティから決定します。
-	 */
-	public int getThreshold(NyARHistogram i_histogram);
+
+
+    /**
+     * このインタフェイスは、ヒストグラムから敷居値を探索する関数を定義します。
+     */
+    public interface INyARHistogramAnalyzer_Threshold
+    {
+        /**
+         * ヒストグラムから閾値を１個探索する関数を実装します。
+         * @param i_histogram
+         * 分析するヒストグラムオブジェクト
+         * @return
+         * 敷居値を返します。値範囲は、{@link NyARHistogram}のプロパティから決定します。
+         */
+        int getThreshold(NyARHistogram i_histogram);
+    }
 }

@@ -23,65 +23,67 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-/**
- * このクラスは、ラスタクラスの基本処理を実装します。
- */
-public abstract class NyARRaster_BasicClass : INyARRaster
 {
-	protected sealed NyARIntSize _size;
-	protected int _buffer_type;
-	/**
-	 * コンストラクタです。
-	 * メンバ変数を初期化して、インスタンスを生成します。
-	 * @param i_width
-	 * ラスタの幅に設定する値
-	 * @param i_height
-	 * ラスタの高さに設定する値
-	 * @param i_buffer_type
-	 * バッファタイプ値に設定する値
-	 */
-	protected NyARRaster_BasicClass(int i_width,int i_height,int i_buffer_type)
-	{
-		this._size= new NyARIntSize(i_width,i_height);
-		this._buffer_type=i_buffer_type;
-	}
-	/**
-	 * この関数は、ラスタの幅を返します。
-	 */
-	public sealed int getWidth()
-	{
-		return this._size.w;
-	}
-	/**
-	 * この関数は、ラスタの高さを返します。
-	 */
-	sealed public int getHeight()
-	{
-		return this._size.h;
-	}
-	/**
-	 * この関数は、ラスタのサイズを格納したオブジェクトを返します。
-	 */
-	sealed public NyARIntSize getSize()
-	{
-		return this._size;
-	}
-	/**
-	 * この関数は、ラスタのバッファへの参照値を返します。
-	 * バッファの形式は、コンストラクタに指定した形式と同じです。
-	 */	
-	sealed public int getBufferType()
-	{
-		return _buffer_type;
-	}
-	/**
-	 * この関数は、ラスタの幅を返します。
-	 */
-	sealed public bool isEqualBufferType(int i_type_value)
-	{
-		return this._buffer_type==i_type_value;
-	}
+
+
+
+    /**
+     * このクラスは、ラスタクラスの基本処理を実装します。
+     */
+    public abstract class NyARRaster_BasicClass : INyARRaster
+    {
+        protected readonly NyARIntSize _size;
+        protected int _buffer_type;
+        /**
+         * コンストラクタです。
+         * メンバ変数を初期化して、インスタンスを生成します。
+         * @param i_width
+         * ラスタの幅に設定する値
+         * @param i_height
+         * ラスタの高さに設定する値
+         * @param i_buffer_type
+         * バッファタイプ値に設定する値
+         */
+        protected NyARRaster_BasicClass(int i_width, int i_height, int i_buffer_type)
+        {
+            this._size = new NyARIntSize(i_width, i_height);
+            this._buffer_type = i_buffer_type;
+        }
+        /**
+         * この関数は、ラスタの幅を返します。
+         */
+        public sealed override int getWidth()
+        {
+            return this._size.w;
+        }
+        /**
+         * この関数は、ラスタの高さを返します。
+         */
+        sealed public override int getHeight()
+        {
+            return this._size.h;
+        }
+        /**
+         * この関数は、ラスタのサイズを格納したオブジェクトを返します。
+         */
+        sealed public override NyARIntSize getSize()
+        {
+            return this._size;
+        }
+        /**
+         * この関数は、ラスタのバッファへの参照値を返します。
+         * バッファの形式は、コンストラクタに指定した形式と同じです。
+         */
+        sealed public override int getBufferType()
+        {
+            return _buffer_type;
+        }
+        /**
+         * この関数は、ラスタの幅を返します。
+         */
+        sealed public override bool isEqualBufferType(int i_type_value)
+        {
+            return this._buffer_type == i_type_value;
+        }
+    }
 }

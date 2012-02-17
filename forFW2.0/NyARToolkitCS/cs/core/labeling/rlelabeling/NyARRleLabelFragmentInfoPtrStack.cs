@@ -23,53 +23,63 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-
-/**
- * このクラスは、{@link NyARRleLabelFragmentInfo}の参照値の動的配列です。
- * {@link NyARLabeling_Rle}が使います。
- * {@link NyARPointerStack}からの追加機能として、配列要素のソート機能があります。
- */
-public class NyARRleLabelFragmentInfoPtrStack  : NyARPointerStack<NyARRleLabelFragmentInfo>
 {
-	public NyARRleLabelFragmentInfoPtrStack(int i_length)
-	{
-		this.initInstance(i_length, NyARRleLabelFragmentInfo.class);
-		return;
-	}
 
-	/**
-	 * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
-	 */
-	sealed public void sortByArea()
-	{
-		int len=this._length;
-		if(len<1){
-			return;
-		}
-		int h = len *13/10;
-		NyARRleLabelFragmentInfo[] item=this._items;
-		for(;;){
-		    int swaps = 0;
-		    for (int i = 0; i + h < len; i++) {
-		        if (item[i + h].area > item[i].area) {
-		            sealed NyARRleLabelFragmentInfo temp = item[i + h];
-		            item[i + h] = item[i];
-		            item[i] = temp;
-		            swaps++;
-		        }
-		    }
-		    if (h == 1) {
-		        if (swaps == 0){
-		        	break;
-		        }
-		    }else{
-		        h=h*10/13;
-		    }
-		}		
-	}	
+
+
+
+
+
+    /**
+     * このクラスは、{@link NyARRleLabelFragmentInfo}の参照値の動的配列です。
+     * {@link NyARLabeling_Rle}が使います。
+     * {@link NyARPointerStack}からの追加機能として、配列要素のソート機能があります。
+     */
+    public class NyARRleLabelFragmentInfoPtrStack : NyARPointerStack<NyARRleLabelFragmentInfo>
+    {
+        public NyARRleLabelFragmentInfoPtrStack(int i_length)
+        {
+            this.initInstance(i_length, NyARRleLabelFragmentInfo);
+            return;
+        }
+
+        /**
+         * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
+         */
+        public void sortByArea()
+        {
+            int len = this._length;
+            if (len < 1)
+            {
+                return;
+            }
+            int h = len * 13 / 10;
+            NyARRleLabelFragmentInfo[] item = this._items;
+            for (; ; )
+            {
+                int swaps = 0;
+                for (int i = 0; i + h < len; i++)
+                {
+                    if (item[i + h].area > item[i].area)
+                    {
+                        NyARRleLabelFragmentInfo temp = item[i + h];
+                        item[i + h] = item[i];
+                        item[i] = temp;
+                        swaps++;
+                    }
+                }
+                if (h == 1)
+                {
+                    if (swaps == 0)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    h = h * 10 / 13;
+                }
+            }
+        }
+    }
 }
