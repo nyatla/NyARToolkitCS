@@ -71,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_projmat
          * @
          */
-        private sealed override void initInstance(NyARCameraDistortionFactor i_distfactor, NyARPerspectiveProjectionMatrix i_projmat)
+        private void initInstance(NyARCameraDistortionFactor i_distfactor, NyARPerspectiveProjectionMatrix i_projmat)
         {
             this._transsolver = new NyARTransportVectorSolver(i_projmat, 4);
             //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
@@ -137,7 +137,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult o_result_conv)
         {
-            const NyARDoublePoint3d trans = this.__transMat_trans;
+            NyARDoublePoint3d trans = this.__transMat_trans;
             double err_threshold = makeErrThreshold(i_square.sqvertex);
 
             NyARDoublePoint2d[] vertex_2d;
@@ -173,9 +173,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 計算に過去の履歴を使う点が、{@link #transMat}と異なります。
          * @see INyARTransMat#transMatContinue
          */
-        public sealed override bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result)
+        public bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result)
         {
-            const NyARDoublePoint3d trans = this.__transMat_trans;
+            NyARDoublePoint3d trans = this.__transMat_trans;
             // io_result_convが初期値なら、transMatで計算する。
             if (!i_prev_result.has_value)
             {
@@ -311,14 +311,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * エラーレート(Σ(理想座標と計算座標の距離[n]^2))
          * @
          */
-        public sealed override double errRate(NyARDoubleMatrix33 i_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d, int i_number_of_vertex, NyARDoublePoint3d[] o_rot_vertex)
+        public double errRate(NyARDoubleMatrix33 i_rot, NyARDoublePoint3d i_trans, NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint2d[] i_vertex2d, int i_number_of_vertex, NyARDoublePoint3d[] o_rot_vertex)
         {
             NyARPerspectiveProjectionMatrix cp = this._ref_projection_mat;
-            const double cp00 = cp.m00;
-            const double cp01 = cp.m01;
-            const double cp02 = cp.m02;
-            const double cp11 = cp.m11;
-            const double cp12 = cp.m12;
+            double cp00 = cp.m00;
+            double cp01 = cp.m01;
+            double cp02 = cp.m02;
+            double cp11 = cp.m11;
+            double cp12 = cp.m12;
 
             double err = 0;
             for (int i = 0; i < i_number_of_vertex; i++)

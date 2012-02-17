@@ -44,28 +44,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数はラスタの幅を返します。
          */
-        public sealed override int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数はラスタの高さを返します。
          */
-        public sealed override int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数はラスタのサイズの参照値を返します。
          */
-        public sealed override NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
         /**
          * この関数は、ラスタの画素読み取りオブジェクトの参照値を返します。
          */
-        public sealed override INyARRgbPixelDriver getRgbPixelDriver()
+        public INyARRgbPixelDriver getRgbPixelDriver()
         {
             return this._pixelreader;
         }
@@ -73,7 +73,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタ画像のバッファを返します。
          * バッファ形式は、{@link NyARBufferType#INT1D_X8R8G8B8_32}(int[])です。
          */
-        public sealed override object getBuffer()
+        public object getBuffer()
         {
             return this._patdata;
         }
@@ -94,14 +94,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、バッファタイプの定数を返します。
          */
-        public sealed override int getBufferType()
+        public int getBufferType()
         {
             return BUFFER_FORMAT;
         }
         /**
          * この関数は、インスタンスのバッファタイプが引数のものと一致しているか判定します。
          */
-        public sealed override bool isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return BUFFER_FORMAT == i_type_value;
         }
@@ -122,7 +122,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._pixelreader = NyARRgbPixelDriverFactory.createDriver(this);
             //疑似アフィン変換のパラメタマトリクスを計算します。
             //長方形から計算すると、有効要素がm00,m01,m02,m03,m10,m11,m20,m23,m30になります。
-            const NyARDoubleMatrix44 mat = this._invmat;
+            NyARDoubleMatrix44 mat = this._invmat;
             mat.m00 = 0;
             mat.m01 = 0;
             mat.m02 = 0;
@@ -152,7 +152,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private void calcPara(NyARIntPoint2d[] i_vertex, double[] o_cparam)
         {
-            const NyARDoubleMatrix44 invmat = this._invmat;
+            NyARDoubleMatrix44 invmat = this._invmat;
             double v1, v2, v4;
             //変換行列とベクトルの積から、変換パラメタを計算する。
             v1 = i_vertex[0].x;
@@ -185,7 +185,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
         {
-            const double[] conv_param = this._convparam;
+            double[] conv_param = this._convparam;
             int rx2, ry2;
             rx2 = this._size.w;
             ry2 = this._size.h;
@@ -200,15 +200,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 for (int x = 0; x < rx2; x++)
                 {
-                    const int ttx = (int)((conv_param[0] * x * y + conv_param[1] * x + conv_param[2] * y + conv_param[3]) + 0.5);
-                    const int tty = (int)((conv_param[4] * x * y + conv_param[5] * x + conv_param[6] * y + conv_param[7]) + 0.5);
+                    int ttx = (int)((conv_param[0] * x * y + conv_param[1] * x + conv_param[2] * y + conv_param[3]) + 0.5);
+                    int tty = (int)((conv_param[4] * x * y + conv_param[5] * x + conv_param[6] * y + conv_param[7]) + 0.5);
                     reader.getPixel((int)ttx, (int)tty, rgb_tmp);
                     this._patdata[x + y * rx2] = (rgb_tmp[0] << 16) | (rgb_tmp[1] << 8) | rgb_tmp[2];
                 }
             }
             return true;
         }
-        public sealed override object createInterface(Type iIid)
+        public object createInterface(Type iIid)
         {
             // TODO Auto-generated method stub
             return null;

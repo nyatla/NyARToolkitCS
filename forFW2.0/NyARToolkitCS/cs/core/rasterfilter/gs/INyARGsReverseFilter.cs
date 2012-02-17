@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._raster = i_raster;
         }
-        public sealed override void doFilter(INyARGrayscaleRaster i_output)
+        public void doFilter(INyARGrayscaleRaster i_output)
         {
             INyARGsPixelDriver ind = this._raster.getGsPixelDriver();
             INyARGsPixelDriver outd = i_output.getGsPixelDriver();

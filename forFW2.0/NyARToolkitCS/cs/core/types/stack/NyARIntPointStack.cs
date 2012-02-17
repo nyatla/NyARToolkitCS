@@ -55,7 +55,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、配列要素を作成します。
          */
-        protected NyARIntPoint2d createElement()
+        protected override NyARIntPoint2d createElement()
         {
             return new NyARIntPoint2d();
         }

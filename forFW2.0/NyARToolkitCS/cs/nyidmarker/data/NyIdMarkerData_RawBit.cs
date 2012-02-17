@@ -61,7 +61,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         public void copyFrom(INyIdMarkerData i_source)
         {
-            const NyIdMarkerData_RawBit s = (NyIdMarkerData_RawBit)i_source;
+            NyIdMarkerData_RawBit s = (NyIdMarkerData_RawBit)i_source;
             System.arraycopy(s.packet, 0, this.packet, 0, s.length);
             this.length = s.length;
             return;

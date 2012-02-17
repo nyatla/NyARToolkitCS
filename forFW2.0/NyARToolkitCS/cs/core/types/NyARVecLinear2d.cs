@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -121,7 +122,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             double x1 = this.dx;
             double y1 = this.dy;
-            return (x1 * i_dx + y1 * i_dy) / Math.sqrt((x1 * x1 + y1 * y1) * (i_dx * i_dx + i_dy * i_dy));
+            return (x1 * i_dx + y1 * i_dy) / Math.Sqrt((x1 * x1 + y1 * y1) * (i_dx * i_dx + i_dy * i_dy));
         }
         /**
          * この関数は、この直線とベクトルが作るCos値の絶対値を返します。
@@ -182,7 +183,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double a2 = this.dy;
             double b2 = -this.dx;
             double c2 = (this.dx * this.y - this.dy * this.x);
-            const double w1 = a1 * b2 - a2 * b1;
+            double w1 = a1 * b2 - a2 * b1;
             if (w1 == 0.0)
             {
                 return false;
@@ -251,7 +252,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double lb = -i_line.a;
             double lc = -(la * i_x + lb * i_y);
             //交点を計算
-            const double w1 = -lb * lb - la * la;
+            double w1 = -lb * lb - la * la;
             if (w1 == 0.0)
             {
                 return false;
@@ -289,7 +290,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double cc = (sum_x2 * sum_y - sum_xy * sum_x);
             double lc = -(la * sum_x + lb * sum_y) / i_number_of_data;
             //交点を計算
-            const double w1 = -lb * lb - la * la;
+            double w1 = -lb * lb - la * la;
             if (w1 == 0.0)
             {
                 return false;
@@ -312,7 +313,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public bool leastSquaresWithNormalize(NyARDoublePoint2d[] i_points, int i_number_of_data)
         {
             bool ret = this.leastSquares(i_points, i_number_of_data);
-            double sq = 1 / Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+            double sq = 1 / Math.Sqrt(this.dx * this.dx + this.dy * this.dy);
             this.dx *= sq;
             this.dy *= sq;
             return ret;

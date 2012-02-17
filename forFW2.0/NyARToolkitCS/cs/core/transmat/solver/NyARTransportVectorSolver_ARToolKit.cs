@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -62,13 +63,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._projection_mat = i_projection_mat_ref;
             //aとb(aの転置行列)の固定部分を設定。
-            const double[][] mata = this._mat_a.getArray();
-            const double[][] matat = this._mat_at.getArray();
+            double[][] mata = this._mat_a.getArray();
+            double[][] matat = this._mat_at.getArray();
 
             //変換用行列のcpara部分を先に作成
             for (int i = 0; i < 4; i++)
             {
-                const int x2 = i * 2;
+                int x2 = i * 2;
                 mata[x2][0] = matat[0][x2] = i_projection_mat_ref.m00;// mat_a->m[j*6+0]=mat_b->m[num*0+j*2] =cpara[0][0];
                 mata[x2][1] = matat[1][x2] = i_projection_mat_ref.m01;// mat_a->m[j*6+1]=mat_b->m[num*2+j*2]=cpara[0][1];
                 mata[x2 + 1][0] = matat[0][x2 + 1] = 0.0;// mat_a->m[j*6+3] =mat_b->m[num*0+j*2+1]= 0.0;
@@ -94,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 cx[i] = i_ref_vertex_2d[i].x;
                 cy[i] = i_ref_vertex_2d[i].y;
-                const int x2 = i * 2;
+                int x2 = i * 2;
                 mata[x2][2] = matat[2][x2] = cpara02 - i_ref_vertex_2d[i].x;// mat_a->m[j*6+2]=mat_b->m[num*4+j*2]=cpara[0][2]-pos2d[j][0];
                 mata[x2 + 1][2] = matat[2][x2 + 1] = cpara12 - i_ref_vertex_2d[i].y;// mat_a->m[j*6+5]=mat_b->m[num*4+j*2+1]=cpara[1][2]-pos2d[j][1];
             }
@@ -130,7 +131,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._mat_e.mul(this._mat_at, this._mat_c);
             this._mat_f.mul(this._mat_t, this._mat_e);
 
-            const double[][] matf = this._mat_f.getArray();
+            double[][] matf = this._mat_f.getArray();
             o_transfer.x = matf[0][0];// trans[0] = mat_f->m[0];
             o_transfer.y = matf[1][0];
             o_transfer.z = matf[2][0];// trans[2] = mat_f->m[2];

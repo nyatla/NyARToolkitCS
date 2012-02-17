@@ -53,8 +53,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @ 
          */
         public NyARColorPatt_O3(int i_width, int i_height)
+            : base(i_width, i_height)
         {
-            super(i_width, i_height);
         }
         private readonly NyARMat wk_get_cpara_a = new NyARMat(8, 8);
         private readonly NyARMat wk_get_cpara_b = new NyARMat(8, 1);
@@ -112,7 +112,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタのi_vertexsで定義される四角形からパターンを取得して、インスタンスに格納します。
          */
-        public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
+        public override bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
         {
             NyARMat cpara = this.wk_pickFromRaster_cpara;
             // xdiv2,ydiv2の計算
@@ -216,7 +216,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double para11 = para[1 * 3 + 1][0];
             double para12 = para[1 * 3 + 2][0];
             double para20 = para[2 * 3 + 0][0];
-            const double para21 = para[2 * 3 + 1][0];
+            double para21 = para[2 * 3 + 1][0];
 
             INyARRgbPixelDriver reader = image.getRgbPixelDriver();
             int img_width = image.getWidth();
@@ -250,19 +250,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     int number_of_pix = 0;
                     for (i = ydiv - 1; i >= 0; i--)
                     {
-                        const double para01_x_yw_para02 = para01 * yw[i] + para02;
-                        const double para11_x_yw_para12 = para11 * yw[i] + para12;
-                        const double para12_x_yw_para22 = para21 * yw[i] + 1.0;
+                        double para01_x_yw_para02 = para01 * yw[i] + para02;
+                        double para11_x_yw_para12 = para11 * yw[i] + para12;
+                        double para12_x_yw_para22 = para21 * yw[i] + 1.0;
                         for (j = xdiv - 1; j >= 0; j--)
                         {
 
-                            const double d = para20 * xw[j] + para12_x_yw_para22;
+                            double d = para20 * xw[j] + para12_x_yw_para22;
                             if (d == 0)
                             {
                                 throw new NyARException();
                             }
-                            const int xcw = (int)((para00 * xw[j] + para01_x_yw_para02) / d);
-                            const int ycw = (int)((para10 * xw[j] + para11_x_yw_para12) / d);
+                            int xcw = (int)((para00 * xw[j] + para01_x_yw_para02) / d);
+                            int ycw = (int)((para10 * xw[j] + para11_x_yw_para12) / d);
                             if (xcw < 0 || xcw >= img_width || ycw < 0 || ycw >= img_height)
                             {
                                 continue;

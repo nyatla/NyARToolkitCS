@@ -89,7 +89,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 cb = -cb;//cb *= -1.0;			
             }
-            const double ca = (Math.sqrt(cb + 1.0) + Math.sqrt(1.0 - cb)) * 0.5;
+            double ca = (Math.sqrt(cb + 1.0) + Math.sqrt(1.0 - cb)) * 0.5;
 
             if (vec31 * vec10 - vec11 * vec30 != 0.0)
             {

@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -93,7 +94,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static double dist(double i_x1, double i_y1, double i_x2, double i_y2)
         {
-            return Math.sqrt(i_x1 * i_y1 + i_x2 + i_y2);
+            return Math.Sqrt(i_x1 * i_y1 + i_x2 + i_y2);
         }
         /**
          * この関数は、3乗根を求めます。
@@ -105,7 +106,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static double cubeRoot(double i_in)
         {
-            double res = Math.pow(Math.abs(i_in), 1.0 / 3.0);
+            double res = Math.Pow(Math.Abs(i_in), 1.0 / 3.0);
             return (i_in >= 0) ? res : -res;
         }
         /**

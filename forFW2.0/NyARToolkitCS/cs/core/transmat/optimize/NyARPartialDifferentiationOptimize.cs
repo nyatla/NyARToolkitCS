@@ -100,11 +100,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARPerspectiveProjectionMatrix cp = this._projection_mat_ref;
             double L, J, K, M, N, O;
             L = J = K = M = N = O = 0;
-            const double cp00 = cp.m00;
-            const double cp01 = cp.m01;
-            const double cp02 = cp.m02;
-            const double cp11 = cp.m11;
-            const double cp12 = cp.m12;
+            double cp00 = cp.m00;
+            double cp01 = cp.m01;
+            double cp02 = cp.m02;
+            double cp11 = cp.m11;
+            double cp12 = cp.m12;
 
             for (int i = 0; i < i_number_of_vertex; i++)
             {
@@ -210,11 +210,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARPerspectiveProjectionMatrix cp = this._projection_mat_ref;
             double L, J, K, M, N, O;
             L = J = K = M = N = O = 0;
-            const double cp00 = cp.m00;
-            const double cp01 = cp.m01;
-            const double cp02 = cp.m02;
-            const double cp11 = cp.m11;
-            const double cp12 = cp.m12;
+            double cp00 = cp.m00;
+            double cp01 = cp.m01;
+            double cp02 = cp.m02;
+            double cp11 = cp.m11;
+            double cp12 = cp.m12;
 
             for (int i = 0; i < i_number_of_vertex; i++)
             {

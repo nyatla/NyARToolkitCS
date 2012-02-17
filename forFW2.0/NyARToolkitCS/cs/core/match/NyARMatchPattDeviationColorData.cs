@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -90,7 +91,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int[] getData(int[] i_buf)
         {
-            System.arraycopy(this._data, 0, i_buf, 0, this._data.length);
+            System.arraycopy(this._data, 0, i_buf, 0, this._data.Length);
             return i_buf;
         }
         /**
@@ -132,7 +133,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //ドライバの生成
             if (this._last_input_raster != i_raster)
             {
-                this._last_drv = (IRasterDriver)i_raster.createInterface(IRasterDriver);
+                this._last_drv = (IRasterDriver)i_raster.createInterface(typeof(IRasterDriver));
                 this._last_input_raster = i_raster;
             }
             this._pow = this._last_drv.makeColorData(this._data);
@@ -226,7 +227,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             //<差分値計算>
             //<差分値計算(FORの1/8展開)/>
-            const double p = Math.sqrt((double)sum);
+            double p = Math.sqrt((double)sum);
             this._pow = (p != 0.0 ? p : 0.0000001);
         }
     }
@@ -320,7 +321,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 w_sum = (ave - ((rgb >> 16) & 0xff)); o_out[input_ptr--] = w_sum; sum += w_sum * w_sum;//R
             }
             //<差分値計算(FORの1/8展開)/>
-            const double p = Math.sqrt((double)sum);
+            double p = Math.Sqrt((double)sum);
             return p != 0.0 ? p : 0.0000001;
         }
     }
@@ -367,7 +368,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
             }
             //<差分値計算(FORの1/8展開)/>
-            const double p = Math.sqrt((double)sum);
+            double p = Math.Sqrt((double)sum);
             return p != 0.0 ? p : 0.0000001;
 
         }

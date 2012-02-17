@@ -67,7 +67,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static void copyArray(NyARIntPoint2d[] i_from, NyARIntPoint2d[] i_to)
         {
-            for (int i = i_from.length - 1; i >= 0; i--)
+            for (int i = i_from.Length - 1; i >= 0; i--)
             {
                 i_to[i].x = i_from[i].x;
                 i_to[i].y = i_from[i].y;
@@ -76,7 +76,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public static void shiftCopy(NyARDoublePoint2d[] i_src, NyARIntPoint2d[] i_dst, int i_shift)
         {
-            int l = i_src.length;
+            int l = i_src.Length;
             for (int i = l - 1; i >= 0; i--)
             {
                 int n = (i + i_shift) % l;
@@ -86,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public static void shiftCopy(NyARIntPoint2d[] i_src, NyARIntPoint2d[] i_dst, int i_shift)
         {
-            int l = i_src.length;
+            int l = i_src.Length;
             for (int i = l - 1; i >= 0; i--)
             {
                 int n = (i + i_shift) % l;
@@ -116,7 +116,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * i_p1との距離の二乗値
          */
-        public sealed override int sqDist(NyARIntPoint2d i_p1)
+        public int sqDist(NyARIntPoint2d i_p1)
         {
             int x = this.x - i_p1.x;
             int y = this.y - i_p1.y;
@@ -129,7 +129,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_number_of_vertex
          * 配列中の有効な頂点数です。
          */
-        public sealed override void setCenterPos(NyARIntPoint2d[] i_point, int i_number_of_vertex)
+        public void setCenterPos(NyARIntPoint2d[] i_point, int i_number_of_vertex)
         {
             int cx, cy;
             cx = cy = 0;
@@ -146,7 +146,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_source
          * コピー元のオブジェクト。
          */
-        public sealed override void setValue(NyARIntPoint2d i_source)
+        public void setValue(NyARIntPoint2d i_source)
         {
             this.x = i_source.x;
             this.y = i_source.y;
@@ -156,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_source
          * コピー元のオブジェクト。
          */
-        public sealed override void setValue(NyARDoublePoint2d i_source)
+        public void setValue(NyARDoublePoint2d i_source)
         {
             this.x = (int)i_source.x;
             this.y = (int)i_source.y;
@@ -168,7 +168,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_y
          * {@link #y}にセットする値
          */
-        public sealed override void setValue(int i_x, int i_y)
+        public void setValue(int i_x, int i_y)
         {
             this.x = i_x;
             this.y = i_y;

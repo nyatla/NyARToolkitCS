@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -52,21 +53,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタの幅を返します。
          */
-        public sealed override int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数は、ラスタの高さを返します。
          */
-        sealed public override int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数は、ラスタのサイズを格納したオブジェクトを返します。
          */
-        sealed public override NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
@@ -74,16 +75,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        sealed public override int getBufferType()
+        public int getBufferType()
         {
             return _buffer_type;
         }
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public override bool isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return this._buffer_type == i_type_value;
         }
+        public abstract object getBuffer();
+        public abstract bool hasBuffer();
+        public abstract void wrapBuffer(object i_ref_buf);
+        public abstract object createInterface(Type i_iid);
     }
 }

@@ -61,13 +61,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool getVertexIndexes(NyARIntCoordinates i_coord, int i_area, int[] o_vertex)
         {
-            const NyARVertexCounter wv1 = this.__getSquareVertex_wv1;
-            const NyARVertexCounter wv2 = this.__getSquareVertex_wv2;
+            NyARVertexCounter wv1 = this.__getSquareVertex_wv1;
+            NyARVertexCounter wv2 = this.__getSquareVertex_wv2;
             int i_coord_num = i_coord.length;
             int vertex1_index = getFarPoint(i_coord.items, i_coord_num, 0);
             int prev_vertex_index = (vertex1_index + i_coord_num) % i_coord_num;
             int v1 = getFarPoint(i_coord.items, i_coord_num, vertex1_index);
-            const double thresh = (i_area / 0.75) * 0.01 * VERTEX_FACTOR;
+            double thresh = (i_area / 0.75) * 0.01 * VERTEX_FACTOR;
 
             o_vertex[0] = vertex1_index;
 
@@ -165,8 +165,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private static int getFarPoint(NyARIntPoint2d[] i_coord, int i_coord_num, int i_point)
         {
             //
-            const int sx = i_coord[i_point].x;
-            const int sy = i_coord[i_point].y;
+            int sx = i_coord[i_point].x;
+            int sy = i_coord[i_point].y;
             int d = 0;
             int w, x, y;
             int ret = 0;
@@ -238,16 +238,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //dmaxは4乗なのでやるとしてもint64じゃないとマズイ
             int v1 = 0;
             NyARIntPoint2d[] coord = this._coord;
-            const int a = coord[ed].y - coord[st].y;
-            const int b = coord[st].x - coord[ed].x;
-            const int c = coord[ed].x * coord[st].y - coord[ed].y * coord[st].x;
+            int a = coord[ed].y - coord[st].y;
+            int b = coord[st].x - coord[ed].x;
+            int c = coord[ed].x * coord[st].y - coord[ed].y * coord[st].x;
             double dmax = 0;
             if (st < ed)
             {
                 //stとedが1区間
                 for (int i = st + 1; i < ed; i++)
                 {
-                    const double d = a * coord[i].x + b * coord[i].y + c;
+                    double d = a * coord[i].x + b * coord[i].y + c;
                     if (d * d > dmax)
                     {
                         dmax = d * d;
@@ -260,7 +260,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //stとedが2区間
                 for (int i = st + 1; i < i_coord_len; i++)
                 {
-                    const double d = a * coord[i].x + b * coord[i].y + c;
+                    double d = a * coord[i].x + b * coord[i].y + c;
                     if (d * d > dmax)
                     {
                         dmax = d * d;
@@ -269,7 +269,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
                 for (int i = 0; i < ed; i++)
                 {
-                    const double d = a * coord[i].x + b * coord[i].y + c;
+                    double d = a * coord[i].x + b * coord[i].y + c;
                     if (d * d > dmax)
                     {
                         dmax = d * d;

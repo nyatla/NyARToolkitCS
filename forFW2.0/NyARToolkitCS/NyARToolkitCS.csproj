@@ -257,6 +257,7 @@
     <Compile Include="cs\core\transmat\rotmatrix\NyARRotVector.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="cs\core\transmat\rotmatrix\NyARRotVectorV2.cs" />
     <Compile Include="cs\core\transmat\solver\INyARTransportVectorSolver.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -183,12 +184,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private bool addFragment(RleElement i_rel_img, int i_nof, int i_row_index, RleInfoStack o_stack)
         {
             int l = i_rel_img.l;
-            const int len = i_rel_img.r - l;
+            int len = i_rel_img.r - l;
             i_rel_img.fid = i_nof;// REL毎の固有ID
             NyARRleLabelFragmentInfo v = o_stack.prePush();
             if (v == null)
             {
-                System.err.println("addFragment force recover!");
+                System.Console.Error.WriteLine("addFragment force recover!");
                 return false;
             }
             v.entry_x = l;
@@ -211,7 +212,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 敷居値を指定します。2値画像の場合は、0を指定してください。
          * @
          */
-        public void labeling(INyARGrayscaleRaster i_raster, int i_th)
+        public virtual void labeling(INyARGrayscaleRaster i_raster, int i_th)
         {
             NyARIntSize size = i_raster.getSize();
             this.imple_labeling(i_raster, i_th, 0, 0, size.w, size.h);
@@ -227,7 +228,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 敷居値
          * @
          */
-        public void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
+        public virtual void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
         {
             this.imple_labeling(i_raster, 0, i_area.x, i_area.y, i_area.w, i_area.h);
         }
@@ -252,7 +253,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		//
 		int len_prev = 0;
 		int len_current = 0;
-		const int bottom=i_top+i_height;
+		int bottom=i_top+i_height;
 		int id_max = 0;
 		int label_count=0;
 		int ypos=i_top;
@@ -439,14 +440,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     class RleInfoStack : NyARObjectStack<NyARRleLabelFragmentInfo>
     {
-        public RleInfoStack(int i_length)
+        public RleInfoStack(int i_length):base()
         {
-            super();
-            super.initInstance(i_length, NyARRleLabelFragmentInfo);
+            base.initInstance(i_length);
             return;
         }
 
-        protected NyARRleLabelFragmentInfo createElement()
+        protected override NyARRleLabelFragmentInfo createElement()
         {
             return new NyARRleLabelFragmentInfo();
         }

@@ -47,10 +47,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
         //override
         public void pca(double[] i_v1, double[] i_v2, int i_number_of_point, NyARDoubleMatrix22 o_evec, double[] o_ev, double[] o_mean)
         {
-            const NyARMatPca input = this.__pca_input;// 次処理で初期化される。		
+            NyARMatPca input = this.__pca_input;// 次処理で初期化される。		
             // pcaの準備
             input.realloc(i_number_of_point, 2);
-            const double[][] input_array = input.getArray();
+            double[][] input_array = input.getArray();
             for (int i = 0; i < i_number_of_point; i++)
             {
                 input_array[i][0] = i_v1[i];
@@ -58,9 +58,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             // 主成分分析
             input.pca(this.__pca_evec, this.__pca_ev, this.__pca_mean);
-            const double[] mean_array = this.__pca_mean.getArray();
-            const double[][] evec_array = this.__pca_evec.getArray();
-            const double[] ev_array = this.__pca_ev.getArray();
+            double[] mean_array = this.__pca_mean.getArray();
+            double[][] evec_array = this.__pca_evec.getArray();
+            double[] ev_array = this.__pca_ev.getArray();
             o_evec.m00 = evec_array[0][0];
             o_evec.m01 = evec_array[0][1];
             o_evec.m10 = evec_array[1][0];

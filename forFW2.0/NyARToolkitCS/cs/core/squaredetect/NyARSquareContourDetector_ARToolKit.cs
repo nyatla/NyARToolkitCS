@@ -81,7 +81,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 検出元のラスタ画像
          * @
          */
-        public sealed override void detectMarker(NyARBinRaster i_raster)
+        public void detectMarker(NyARBinRaster i_raster)
         {
             NyARLabelingImage limage = this._limage;
 
@@ -96,7 +96,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //ラベルをソートしておく
             stack.sortByArea();
             //
-            const NyARLabelingLabel[] labels = stack.getArray();
+            NyARLabelingLabel[] labels = stack.getArray();
 
             // デカいラベルを読み飛ばし
             int i;

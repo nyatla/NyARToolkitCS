@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -65,7 +66,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void realloc(int i_clm)
         {
-            if (i_clm <= this.v.length)
+            if (i_clm <= this.v.Length)
             {
                 // 十分な配列があれば何もしない。
             }

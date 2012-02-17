@@ -54,21 +54,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
         //override
-        public sealed override void setAngle(double i_x, double i_y, double i_z)
+        public override void setAngle(double i_x, double i_y, double i_z)
         {
-            const double sina = Math.sin(i_x);
-            const double cosa = Math.cos(i_x);
-            const double sinb = Math.sin(i_y);
-            const double cosb = Math.cos(i_y);
-            const double sinc = Math.sin(i_z);
-            const double cosc = Math.cos(i_z);
+            double sina = Math.sin(i_x);
+            double cosa = Math.cos(i_x);
+            double sinb = Math.sin(i_y);
+            double cosb = Math.cos(i_y);
+            double sinc = Math.sin(i_z);
+            double cosc = Math.cos(i_z);
             // Optimize
-            const double CACA = cosa * cosa;
-            const double SASA = sina * sina;
-            const double SACA = sina * cosa;
-            const double SASB = sina * sinb;
-            const double CASB = cosa * sinb;
-            const double SACACB = SACA * cosb;
+            double CACA = cosa * cosa;
+            double SASA = sina * sina;
+            double SACA = sina * cosa;
+            double SASB = sina * sinb;
+            double CASB = cosa * sinb;
+            double SACACB = SACA * cosb;
 
             this.m00 = CACA * cosb * cosc + SASA * cosc + SACACB * sinc - SACA * sinc;
             this.m01 = -CACA * cosb * sinc - SASA * sinc + SACACB * cosc - SACA * cosc;

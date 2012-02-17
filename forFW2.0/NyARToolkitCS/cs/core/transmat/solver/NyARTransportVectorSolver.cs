@@ -71,8 +71,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             //3x2nと2n*3の行列から、最小二乗法計算するために3x3マトリクスを作る。		
             //行列[A]の3列目のキャッシュ
-            const double[] cx = this._cx;
-            const double[] cy = this._cy;
+            double[] cx = this._cx;
+            double[] cy = this._cy;
 
             double m22;
             double p00 = this._projection_mat.m00;
@@ -112,15 +112,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void solveTransportVector(NyARDoublePoint3d[] i_vertex3d, NyARDoublePoint3d o_transfer)
         {
-            const int number_of_vertex = this._nmber_of_vertex;
-            const double p00 = this._projection_mat.m00;
-            const double p01 = this._projection_mat.m01;
-            const double p02 = this._projection_mat.m02;
-            const double p11 = this._projection_mat.m11;
-            const double p12 = this._projection_mat.m12;
+            int number_of_vertex = this._nmber_of_vertex;
+            double p00 = this._projection_mat.m00;
+            double p01 = this._projection_mat.m01;
+            double p02 = this._projection_mat.m02;
+            double p11 = this._projection_mat.m11;
+            double p12 = this._projection_mat.m12;
             //行列[A]の3列目のキャッシュ
-            const double[] cx = this._cx;
-            const double[] cy = this._cy;
+            double[] cx = this._cx;
+            double[] cy = this._cy;
 
             //回転行列を元座標の頂点群に適応
             //[A]T*[b]を計算

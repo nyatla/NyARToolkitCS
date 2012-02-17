@@ -105,17 +105,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             Debug.Assert(this._code_patt != null);
             //
-            const int[] linput = i_patt.getData();
+            int[] linput = i_patt.getData();
             int sum;
             double max = Double.MIN_VALUE;
             int res = NyARMatchPattResult.DIRECTION_UNKNOWN;
-            const int for_mod = this._optimize_for_mod;
+            int for_mod = this._optimize_for_mod;
             for (int j = 0; j < 4; j++)
             {
                 //合計値初期化
                 sum = 0;
-                const NyARMatchPattDeviationColorData code_patt = this._code_patt.getColorData(j);
-                const int[] pat_j = code_patt.getData();
+                NyARMatchPattDeviationColorData code_patt = this._code_patt.getColorData(j);
+                int[] pat_j = code_patt.getData();
                 //<全画素について、比較(FORの1/16展開)>
                 int i;
                 for (i = this._rgbpixels - 1; i >= for_mod; i--)
@@ -142,7 +142,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     sum += linput[i] * pat_j[i]; i--;
                 }
                 //<全画素について、比較(FORの1/16展開)/>
-                const double sum2 = sum / code_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
+                double sum2 = sum / code_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
                 if (sum2 > max)
                 {
                     max = sum2;

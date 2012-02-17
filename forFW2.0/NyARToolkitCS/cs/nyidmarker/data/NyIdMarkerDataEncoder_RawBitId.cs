@@ -33,7 +33,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
     public class NyIdMarkerDataEncoder_RawBitId : NyIdMarkerDataEncoder_RawBit
     {
         private NyIdMarkerData_RawBit _tmp = new NyIdMarkerData_RawBit();
-        public bool encode(NyIdMarkerPattern i_data, INyIdMarkerData o_dest)
+        public override bool encode(NyIdMarkerPattern i_data, INyIdMarkerData o_dest)
         {
             //対象か調べるん
             if (i_data.ctrl_domain != 0)
@@ -68,7 +68,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
         /**
          * この関数は、{@link NyIdMarkerData_RawBitId}型のオブジェクトを生成して返します。
          */
-        public INyIdMarkerData createDataInstance()
+        public override INyIdMarkerData createDataInstance()
         {
             return new NyIdMarkerData_RawBitId();
         }

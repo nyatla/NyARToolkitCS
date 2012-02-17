@@ -309,12 +309,11 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         public class ARTKDetector : NyARSquareContourDetector_ARToolKit
         {
             private NyARSingleDetectMarker _parent;
-            public ARTKDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size)
+            public ARTKDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size):base(i_size)
             {
-                super(i_size);
                 this._parent = i_parent;
             }
-            protected void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 this._parent.updateSquareInfo(i_coord, i_vertex_index);
             }
@@ -326,7 +325,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._transmat = new NyARTransMat_ARToolKit(i_ref_param);
             this._square_detect = new ARTKDetector(this, i_ref_param.getScreenSize());
         }
-        protected void execDetectMarker()
+        protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
             this._square_detect.detectMarker(this._bin_raster);
@@ -343,7 +342,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._transmat = new NyARTransMat_ARToolKit(i_ref_param);
             this._square_detect = new NyARSingleDetectMarker_ARTKv2.ARTKDetector(this, i_ref_param.getScreenSize());
         }
-        protected void execDetectMarker()
+        protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
             this._square_detect.detectMarker(this._bin_raster);
@@ -368,7 +367,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 super(i_size);
                 this._parent = i_parent;
             }
-            protected void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 this._parent.updateSquareInfo(i_coord, i_vertex_index);
             }
@@ -381,7 +380,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._transmat = new NyARTransMat(i_ref_param);
             this._square_detect = new RleDetector(this, i_ref_param.getScreenSize());
         }
-        protected void execDetectMarker()
+        protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
             this._square_detect.detectMarker(this._bin_raster, 0);

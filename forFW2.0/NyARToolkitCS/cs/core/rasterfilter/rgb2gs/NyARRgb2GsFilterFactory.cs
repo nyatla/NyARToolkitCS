@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARRgb2GsFilterFactory
@@ -108,11 +109,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             NyARIntSize size = this._ref_raster.getSize();
             int bp = (l + t * size.w) * 4;
-            const int b = t + h;
-            const int row_padding_dst = (size.w - w);
-            const int row_padding_src = row_padding_dst * 4;
-            const int pix_count = w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int b = t + h;
+            int row_padding_dst = (size.w - w);
+            int row_padding_src = row_padding_dst * 4;
+            int pix_count = w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             int dst_ptr = t * size.w + l;
             byte[] in_buf = (byte[])this._ref_raster.getBuffer();
             switch (o_raster.getBufferType())
@@ -185,11 +186,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             NyARIntSize size = this._ref_raster.getSize();
             int bp = (l + t * size.w) * 3;
-            const int b = t + h;
-            const int row_padding_dst = (size.w - w);
-            const int row_padding_src = row_padding_dst * 3;
-            const int pix_count = w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int b = t + h;
+            int row_padding_dst = (size.w - w);
+            int row_padding_src = row_padding_dst * 3;
+            int pix_count = w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             int dst_ptr = t * size.w + l;
             byte[] in_buf = (byte[])this._ref_raster.getBuffer();
             switch (o_raster.getBufferType())
@@ -261,11 +262,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             NyARIntSize size = this._ref_raster.getSize();
             int bp = (l + t * size.w);
-            const int b = t + h;
-            const int row_padding_dst = (size.w - w);
-            const int row_padding_src = row_padding_dst;
-            const int pix_count = w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int b = t + h;
+            int row_padding_dst = (size.w - w);
+            int row_padding_src = row_padding_dst;
+            int pix_count = w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             int dst_ptr = t * size.w + l;
             int[] in_buf = (int[])this._ref_raster.getBuffer();
             switch (o_raster.getBufferType())
@@ -330,8 +331,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void convertRect(int l, int t, int w, int h, INyARGrayscaleRaster o_raster)
         {
             int[] wk = this._wk;
-            const int b = t + h;
-            const int pix_count = w;
+            int b = t + h;
+            int pix_count = w;
             switch (o_raster.getBufferType())
             {
                 default:
@@ -373,8 +374,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void convertRect(int l, int t, int w, int h, INyARGrayscaleRaster o_raster)
         {
             int[] wk = this._wk;
-            const int b = t + h;
-            const int pix_count = w;
+            int b = t + h;
+            int pix_count = w;
             switch (o_raster.getBufferType())
             {
                 default:
@@ -414,8 +415,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void convertRect(int l, int t, int w, int h, INyARGrayscaleRaster o_raster)
         {
             int[] wk = this._wk;
-            const int b = t + h;
-            const int pix_count = w;
+            int b = t + h;
+            int pix_count = w;
             switch (o_raster.getBufferType())
             {
                 default:

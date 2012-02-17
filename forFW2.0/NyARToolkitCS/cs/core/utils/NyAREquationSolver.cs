@@ -22,6 +22,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -93,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 return 1;
             }
             //実根２個
-            t = Math.sqrt(t);
+            t = Math.Sqrt(t);
             o_result[i_result_st + 0] = (-i_b + t) / (2);
             o_result[i_result_st + 1] = (-i_b - t) / (2);
             return 2;
@@ -143,7 +145,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             if ((tmp = q * q - p * p * p) == 0)
             {
                 // 重根
-                q = Math.cbrt(q);
+                q = NyARMath.cubeRoot(q);
                 o_result[0] = 2 * q - b;
                 o_result[1] = -q - b;
                 return 2;
@@ -151,7 +153,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             else if (tmp > 0)
             {
                 // 実根1,虚根2
-                double a3 = Math.cbrt(q + ((q > 0) ? 1 : -1) * Math.sqrt(tmp));
+                double a3 = NyARMath.cubeRoot(q + ((q > 0) ? 1 : -1) * Math.Sqrt(tmp));
                 double b3 = p / a3;
                 o_result[0] = a3 + b3 - b;
                 // 虚根:-0.5*(a3+b3)-b,Math.abs(a3-b3)*Math.sqrt(3.0)/2
@@ -160,11 +162,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             else
             {
                 // 実根3
-                tmp = 2 * Math.sqrt(p);
-                double t = Math.acos(q / (p * tmp / 2));
-                o_result[0] = tmp * Math.cos(t / 3) - b;
-                o_result[1] = tmp * Math.cos((t + 2 * Math.PI) / 3) - b;
-                o_result[2] = tmp * Math.cos((t + 4 * Math.PI) / 3) - b;
+                tmp = 2 * Math.Sqrt(p);
+                double t = Math.Acos(q / (p * tmp / 2));
+                o_result[0] = tmp * Math.Cos(t / 3) - b;
+                o_result[1] = tmp * Math.Cos((t + 2 * Math.PI) / 3) - b;
+                o_result[2] = tmp * Math.Cos((t + 4 * Math.PI) / 3) - b;
                 return 3;
             }
         }
@@ -229,7 +231,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             return 1;
                         }
                         //実根2個
-                        result_0 = Math.sqrt(result_0);
+                        result_0 = Math.Sqrt(result_0);
                         o_result[0] = result_0 - B3;
                         o_result[1] = -result_0 - B3;
                         return 2;
@@ -242,7 +244,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         if (result_0 > 0)
                         {
                             //NC
-                            result_0 = Math.sqrt(result_0);
+                            result_0 = Math.Sqrt(result_0);
                             o_result[0] = result_0 - B3;
                             o_result[1] = -result_0 - B3;
                             number_of_result += 2;
@@ -250,7 +252,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         if (result_1 > 0)
                         {
                             //NC
-                            result_1 = Math.sqrt(result_1);
+                            result_1 = Math.Sqrt(result_1);
                             o_result[number_of_result + 0] = result_1 - B3;
                             o_result[number_of_result + 1] = -result_1 - B3;
                             number_of_result += 2;
@@ -271,7 +273,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //全て虚数解
                     return 0;
                 }
-                double ru = Math.sqrt(u);
+                double ru = Math.Sqrt(u);
                 //2次方程式を解いてyを計算(最適化ポイント)
                 int result_1st, result_2nd;
                 result_1st = solve2Equation(-ru, (p + u) / 2 + ru * q / (2 * u), o_result, 0);
@@ -327,22 +329,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
             if ((tmp = q * q - p * p * p) == 0)
             {
                 // 重根
-                q = Math.cbrt(q);
+                q = NyARMath.cubeRoot(q);
                 return 2 * q - b;
             }
             else if (tmp > 0)
             {
                 // 実根1,虚根2
-                double a3 = Math.cbrt(q + ((q > 0) ? 1 : -1) * Math.sqrt(tmp));
+                double a3 = NyARMath.cubeRoot(q + ((q > 0) ? 1 : -1) * Math.Sqrt(tmp));
                 double b3 = p / a3;
                 return a3 + b3 - b;
             }
             else
             {
                 // 実根3
-                tmp = 2 * Math.sqrt(p);
-                double t = Math.acos(q / (p * tmp / 2));
-                return tmp * Math.cos(t / 3) - b;
+                tmp = 2 * Math.Sqrt(p);
+                double t = Math.Acos(q / (p * tmp / 2));
+                return tmp * Math.Cos(t / 3) - b;
             }
         }
         /*

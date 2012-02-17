@@ -49,20 +49,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大サイズ。
          * @
          */
-        public NyARLabelingLabelStack(int i_max_array_size)
+        public NyARLabelingLabelStack(int i_max_array_size):base()
         {
-            super();
-            super.initInstance(i_max_array_size, NyARLabelingLabel);
+            base.initInstance(i_max_array_size);
         }
         /** {@link NyARLabelingLabel}要素を返します。*/
-        protected NyARLabelingLabel createElement()
+        protected override NyARLabelingLabel createElement()
         {
             return new NyARLabelingLabel();
         }
         /**
          * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
          */
-        public sealed override void sortByArea()
+        public void sortByArea()
         {
             int len = this._length;
             if (len < 1)
@@ -78,7 +77,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 {
                     if (item[i + h].area > item[i].area)
                     {
-                        const NyARLabelingLabel temp = item[i + h];
+                        NyARLabelingLabel temp = item[i + h];
                         item[i + h] = item[i];
                         item[i] = temp;
                         swaps++;

@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -52,35 +53,34 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int _bottom;
 
 
-            public Labeling(int i_width, int i_height)
+            public Labeling(int i_width, int i_height):base(i_width, i_height)
             {
-                super(i_width, i_height);
                 long t = (long)i_width * i_height * 2048 / (320 * 240) + 32;//full HD support
                 this.label_stack = new NyARRleLabelFragmentInfoPtrStack((int)t);//検出可能な最大ラベル数
                 this._bottom = i_height - 1;
                 this._right = i_width - 1;
                 return;
             }
-            public void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
+            public override void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
             {
                 //配列初期化
                 this.label_stack.clear();
                 //ラベルの検出
-                super.labeling(i_raster, i_area, i_th);
+                base.labeling(i_raster, i_area, i_th);
                 //ソート
                 this.label_stack.sortByArea();
             }
-            public void labeling(INyARGrayscaleRaster i_raster, int i_th)
+            public override void labeling(INyARGrayscaleRaster i_raster, int i_th)
             {
                 //配列初期化
                 this.label_stack.clear();
                 //ラベルの検出
-                super.labeling(i_raster, i_th);
+                base.labeling(i_raster, i_th);
                 //ソート
                 this.label_stack.sortByArea();
             }
 
-            protected void onLabelFound(NyARRleLabelFragmentInfo i_label)
+            protected override void onLabelFound(NyARRleLabelFragmentInfo i_label)
             {
                 // クリップ領域が画面の枠に接していれば除外
                 if (i_label.clip_l == 0 || i_label.clip_r == this._right)
@@ -96,7 +96,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
 
         protected Labeling _labeling;
-        private readonly NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> _overlap_checker = new NyARLabelOverlapChecker<NyARRleLabelFragmentInfo>(32, NyARRleLabelFragmentInfo);
+        private readonly NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> _overlap_checker = new NyARLabelOverlapChecker<NyARRleLabelFragmentInfo>(32);
         private NyARContourPickup _cpickup = new NyARContourPickup();
         private readonly NyARCoord2SquareVertexIndexes _coord2vertex = new NyARCoord2SquareVertexIndexes();
         private readonly NyARIntCoordinates _coord;
@@ -142,12 +142,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             Debug.Assert(i_area.w * i_area.h > 0);
 
-            const NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
-            const NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
+            NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
+            NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
 
             // ラベル数が0ならここまで
             this._labeling.labeling(i_raster, i_area, i_th);
-            const int label_num = flagment.getLength();
+            int label_num = flagment.getLength();
             if (label_num < 1)
             {
                 return;
@@ -157,7 +157,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARRleLabelFragmentInfo[] labels = flagment.getArray();
 
             NyARIntCoordinates coord = this._coord;
-            const int[] mkvertex = this.__detectMarker_mkvertex;
+            int[] mkvertex = this.__detectMarker_mkvertex;
 
 
             //重なりチェッカの最大数を設定
@@ -205,13 +205,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void detectMarker(INyARGrayscaleRaster i_raster, int i_th)
         {
-            const NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
-            const NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
+            NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
+            NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
 
             // ラベル数が0ならここまで
             flagment.clear();
             this._labeling.labeling(i_raster, i_th);
-            const int label_num = flagment.getLength();
+            int label_num = flagment.getLength();
             if (label_num < 1)
             {
                 return;
@@ -222,7 +222,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARRleLabelFragmentInfo[] labels = flagment.getArray();
 
             NyARIntCoordinates coord = this._coord;
-            const int[] mkvertex = this.__detectMarker_mkvertex;
+            int[] mkvertex = this.__detectMarker_mkvertex;
 
 
             //重なりチェッカの最大数を設定
@@ -230,7 +230,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             for (int i = 0; i < label_num; i++)
             {
-                const NyARRleLabelFragmentInfo label_pt = labels[i];
+                NyARRleLabelFragmentInfo label_pt = labels[i];
                 int label_area = label_pt.area;
 
                 // 既に検出された矩形との重なりを確認

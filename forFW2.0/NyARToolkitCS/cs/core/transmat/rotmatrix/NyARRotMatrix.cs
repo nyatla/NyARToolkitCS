@@ -57,7 +57,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_prev_result
          * セットする姿勢変換行列。
          */
-        public void initRotByPrevResult(NyARTransMatResult i_prev_result)
+        public virtual void initRotByPrevResult(NyARTransMatResult i_prev_result)
         {
 
             this.m00 = i_prev_result.m00;
@@ -84,10 +84,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 矩形の３次元オフセット座標。4要素である必要があります。
          * @
          */
-        public void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
+        public virtual void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
         {
-            const NyARRotVectorV2 vec1 = this.__initRot_vec1;
-            const NyARRotVectorV2 vec2 = this.__initRot_vec2;
+            NyARRotVectorV2 vec1 = this.__initRot_vec1;
+            NyARRotVectorV2 vec2 = this.__initRot_vec2;
 
             //向かい合った辺から、２本のベクトルを計算
 
@@ -110,10 +110,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.m21 = vec2.v3;
 
             //最後の軸を計算
-            const double w02 = vec1.v2 * vec2.v3 - vec1.v3 * vec2.v2;
-            const double w12 = vec1.v3 * vec2.v1 - vec1.v1 * vec2.v3;
-            const double w22 = vec1.v1 * vec2.v2 - vec1.v2 * vec2.v1;
-            const double w = Math.sqrt(w02 * w02 + w12 * w12 + w22 * w22);
+            double w02 = vec1.v2 * vec2.v3 - vec1.v3 * vec2.v2;
+            double w12 = vec1.v3 * vec2.v1 - vec1.v1 * vec2.v3;
+            double w22 = vec1.v1 * vec2.v2 - vec1.v2 * vec2.v1;
+            double w = Math.sqrt(w02 * w02 + w12 * w12 + w22 * w22);
             this.m02 = w02 / w;
             this.m12 = w12 / w;
             this.m22 = w22 / w;
@@ -137,9 +137,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void getPoint3d(NyARDoublePoint3d i_in_point, NyARDoublePoint3d i_out_point)
         {
-            const double x = i_in_point.x;
-            const double y = i_in_point.y;
-            const double z = i_in_point.z;
+            double x = i_in_point.x;
+            double y = i_in_point.y;
+            double z = i_in_point.z;
             i_out_point.x = this.m00 * x + this.m01 * y + this.m02 * z;
             i_out_point.y = this.m10 * x + this.m11 * y + this.m12 * z;
             i_out_point.z = this.m20 * x + this.m21 * y + this.m22 * z;
@@ -158,11 +158,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             for (int i = i_number_of_vertex - 1; i >= 0; i--)
             {
-                const NyARDoublePoint3d out_ptr = i_out_point[i];
-                const NyARDoublePoint3d in_ptr = i_in_point[i];
-                const double x = in_ptr.x;
-                const double y = in_ptr.y;
-                const double z = in_ptr.z;
+                NyARDoublePoint3d out_ptr = i_out_point[i];
+                NyARDoublePoint3d in_ptr = i_in_point[i];
+                double x = in_ptr.x;
+                double y = in_ptr.y;
+                double z = in_ptr.z;
                 out_ptr.x = this.m00 * x + this.m01 * y + this.m02 * z;
                 out_ptr.y = this.m10 * x + this.m11 * y + this.m12 * z;
                 out_ptr.z = this.m20 * x + this.m21 * y + this.m22 * z;

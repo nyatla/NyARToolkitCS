@@ -40,9 +40,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_local_y
          * パラメータ計算の基準点を指定します。
          */
-        public NyARPerspectiveParamGenerator_O1(int i_local_x, int i_local_y)
+        public NyARPerspectiveParamGenerator_O1(int i_local_x, int i_local_y):base(i_local_x, i_local_y)
         {
-            super(i_local_x, i_local_y);
             return;
         }
 

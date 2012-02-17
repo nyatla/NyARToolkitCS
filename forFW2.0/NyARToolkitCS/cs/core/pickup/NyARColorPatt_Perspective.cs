@@ -23,6 +23,7 @@
  * 
  */
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -108,28 +109,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数はラスタの幅を返します。
          */
-        public sealed override int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数はラスタの高さを返します。
          */
-        public sealed override int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数はラスタのサイズの参照値を返します。
          */
-        public sealed override NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
         /**
          * この関数は、ラスタの画素読み取りオブジェクトの参照値を返します。
          */
-        public sealed override INyARRgbPixelDriver getRgbPixelDriver()
+        public INyARRgbPixelDriver getRgbPixelDriver()
         {
             return this._pixelreader;
         }
@@ -137,7 +138,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタ画像のバッファを返します。
          * バッファ形式は、{@link NyARBufferType#INT1D_X8R8G8B8_32}(int[])です。
          */
-        public sealed override object getBuffer()
+        public object getBuffer()
         {
             return this._patdata;
         }
@@ -158,14 +159,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、バッファタイプの定数を返します。
          */
-        public sealed override int getBufferType()
+        public int getBufferType()
         {
             return BUFFER_FORMAT;
         }
         /**
          * この関数は、インスタンスのバッファタイプが引数のものと一致しているか判定します。
          */
-        public sealed override bool isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return BUFFER_FORMAT == i_type_value;
         }
@@ -178,20 +179,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             if (this._last_input_raster != image)
             {
-                this._raster_driver = (INyARPerspectiveCopy)image.createInterface(INyARPerspectiveCopy);
+                this._raster_driver = (INyARPerspectiveCopy)image.createInterface(typeof(INyARPerspectiveCopy));
                 this._last_input_raster = image;
             }
             //遠近法のパラメータを計算
             return this._raster_driver.copyPatt(i_vertexs, this._edge.x, this._edge.y, this._sample_per_pixel, this);
         }
 
-        public sealed override object createInterface(Type iIid)
+        public object createInterface(Type iIid)
         {
-            if (iIid == INyARPerspectiveCopy)
+            if (iIid == typeof(INyARPerspectiveCopy))
             {
                 return NyARPerspectiveCopyFactory.createDriver(this);
             }
-            if (iIid == NyARMatchPattDeviationColorData.IRasterDriver)
+            if (iIid == typeof(NyARMatchPattDeviationColorData.IRasterDriver))
             {
                 return NyARMatchPattDeviationColorData.RasterDriverFactory.createDriver(this);
             }

@@ -101,7 +101,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setMaxLabels(int i_max_label)
         {
-            if (i_max_label > this._labels.length)
+            if (i_max_label > this._labels.Length)
             {
                 this._labels = new T[i_max_label];
             }

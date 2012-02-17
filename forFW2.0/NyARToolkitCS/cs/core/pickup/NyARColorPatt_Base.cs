@@ -68,28 +68,28 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数はラスタの幅を返します。
          */
-        public sealed override int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数はラスタの高さを返します。
          */
-        public sealed override int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数はラスタのサイズの参照値を返します。
          */
-        public sealed override NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
         /**
          * この関数は、ラスタの画素読み取りオブジェクトの参照値を返します。
          */
-        public sealed override INyARRgbPixelDriver getRgbPixelDriver()
+        public INyARRgbPixelDriver getRgbPixelDriver()
         {
             return this._pixelreader;
         }
@@ -118,14 +118,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、バッファタイプの定数を返します。
          */
-        public sealed override int getBufferType()
+        public int getBufferType()
         {
             return BUFFER_FORMAT;
         }
         /**
          * この関数は、インスタンスのバッファタイプが引数のものと一致しているか判定します。
          */
-        public sealed override bool isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return BUFFER_FORMAT == i_type_value;
         }
@@ -185,7 +185,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタのi_vertexsで定義される四角形からパターンを取得して、インスタンスに格納します。
          */
-        public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
+        public virtual bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs)
         {
             // パターンの切り出しに失敗することもある。
             NyARMat cpara = new NyARMat(8, 1);
@@ -237,15 +237,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 sample_pixel_y = AR_PATT_SAMPLE_NUM;
             }
 
-            const int xdiv = sample_pixel_x / this._size.w;// xdiv = xdiv2/Config.AR_PATT_SIZE_X;
-            const int ydiv = sample_pixel_y / this._size.h;// ydiv = ydiv2/Config.AR_PATT_SIZE_Y;
+            int xdiv = sample_pixel_x / this._size.w;// xdiv = xdiv2/Config.AR_PATT_SIZE_X;
+            int ydiv = sample_pixel_y / this._size.h;// ydiv = ydiv2/Config.AR_PATT_SIZE_Y;
 
 
             int img_x = image.getWidth();
             int img_y = image.getHeight();
 
-            const double xdiv2_reciprocal = 1.0 / sample_pixel_x;
-            const double ydiv2_reciprocal = 1.0 / sample_pixel_y;
+            double xdiv2_reciprocal = 1.0 / sample_pixel_x;
+            double ydiv2_reciprocal = 1.0 / sample_pixel_y;
             int r, g, b;
             int[] rgb_tmp = new int[3];
 
@@ -261,17 +261,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //1ピクセルを作成
                     for (int j = 0; j < ydiv; j++)
                     {
-                        const double yw = 102.5 + 5.0 * (iy * ydiv + j + 0.5) * ydiv2_reciprocal;
+                        double yw = 102.5 + 5.0 * (iy * ydiv + j + 0.5) * ydiv2_reciprocal;
                         for (int i = 0; i < xdiv; i++)
                         {
-                            const double xw = 102.5 + 5.0 * (ix * xdiv + i + 0.5) * xdiv2_reciprocal;
-                            const double d = para20 * xw + para21 * yw + para22;
+                            double xw = 102.5 + 5.0 * (ix * xdiv + i + 0.5) * xdiv2_reciprocal;
+                            double d = para20 * xw + para21 * yw + para22;
                             if (d == 0)
                             {
                                 throw new NyARException();
                             }
-                            const int xc = (int)((para00 * xw + para01 * yw + para02) / d);
-                            const int yc = (int)((para10 * xw + para11 * yw + para12) / d);
+                            int xc = (int)((para00 * xw + para01 * yw + para02) / d);
+                            int yc = (int)((para10 * xw + para11 * yw + para12) / d);
 
                             if (xc >= 0 && xc < img_x && yc >= 0 && yc < img_y)
                             {

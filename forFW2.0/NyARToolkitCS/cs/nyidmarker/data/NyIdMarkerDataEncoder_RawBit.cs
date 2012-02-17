@@ -37,15 +37,15 @@ public class NyIdMarkerDataEncoder_RawBit : INyIdMarkerDataEncoder
 	 * この関数は、マーカパターンデータを{@link NyIdMarkerData_RawBit}型のデータに変換します。
 	 * o_destには、{@link NyIdMarkerData_RawBit}型のオブジェクトを指定してください。
 	 */
-	public bool encode(NyIdMarkerPattern i_data,INyIdMarkerData o_dest)
+	public virtual bool encode(NyIdMarkerPattern i_data,INyIdMarkerData o_dest)
 	{
-		const NyIdMarkerData_RawBit dest=(NyIdMarkerData_RawBit)o_dest;
+		NyIdMarkerData_RawBit dest=(NyIdMarkerData_RawBit)o_dest;
 		if(i_data.ctrl_domain!=_DOMAIN_ID){
 			return false;
 		}
 		//パケット数計算
-		const int resolution_len=(i_data.model+i_data.model-1);      //データドットの数
-		const int packet_length=(resolution_len*resolution_len)/8+1;
+		int resolution_len=(i_data.model+i_data.model-1);      //データドットの数
+		int packet_length=(resolution_len*resolution_len)/8+1;
 		int sum=0;
 		for(int i=0;i<packet_length;i++){
 			dest.packet[i]=i_data.data[i];
@@ -63,7 +63,7 @@ public class NyIdMarkerDataEncoder_RawBit : INyIdMarkerDataEncoder
 	/**
 	 * この関数は、{@link NyIdMarkerData_RawBit}型のオブジェクトを生成して返します。
 	 */
-	public INyIdMarkerData createDataInstance()
+	public virtual INyIdMarkerData createDataInstance()
 	{
 		return new NyIdMarkerData_RawBit();
 	}

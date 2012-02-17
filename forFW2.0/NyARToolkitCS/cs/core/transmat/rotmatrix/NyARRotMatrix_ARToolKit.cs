@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -47,9 +48,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 参照する射影変換オブジェクト
          * @
          */
-        public NyARRotMatrix_ARToolKit(NyARPerspectiveProjectionMatrix i_matrix)
+        public NyARRotMatrix_ARToolKit(NyARPerspectiveProjectionMatrix i_matrix):base(i_matrix)
         {
-            super(i_matrix);
+            
             this._angle = new NyARDoublePoint3d();
             return;
         }
@@ -59,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         //override
         public sealed override void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
         {
-            super.initRotBySquare(i_linear, i_sqvertex);
+            base.initRotBySquare(i_linear, i_sqvertex);
             //Matrixからangleをロード
             this.updateAngleFromMatrix();
             return;
@@ -69,7 +70,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * [read only]角度値
          */
-        public sealed override NyARDoublePoint3d getAngle()
+        public NyARDoublePoint3d getAngle()
         {
             return this._angle;
         }
@@ -78,7 +79,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 複製した{@link #getAngle()}の値
          */
-        public sealed override NyARDoublePoint3d getAngle(NyARDoublePoint3d i_buf)
+        public NyARDoublePoint3d getAngle(NyARDoublePoint3d i_buf)
         {
             i_buf.setValue(this._angle);
             return i_buf;
@@ -93,14 +94,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_z
          * Z軸の回転量。
          */
-        public void setAngle(double i_x, double i_y, double i_z)
+        public virtual void setAngle(double i_x, double i_y, double i_z)
         {
-            double sina = Math.sin(i_x);
-            double cosa = Math.cos(i_x);
-            double sinb = Math.sin(i_y);
-            double cosb = Math.cos(i_y);
-            double sinc = Math.sin(i_z);
-            double cosc = Math.cos(i_z);
+            double sina = Math.Sin(i_x);
+            double cosa = Math.Cos(i_x);
+            double sinb = Math.Sin(i_y);
+            double cosb = Math.Cos(i_y);
+            double sinc = Math.Sin(i_z);
+            double cosc = Math.Cos(i_z);
             // Optimize
             double CACA = cosa * cosa;
             double SASA = sina * sina;
@@ -125,7 +126,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 現在のMatrixからangkeを復元する。
          * @param o_angle
          */
-        private sealed override void updateAngleFromMatrix()
+        private void updateAngleFromMatrix()
         {
             double a, b, c;
             double sina, cosa, sinb, cosb, sinc, cosc;
@@ -142,8 +143,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 cosb = this.m22;// <Optimize/>cosb = rot[2][2];
             }
-            b = Math.acos(cosb);
-            sinb = Math.sin(b);
+            b = Math.Acos(cosb);
+            sinb = Math.Sin(b);
             double rot02 = this.m02;
             double rot12 = this.m12;
             if (b >= 0.000001 || b <= -0.000001)
@@ -170,12 +171,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     sina = -1.0;
                     cosa = 0.0;
                 }
-                a = Math.acos(cosa);
+                a = Math.Acos(cosa);
                 if (sina < 0)
                 {
                     a = -a;
                 }
-                const double tmp = (rot02 * rot02 + rot12 * rot12);
+                double tmp = (rot02 * rot02 + rot12 * rot12);
                 sinc = (this.m21 * rot02 - this.m20 * rot12) / tmp;
                 cosc = -(rot02 * this.m20 + rot12 * this.m21) / tmp;
 
@@ -199,7 +200,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     sinc = -1.0;
                     cosc = 0.0;
                 }
-                c = Math.acos(cosc);
+                c = Math.Acos(cosc);
                 if (sinc < 0)
                 {
                     c = -c;
@@ -232,7 +233,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     sinc = -1.0;
                     cosc = 0.0;
                 }
-                c = Math.acos(cosc);
+                c = Math.Acos(cosc);
                 if (sinc < 0)
                 {
                     c = -c;

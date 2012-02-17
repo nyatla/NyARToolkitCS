@@ -163,7 +163,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ヒストグラムを初期化します。
          */
-        public override sealed void reset()
+        public void reset()
         {
             int[] d = this.data;
             for (int i = this.length - 1; i >= 0; i--)

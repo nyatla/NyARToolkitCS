@@ -28,6 +28,9 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.IO;
+using System;
+using System.Collections.Generic;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -128,7 +131,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void changeScreenSize(int i_xsize, int i_ysize)
         {
-            const double scale = (double)i_xsize / (double)(this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
+            double scale = (double)i_xsize / (double)(this._screen_size.w);// scale = (double)xsize / (double)(source->xsize);
             //スケールを変更
             this._dist.changeScale(scale);
             this._projection_matrix.changeScale(scale);
@@ -155,30 +158,30 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-
+        public void loadARParam(StreamReader i_stream)
+        {
+            this.loadARParam(new BinaryReader(i_stream));
+        }
         /**
          * この関数は、ストリームからARToolKit形式のカメラパラメーを1個目の設定をロードします。
          * @param i_stream
          * 読み込むストリームです。
          * @throws Exception
          */
-        public void loadARParam(InputStream i_stream)
+        public void loadARParam(BinaryReader i_reader)
         {
             try
             {
                 byte[] buf = new byte[SIZE_OF_PARAM_SET];
-                i_stream.read(buf);
                 double[] tmp = new double[16];
 
                 // バッファを加工
-                ByteBuffer bb = ByteBuffer.wrap(buf);
-                bb.order(ByteOrder.BIG_ENDIAN);
-                this._screen_size.w = bb.getInt();
-                this._screen_size.h = bb.getInt();
+                this._screen_size.w = endianConv(i_reader.ReadInt32());
+                this._screen_size.h = endianConv(i_reader.ReadInt32());
                 //double値を12個読み込む
                 for (int i = 0; i < 12; i++)
                 {
-                    tmp[i] = bb.getDouble();
+                    tmp[i] = endianConv(i_reader.ReadDouble());
                 }
                 //パディング
                 tmp[12] = tmp[13] = tmp[14] = 0;
@@ -188,7 +191,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //double値を4個読み込む
                 for (int i = 0; i < 4; i++)
                 {
-                    tmp[i] = bb.getDouble();
+                    tmp[i] = endianConv(i_reader.ReadDouble());
                 }
                 //Factorオブジェクトにセット
                 this._dist.setValue(tmp);
@@ -205,34 +208,55 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 未定義
          * @throws Exception
          */
-        public void saveARParam(OutputStream i_stream)
+        public void saveARParam(StreamWriter i_stream)
         {
             NyARException.trap("未チェックの関数");
-            byte[] buf = new byte[SIZE_OF_PARAM_SET];
-            // バッファをラップ
-            ByteBuffer bb = ByteBuffer.wrap(buf);
-            bb.order(ByteOrder.BIG_ENDIAN);
+            /*            byte[] buf = new byte[SIZE_OF_PARAM_SET];
+                        // バッファをラップ
+                        ByteBuffer bb = ByteBuffer.wrap(buf);
+                        bb.order(ByteOrder.BIG_ENDIAN);
 
-            // 書き込み
-            bb.putInt(this._screen_size.w);
-            bb.putInt(this._screen_size.h);
-            double[] tmp = new double[12];
-            //Projectionを読み出し
-            this._projection_matrix.getValue(tmp);
-            //double値を12個書き込む
-            for (int i = 0; i < 12; i++)
+                        // 書き込み
+                        bb.putInt(this._screen_size.w);
+                        bb.putInt(this._screen_size.h);
+                        double[] tmp = new double[12];
+                        //Projectionを読み出し
+                        this._projection_matrix.getValue(tmp);
+                        //double値を12個書き込む
+                        for (int i = 0; i < 12; i++)
+                        {
+                            tmp[i] = bb.getDouble();
+                        }
+                        //Factorを読み出し
+                        this._dist.getValue(tmp);
+                        //double値を4個書き込む
+                        for (int i = 0; i < 4; i++)
+                        {
+                            tmp[i] = bb.getDouble();
+                        }
+                        i_stream.write(buf);
+                        return;
+             */
+        }
+        private static double endianConv(double i_val)
+        {
+            if (!BitConverter.IsLittleEndian)
             {
-                tmp[i] = bb.getDouble();
+                return i_val;
             }
-            //Factorを読み出し
-            this._dist.getValue(tmp);
-            //double値を4個書き込む
-            for (int i = 0; i < 4; i++)
+            byte[] ba = BitConverter.GetBytes(i_val);
+            Array.Reverse(ba);
+            return BitConverter.ToDouble(ba, 0);
+        }
+        private static int endianConv(int i_val)
+        {
+            if (!BitConverter.IsLittleEndian)
             {
-                tmp[i] = bb.getDouble();
+                return i_val;
             }
-            i_stream.write(buf);
-            return;
+            byte[] ba = BitConverter.GetBytes(i_val);
+            Array.Reverse(ba);
+            return BitConverter.ToInt32(ba, 0);
         }
     }
 }

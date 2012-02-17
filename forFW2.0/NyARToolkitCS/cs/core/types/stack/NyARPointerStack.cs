@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -61,7 +62,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列型を示すクラスタイプ
          * @
          */
-        protected void initInstance(int i_length)
+        protected virtual void initInstance(int i_length)
         {
             //領域確保
             this._items = new T[i_length];
@@ -77,10 +78,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 追加したオブジェクト。失敗するとnullを返します。
          */
-        public T push(T i_object)
+        public virtual T push(T i_object)
         {
             // 必要に応じてアロケート
-            if (this._length >= this._items.length)
+            if (this._length >= this._items.Length)
             {
                 return null;
             }
@@ -101,7 +102,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public T pushAssert(T i_object)
         {
             // 必要に応じてアロケート
-            Debug.Assert(this._length < this._items.length);
+            Debug.Assert(this._length < this._items.Length);
             // 使用領域を+1して、予約した領域を返す。
             this._items[this._length] = i_object;
             this._length++;
@@ -167,7 +168,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int getArraySize()
         {
-            return this._items.length;
+            return this._items.Length;
         }
         /**
          * この関数は、指定したインデクスの要素を配列から取り除きます。
@@ -175,14 +176,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_index
          * 削除する要素のインデクス
          */
-        public void remove(int i_index)
+        public virtual void remove(int i_index)
         {
             Debug.Assert(this._length > i_index && i_index >= 0);
 
             if (i_index != this._length - 1)
             {
                 int i;
-                const int len = this._length - 1;
+                int len = this._length - 1;
                 T[] items = this._items;
                 for (i = i_index; i < len; i++)
                 {
@@ -199,7 +200,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_index
          * 削除する要素のインデクス
          */
-        public void removeIgnoreOrder(int i_index)
+        public virtual void removeIgnoreOrder(int i_index)
         {
             Debug.Assert(this._length > i_index && i_index >= 0);
             //値の交換

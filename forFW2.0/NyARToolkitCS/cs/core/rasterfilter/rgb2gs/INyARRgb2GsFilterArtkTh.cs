@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -53,6 +54,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARIntSize s = this._raster.getSize();
             this.doFilter(0, 0, s.w, s.h, i_h, i_gsraster);
         }
+        public abstract void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster);
     }
 
     class NyARRgb2GsFilterArtkTh_BYTE1D_C8C8C8_24 : NyARRgb2GsFilterArtkTh_Base
@@ -64,7 +66,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     i_raster.isEqualBufferType(NyARBufferType.BYTE1D_R8G8B8_24));
             this._raster = i_raster;
         }
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             byte[] input = (byte[])this._raster.getBuffer();
@@ -73,8 +75,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARIntSize s = this._raster.getSize();
             int skip_dst = (s.w - i_w);
             int skip_src = skip_dst * 3;
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int pt_src = pt_dst * 3;
@@ -120,7 +122,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             this._raster = i_raster;
         }
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             byte[] input = (byte[])this._raster.getBuffer();
@@ -129,8 +131,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int th = i_th * 3;
             int skip_dst = (s.w - i_w);
             int skip_src = skip_dst * 4;
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int pt_src = pt_dst * 4;
@@ -178,7 +180,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.BYTE1D_X8R8G8B8_32));
             this._raster = i_raster;
         }
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             byte[] input = (byte[])this._raster.getBuffer();
@@ -187,8 +189,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARIntSize s = this._raster.getSize();
             int skip_dst = (s.w - i_w);
             int skip_src = skip_dst * 4;
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int pt_src = pt_dst * 4;
@@ -235,7 +237,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
             this._raster = i_raster;
         }
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             int[] input = (int[])this._raster.getBuffer();
@@ -245,8 +247,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARIntSize s = this._raster.getSize();
             int skip_src = (s.w - i_w);
             int skip_dst = skip_src;
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int pt_src = pt_dst;
@@ -283,7 +285,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.WORD1D_R5G6B5_16LE));
             this._raster = i_raster;
         }
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             short[] input = (short[])this._raster.getBuffer();
@@ -331,7 +333,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._raster = i_raster;
         }
         private int[] __rgb = new int[3];
-        public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
+        public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
             INyARRgbPixelDriver input = this._raster.getRgbPixelDriver();
