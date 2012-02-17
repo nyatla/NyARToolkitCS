@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -156,11 +157,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARPerspectiveProjectionMatrix cp = this._projection_mat_ref;
             double L, J, K, M, N, O;
             L = J = K = M = N = O = 0;
-            const double cp00 = cp.m00;
-            const double cp01 = cp.m01;
-            const double cp02 = cp.m02;
-            const double cp11 = cp.m11;
-            const double cp12 = cp.m12;
+            double cp00 = cp.m00;
+            double cp01 = cp.m01;
+            double cp02 = cp.m02;
+            double cp11 = cp.m11;
+            double cp12 = cp.m12;
 
             for (int i = 0; i < i_number_of_vertex; i++)
             {
@@ -306,12 +307,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
 
             // ZXY系のsin/cos値を抽出
-            double sinx = Math.sin(i_angle.x);
-            double cosx = Math.cos(i_angle.x);
-            double siny = Math.sin(i_angle.y);
-            double cosy = Math.cos(i_angle.y);
-            double sinz = Math.sin(i_angle.z);
-            double cosz = Math.cos(i_angle.z);
+            double sinx = Math.Sin(i_angle.x);
+            double cosx = Math.Cos(i_angle.x);
+            double siny = Math.Sin(i_angle.y);
+            double cosy = Math.Cos(i_angle.y);
+            double sinz = Math.Sin(i_angle.z);
+            double cosz = Math.Cos(i_angle.z);
             o_angle.x = i_angle.x + optimizeParamX(siny, cosy, sinz, cosz, i_trans, i_vertex3d, i_vertex2d, i_number_of_vertex, i_angle.x);
             o_angle.y = i_angle.y + optimizeParamY(sinx, cosx, sinz, cosz, i_trans, i_vertex3d, i_vertex2d, i_number_of_vertex, i_angle.y);
             o_angle.z = i_angle.z + optimizeParamZ(sinx, cosx, siny, cosy, i_trans, i_vertex3d, i_vertex2d, i_number_of_vertex, i_angle.z);

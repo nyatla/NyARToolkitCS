@@ -29,6 +29,7 @@
  * 
  */
 using System.Diagnostics;
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -54,11 +55,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * 列数
          */
-        protected int clm;
+        protected internal int clm;
         /**
          * 行数
          */
-        protected int row;
+        protected internal int row;
         /**
          * デフォルトコンストラクタ。
          * 機能しません。

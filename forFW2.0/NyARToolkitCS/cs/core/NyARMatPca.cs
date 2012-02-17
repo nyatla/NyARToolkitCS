@@ -68,7 +68,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(o_ev.getClm() == check);
             Debug.Assert(o_mean.getClm() == l_clm);
 
-            const double srow = Math.Sqrt((double)l_row);
+            double srow = Math.Sqrt((double)l_row);
             PCA_EX(o_mean);
 
             PCA_CENTER(this, o_mean);

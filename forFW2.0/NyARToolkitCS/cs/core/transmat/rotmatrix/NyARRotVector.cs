@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -75,7 +76,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double vec30 = vec11 * vec22 - vec12 * vec21;
             double vec31 = vec12 * vec20 - vec10 * vec22;
             double vec32 = vec10 * vec21 - vec11 * vec20;
-            w = Math.sqrt(vec30 * vec30 + vec31 * vec31 + vec32 * vec32);
+            w = Math.Sqrt(vec30 * vec30 + vec31 * vec31 + vec32 * vec32);
             if (w == 0.0)
             {
                 throw new NyARException();
@@ -89,7 +90,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 cb = -cb;//cb *= -1.0;			
             }
-            double ca = (Math.sqrt(cb + 1.0) + Math.sqrt(1.0 - cb)) * 0.5;
+            double ca = (Math.Sqrt(cb + 1.0) + Math.Sqrt(1.0 - cb)) * 0.5;
 
             if (vec31 * vec10 - vec11 * vec30 != 0.0)
             {
@@ -137,10 +138,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 throw new NyARException();
             }
-            r1 = (-b + Math.sqrt(d)) / a;
+            r1 = (-b + Math.Sqrt(d)) / a;
             p1 = k1 * r1 + k2;
             q1 = k3 * r1 + k4;
-            r2 = (-b - Math.sqrt(d)) / a;
+            r2 = (-b - Math.Sqrt(d)) / a;
             p2 = k1 * r2 + k2;
             q2 = k3 * r2 + k4;
             if (f == 1)
@@ -197,10 +198,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 throw new NyARException();
             }
-            r3 = (-b + Math.sqrt(d)) / a;
+            r3 = (-b + Math.Sqrt(d)) / a;
             p3 = k1 * r3 + k2;
             q3 = k3 * r3 + k4;
-            r4 = (-b - Math.sqrt(d)) / a;
+            r4 = (-b - Math.Sqrt(d)) / a;
             p4 = k1 * r4 + k2;
             q4 = k3 * r4 + k4;
             if (f == 1)

@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -72,7 +73,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             public void deleteObject(NyARManagedObject i_object)
             {
                 Debug.Assert(i_object != null);
-                Debug.Assert(this._pool_stock < this._pool.length);
+                Debug.Assert(this._pool_stock < this._pool.Length);
                 this._pool[this._pool_stock] = i_object;
                 this._pool_stock++;
             }

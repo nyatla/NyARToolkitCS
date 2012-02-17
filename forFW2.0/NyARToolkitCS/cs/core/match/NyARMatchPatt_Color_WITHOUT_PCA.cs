@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -107,7 +108,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //
             int[] linput = i_patt.getData();
             int sum;
-            double max = Double.MIN_VALUE;
+            double max = double.MinValue;
             int res = NyARMatchPattResult.DIRECTION_UNKNOWN;
             int for_mod = this._optimize_for_mod;
             for (int j = 0; j < 4; j++)

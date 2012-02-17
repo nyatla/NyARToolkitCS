@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -270,7 +271,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             py = iy - d1;
             p = this._f2 / 100000000.0;
             z02 = px * px + py * py;
-            q = z0 = Math.sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
+            q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
 
             for (int i = 1; ; i++)
             {
@@ -293,7 +294,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     break;
                 }
                 z02 = px * px + py * py;
-                z0 = Math.sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
+                z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
             }
             o_point.x = px / this._f3 + d0;
             o_point.y = py / this._f3 + d1;
@@ -319,7 +320,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             py = iy - d1;
             p = this._f2 / 100000000.0;
             z02 = px * px + py * py;
-            q = z0 = Math.sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
+            q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
 
             for (int i = 1; ; i++)
             {
@@ -342,7 +343,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     break;
                 }
                 z02 = px * px + py * py;
-                z0 = Math.sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
+                z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
             }
             o_veclinear.x = px / this._f3 + d0;
             o_veclinear.y = py / this._f3 + d1;
