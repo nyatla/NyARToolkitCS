@@ -29,6 +29,9 @@
  * 
  */
 using System.Diagnostics;
+using System.IO;
+using System;
+using System.Collections.Generic;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -50,19 +53,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * バッファ形式は形式はINT1D_X8R8G8B8_32であり、4要素、かつ全て同一なサイズである必要があります。
          * @
          */
-        public static void loadFromARToolKitFormFile(InputStream i_stream, NyARRaster[] o_raster)
+        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARRaster[] o_raster)
         {
-            Debug.Assert(o_raster.length == 4);
+            Debug.Assert(o_raster.Length == 4);
             //4個の要素をラスタにセットする。
             try
             {
-                StreamTokenizer st = new StreamTokenizer(new InputStreamReader(i_stream));
+                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
                 //GBRAで一度読みだす。
+                int idx = 0;
                 for (int h = 0; h < 4; h++)
                 {
                     Debug.Assert(o_raster[h].isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
                     NyARRaster ra = o_raster[h];
-                    readBlock(st, ra.getWidth(), ra.getHeight(), (int[])ra.getBuffer());
+                    idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBuffer());
                 }
             }
             catch (Exception e)
@@ -79,7 +83,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 出力先の{@link NyARCode}オブジェクトです。
          * @
          */
-        public static void loadFromARToolKitFormFile(InputStream i_stream, NyARCode o_code)
+        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARCode o_code)
         {
             int width = o_code.getWidth();
             int height = o_code.getHeight();
@@ -87,12 +91,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //4個の要素をラスタにセットする。
             try
             {
-                StreamTokenizer st = new StreamTokenizer(new InputStreamReader(i_stream));
                 int[] buf = (int[])tmp_raster.getBuffer();
+                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
                 //GBRAで一度読みだす。
+                int idx = 0;
                 for (int h = 0; h < 4; h++)
                 {
-                    readBlock(st, width, height, buf);
+                    idx = readBlock(data, idx, width, height, buf);
                     //ARCodeにセット(カラー)
                     o_code.getColorData(h).setRaster(tmp_raster);
                     o_code.getBlackWhiteData(h).setRaster(tmp_raster);
@@ -107,7 +112,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         /**
          * ストリームi_stから、1ブロック(1方位分)のXRGBデータをからo_bufへ読みだします。
-         * @param i_st
+         * @param i_data
          * 入力元のStreamTokenizerを指定します。
          * i_stの読み取り位置は更新されます。
          * @param i_width
@@ -118,8 +123,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 読み取った値を格納する配列です。
          * @
          */
-        private static void readBlock(StreamTokenizer i_st, int i_width, int i_height, int[] o_buf)
+        private static void readBlock(string[] i_data, int i_width, int i_height, int[] o_buf)
         {
+            int idx = i_idx;
             try
             {
                 int pixels = i_width * i_height;
@@ -127,15 +133,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 {
                     for (int i2 = 0; i2 < pixels; i2++)
                     {
-                        // 数値のみ読み出す
-                        switch (i_st.nextToken())
+                        //数値のみ読み出す(空文字は読み飛ばし！)
+                        for (; ; )
                         {
-                            case StreamTokenizer.TT_NUMBER:
+                            if (i_data[idx].Length > 0)
+                            {
                                 break;
-                            default:
-                                throw new NyARException();
+                            }
+                            idx++;
                         }
-                        o_buf[i2] = (o_buf[i2] << 8) | ((0x000000ff & (int)i_st.nval));
+                        o_buf[i2] = (o_buf[i2] << 8) | ((0x000000ff & (int)int.Parse(i_data[idx])));
+                        idx++;
                     }
                 }
                 //GBR→RGB
@@ -148,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 throw new NyARException(e);
             }
-            return;
+            return idx;
         }
     }
 
@@ -236,7 +244,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 読出し元のStreamオブジェクト
          * @
          */
-        public void loadARPatt(InputStream i_stream)
+        public void loadARPatt(StreamReader i_stream)
         {
             //ラスタにパターンをロードする。
             NyARCodeFileReader.loadFromARToolKitFormFile(i_stream, this);
@@ -252,7 +260,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setRaster(INyARRgbRaster[] i_raster)
         {
-            Debug.Assert(i_raster.length != 4);
+            Debug.Assert(i_raster.Length != 4);
             //ラスタにパターンをロードする。
             for (int i = 0; i < 4; i++)
             {

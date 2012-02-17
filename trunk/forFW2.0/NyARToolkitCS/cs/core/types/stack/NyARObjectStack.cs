@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -61,10 +62,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大長さ
          * @
          */
-        protected void initInstance(int i_length)
+        protected override void initInstance(int i_length)
         {
             //領域確保
-            super.initInstance(i_length);
+            base.initInstance(i_length);
             for (int i = 0; i < i_length; i++)
             {
                 this._items[i] = createElement();
@@ -87,7 +88,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected void initInstance(int i_length, object i_param)
         {
             //領域確保
-            super.initInstance(i_length);
+            base.initInstance(i_length);
             for (int i = 0; i < i_length; i++)
             {
                 this._items[i] = createElement(i_param);
@@ -102,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しいオブジェクトを返してください。
          * @
          */
-        protected T createElement()
+        protected virtual T createElement()
         {
             throw new NyARException();
         }
@@ -114,7 +115,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しいオブジェクトを返してください。
          * @
          */
-        protected T createElement(object i_param)
+        protected virtual T createElement(object i_param)
         {
             throw new NyARException();
         }
@@ -130,7 +131,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public T prePush()
         {
             // 必要に応じてアロケート
-            if (this._length >= this._items.length)
+            if (this._length >= this._items.Length)
             {
                 return null;
             }
@@ -142,7 +143,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は機能しません。{@link #prePush}を使って下さい。
          */
-        public T push(T i_object)
+        public override T push(T i_object)
         {
             return null;
         }
@@ -154,27 +155,27 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void init(int i_reserv_length)
         {
             // 必要に応じてアロケート
-            if (i_reserv_length >= this._items.length)
+            if (i_reserv_length >= this._items.Length)
             {
                 throw new NyARException();
             }
             this._length = i_reserv_length;
         }
         //override
-        public void remove(int i_index)
+        public override void remove(int i_index)
         {
             if (i_index != this._length - 1)
             {
                 T item = this._items[i_index];
                 //要素をシフト
-                super.remove(i_index);
+                base.remove(i_index);
                 //外したオブジェクトを末端に取り付ける
                 this._items[i_index] = item;
             }
             this._length--;
         }
         //override
-        public void removeIgnoreOrder(int i_index)
+        public override void removeIgnoreOrder(int i_index)
         {
             Debug.Assert(this._length > i_index && i_index >= 0);
             if (i_index != this._length - 1)

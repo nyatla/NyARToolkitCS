@@ -48,12 +48,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARIntRectStack(int i_length)
         {
-            super.initInstance(i_length, NyARIntRect);
+            base.initInstance(i_length, NyARIntRect);
         }
         /**
          * この関数は、配列要素を作成します。
          */
-        protected NyARIntRect createElement()
+        protected override NyARIntRect createElement()
         {
             return new NyARIntRect();
         }

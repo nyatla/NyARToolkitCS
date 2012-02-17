@@ -67,7 +67,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setSquare(double i_width)
         {
-            const double w_2 = i_width / 2.0;
+            double w_2 = i_width / 2.0;
 
             NyARDoublePoint3d vertex3d_ptr;
             vertex3d_ptr = this.vertex[0];
@@ -97,8 +97,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setSquare(double i_width, double i_height)
         {
-            const double w_2 = i_width / 2.0;
-            const double h_2 = i_height / 2.0;
+            double w_2 = i_width / 2.0;
+            double h_2 = i_height / 2.0;
 
             NyARDoublePoint3d vertex3d_ptr;
             vertex3d_ptr = this.vertex[0];

@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -91,8 +92,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             P2D21 = i_vertex2d[2].y;
             P2D30 = i_vertex2d[3].x;
             P2D31 = i_vertex2d[3].y;
-            const NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
-            const double CP0 = prjmat.m00, CP1 = prjmat.m01, CP2 = prjmat.m02, CP4 = prjmat.m10, CP5 = prjmat.m11, CP6 = prjmat.m12, CP8 = prjmat.m20, CP9 = prjmat.m21, CP10 = prjmat.m22;
+            NyARPerspectiveProjectionMatrix prjmat = this._projection_mat_ref;
+            double CP0 = prjmat.m00, CP1 = prjmat.m01, CP2 = prjmat.m02, CP4 = prjmat.m10, CP5 = prjmat.m11, CP6 = prjmat.m12, CP8 = prjmat.m20, CP9 = prjmat.m21, CP10 = prjmat.m22;
             combo03 = CP0 * trans.x + CP1 * trans.y + CP2 * trans.z + prjmat.m03;
             combo13 = CP4 * trans.x + CP5 * trans.y + CP6 * trans.z + prjmat.m13;
             combo23 = CP8 * trans.x + CP9 * trans.y + CP10 * trans.z + prjmat.m23;
@@ -111,7 +112,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double w, w2;
             double wsin, wcos;
 
-            const NyARDoublePoint3d angle = io_rot.getAngle();
+            NyARDoublePoint3d angle = io_rot.getAngle();
             a2 = angle.x;
             b2 = angle.y;
             c2 = angle.z;
@@ -128,18 +129,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     a_factor[j] = w;
                     w = b2 + w2;
                     b_factor[j] = w;
-                    sinb[j] = Math.sin(w);
-                    cosb[j] = Math.cos(w);
+                    sinb[j] = Math.Sin(w);
+                    cosb[j] = Math.Cos(w);
                     w = c2 + w2;
                     c_factor[j] = w;
-                    sinc[j] = Math.sin(w);
-                    cosc[j] = Math.cos(w);
+                    sinc[j] = Math.Sin(w);
+                    cosc[j] = Math.Cos(w);
                 }
                 //
                 for (t1 = 0; t1 < 3; t1++)
                 {
-                    SA = Math.sin(a_factor[t1]);
-                    CA = Math.cos(a_factor[t1]);
+                    SA = Math.Sin(a_factor[t1]);
+                    CA = Math.Cos(a_factor[t1]);
                     // Optimize
                     CACA = CA * CA;
                     SASA = SA * SA;

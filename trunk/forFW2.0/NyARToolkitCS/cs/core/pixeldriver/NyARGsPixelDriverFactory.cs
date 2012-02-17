@@ -83,8 +83,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf)
         {
             int bp;
-            const int w = this._ref_size.w;
-            const int[] b = this._ref_buf;
+            int w = this._ref_size.w;
+            int[] b = this._ref_buf;
             for (int i = i_n - 1; i >= 0; i--)
             {
                 bp = (i_x[i] + i_y[i] * w);

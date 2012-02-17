@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -39,7 +40,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public int getThreshold(NyARHistogram i_histogram)
         {
             int i;
-            double min = Double.MAX_VALUE;
+            double min = Double.MaxValue;
             int th = 0;
             int da, sa, db, sb, pa, pb;
             double oa, ob;
@@ -92,7 +93,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //Σ(i-mb)^2*h[i]=Σ(i^2*h[i])+Σ(mb^2*h[i])-Σ(2*i*mb*h[i])
                 ob = ((double)(pb + mb * mb * sb - 2 * mb * db)) / sb;
 
-                double kai = wa * Math.log(oa / wa) + wb * Math.log(ob / wb);
+                double kai = wa * Math.Log(oa / wa) + wb * Math.Log(ob / wb);
                 if (kai > 0 && min > kai)
                 {
                     min = kai;

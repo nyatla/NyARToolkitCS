@@ -22,6 +22,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -71,7 +73,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void deleteObject(T i_object)
         {
             Debug.Assert(i_object != null);
-            Debug.Assert(this._pool_stock < this._pool.length);
+            Debug.Assert(this._pool_stock < this._pool.Length);
             //自身の提供したオブジェクトかを確認するのは省略。
             this._pool[this._pool_stock] = i_object;
             this._pool_stock++;
@@ -102,7 +104,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //使用中個数をリセット
             this._pool_stock = i_length;
             //オブジェクトを作成
-            for (int i = this._pool.length - 1; i >= 0; i--)
+            for (int i = this._pool.Length - 1; i >= 0; i--)
             {
                 this._buffer[i] = this._pool[i] = createElement();
             }

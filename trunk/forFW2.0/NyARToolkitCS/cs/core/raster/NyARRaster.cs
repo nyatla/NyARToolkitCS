@@ -64,7 +64,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARRaster(int i_width, int i_height, int i_buffer_type, bool i_is_alloc)
         {
-            super(i_width, i_height, i_buffer_type);
+            base(i_width, i_height, i_buffer_type);
             if (!initInstance(this._size, i_buffer_type, i_is_alloc))
             {
                 throw new NyARException();
@@ -86,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARRaster(int i_width, int i_height, int i_buffer_type)
         {
-            super(i_width, i_height, i_buffer_type);
+            base(i_width, i_height, i_buffer_type);
             if (!initInstance(this._size, i_buffer_type, true))
             {
                 throw new NyARException();
@@ -123,7 +123,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        public object getBuffer()
+        public override object getBuffer()
         {
             return this._buf;
         }
@@ -132,7 +132,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
          * バッファにアクセスするまえに、バッファの有無をこの関数でチェックしてください。
          */
-        public bool hasBuffer()
+        public override bool hasBuffer()
         {
             return this._buf != null;
         }
@@ -140,12 +140,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
-        public void wrapBuffer(object i_ref_buf)
+        public override void wrapBuffer(object i_ref_buf)
         {
             Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
             this._buf = i_ref_buf;
         }
-        public object createInterface(Type iIid)
+        public override object createInterface(Type iIid)
         {
             // TODO Auto-generated method stub
             return null;

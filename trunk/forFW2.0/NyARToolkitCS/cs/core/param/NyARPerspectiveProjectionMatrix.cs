@@ -191,7 +191,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_2d
          * 変換後の座標値を受け取るオブジェクト
          */
-        public sealed override void project(NyARDoublePoint3d i_3dvertex, NyARDoublePoint2d o_2d)
+        public void project(NyARDoublePoint3d i_3dvertex, NyARDoublePoint2d o_2d)
         {
             double w = 1 / (i_3dvertex.z * this.m22);
             o_2d.x = (i_3dvertex.x * this.m00 + i_3dvertex.y * this.m01 + i_3dvertex.z * this.m02) * w;
@@ -209,7 +209,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_2d
          * 変換後の座標値を受け取るオブジェクト
          */
-        public sealed override void project(double i_x, double i_y, double i_z, NyARDoublePoint2d o_2d)
+        public void project(double i_x, double i_y, double i_z, NyARDoublePoint2d o_2d)
         {
             double w = 1 / (i_z * this.m22);
             o_2d.x = (i_x * this.m00 + i_y * this.m01 + i_z * this.m02) * w;
@@ -223,7 +223,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_2d
          * 変換後の座標値を受け取るオブジェクト
          */
-        public sealed override void project(NyARDoublePoint3d i_3dvertex, NyARIntPoint2d o_2d)
+        public void project(NyARDoublePoint3d i_3dvertex, NyARIntPoint2d o_2d)
         {
             double w = 1 / (i_3dvertex.z * this.m22);
             o_2d.x = (int)((i_3dvertex.x * this.m00 + i_3dvertex.y * this.m01 + i_3dvertex.z * this.m02) * w);
@@ -241,7 +241,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_2d
          * 変換後の座標値を受け取るオブジェクト
          */
-        public sealed override void project(double i_x, double i_y, double i_z, NyARIntPoint2d o_2d)
+        public void project(double i_x, double i_y, double i_z, NyARIntPoint2d o_2d)
         {
             double w = 1 / (i_z * this.m22);
             o_2d.x = (int)((i_x * this.m00 + i_y * this.m01 + i_z * this.m02) * w);

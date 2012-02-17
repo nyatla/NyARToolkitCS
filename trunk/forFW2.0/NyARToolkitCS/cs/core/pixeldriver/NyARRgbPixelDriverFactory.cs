@@ -91,7 +91,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixel(int i_x, int i_y, int[] o_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 3;
+            int bp = (i_x + i_y * this._ref_size.w) * 3;
             o_rgb[0] = (ref_buf[bp + 2] & 0xff);// R
             o_rgb[1] = (ref_buf[bp + 1] & 0xff);// G
             o_rgb[2] = (ref_buf[bp + 0] & 0xff);// B
@@ -104,7 +104,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
             int bp;
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             byte[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {
@@ -122,7 +122,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int[] i_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int idx = (i_y * this._ref_size.w + i_x) * 3;
+            int idx = (i_y * this._ref_size.w + i_x) * 3;
             ref_buf[idx + 0] = (byte)i_rgb[2];// B
             ref_buf[idx + 1] = (byte)i_rgb[1];// G
             ref_buf[idx + 2] = (byte)i_rgb[0];// R
@@ -134,7 +134,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
         {
             byte[] ref_buf = this._ref_buf;
-            const int idx = (i_y * this._ref_size.w + i_x) * 3;
+            int idx = (i_y * this._ref_size.w + i_x) * 3;
             ref_buf[idx + 0] = (byte)i_b;// B
             ref_buf[idx + 1] = (byte)i_g;// G
             ref_buf[idx + 2] = (byte)i_r;// R
@@ -175,7 +175,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixel(int i_x, int i_y, int[] o_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 4;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
             o_rgb[0] = (ref_buf[bp + 2] & 0xff);// R
             o_rgb[1] = (ref_buf[bp + 1] & 0xff);// G
             o_rgb[2] = (ref_buf[bp + 0] & 0xff);// B
@@ -188,7 +188,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
             int bp;
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             byte[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {
@@ -206,7 +206,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int[] i_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 4;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
             ref_buf[bp + 2] = (byte)i_rgb[0];// R
             ref_buf[bp + 1] = (byte)i_rgb[1];// G
             ref_buf[bp + 0] = (byte)i_rgb[2];// B
@@ -218,7 +218,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 4;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
             ref_buf[bp + 2] = (byte)i_r;// R
             ref_buf[bp + 1] = (byte)i_g;// G
             ref_buf[bp + 0] = (byte)i_b;// B
@@ -259,7 +259,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixel(int i_x, int i_y, int[] o_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 3;
+            int bp = (i_x + i_y * this._ref_size.w) * 3;
             o_rgb[0] = (ref_buf[bp + 0] & 0xff);// R
             o_rgb[1] = (ref_buf[bp + 1] & 0xff);// G
             o_rgb[2] = (ref_buf[bp + 2] & 0xff);// B
@@ -272,7 +272,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
             int bp;
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             byte[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {
@@ -290,7 +290,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int[] i_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int idx = (i_y * this._ref_size.w + i_x) * 3;
+            int idx = (i_y * this._ref_size.w + i_x) * 3;
             ref_buf[idx + 0] = (byte)i_rgb[0];// R
             ref_buf[idx + 1] = (byte)i_rgb[1];// G
             ref_buf[idx + 2] = (byte)i_rgb[2];// B
@@ -302,7 +302,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
         {
             byte[] ref_buf = this._ref_buf;
-            const int idx = (i_y * this._ref_size.w + i_x) * 3;
+            int idx = (i_y * this._ref_size.w + i_x) * 3;
             ref_buf[idx + 0] = (byte)i_r;// R
             ref_buf[idx + 1] = (byte)i_g;// G
             ref_buf[idx + 2] = (byte)i_b;// B
@@ -343,7 +343,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixel(int i_x, int i_y, int[] o_rgb)
         {
             byte[] ref_buf = this._ref_buf;
-            const int bp = (i_x + i_y * this._ref_size.w) * 4;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
             o_rgb[0] = (ref_buf[bp + 1] & 0xff);// R
             o_rgb[1] = (ref_buf[bp + 2] & 0xff);// G
             o_rgb[2] = (ref_buf[bp + 3] & 0xff);// B
@@ -356,7 +356,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
             int bp;
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             byte[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {
@@ -486,7 +486,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void getPixel(int i_x, int i_y, int[] o_rgb)
         {
-            const int rgb = this._ref_buf[i_x + i_y * this._ref_size.w];
+            int rgb = this._ref_buf[i_x + i_y * this._ref_size.w];
             o_rgb[0] = (rgb >> 16) & 0xff;// R
             o_rgb[1] = (rgb >> 8) & 0xff;// G
             o_rgb[2] = rgb & 0xff;// B
@@ -498,7 +498,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             int[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {

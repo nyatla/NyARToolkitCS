@@ -23,6 +23,8 @@
  * 
  */
 using jp.nyatla.nyartoolkit.cs.core;
+using System.Diagnostics;
+
 
 namespace jp.nyatla.nyartoolkit.cs.processor
 {
@@ -73,9 +75,8 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             private readonly NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
             private NyARCoord2Linear _coordline;
 
-            public DetectSquare(NyARParam i_param)
+            public DetectSquare(NyARParam i_param): base(i_param.getScreenSize())
             {
-                super(i_param.getScreenSize());
                 this._match_patt = null;
                 this._coordline = new NyARCoord2Linear(i_param.getScreenSize(), i_param.getDistortionFactor());
                 return;
@@ -85,8 +86,8 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 /*unmanagedで実装するときは、ここでリソース解放をすること。*/
                 this._deviation_data = new NyARMatchPattDeviationColorData(i_code_resolution, i_code_resolution);
                 this._inst_patt = new NyARColorPatt_Perspective(i_code_resolution, i_code_resolution, 4, 25);
-                this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_ref_code.length];
-                for (int i = 0; i < i_ref_code.length; i++)
+                this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_ref_code.Length];
+                for (int i = 0; i < i_ref_code.Length; i++)
                 {
                     this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[i]);
                 }
@@ -101,14 +102,14 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 this._ref_raster = i_raster;
                 this._target_id = i_target_id;
                 this.code_index = -1;
-                this.confidence = Double.MIN_VALUE;
+                this.confidence = double.MinValue;
             }
 
             /**
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            protected void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 if (this._match_patt == null)
                 {
@@ -135,7 +136,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 int lcode_index = 0;
                 int dir = 0;
                 double c1 = 0;
-                for (int i = 0; i < this._match_patt.length; i++)
+                for (int i = 0; i < this._match_patt.Length; i++)
                 {
                     this._match_patt[i].evaluate(this._deviation_data, mr);
                     double c2 = mr.confidence;
@@ -323,8 +324,8 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             Debug.Assert(this._gs_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h));
             if (this._last_input_raster != i_raster)
             {
-                this._histmaker = (INyARHistogramFromRaster)this._gs_raster.createInterface(INyARHistogramFromRaster);
-                this._togs_filter = (INyARRgb2GsFilter)i_raster.createInterface(INyARRgb2GsFilter);
+                this._histmaker = (INyARHistogramFromRaster)this._gs_raster.createInterface(typeof(INyARHistogramFromRaster));
+                this._togs_filter = (INyARRgb2GsFilter)i_raster.createInterface(typeof(INyARRgb2GsFilter));
                 this._last_input_raster = i_raster;
             }
 

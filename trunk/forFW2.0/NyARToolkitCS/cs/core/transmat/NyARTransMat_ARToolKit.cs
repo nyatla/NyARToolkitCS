@@ -105,7 +105,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ARToolKitのarGetTransMatに該当します。
          * @see INyARTransMat#transMatContinue
          */
-        public sealed override bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult o_result_conv)
+        public bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult o_result_conv)
         {
             NyARDoublePoint3d trans = this.__transMat_trans;
 
@@ -143,9 +143,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 計算に過去の履歴を使う点が、{@link #transMat}と異なります。
          * @see INyARTransMat#transMatContinue
          */
-        public sealed override bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result)
+        public bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result)
         {
-            const NyARDoublePoint3d trans = this.__transMat_trans;
+            NyARDoublePoint3d trans = this.__transMat_trans;
 
             // i_prev_resultが初期値なら、transMatで計算する。
             if (!i_prev_result.has_value)

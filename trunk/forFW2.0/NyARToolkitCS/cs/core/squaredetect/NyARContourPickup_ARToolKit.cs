@@ -72,13 +72,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool getContour(NyARLabelingImage i_raster, int i_entry_x, int i_entry_y, NyARIntCoordinates o_coord)
         {
-            const int[] xdir = _getContour_xdir;// static int xdir[8] = { 0, 1, 1, 1, 0,-1,-1,-1};
-            const int[] ydir = _getContour_ydir;// static int ydir[8] = {-1,-1, 0, 1, 1, 1, 0,-1};
+            int[] xdir = _getContour_xdir;// static int xdir[8] = { 0, 1, 1, 1, 0,-1,-1,-1};
+            int[] ydir = _getContour_ydir;// static int ydir[8] = {-1,-1, 0, 1, 1, 1, 0,-1};
 
-            const int[] i_buf = (int[])i_raster.getBuffer();
-            const int width = i_raster.getWidth();
-            const int height = i_raster.getHeight();
-            const NyARIntPoint2d[] coord = o_coord.items;
+            int[] i_buf = (int[])i_raster.getBuffer();
+            int width = i_raster.getWidth();
+            int height = i_raster.getHeight();
+            NyARIntPoint2d[] coord = o_coord.items;
             int i_array_size = o_coord.items.length;
             //クリップ領域の上端に接しているポイントを得る。
             int sx = i_entry_x;
@@ -150,8 +150,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     int i;
                     for (i = 0; i < 8; i++)
                     {
-                        const int x = c + xdir[dir];
-                        const int y = r + ydir[dir];
+                        int x = c + xdir[dir];
+                        int y = r + ydir[dir];
                         //境界チェック
                         if (x >= 0 && x < width && y >= 0 && y < height)
                         {

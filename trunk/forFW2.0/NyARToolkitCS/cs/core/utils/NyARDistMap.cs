@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -74,7 +75,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARDistMap(int i_max_col, int i_max_row)
         {
-            this._min_dist = Integer.MAX_VALUE;
+            this._min_dist = int.MaxValue;
             this._min_dist_index = 0;
             this._size_col = i_max_col;
             this._size_row = i_max_row;
@@ -143,7 +144,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             DistItem[] map = this._map;
             //distortionMapを作成。ついでに最小値のインデクスも取得
             int min_index = 0;
-            int min_dist = Integer.MAX_VALUE;
+            int min_dist = int.MaxValue;
             int idx = 0;
             for (int r = 0; r < i_row_len; r++)
             {
@@ -185,7 +186,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             temp_map = map[0];
             map[0] = map[this._min_dist_index];
             map[this._min_dist_index] = temp_map;
-            for (int i = 0; i < o_rowindex.length; i++)
+            for (int i = 0; i < o_rowindex.Length; i++)
             {
                 o_rowindex[i] = -1;
             }
@@ -203,7 +204,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //r,cのものを除外しながら最小値を得る。
                 int reject_c = map[i - 1].col;
                 int reject_r = map[i - 1].row;
-                int min_dist = Integer.MAX_VALUE;
+                int min_dist = int.MaxValue;
                 if (1 >= map_length - col_len)
                 {
                     break;

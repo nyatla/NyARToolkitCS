@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -316,19 +317,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 o_out.x = Math.PI / 2;
                 o_out.y = 0;
-                o_out.z = Math.atan2(-this.m10, this.m00);
+                o_out.z = Math.Atan2(-this.m10, this.m00);
             }
             else if (sina <= -1.0)
             {
                 o_out.x = -Math.PI / 2;
                 o_out.y = 0;
-                o_out.z = Math.atan2(-this.m10, this.m00);
+                o_out.z = Math.Atan2(-this.m10, this.m00);
             }
             else
             {
-                o_out.x = Math.asin(sina);
-                o_out.z = Math.atan2(-this.m01, this.m11);
-                o_out.y = Math.atan2(-this.m20, this.m22);
+                o_out.x = Math.Asin(sina);
+                o_out.z = Math.Atan2(-this.m01, this.m11);
+                o_out.y = Math.Atan2(-this.m20, this.m22);
             }
         }
         /**
@@ -380,8 +381,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setRotateX(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
             this.identity();
             this.m11 = c;
             this.m12 = -s;
@@ -396,8 +397,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setRotateY(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
             this.identity();
             this.m00 = c;
             this.m02 = s;
@@ -411,8 +412,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setRotateZ(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
             this.identity();
             this.m00 = c;
             this.m01 = -s;
@@ -443,8 +444,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void rotateX(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
 
             double t1, t2;
             t1 = this.m01; t2 = this.m02;
@@ -467,8 +468,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void rotateY(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
 
             double t1, t2;
             t1 = this.m00; t2 = this.m02;
@@ -491,8 +492,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void rotateZ(double i_radian)
         {
-            double s = Math.sin(i_radian);
-            double c = Math.cos(i_radian);
+            double s = Math.Sin(i_radian);
+            double c = Math.Cos(i_radian);
 
             double t1, t2;
             t1 = this.m00; t2 = this.m01;
@@ -544,6 +545,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * テストプログラム
          * @param args
          */
+        /*
         public static void main(string[] args)
         {
 
@@ -580,6 +582,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 e.printStackTrace();
             }
         }
+         */
 
     }
 }

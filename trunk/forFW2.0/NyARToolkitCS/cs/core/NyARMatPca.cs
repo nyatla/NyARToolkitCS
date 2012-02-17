@@ -28,6 +28,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -39,8 +41,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private NyARVec wk_PCA_QRM_ev = new NyARVec(1);
         private NyARMatPca wk_PCA_PCA_u = null;
         public NyARMatPca(int i_r, int i_c)
+            : base(i_r, i_c)
         {
-            super(i_r, i_c);
         }
 
 
@@ -57,16 +59,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void pca(NyARMat o_evec, NyARVec o_ev, NyARVec o_mean)
         {
-            const double l_row = this.row;// row = input->row;
-            const double l_clm = this.clm;// clm = input->clm;
-            const double check = (l_row < l_clm) ? l_row : l_clm;
+            double l_row = this.row;// row = input->row;
+            double l_clm = this.clm;// clm = input->clm;
+            double check = (l_row < l_clm) ? l_row : l_clm;
 
             Debug.Assert(l_row >= 2 || l_clm >= 2);
             Debug.Assert(o_evec.clm == l_clm && o_evec.row == check);
             Debug.Assert(o_ev.getClm() == check);
             Debug.Assert(o_mean.getClm() == l_clm);
 
-            const double srow = Math.sqrt((double)l_row);
+            const double srow = Math.Sqrt((double)l_row);
             PCA_EX(o_mean);
 
             PCA_CENTER(this, o_mean);
@@ -250,7 +252,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     break;
                 }
                 NyARException.trap("未チェックのパス");
-                work = 1 / Math.sqrt(Math.abs(ev_array[i]));// work = 1 /
+                work = 1 / Math.Sqrt(Math.Abs(ev_array[i]));// work = 1 /
                 // sqrt(fabs(ev->v[i]));
                 for (int j = 0; j < clm; j++)
                 {
@@ -515,7 +517,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             for (int h = dim - 1; h > 0; h--)
             {
                 int j = h;
-                while (j > 0 && Math.abs(ev_array[j]) > PCA_EPS * (Math.abs(dv_array[j - 1]) + Math.abs(dv_array[j])))
+                while (j > 0 && Math.Abs(ev_array[j]) > PCA_EPS * (Math.Abs(dv_array[j - 1]) + Math.Abs(dv_array[j])))
                 {// while(j>0 && fabs(ev->v[j]) >EPS*(fabs(dv->v[j-1])+fabs(dv->v[j])))
                     // j--;
                     j--;
@@ -534,7 +536,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     }
                     w = (dv_array[h - 1] - dv_array[h]) / 2;// w = (dv->v[h-1] -dv->v[h]) / 2;//ここ？
                     t = ev_array[h] * ev_array[h];// t = ev->v[h] * ev->v[h];
-                    s = Math.sqrt(w * w + t);
+                    s = Math.Sqrt(w * w + t);
                     if (w < 0)
                     {
                         s = -s;
@@ -543,12 +545,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     y = ev_array[j + 1];// y = ev->v[j+1];
                     for (int k = j; k < h; k++)
                     {
-                        if (Math.abs(x) >= Math.abs(y))
+                        if (Math.Abs(x) >= Math.Abs(y))
                         {
-                            if (Math.abs(x) > PCA_VZERO)
+                            if (Math.Abs(x) > PCA_VZERO)
                             {
                                 t = -y / x;
-                                c = 1 / Math.sqrt(t * t + 1);
+                                c = 1 / Math.Sqrt(t * t + 1);
                                 s = t * c;
                             }
                             else
@@ -560,7 +562,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         else
                         {
                             t = -x / y;
-                            s = 1.0 / Math.sqrt(t * t + 1);
+                            s = 1.0 / Math.Sqrt(t * t + 1);
                             c = t * s;
                         }
                         w = dv_array[k] - dv_array[k + 1];// w = dv->v[k] -dv->v[k+1];
@@ -593,8 +595,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             }
                         }
                     }
-                } while (Math.abs(ev_array[h]) > PCA_EPS
-                        * (Math.abs(dv_array[h - 1]) + Math.abs(dv_array[h])));
+                } while (Math.Abs(ev_array[h]) > PCA_EPS
+                        * (Math.Abs(dv_array[h - 1]) + Math.Abs(dv_array[h])));
             }
             for (int k = 0; k < dim - 1; k++)
             {

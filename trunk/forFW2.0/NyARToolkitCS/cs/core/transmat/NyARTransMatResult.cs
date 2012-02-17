@@ -71,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_trans
          * 設定する平行移動量
          */
-        public sealed override void setValue(NyARDoubleMatrix33 i_rot, NyARDoublePoint3d i_trans, double i_error)
+        public void setValue(NyARDoubleMatrix33 i_rot, NyARDoublePoint3d i_trans, double i_error)
         {
             this.m00 = i_rot.m00;
             this.m01 = i_rot.m01;

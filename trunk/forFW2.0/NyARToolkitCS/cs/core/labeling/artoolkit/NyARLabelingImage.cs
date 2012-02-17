@@ -62,8 +62,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @
          */
         public NyARLabelingImage(int i_width, int i_height)
+            : base(i_width, i_height, NyARBufferType.INT1D)
         {
-            super(i_width, i_height, NyARBufferType.INT1D);
             this._buf = new int[i_height * i_width];
             this._label_list = new NyARLabelingLabelStack(MAX_LABELS);
             this._index_table = new int[MAX_LABELS];
@@ -75,18 +75,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * 画像バッファを返します。バッファの形式は、{@link NyARBufferType#INT1D}(int[])です。
          */
-        public object getBuffer()
+        public override object getBuffer()
         {
             return this._buf;
         }
-        public bool hasBuffer()
+        public override bool hasBuffer()
         {
             return this._buf != null;
         }
         /**
          * このクラスでは、関数は機能しません。
          */
-        public void wrapBuffer(object i_ref_buf)
+        public override void wrapBuffer(object i_ref_buf)
         {
             NyARException.notImplement();
         }
@@ -180,7 +180,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //あれ？見つからないよ？
             throw new NyARException();
         }
-        public object createInterface(Type iIid)
+        public override object createInterface(Type iIid)
         {
             throw new NyARException();
         }

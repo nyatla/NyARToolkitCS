@@ -95,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     class Rgb2HsvFilter_Blank : NyARRasterFilter_Rgb2Hsv.IFilter
     {
-        public sealed override bool isSupport(INyARRaster i_in, INyARRaster i_out)
+        public bool isSupport(INyARRaster i_in, INyARRaster i_out)
         {
             return false;
         }
@@ -108,7 +108,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     class Rgb2HsvFilter_BYTE1D_B8G8R8_24 : NyARRasterFilter_Rgb2Hsv.IFilter
     {
-        public sealed override bool isSupport(INyARRaster i_in, INyARRaster i_out)
+        public bool isSupport(INyARRaster i_in, INyARRaster i_out)
         {
             return i_in.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8_24) && i_out.isEqualBufferType(NyARBufferType.INT1D_X7H9S8V8_32);
         }

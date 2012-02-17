@@ -136,7 +136,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = (INyARRgbRaster)i_ref_raster;
         }
-        protected bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
+        protected override bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
         {
             int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
             int in_w = this._ref_raster.getWidth();
@@ -172,7 +172,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         for (int ix = out_w - 1; ix >= 0; ix--)
                         {
                             //1ピクセルを作成
-                            const double d = 1 / (cp7_cy_1_cp6_cx);
+                            double d = 1 / (cp7_cy_1_cp6_cx);
                             int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                             int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                             if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
@@ -205,7 +205,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             for (int ix = 0; ix < out_w; ix++)
                             {
                                 //1ピクセルを作成
-                                const double d = 1 / (cp7_cy_1_cp6_cx);
+                                double d = 1 / (cp7_cy_1_cp6_cx);
                                 int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                                 int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                                 if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
@@ -228,121 +228,130 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return false;
         }
-        protected bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
-	{
-		const int res_pix=i_resolution*i_resolution;
+        protected override bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
+        {
+            int res_pix = i_resolution * i_resolution;
 
-		int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
-		int[] pat_data=(int[])o_out.getBuffer();
-		int in_w=this._ref_raster.getWidth();
-		int in_h=this._ref_raster.getHeight();
-		INyARRgbPixelDriver i_in_reader=this._ref_raster.getRgbPixelDriver();
+            int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
+            int[] pat_data = (int[])o_out.getBuffer();
+            int in_w = this._ref_raster.getWidth();
+            int in_h = this._ref_raster.getHeight();
+            INyARRgbPixelDriver i_in_reader = this._ref_raster.getRgbPixelDriver();
 
-		//ピクセルリーダーを取得
-		double cp0=cpara[0];
-		double cp3=cpara[3];
-		double cp6=cpara[6];
-		double cp1=cpara[1];
-		double cp4=cpara[4];
-		double cp7=cpara[7];
-		double cp2=cpara[2];
-		double cp5=cpara[5];
-		
-		int out_w=o_out.getWidth();
-		int out_h=o_out.getHeight();
-		switch(o_out.getBufferType())
-		{
-		case NyARBufferType.INT1D_X8R8G8B8_32:
-			int p=(out_w*out_h-1);
-			for(int iy=out_h-1;iy>=0;iy--){
-				//解像度分の点を取る。
-				for(int ix=out_w-1;ix>=0;ix--){
-					int r,g,b;
-					r=g=b=0;
-					int cy=pk_t+iy*i_resolution;
-					int cx=pk_l+ix*i_resolution;
-					double cp7_cy_1_cp6_cx_b  =cp7*cy+1.0+cp6*cx;
-					double cp1_cy_cp2_cp0_cx_b=cp1*cy+cp2+cp0*cx;
-					double cp4_cy_cp5_cp3_cx_b=cp4*cy+cp5+cp3*cx;
-					for(int i2y=i_resolution-1;i2y>=0;i2y--){
-						double cp7_cy_1_cp6_cx  =cp7_cy_1_cp6_cx_b;
-						double cp1_cy_cp2_cp0_cx=cp1_cy_cp2_cp0_cx_b;
-						double cp4_cy_cp5_cp3_cx=cp4_cy_cp5_cp3_cx_b;
-						for(int i2x=i_resolution-1;i2x>=0;i2x--){
-							//1ピクセルを作成
-							const double d=1/(cp7_cy_1_cp6_cx);
-							int x=(int)((cp1_cy_cp2_cp0_cx)*d);
-							int y=(int)((cp4_cy_cp5_cp3_cx)*d);
-							if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
-							if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
-							
-							i_in_reader.getPixel(x, y, rgb_tmp);
-							r+=rgb_tmp[0];
-							g+=rgb_tmp[1];
-							b+=rgb_tmp[2];
-							cp7_cy_1_cp6_cx+=cp6;
-							cp1_cy_cp2_cp0_cx+=cp0;
-							cp4_cy_cp5_cp3_cx+=cp3;
-						}
-						cp7_cy_1_cp6_cx_b+=cp7;
-						cp1_cy_cp2_cp0_cx_b+=cp1;
-						cp4_cy_cp5_cp3_cx_b+=cp4;
-					}
-					r/=res_pix;
-					g/=res_pix;
-					b/=res_pix;
-					pat_data[p]=((r&0xff)<<16)|((g&0xff)<<8)|((b&0xff));
-					p--;
-				}
-			}
-			return true;
-		default:
-			//ANY to RGBx
-			if(o_out instanceof INyARRgbRaster){
-				INyARRgbPixelDriver out_reader=((INyARRgbRaster)o_out).getRgbPixelDriver();
-				for(int iy=out_h-1;iy>=0;iy--){
-					//解像度分の点を取る。
-					for(int ix=out_w-1;ix>=0;ix--){
-						int r,g,b;
-						r=g=b=0;
-						int cy=pk_t+iy*i_resolution;
-						int cx=pk_l+ix*i_resolution;
-						double cp7_cy_1_cp6_cx_b  =cp7*cy+1.0+cp6*cx;
-						double cp1_cy_cp2_cp0_cx_b=cp1*cy+cp2+cp0*cx;
-						double cp4_cy_cp5_cp3_cx_b=cp4*cy+cp5+cp3*cx;
-						for(int i2y=i_resolution-1;i2y>=0;i2y--){
-							double cp7_cy_1_cp6_cx  =cp7_cy_1_cp6_cx_b;
-							double cp1_cy_cp2_cp0_cx=cp1_cy_cp2_cp0_cx_b;
-							double cp4_cy_cp5_cp3_cx=cp4_cy_cp5_cp3_cx_b;
-							for(int i2x=i_resolution-1;i2x>=0;i2x--){
-								//1ピクセルを作成
-								const double d=1/(cp7_cy_1_cp6_cx);
-								int x=(int)((cp1_cy_cp2_cp0_cx)*d);
-								int y=(int)((cp4_cy_cp5_cp3_cx)*d);
-								if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
-								if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
-								
-								i_in_reader.getPixel(x, y, rgb_tmp);
-								r+=rgb_tmp[0];
-								g+=rgb_tmp[1];
-								b+=rgb_tmp[2];
-								cp7_cy_1_cp6_cx+=cp6;
-								cp1_cy_cp2_cp0_cx+=cp0;
-								cp4_cy_cp5_cp3_cx+=cp3;
-							}
-							cp7_cy_1_cp6_cx_b+=cp7;
-							cp1_cy_cp2_cp0_cx_b+=cp1;
-							cp4_cy_cp5_cp3_cx_b+=cp4;
-						}
-						out_reader.setPixel(ix,iy,r/res_pix,g/res_pix,b/res_pix);
-					}
-				}
-				return true;
-			}
-			break;
-		}
-		return false;
-	}
+            //ピクセルリーダーを取得
+            double cp0 = cpara[0];
+            double cp3 = cpara[3];
+            double cp6 = cpara[6];
+            double cp1 = cpara[1];
+            double cp4 = cpara[4];
+            double cp7 = cpara[7];
+            double cp2 = cpara[2];
+            double cp5 = cpara[5];
+
+            int out_w = o_out.getWidth();
+            int out_h = o_out.getHeight();
+            switch (o_out.getBufferType())
+            {
+                case NyARBufferType.INT1D_X8R8G8B8_32:
+                    int p = (out_w * out_h - 1);
+                    for (int iy = out_h - 1; iy >= 0; iy--)
+                    {
+                        //解像度分の点を取る。
+                        for (int ix = out_w - 1; ix >= 0; ix--)
+                        {
+                            int r, g, b;
+                            r = g = b = 0;
+                            int cy = pk_t + iy * i_resolution;
+                            int cx = pk_l + ix * i_resolution;
+                            double cp7_cy_1_cp6_cx_b = cp7 * cy + 1.0 + cp6 * cx;
+                            double cp1_cy_cp2_cp0_cx_b = cp1 * cy + cp2 + cp0 * cx;
+                            double cp4_cy_cp5_cp3_cx_b = cp4 * cy + cp5 + cp3 * cx;
+                            for (int i2y = i_resolution - 1; i2y >= 0; i2y--)
+                            {
+                                double cp7_cy_1_cp6_cx = cp7_cy_1_cp6_cx_b;
+                                double cp1_cy_cp2_cp0_cx = cp1_cy_cp2_cp0_cx_b;
+                                double cp4_cy_cp5_cp3_cx = cp4_cy_cp5_cp3_cx_b;
+                                for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
+                                {
+                                    //1ピクセルを作成
+                                    double d = 1 / (cp7_cy_1_cp6_cx);
+                                    int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                    int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                    if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                    if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                                    i_in_reader.getPixel(x, y, rgb_tmp);
+                                    r += rgb_tmp[0];
+                                    g += rgb_tmp[1];
+                                    b += rgb_tmp[2];
+                                    cp7_cy_1_cp6_cx += cp6;
+                                    cp1_cy_cp2_cp0_cx += cp0;
+                                    cp4_cy_cp5_cp3_cx += cp3;
+                                }
+                                cp7_cy_1_cp6_cx_b += cp7;
+                                cp1_cy_cp2_cp0_cx_b += cp1;
+                                cp4_cy_cp5_cp3_cx_b += cp4;
+                            }
+                            r /= res_pix;
+                            g /= res_pix;
+                            b /= res_pix;
+                            pat_data[p] = ((r & 0xff) << 16) | ((g & 0xff) << 8) | ((b & 0xff));
+                            p--;
+                        }
+                    }
+                    return true;
+                default:
+                    //ANY to RGBx
+                    if (o_out is INyARRgbRaster)
+                    {
+                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        for (int iy = out_h - 1; iy >= 0; iy--)
+                        {
+                            //解像度分の点を取る。
+                            for (int ix = out_w - 1; ix >= 0; ix--)
+                            {
+                                int r, g, b;
+                                r = g = b = 0;
+                                int cy = pk_t + iy * i_resolution;
+                                int cx = pk_l + ix * i_resolution;
+                                double cp7_cy_1_cp6_cx_b = cp7 * cy + 1.0 + cp6 * cx;
+                                double cp1_cy_cp2_cp0_cx_b = cp1 * cy + cp2 + cp0 * cx;
+                                double cp4_cy_cp5_cp3_cx_b = cp4 * cy + cp5 + cp3 * cx;
+                                for (int i2y = i_resolution - 1; i2y >= 0; i2y--)
+                                {
+                                    double cp7_cy_1_cp6_cx = cp7_cy_1_cp6_cx_b;
+                                    double cp1_cy_cp2_cp0_cx = cp1_cy_cp2_cp0_cx_b;
+                                    double cp4_cy_cp5_cp3_cx = cp4_cy_cp5_cp3_cx_b;
+                                    for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
+                                    {
+                                        //1ピクセルを作成
+                                        double d = 1 / (cp7_cy_1_cp6_cx);
+                                        int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                        int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                        if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                        if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                                        i_in_reader.getPixel(x, y, rgb_tmp);
+                                        r += rgb_tmp[0];
+                                        g += rgb_tmp[1];
+                                        b += rgb_tmp[2];
+                                        cp7_cy_1_cp6_cx += cp6;
+                                        cp1_cy_cp2_cp0_cx += cp0;
+                                        cp4_cy_cp5_cp3_cx += cp3;
+                                    }
+                                    cp7_cy_1_cp6_cx_b += cp7;
+                                    cp1_cy_cp2_cp0_cx_b += cp1;
+                                    cp4_cy_cp5_cp3_cx_b += cp4;
+                                }
+                                out_reader.setPixel(ix, iy, r / res_pix, g / res_pix, b / res_pix);
+                            }
+                        }
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
 
     }
     class PerspectiveCopy_BYTE1D_B8G8R8X8_32 : PerspectiveCopy_Base
@@ -352,159 +361,169 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = (INyARRgbRaster)i_ref_raster;
         }
-        protected bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
-	{
-		int in_w=this._ref_raster.getWidth();
-		int in_h=this._ref_raster.getHeight();
-		byte[] i_in_buf=(byte[])this._ref_raster.getBuffer();
+        protected override bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
+        {
+            int in_w = this._ref_raster.getWidth();
+            int in_h = this._ref_raster.getHeight();
+            byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
 
-		int[] pat_data=(int[])o_out.getBuffer();
-		//ピクセルリーダーを取得
-		double cp0=cpara[0];
-		double cp3=cpara[3];
-		double cp6=cpara[6];
-		double cp1=cpara[1];
-		double cp4=cpara[4];
-		double cp7=cpara[7];
-		
-		int out_w=o_out.getWidth();
-		int out_h=o_out.getHeight();
-		double cp7_cy_1  =cp7*pk_t+1.0+cp6*pk_l;
-		double cp1_cy_cp2=cp1*pk_t+cpara[2]+cp0*pk_l;
-		double cp4_cy_cp5=cp4*pk_t+cpara[5]+cp3*pk_l;
-		int r,g,b,p;
-		switch(o_out.getBufferType())
-		{
-		case NyARBufferType.INT1D_X8R8G8B8_32:
-			p=0;
-			for(int iy=0;iy<out_h;iy++){
-				//解像度分の点を取る。
-				double cp7_cy_1_cp6_cx  =cp7_cy_1;
-				double cp1_cy_cp2_cp0_cx=cp1_cy_cp2;
-				double cp4_cy_cp5_cp3_cx=cp4_cy_cp5;
-				
-				for(int ix=0;ix<out_w;ix++){
-					//1ピクセルを作成
-					const double d=1/(cp7_cy_1_cp6_cx);
-					int x=(int)((cp1_cy_cp2_cp0_cx)*d);
-					int y=(int)((cp4_cy_cp5_cp3_cx)*d);
-					if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
-					if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
-							
-					final int bp = (x + y * in_w) * 4;
-					r=(i_in_buf[bp + 2] & 0xff);
-					g=(i_in_buf[bp + 1] & 0xff);
-					b=(i_in_buf[bp + 0] & 0xff);
-					cp7_cy_1_cp6_cx+=cp6;
-					cp1_cy_cp2_cp0_cx+=cp0;
-					cp4_cy_cp5_cp3_cx+=cp3;
-					pat_data[p]=(r<<16)|(g<<8)|((b&0xff));
-					p++;
-				}
-				cp7_cy_1+=cp7;
-				cp1_cy_cp2+=cp1;
-				cp4_cy_cp5+=cp4;
-			}
-			return true;
-		default:
-			//ANY to RGBx
-			if(o_out is INyARRgbRaster){
-				INyARRgbPixelDriver out_reader=((INyARRgbRaster)o_out).getRgbPixelDriver();
-				for(int iy=0;iy<out_h;iy++){
-					//解像度分の点を取る。
-					double cp7_cy_1_cp6_cx  =cp7_cy_1;
-					double cp1_cy_cp2_cp0_cx=cp1_cy_cp2;
-					double cp4_cy_cp5_cp3_cx=cp4_cy_cp5;
-					
-					for(int ix=0;ix<out_w;ix++){
-						//1ピクセルを作成
-						const double d=1/(cp7_cy_1_cp6_cx);
-						int x=(int)((cp1_cy_cp2_cp0_cx)*d);
-						int y=(int)((cp4_cy_cp5_cp3_cx)*d);
-						if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
-						if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
-								
-						const int bp = (x + y * in_w) * 4;
-						r=(i_in_buf[bp + 2] & 0xff);
-						g=(i_in_buf[bp + 1] & 0xff);
-						b=(i_in_buf[bp + 0] & 0xff);
-						cp7_cy_1_cp6_cx+=cp6;
-						cp1_cy_cp2_cp0_cx+=cp0;
-						cp4_cy_cp5_cp3_cx+=cp3;
-						out_reader.setPixel(ix,iy,r,g,b);
-					}
-					cp7_cy_1+=cp7;
-					cp1_cy_cp2+=cp1;
-					cp4_cy_cp5+=cp4;
-				}
-				return true;
-			}
-			break;
-		}
-		return false;
-	}
-        protected bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
-	{
-		int in_w=this._ref_raster.getWidth();
-		int in_h=this._ref_raster.getHeight();
-		byte[] i_in_buf=(byte[])this._ref_raster.getBuffer();
-		const int res_pix=i_resolution*i_resolution;
+            int[] pat_data = (int[])o_out.getBuffer();
+            //ピクセルリーダーを取得
+            double cp0 = cpara[0];
+            double cp3 = cpara[3];
+            double cp6 = cpara[6];
+            double cp1 = cpara[1];
+            double cp4 = cpara[4];
+            double cp7 = cpara[7];
 
-		//ピクセルリーダーを取得
-		double cp0=cpara[0];
-		double cp3=cpara[3];
-		double cp6=cpara[6];
-		double cp1=cpara[1];
-		double cp4=cpara[4];
-		double cp7=cpara[7];
-		double cp2=cpara[2];
-		double cp5=cpara[5];
-		
-		int out_w=o_out.getWidth();
-		int out_h=o_out.getHeight();
-		if(o_out instanceof INyARRgbRaster){
-			INyARRgbPixelDriver out_reader=((INyARRgbRaster)o_out).getRgbPixelDriver();
-			for(int iy=out_h-1;iy>=0;iy--){
-				//解像度分の点を取る。
-				for(int ix=out_w-1;ix>=0;ix--){
-					int r,g,b;
-					r=g=b=0;
-					int cy=pk_t+iy*i_resolution;
-					int cx=pk_l+ix*i_resolution;
-					double cp7_cy_1_cp6_cx_b  =cp7*cy+1.0+cp6*cx;
-					double cp1_cy_cp2_cp0_cx_b=cp1*cy+cp2+cp0*cx;
-					double cp4_cy_cp5_cp3_cx_b=cp4*cy+cp5+cp3*cx;
-					for(int i2y=i_resolution-1;i2y>=0;i2y--){
-						double cp7_cy_1_cp6_cx  =cp7_cy_1_cp6_cx_b;
-						double cp1_cy_cp2_cp0_cx=cp1_cy_cp2_cp0_cx_b;
-						double cp4_cy_cp5_cp3_cx=cp4_cy_cp5_cp3_cx_b;
-						for(int i2x=i_resolution-1;i2x>=0;i2x--){
-							//1ピクセルを作成
-							const double d=1/(cp7_cy_1_cp6_cx);
-							int x=(int)((cp1_cy_cp2_cp0_cx)*d);
-							int y=(int)((cp4_cy_cp5_cp3_cx)*d);
-							if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
-							if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
-							
-							const int bp = (x + y * in_w) * 4;
-							r+=(i_in_buf[bp + 2] & 0xff);
-							g+=(i_in_buf[bp + 1] & 0xff);
-							b+=(i_in_buf[bp + 0] & 0xff);
-							cp7_cy_1_cp6_cx+=cp6;
-							cp1_cy_cp2_cp0_cx+=cp0;
-							cp4_cy_cp5_cp3_cx+=cp3;
-						}
-						cp7_cy_1_cp6_cx_b+=cp7;
-						cp1_cy_cp2_cp0_cx_b+=cp1;
-						cp4_cy_cp5_cp3_cx_b+=cp4;
-					}
-					out_reader.setPixel(ix,iy,r/res_pix,g/res_pix,b/res_pix);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+            int out_w = o_out.getWidth();
+            int out_h = o_out.getHeight();
+            double cp7_cy_1 = cp7 * pk_t + 1.0 + cp6 * pk_l;
+            double cp1_cy_cp2 = cp1 * pk_t + cpara[2] + cp0 * pk_l;
+            double cp4_cy_cp5 = cp4 * pk_t + cpara[5] + cp3 * pk_l;
+            int r, g, b, p;
+            switch (o_out.getBufferType())
+            {
+                case NyARBufferType.INT1D_X8R8G8B8_32:
+                    p = 0;
+                    for (int iy = 0; iy < out_h; iy++)
+                    {
+                        //解像度分の点を取る。
+                        double cp7_cy_1_cp6_cx = cp7_cy_1;
+                        double cp1_cy_cp2_cp0_cx = cp1_cy_cp2;
+                        double cp4_cy_cp5_cp3_cx = cp4_cy_cp5;
+
+                        for (int ix = 0; ix < out_w; ix++)
+                        {
+                            //1ピクセルを作成
+                            double d = 1 / (cp7_cy_1_cp6_cx);
+                            int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                            int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                            if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                            if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                            int bp = (x + y * in_w) * 4;
+                            r = (i_in_buf[bp + 2] & 0xff);
+                            g = (i_in_buf[bp + 1] & 0xff);
+                            b = (i_in_buf[bp + 0] & 0xff);
+                            cp7_cy_1_cp6_cx += cp6;
+                            cp1_cy_cp2_cp0_cx += cp0;
+                            cp4_cy_cp5_cp3_cx += cp3;
+                            pat_data[p] = (r << 16) | (g << 8) | ((b & 0xff));
+                            p++;
+                        }
+                        cp7_cy_1 += cp7;
+                        cp1_cy_cp2 += cp1;
+                        cp4_cy_cp5 += cp4;
+                    }
+                    return true;
+                default:
+                    //ANY to RGBx
+                    if (o_out is INyARRgbRaster)
+                    {
+                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        for (int iy = 0; iy < out_h; iy++)
+                        {
+                            //解像度分の点を取る。
+                            double cp7_cy_1_cp6_cx = cp7_cy_1;
+                            double cp1_cy_cp2_cp0_cx = cp1_cy_cp2;
+                            double cp4_cy_cp5_cp3_cx = cp4_cy_cp5;
+
+                            for (int ix = 0; ix < out_w; ix++)
+                            {
+                                //1ピクセルを作成
+                                double d = 1 / (cp7_cy_1_cp6_cx);
+                                int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                                int bp = (x + y * in_w) * 4;
+                                r = (i_in_buf[bp + 2] & 0xff);
+                                g = (i_in_buf[bp + 1] & 0xff);
+                                b = (i_in_buf[bp + 0] & 0xff);
+                                cp7_cy_1_cp6_cx += cp6;
+                                cp1_cy_cp2_cp0_cx += cp0;
+                                cp4_cy_cp5_cp3_cx += cp3;
+                                out_reader.setPixel(ix, iy, r, g, b);
+                            }
+                            cp7_cy_1 += cp7;
+                            cp1_cy_cp2 += cp1;
+                            cp4_cy_cp5 += cp4;
+                        }
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+        protected override bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
+        {
+            int in_w = this._ref_raster.getWidth();
+            int in_h = this._ref_raster.getHeight();
+            byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
+            int res_pix = i_resolution * i_resolution;
+
+            //ピクセルリーダーを取得
+            double cp0 = cpara[0];
+            double cp3 = cpara[3];
+            double cp6 = cpara[6];
+            double cp1 = cpara[1];
+            double cp4 = cpara[4];
+            double cp7 = cpara[7];
+            double cp2 = cpara[2];
+            double cp5 = cpara[5];
+
+            int out_w = o_out.getWidth();
+            int out_h = o_out.getHeight();
+            if (o_out is INyARRgbRaster)
+            {
+                INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                for (int iy = out_h - 1; iy >= 0; iy--)
+                {
+                    //解像度分の点を取る。
+                    for (int ix = out_w - 1; ix >= 0; ix--)
+                    {
+                        int r, g, b;
+                        r = g = b = 0;
+                        int cy = pk_t + iy * i_resolution;
+                        int cx = pk_l + ix * i_resolution;
+                        double cp7_cy_1_cp6_cx_b = cp7 * cy + 1.0 + cp6 * cx;
+                        double cp1_cy_cp2_cp0_cx_b = cp1 * cy + cp2 + cp0 * cx;
+                        double cp4_cy_cp5_cp3_cx_b = cp4 * cy + cp5 + cp3 * cx;
+                        for (int i2y = i_resolution - 1; i2y >= 0; i2y--)
+                        {
+                            double cp7_cy_1_cp6_cx = cp7_cy_1_cp6_cx_b;
+                            double cp1_cy_cp2_cp0_cx = cp1_cy_cp2_cp0_cx_b;
+                            double cp4_cy_cp5_cp3_cx = cp4_cy_cp5_cp3_cx_b;
+                            for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
+                            {
+                                //1ピクセルを作成
+                                double d = 1 / (cp7_cy_1_cp6_cx);
+                                int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                                int bp = (x + y * in_w) * 4;
+                                r += (i_in_buf[bp + 2] & 0xff);
+                                g += (i_in_buf[bp + 1] & 0xff);
+                                b += (i_in_buf[bp + 0] & 0xff);
+                                cp7_cy_1_cp6_cx += cp6;
+                                cp1_cy_cp2_cp0_cx += cp0;
+                                cp4_cy_cp5_cp3_cx += cp3;
+                            }
+                            cp7_cy_1_cp6_cx_b += cp7;
+                            cp1_cy_cp2_cp0_cx_b += cp1;
+                            cp4_cy_cp5_cp3_cx_b += cp4;
+                        }
+                        out_reader.setPixel(ix, iy, r / res_pix, g / res_pix, b / res_pix);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
     }
 
     class PerspectiveCopy_BYTE1D_B8G8R8_24 : PerspectiveCopy_Base
@@ -514,7 +533,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = (INyARRgbRaster)i_ref_raster;
         }
-        protected bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
+        protected override bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
 	{
 		int in_w=this._ref_raster.getWidth();
 		int in_h=this._ref_raster.getHeight();
@@ -546,13 +565,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				
 				for(int ix=0;ix<out_w;ix++){
 					//1ピクセルを作成
-					const double d=1/(cp7_cy_1_cp6_cx);
+					double d=1/(cp7_cy_1_cp6_cx);
 					int x=(int)((cp1_cy_cp2_cp0_cx)*d);
 					int y=(int)((cp4_cy_cp5_cp3_cx)*d);
 					if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
 					if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
 							
-					const int bp = (x + y * in_w) * 3;
+					int bp = (x + y * in_w) * 3;
 					r=(i_in_buf[bp + 2] & 0xff);
 					g=(i_in_buf[bp + 1] & 0xff);
 					b=(i_in_buf[bp + 0] & 0xff);
@@ -579,13 +598,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
 					
 					for(int ix=0;ix<out_w;ix++){
 						//1ピクセルを作成
-						final double d=1/(cp7_cy_1_cp6_cx);
+						double d=1/(cp7_cy_1_cp6_cx);
 						int x=(int)((cp1_cy_cp2_cp0_cx)*d);
 						int y=(int)((cp4_cy_cp5_cp3_cx)*d);
 						if(x<0){x=0;}else if(x>=in_w){x=in_w-1;}
 						if(y<0){y=0;}else if(y>=in_h){y=in_h-1;}
 								
-						final int bp = (x + y * in_w) * 3;
+						int bp = (x + y * in_w) * 3;
 						r=(i_in_buf[bp + 2] & 0xff);
 						g=(i_in_buf[bp + 1] & 0xff);
 						b=(i_in_buf[bp + 0] & 0xff);
@@ -605,9 +624,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		}
 		return false;
 	}
-        protected bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
+        protected override bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
         {
-            const int res_pix = i_resolution * i_resolution;
+            int res_pix = i_resolution * i_resolution;
             int in_w = this._ref_raster.getWidth();
             int in_h = this._ref_raster.getHeight();
             byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
@@ -647,13 +666,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
                             {
                                 //1ピクセルを作成
-                                const double d = 1 / (cp7_cy_1_cp6_cx);
+                                double d = 1 / (cp7_cy_1_cp6_cx);
                                 int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                                 int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                                 if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
                                 if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
-                                const int bp = (x + y * in_w) * 3;
+                                int bp = (x + y * in_w) * 3;
                                 r += (i_in_buf[bp + 2] & 0xff);
                                 g += (i_in_buf[bp + 1] & 0xff);
                                 b += (i_in_buf[bp + 0] & 0xff);
@@ -681,7 +700,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = (INyARRgbRaster)i_ref_raster;
         }
-        protected bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
+        protected override bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
         {
             byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
             int in_w = this._ref_raster.getWidth();
@@ -715,13 +734,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         for (int ix = 0; ix < out_w; ix++)
                         {
                             //1ピクセルを作成
-                            const double d = 1 / (cp7_cy_1_cp6_cx);
+                            double d = 1 / (cp7_cy_1_cp6_cx);
                             int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                             int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                             if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
                             if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
-                            const int bp = (x + y * in_w) * 3;
+                            int bp = (x + y * in_w) * 3;
                             r = (i_in_buf[bp + 0] & 0xff);
                             g = (i_in_buf[bp + 1] & 0xff);
                             b = (i_in_buf[bp + 2] & 0xff);
@@ -750,13 +769,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             for (int ix = 0; ix < out_w; ix++)
                             {
                                 //1ピクセルを作成
-                                const double d = 1 / (cp7_cy_1_cp6_cx);
+                                double d = 1 / (cp7_cy_1_cp6_cx);
                                 int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                                 int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                                 if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
                                 if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
-                                const int bp = (x + y * in_w) * 3;
+                                int bp = (x + y * in_w) * 3;
                                 r = (i_in_buf[bp + 0] & 0xff);
                                 g = (i_in_buf[bp + 1] & 0xff);
                                 b = (i_in_buf[bp + 2] & 0xff);
@@ -776,9 +795,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return false;
         }
-        protected bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
+        protected override bool multiPixel(int pk_l, int pk_t, double[] cpara, int i_resolution, INyARRaster o_out)
         {
-            const int res_pix = i_resolution * i_resolution;
+            int res_pix = i_resolution * i_resolution;
 
             byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
             int in_w = this._ref_raster.getWidth();
@@ -819,13 +838,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
                             {
                                 //1ピクセルを作成
-                                const double d = 1 / (cp7_cy_1_cp6_cx);
+                                double d = 1 / (cp7_cy_1_cp6_cx);
                                 int x = (int)((cp1_cy_cp2_cp0_cx) * d);
                                 int y = (int)((cp4_cy_cp5_cp3_cx) * d);
                                 if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
                                 if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
-                                const int bp = (x + y * in_w) * 3;
+                                int bp = (x + y * in_w) * 3;
                                 r += (i_in_buf[bp + 0] & 0xff);
                                 g += (i_in_buf[bp + 1] & 0xff);
                                 b += (i_in_buf[bp + 2] & 0xff);

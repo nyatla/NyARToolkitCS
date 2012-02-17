@@ -120,7 +120,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     sum += linput[i] * pat_j[i];
                 }
                 //0.7776737688877927がでればOK
-                const double sum2 = sum / code_patt.getPow() / i_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
+                double sum2 = sum / code_patt.getPow() / i_patt.getPow();// sum2 = sum / patpow[k][j]/ datapow;
                 if (sum2 > max)
                 {
                     max = sum2;

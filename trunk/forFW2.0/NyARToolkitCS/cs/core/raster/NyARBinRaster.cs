@@ -43,8 +43,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @
          */
         public NyARBinRaster(int i_width, int i_height)
+            : base(i_width, i_height, NyARBufferType.INT1D_BIN_8, true)
         {
-            super(i_width, i_height, NyARBufferType.INT1D_BIN_8, true);
         }
         /*
          * この関数は、インスタンスの初期化シーケンスを実装します。
@@ -59,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 初期化に成功するとtrue
          * @ 
          */
-        protected void initInstance(NyARIntSize i_size, int i_buf_type, bool i_is_alloc)
+        protected override void initInstance(NyARIntSize i_size, int i_buf_type, bool i_is_alloc)
         {
             switch (i_buf_type)
             {
@@ -67,14 +67,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
                     break;
                 default:
-                    super.initInstance(i_size, i_buf_type, i_is_alloc);
+                    base.initInstance(i_size, i_buf_type, i_is_alloc);
                     return;
             }
             this._pixdrv = NyARGsPixelDriverFactory.createDriver(this);
             this._is_attached_buffer = i_is_alloc;
             return;
         }
-        public object createInterface(Type i_iid)
+        public override object createInterface(Type i_iid)
         {
             if (i_iid == NyARLabeling_Rle.IRasterDriver)
             {

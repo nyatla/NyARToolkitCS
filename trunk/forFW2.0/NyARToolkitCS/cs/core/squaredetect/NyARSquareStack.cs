@@ -54,7 +54,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * 要素のオブジェクトを生成します。
          */
-        protected NyARSquare createElement()
+        protected override NyARSquare createElement()
         {
             return new NyARSquare();
         }

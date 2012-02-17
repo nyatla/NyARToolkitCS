@@ -68,7 +68,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool inverse(NyARDoubleMatrix22 i_src)
 	{
-		const double a11,a12,a21,a22;
+		double a11,a12,a21,a22;
 		a11=i_src.m00;
 		a12=i_src.m01;
 		a21=i_src.m10;

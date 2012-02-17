@@ -81,7 +81,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             if (dx >= dy)
             {
                 // 傾きが1以下の場合
-                if (dx >= ptr.length)
+                if (dx >= ptr.Length)
                 {
                     return false;
                 }
@@ -103,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             else
             {
                 // 傾きが1より大きい場合
-                if (dy >= this.items.length)
+                if (dy >= this.items.Length)
                 {
                     return false;
                 }

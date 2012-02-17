@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -98,7 +99,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //ラスタドライバの切り替え
             if (i_raster != this._ref_last_input_raster)
             {
-                this._imdriver = (IRasterDriver)i_raster.createInterface(IRasterDriver);
+                this._imdriver = (IRasterDriver)i_raster.createInterface(typeof(IRasterDriver));
                 this._ref_last_input_raster = i_raster;
             }
             return this._imdriver.getContour(0, 0, s.w - 1, s.h - 1, i_entry_x, i_entry_y, i_th, o_coord);
@@ -128,7 +129,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //ラスタドライバの切り替え
             if (i_raster != this._ref_last_input_raster)
             {
-                this._imdriver = (IRasterDriver)i_raster.createInterface(IRasterDriver);
+                this._imdriver = (IRasterDriver)i_raster.createInterface(typeof(IRasterDriver));
                 this._ref_last_input_raster = i_raster;
             }
             return this._imdriver.getContour(i_area.x, i_area.y, i_area.x + i_area.w - 1, i_area.h + i_area.y - 1, i_entry_x, i_entry_y, i_th, o_coord);
@@ -143,7 +144,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected readonly static int[] _getContour_xdir = { 0, 1, 1, 1, 0, -1, -1, -1, 0, 1, 1, 1, 0, -1, -1 };
         /** 8方位探索の座標マップ*/
         protected readonly static int[] _getContour_ydir = { -1, -1, 0, 1, 1, 1, 0, -1, -1, -1, 0, 1, 1, 1, 0 };
-
+        public abstract bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord);
     }
 
 
@@ -158,7 +159,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = i_ref_raster;
         }
-        public bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord) 
+        public override bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord) 
 	{
 		Debug.Assert(i_t<=i_entry_x);
 		int[] buf=(int[])this._ref_raster.getBuffer();
@@ -167,7 +168,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		int width=this._ref_raster.getWidth();
 		//クリップ領域の上端に接しているポイントを得る。
 		NyARIntPoint2d[] coord=o_coord.items;
-		int max_coord=o_coord.items.length;
+		int max_coord=o_coord.items.Length;
 		coord[0].x = i_entry_x;
 		coord[0].y = i_entry_y;
 		int coord_num = 1;
@@ -220,8 +221,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				//境界に接しているとき
 				int i;
 				for (i = 0; i < 8; i++){				
-					const int x=c + xdir[dir];
-					const int y=r + ydir[dir];
+					int x=c + xdir[dir];
+					int y=r + ydir[dir];
 					//境界チェック
 					if(x>=i_l && x<=i_r && y>=i_t && y<=i_b){
 						if (buf[(y)*width+(x)] <= i_th) {
@@ -253,8 +254,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				dir = (dir + 5) % 8;//dirの正規化
 				int i;
 				for (i = 0; i < 8; i++){				
-					final int x=c + xdir[dir];
-					final int y=r + ydir[dir];
+					int x=c + xdir[dir];
+					int y=r + ydir[dir];
 					//境界チェック
 					if(x>=i_l && x<=i_r && y>=i_t && y<=i_b){
 						if (buf[(y)*width+(x)] <= i_th) {
@@ -302,7 +303,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._ref_raster = i_ref_raster;
         }
-        public bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord)
+        public override bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord)
         {
             Debug.Assert(i_t <= i_entry_x);
             INyARGsPixelDriver reader = this._ref_raster.getGsPixelDriver();
@@ -310,7 +311,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int[] ydir = _getContour_ydir;// static int ydir[8] = {-1,-1, 0, 1, 1, 1, 0,-1};
             //クリップ領域の上端に接しているポイントを得る。
             NyARIntPoint2d[] coord = o_coord.items;
-            int max_coord = o_coord.items.length;
+            int max_coord = o_coord.items.Length;
             coord[0].x = i_entry_x;
             coord[0].y = i_entry_y;
             int coord_num = 1;
@@ -325,8 +326,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 int i;
                 for (i = 0; i < 8; i++)
                 {
-                    const int x = c + xdir[dir];
-                    const int y = r + ydir[dir];
+                    int x = c + xdir[dir];
+                    int y = r + ydir[dir];
                     //境界チェック
                     if (x >= i_l && x <= i_r && y >= i_t && y <= i_b)
                     {

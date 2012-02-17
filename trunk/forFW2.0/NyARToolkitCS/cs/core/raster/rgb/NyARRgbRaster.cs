@@ -23,6 +23,7 @@
  * 
  */
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -66,9 +67,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @
          */
-        public NyARRgbRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc)
+        public NyARRgbRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc):base(i_width, i_height, i_raster_type)
         {
-            super(i_width, i_height, i_raster_type);
             if (!initInstance(this._size, i_raster_type, i_is_alloc))
             {
                 throw new NyARException();
@@ -87,9 +87,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 指定できる値は、クラスの説明を見てください。
          * @
          */
-        public NyARRgbRaster(int i_width, int i_height, int i_raster_type)
+        public NyARRgbRaster(int i_width, int i_height, int i_raster_type):base(i_width, i_height, i_raster_type)
         {
-            super(i_width, i_height, i_raster_type);
             if (!initInstance(this._size, i_raster_type, true))
             {
                 throw new NyARException();
@@ -104,9 +103,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラスタのサイズ
          * @
          */
-        public NyARRgbRaster(int i_width, int i_height)
+        public NyARRgbRaster(int i_width, int i_height): base(i_width, i_height, NyARBufferType.INT1D_X8R8G8B8_32)
         {
-            super(i_width, i_height, NyARBufferType.INT1D_X8R8G8B8_32);
             if (!initInstance(this._size, NyARBufferType.INT1D_X8R8G8B8_32, true))
             {
                 throw new NyARException();
@@ -158,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * オブジェクトの参照値
          * @
          */
-        public INyARRgbPixelDriver getRgbPixelDriver()
+        public override INyARRgbPixelDriver getRgbPixelDriver()
         {
             return this._rgb_pixel_driver;
         }
@@ -166,7 +164,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        public object getBuffer()
+        public override object getBuffer()
         {
             return this._buf;
         }
@@ -177,7 +175,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * インスタンスがバッファを所有すれば、trueです。
          */
-        public bool hasBuffer()
+        public override bool hasBuffer()
         {
             return this._buf != null;
         }
@@ -185,41 +183,41 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファの時にだけ使えます。
          */
-        public void wrapBuffer(object i_ref_buf)
+        public override void wrapBuffer(object i_ref_buf)
         {
             Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
             this._buf = i_ref_buf;
             //ピクセルリーダーの参照バッファを切り替える。
             this._rgb_pixel_driver.switchRaster(this);
         }
-        public object createInterface(Type iIid)
+        public override object createInterface(Type iIid)
         {
-            if (iIid == INyARPerspectiveCopy)
+            if (iIid == typeof(INyARPerspectiveCopy))
             {
                 return NyARPerspectiveCopyFactory.createDriver(this);
             }
-            if (iIid == NyARMatchPattDeviationColorData.IRasterDriver)
+            if (iIid == typeof(NyARMatchPattDeviationColorData.IRasterDriver))
             {
                 return NyARMatchPattDeviationColorData.RasterDriverFactory.createDriver(this);
             }
-            if (iIid == INyARRgb2GsFilter)
+            if (iIid == typeof(INyARRgb2GsFilter))
             {
                 //デフォルトのインタフェイス
                 return NyARRgb2GsFilterFactory.createRgbAveDriver(this);
             }
-            else if (iIid == INyARRgb2GsFilterRgbAve)
+            else if (iIid == typeof(INyARRgb2GsFilterRgbAve))
             {
                 return NyARRgb2GsFilterFactory.createRgbAveDriver(this);
             }
-            else if (iIid == INyARRgb2GsFilterRgbCube)
+            else if (iIid == typeof(INyARRgb2GsFilterRgbCube))
             {
                 return NyARRgb2GsFilterFactory.createRgbCubeDriver(this);
             }
-            else if (iIid == INyARRgb2GsFilterYCbCr)
+            else if (iIid == typeof(INyARRgb2GsFilterYCbCr))
             {
                 return NyARRgb2GsFilterFactory.createYCbCrDriver(this);
             }
-            if (iIid == INyARRgb2GsFilterArtkTh)
+            if (iIid == typeof(INyARRgb2GsFilterArtkTh))
             {
                 return NyARRgb2GsFilterArtkThFactory.createDriver(this);
             }

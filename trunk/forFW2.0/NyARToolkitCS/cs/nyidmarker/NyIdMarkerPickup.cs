@@ -57,7 +57,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * @return
          * @
          */
-        public sealed override bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARIntPoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
+        public bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARIntPoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
@@ -75,7 +75,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * @return
          * @
          */
-        public sealed override bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARDoublePoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
+        public bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARDoublePoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
@@ -95,8 +95,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         private bool _pickFromRaster(INyARGsPixelDriver i_pix_drv, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
-            const PerspectivePixelReader.TThreshold th = this.__pickFromRaster_th;
-            const MarkerPattEncoder encoder = this.__pickFromRaster_encoder;
+            PerspectivePixelReader.TThreshold th = this.__pickFromRaster_th;
+            MarkerPattEncoder encoder = this.__pickFromRaster_encoder;
             //マーカパラメータを取得
             this._perspective_reader.detectThresholdValue(i_pix_drv, th);
 
@@ -104,7 +104,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             {
                 return false;
             }
-            const int d = encoder.encode(o_data);
+            int d = encoder.encode(o_data);
             if (d < 0)
             {
                 return false;
@@ -178,16 +178,16 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         private bool rectPixels(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, int i_lt_x, int i_lt_y, int i_step_x, int i_step_y, int i_width, int i_height, int i_out_st, int[] o_pixel)
         {
-            const double[] cpara = this._cparam;
-            const int[] ref_x = this._ref_x;
-            const int[] ref_y = this._ref_y;
-            const int raster_width = i_raster_size.w;
-            const int raster_height = i_raster_size.h;
+            double[] cpara = this._cparam;
+            int[] ref_x = this._ref_x;
+            int[] ref_y = this._ref_y;
+            int raster_width = i_raster_size.w;
+            int raster_height = i_raster_size.h;
 
             int out_index = i_out_st;
-            const double cpara_6 = cpara[6];
-            const double cpara_0 = cpara[0];
-            const double cpara_3 = cpara[3];
+            double cpara_6 = cpara[6];
+            double cpara_0 = cpara[0];
+            double cpara_3 = cpara[3];
 
             for (int i = 0; i < i_height; i++)
             {
@@ -199,10 +199,10 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 int pt = 0;
                 for (int i2 = 0; i2 < i_width; i2++)
                 {
-                    const int cx0 = 1 + i2 * i_step_x + i_lt_x;
-                    const double d = cpara_6 * cx0 + cpy0_7;
-                    const int x = (int)((cpara_0 * cx0 + cpy0_12) / d);
-                    const int y = (int)((cpara_3 * cx0 + cpy0_45) / d);
+                    int cx0 = 1 + i2 * i_step_x + i_lt_x;
+                    double d = cpara_6 * cx0 + cpy0_7;
+                    int x = (int)((cpara_0 * cx0 + cpy0_12) / d);
+                    int y = (int)((cpara_3 * cx0 + cpy0_45) / d);
                     if (x < 0 || y < 0 || x >= raster_width || y >= raster_height)
                     {
                         return false;
@@ -227,11 +227,11 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
         private static bool checkFreqWidth(int[] i_freq, int i_width)
         {
             int c = i_freq[1] - i_freq[0];
-            const int count = i_width * 2 - 1;
+            int count = i_width * 2 - 1;
             for (int i = 1; i < count; i++)
             {
-                const int n = i_freq[i + 1] - i_freq[i];
-                const int v = n * 100 / c;
+                int n = i_freq[i + 1] - i_freq[i];
+                int v = n * 100 / c;
                 if (v > 150 || v < 50)
                 {
                     return false;
@@ -267,7 +267,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 return -1;
             }
             /*周波数インデクスを計算*/
-            const int st = (index - 1) * index;
+            int st = (index - 1) * index;
             for (int i = 0; i < index * 2; i++)
             {
                 o_freq_table[i] = i_freq_table[st + i] * FRQ_STEP / max;
@@ -315,9 +315,9 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
         public int getRowFrequency(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, int i_y1, int i_th_h, int i_th_l, int[] o_edge_index)
         {
             //3,4,5,6,7,8,9,10
-            const int[] freq_count_table = this._freq_count_table;
+            int[] freq_count_table = this._freq_count_table;
             //0,2,4,6,8,10,12,14,16,18,20の要素を持つ配列
-            const int[] freq_table = this._freq_table;
+            int[] freq_table = this._freq_table;
             //初期化
             double[] cpara = this._cparam;
             int[] ref_x = this._ref_x;
@@ -331,29 +331,29 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             {
                 freq_table[i] = 0;
             }
-            const int raster_width = i_raster_size.w;
-            const int raster_height = i_raster_size.h;
+            int raster_width = i_raster_size.w;
+            int raster_height = i_raster_size.h;
 
-            const double cpara_0 = cpara[0];
-            const double cpara_3 = cpara[3];
-            const double cpara_6 = cpara[6];
+            double cpara_0 = cpara[0];
+            double cpara_3 = cpara[3];
+            double cpara_6 = cpara[6];
 
             //10-20ピクセル目からタイミングパターンを検出
             for (int i = 0; i < FREQ_SAMPLE_NUM; i++)
             {
                 //2行分のピクセルインデックスを計算
-                const double cy0 = 1 + i_y1 + i;
-                const double cpy0_12 = cpara[1] * cy0 + cpara[2];
-                const double cpy0_45 = cpara[4] * cy0 + cpara[5];
-                const double cpy0_7 = cpara[7] * cy0 + 1.0;
+                double cy0 = 1 + i_y1 + i;
+                double cpy0_12 = cpara[1] * cy0 + cpara[2];
+                double cpy0_45 = cpara[4] * cy0 + cpara[5];
+                double cpy0_7 = cpara[7] * cy0 + 1.0;
 
                 int pt = 0;
                 for (int i2 = 0; i2 < FRQ_POINTS; i2++)
                 {
-                    const double cx0 = 1 + i2 * FRQ_STEP + FRQ_EDGE;
-                    const double d = (cpara_6 * cx0) + cpy0_7;
-                    const int x = (int)((cpara_0 * cx0 + cpy0_12) / d);
-                    const int y = (int)((cpara_3 * cx0 + cpy0_45) / d);
+                    double cx0 = 1 + i2 * FRQ_STEP + FRQ_EDGE;
+                    double d = (cpara_6 * cx0) + cpy0_7;
+                    int x = (int)((cpara_0 * cx0 + cpy0_12) / d);
+                    int y = (int)((cpara_3 * cx0 + cpy0_45) / d);
                     if (x < 0 || y < 0 || x >= raster_width || y >= raster_height)
                     {
                         return -1;
@@ -367,7 +367,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 i_reader.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
 
                 //o_edge_indexを一時的に破壊して調査する
-                const int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
+                int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
 
                 //周期は3-10であること
                 if (freq_t < MIN_FREQ || freq_t > MAX_FREQ)
@@ -381,7 +381,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 }
                 //検出カウンタを追加
                 freq_count_table[freq_t]++;
-                const int table_st = (freq_t - 1) * freq_t;
+                int table_st = (freq_t - 1) * freq_t;
                 for (int i2 = 0; i2 < freq_t * 2; i2++)
                 {
                     freq_table[table_st + i2] += o_edge_index[i2];
@@ -425,7 +425,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 freq_table[i] = 0;
             }
             int raster_width = i_raster_size.w;
-            const int raster_height = i_raster_size.h;
+            int raster_height = i_raster_size.h;
 
 
             double cpara7 = cpara[7];
@@ -460,7 +460,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 //ピクセルを取得(入力画像を多様化するならここを調整すること)
                 i_reader.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
 
-                const int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
+                int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
                 //周期は3-10であること
                 if (freq_t < MIN_FREQ || freq_t > MAX_FREQ)
                 {
@@ -473,7 +473,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 }
                 //検出カウンタを追加
                 freq_count_table[freq_t]++;
-                const int table_st = (freq_t - 1) * freq_t;
+                int table_st = (freq_t - 1) * freq_t;
                 for (int i2 = 0; i2 < freq_t * 2; i2++)
                 {
                     freq_table[table_st + i2] += o_edge_index[i2];
@@ -574,7 +574,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 
             for (int i = i_pixcel.length - 1; i >= 1; i--)
             {
-                const int pix = i_pixcel[i];
+                int pix = i_pixcel[i];
                 if (h0 < pix)
                 {
                     if (h1 < pix)
@@ -657,7 +657,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         public void detectThresholdValue(INyARGsPixelDriver i_reader, TThreshold o_threshold)
         {
-            const int[] th_pixels = this._th_pixels;
+            int[] th_pixels = this._th_pixels;
             NyARIntSize size = i_reader.getSize();
             //左上のピックアップ領域からピクセルを得る(00-24)
             rectPixels(i_reader, size, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, 0, th_pixels);
@@ -671,7 +671,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             //右下のピックアップ領域からピクセルを得る(75-99)
             rectPixels(i_reader, size, THRESHOLD_SAMPLE_RB, THRESHOLD_SAMPLE_RB, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE * 3, th_pixels);
 
-            const THighAndLow hl = this.__detectThresholdValue_hl;
+            THighAndLow hl = this.__detectThresholdValue_hl;
             //Ptailで求めたピクセル平均
             getPtailHighAndLow(th_pixels, hl);
 

@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -176,19 +177,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 o_out.x = Math.PI / 2;
                 o_out.y = 0;
-                o_out.z = Math.atan2(-this.m10, this.m00);
+                o_out.z = Math.Atan2(-this.m10, this.m00);
             }
             else if (sina <= -1.0)
             {
                 o_out.x = -Math.PI / 2;
                 o_out.y = 0;
-                o_out.z = Math.atan2(-this.m10, this.m00);
+                o_out.z = Math.Atan2(-this.m10, this.m00);
             }
             else
             {
-                o_out.x = Math.asin(sina);
-                o_out.z = Math.atan2(-this.m01, this.m11);
-                o_out.y = Math.atan2(-this.m20, this.m22);
+                o_out.x = Math.Asin(sina);
+                o_out.z = Math.Atan2(-this.m01, this.m11);
+                o_out.y = Math.Atan2(-this.m20, this.m22);
             }
         }
         /**
@@ -212,12 +213,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void setZXYAngle(double i_x, double i_y, double i_z)
         {
-            const double sina = Math.sin(i_x);
-            const double cosa = Math.cos(i_x);
-            const double sinb = Math.sin(i_y);
-            const double cosb = Math.cos(i_y);
-            const double sinc = Math.sin(i_z);
-            const double cosc = Math.cos(i_z);
+            double sina = Math.Sin(i_x);
+            double cosa = Math.Cos(i_x);
+            double sinb = Math.Sin(i_y);
+            double cosb = Math.Cos(i_y);
+            double sinc = Math.Sin(i_z);
+            double cosc = Math.Cos(i_z);
             this.m00 = cosc * cosb - sinc * sina * sinb;
             this.m01 = -sinc * cosa;
             this.m02 = cosc * sinb + sinc * sina * cosb;

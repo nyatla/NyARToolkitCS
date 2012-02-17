@@ -22,6 +22,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -38,19 +40,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private static bool isValid2dArray(double[][] i_left, double[] i_right)
         {
-            const int sm = i_left.length;
-            const int sn = i_left[0].length;
-            if (i_left.length != sm)
+            int sm = i_left.Length;
+            int sn = i_left[0].Length;
+            if (i_left.Length != sm)
             {
                 return false;
             }
-            if (i_right.length != sm)
+            if (i_right.Length != sm)
             {
                 return false;
             }
             for (int i = 1; i < sm; i++)
             {
-                if (i_left[i].length != sn)
+                if (i_left[i].Length != sn)
                 {
                     return false;
                 }
@@ -101,11 +103,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 {//ピボット操作
                     int pivod = solve_row;
-                    double pivod_value = Math.abs(i_left[pivod][pivod]);
+                    double pivod_value = Math.Abs(i_left[pivod][pivod]);
                     for (int i = solve_row + 1; i < i_m; i++)
                     {
-                        const double pivod_2 = Math.abs(i_left[i][pivod]);
-                        if (pivod_value < Math.abs(pivod_2))
+                        double pivod_2 = Math.Abs(i_left[i][pivod]);
+                        if (pivod_value < Math.Abs(pivod_2))
                         {
                             pivod = i;
                             pivod_value = pivod_2;
@@ -114,16 +116,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     if (solve_row != pivod)
                     {
                         //行の入れ替え(Cの時はポインタテーブル使って！)
-                        const double[] t = i_left[solve_row];
+                        double[] t = i_left[solve_row];
                         i_left[solve_row] = i_left[pivod];
                         i_left[pivod] = t;
-                        const double t2 = i_right[solve_row];
+                        double t2 = i_right[solve_row];
                         i_right[solve_row] = i_right[pivod];
                         i_right[pivod] = t2;
                     }
                 }
-                const double[] dest_l_n = i_left[solve_row];
-                const double dest_l_nn = i_left[solve_row][solve_row];
+                double[] dest_l_n = i_left[solve_row];
+                double dest_l_nn = i_left[solve_row][solve_row];
                 if (dest_l_nn == 0.0)
                 {
                     //選択後の対角要素が0になってしまったら失敗する。
@@ -136,15 +138,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     double s = dest_l_n[i];
                     for (int i2 = 0; i2 < i_n; i2++)
                     {
-                        const double p = i_left[i][i2] * s;
+                        double p = i_left[i][i2] * s;
                         dest_l_n[i2] = dest_l_n[i2] - p;
                     }
-                    const double k = i_right[i] * s;
+                    double k = i_right[i] * s;
                     i_right[solve_row] = i_right[solve_row] - k;
 
                 }
                 //消去法の実行(割り算)
-                const double d = dest_l_n[solve_row];
+                double d = dest_l_n[solve_row];
                 for (int i2 = 0; i2 < solve_row; i2++)
                 {
                     dest_l_n[i2] = 0;

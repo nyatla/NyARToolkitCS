@@ -37,7 +37,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     class NyARGsCustomToneTableFilter_Any : INyARGsCustomToneTableFilter
     {
         private INyARGrayscaleRaster _raster;
-        protected NyARGsCustomToneTableFilter_Any(INyARGrayscaleRaster i_ref_raster)
+        public NyARGsCustomToneTableFilter_Any(INyARGrayscaleRaster i_ref_raster)
         {
             this._raster = i_ref_raster;
         }

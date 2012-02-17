@@ -28,6 +28,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -84,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
                 w = (dv_x - dv_y) / 2;// w = (dv->v[h-1] -dv->v[h]) / 2;//ここ？
                 t = ev1 * ev1;// t = ev->v[h] * ev->v[h];
-                s = Math.sqrt(w * w + t);
+                s = Math.Sqrt(w * w + t);
                 if (w < 0)
                 {
                     s = -s;
@@ -92,12 +94,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 x = dv_x - dv_y + t / (w + s);// x = dv->v[j] -dv->v[h] +t/(w+s);
                 y = ev1;// y = ev->v[j+1];
 
-                if (Math.abs(x) >= Math.abs(y))
+                if (Math.Abs(x) >= Math.Abs(y))
                 {
-                    if (Math.abs(x) > PCA_VZERO)
+                    if (Math.Abs(x) > PCA_VZERO)
                     {
                         t = -y / x;
-                        c = 1 / Math.sqrt(t * t + 1);
+                        c = 1 / Math.Sqrt(t * t + 1);
                         s = t * c;
                     }
                     else
@@ -109,7 +111,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 else
                 {
                     t = -x / y;
-                    s = 1.0 / Math.sqrt(t * t + 1);
+                    s = 1.0 / Math.Sqrt(t * t + 1);
                     c = t * s;
                 }
                 w = dv_x - dv_y;// w = dv->v[k] -dv->v[k+1];
@@ -127,7 +129,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 y = mat11;// y = a->m[(k+1)*dim+i];
                 mat01 = c * x - s * y;// a->m[k*dim+i] = c * x - s* y;
                 mat11 = s * x + c * y;// a->m[(k+1)*dim+i] = s* x + c * y;
-            } while (Math.abs(ev1) > PCA_EPS * (Math.abs(dv_x) + Math.abs(dv_y)));
+            } while (Math.Abs(ev1) > PCA_EPS * (Math.Abs(dv_x) + Math.Abs(dv_y)));
             // }
 
             t = dv_x;// t = dv->v[h];
@@ -180,7 +182,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             sy = sy / i_number_of_data;
 
             //PCA_CENTERとPCA_xt_by_xを一緒に処理
-            double srow = Math.sqrt((double)i_number_of_data);
+            double srow = Math.Sqrt((double)i_number_of_data);
             double w00, w11, w10;
             w00 = w11 = w10 = 0.0;// *out = 0.0;
             for (int i = 0; i < i_number_of_data; i++)
@@ -221,7 +223,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             PCA_PCA(i_v1, i_v2, i_number_of_point, o_evec, o_ev, o_mean);
 
-            const double sum = o_ev[0] + o_ev[1];
+            double sum = o_ev[0] + o_ev[1];
             // For順変更禁止
             o_ev[0] /= sum;// ev->v[i] /= sum;
             o_ev[1] /= sum;// ev->v[i] /= sum;

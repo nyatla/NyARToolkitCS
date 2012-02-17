@@ -66,11 +66,10 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             private readonly NyARMatchPattResult __detectMarkerLite_mr = new NyARMatchPattResult();
             private NyARCoord2Linear _coordline;
 
-            public RleDetector(INyARColorPatt i_inst_patt, NyARCode[] i_ref_code, int i_num_of_code, NyARParam i_param)
+            public RleDetector(INyARColorPatt i_inst_patt, NyARCode[] i_ref_code, int i_num_of_code, NyARParam i_param):base(i_param.getScreenSize())
             {
-                super(i_param.getScreenSize());
-                const int cw = i_ref_code[0].getWidth();
-                const int ch = i_ref_code[0].getHeight();
+                int cw = i_ref_code[0].getWidth();
+                int ch = i_ref_code[0].getHeight();
                 //NyARMatchPatt_Color_WITHOUT_PCA[]の作成
                 this._match_patt = new NyARMatchPatt_Color_WITHOUT_PCA[i_num_of_code];
                 this._match_patt[0] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[0]);
@@ -93,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            protected void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 NyARMatchPattResult mr = this.__detectMarkerLite_mr;
                 //輪郭座標から頂点リストに変換
@@ -119,7 +118,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 direction = mr.direction;
                 confidence = mr.confidence;
                 //2番目以降
-                for (int i = 1; i < this._match_patt.length; i++)
+                for (int i = 1; i < this._match_patt.Length; i++)
                 {
                     this._match_patt[i].evaluate(this._deviation_data, mr);
                     if (confidence > mr.confidence)
@@ -132,11 +131,11 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                     confidence = mr.confidence;
                 }
                 //最も一致したマーカ情報を、この矩形の情報として記録する。
-                const NyARDetectMarkerResult result = this.result_stack.prePush();
+                NyARDetectMarkerResult result = this.result_stack.prePush();
                 result.arcode_id = square_index;
                 result.confidence = confidence;
 
-                const NyARSquare sq = result.square;
+                NyARSquare sq = result.square;
                 //directionを考慮して、squareを更新する。
                 for (int i = 0; i < 4; i++)
                 {
@@ -209,10 +208,10 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             int i_number_of_code)
         {
 
-            const NyARIntSize scr_size = i_ref_param.getScreenSize();
+            NyARIntSize scr_size = i_ref_param.getScreenSize();
             // 解析オブジェクトを作る
-            const int cw = i_ref_code[0].getWidth();
-            const int ch = i_ref_code[0].getHeight();
+            int cw = i_ref_code[0].getWidth();
+            int ch = i_ref_code[0].getHeight();
 
             this._transmat = new NyARTransMat(i_ref_param);
             //NyARToolkitプロファイル
@@ -254,7 +253,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             }
             if (this._last_input_raster != i_raster)
             {
-                this._tobin_filter = (INyARRgb2GsFilterArtkTh)i_raster.createInterface(INyARRgb2GsFilterArtkTh);
+                this._tobin_filter = (INyARRgb2GsFilterArtkTh)i_raster.createInterface(typeof(INyARRgb2GsFilterArtkTh));
                 this._last_input_raster = i_raster;
             }
             this._tobin_filter.doFilter(i_threshold, this._bin_raster);
@@ -278,7 +277,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          */
         public void getTransmationMatrix(int i_index, NyARTransMatResult o_result)
         {
-            const NyARDetectMarkerResult result = this._square_detect.result_stack.getItem(i_index);
+            NyARDetectMarkerResult result = this._square_detect.result_stack.getItem(i_index);
             // 一番一致したマーカーの位置とかその辺を計算
             if (_is_continue)
             {
@@ -351,11 +350,10 @@ namespace jp.nyatla.nyartoolkit.cs.detector
     {
         public NyARDetectMarkerResultStack(int i_length)
         {
-            super();
-            this.initInstance(i_length, NyARDetectMarkerResult);
+            this.initInstance(i_length);
             return;
         }
-        protected NyARDetectMarkerResult createElement()
+        protected override NyARDetectMarkerResult createElement()
         {
             return new NyARDetectMarkerResult();
         }

@@ -85,7 +85,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool crossPos(NyARLinear l_line_2, NyARDoublePoint2d o_point)
         {
-            const double w1 = this.a * l_line_2.b - l_line_2.a * this.b;
+            double w1 = this.a * l_line_2.b - l_line_2.a * this.b;
             if (w1 == 0.0)
             {
                 return false;
@@ -109,7 +109,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool crossPos(double i_a, double i_b, double i_c, NyARDoublePoint2d o_point)
         {
-            const double w1 = this.a * i_b - i_a * this.b;
+            double w1 = this.a * i_b - i_a * this.b;
             if (w1 == 0.0)
             {
                 return false;
@@ -133,7 +133,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool crossPos(double i_a, double i_b, double i_c, NyARIntPoint2d o_point)
         {
-            const double w1 = this.a * i_b - i_a * this.b;
+            double w1 = this.a * i_b - i_a * this.b;
             if (w1 == 0.0)
             {
                 return false;
@@ -151,7 +151,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool isCross(NyARLinear l_line_2)
         {
-            const double w1 = this.a * l_line_2.b - l_line_2.a * this.b;
+            double w1 = this.a * l_line_2.b - l_line_2.a * this.b;
             return (w1 == 0.0) ? false : true;
         }
 
@@ -299,7 +299,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double lb = -this.a;
             double lc = -(la * i_x + lb * i_y);
             //交点を計算
-            const double w1 = i_linear.a * lb - la * i_linear.b;
+            double w1 = i_linear.a * lb - la * i_linear.b;
             if (w1 == 0.0)
             {
                 return false;

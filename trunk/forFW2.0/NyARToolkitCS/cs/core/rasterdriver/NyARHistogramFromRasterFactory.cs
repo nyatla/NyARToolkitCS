@@ -45,18 +45,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		case NyARBufferType.INT1D_BIN_8:
 			return new NyARHistogramFromRaster_INTGS8(i_raster);
 		default:
-			if(i_raster instanceof INyARGrayscaleRaster){
+			if(i_raster is INyARGrayscaleRaster){
 				return new NyARHistogramFromRaster_AnyGs((INyARGrayscaleRaster)i_raster);
 			}
-			if(i_raster instanceof INyARRgbRaster){
+            if (i_raster is INyARRgbRaster)
+            {
 				return new NyARHistogramFromRaster_AnyRgb((INyARRgbRaster)i_raster);
 			}
+            break;
 		}
 		throw new NyARException();
 	}
         public static INyARHistogramFromRaster createInstance(INyARRgbRaster i_raster) 
 	{
-		if(i_raster instanceof INyARRgbRaster){
+        if (i_raster is INyARRgbRaster)
+        {
 			return new NyARHistogramFromRaster_AnyRgb((INyARRgbRaster)i_raster);
 		}
 		throw new NyARException();
@@ -83,8 +86,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_histogram.reset();
             int[] data_ptr = o_histogram.data;
             INyARGsPixelDriver drv = this._gsr.getGsPixelDriver();
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             for (int y = i_h - 1; y >= 0; y -= i_skip)
             {
@@ -116,8 +119,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_histogram.reset();
             int[] data_ptr = o_histogram.data;
             INyARRgbPixelDriver drv = this._gsr.getRgbPixelDriver();
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             for (int y = i_h - 1; y >= 0; y -= i_skip)
             {
@@ -148,11 +151,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public void createHistogram(int i_l, int i_t, int i_w, int i_h, int i_skip, NyARHistogram o_histogram)
         {
             o_histogram.reset();
-            const int[] input = (int[])this._gsr.getBuffer();
+            int[] input = (int[])this._gsr.getBuffer();
             NyARIntSize s = this._gsr.getSize();
             int skip = (i_skip * s.w - i_w);
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt = (i_t * s.w + i_l);
             int[] data = o_histogram.data;

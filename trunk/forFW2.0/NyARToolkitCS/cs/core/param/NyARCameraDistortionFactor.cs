@@ -123,10 +123,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public sealed override void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
+        public void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
         {
-            const double x = (i_in.x - this._f0) * this._f3;
-            const double y = (i_in.y - this._f1) * this._f3;
+            double x = (i_in.x - this._f0) * this._f3;
+            double y = (i_in.y - this._f1) * this._f3;
             if (x == 0.0 && y == 0.0)
             {
                 o_out.x = this._f0;
@@ -134,7 +134,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             else
             {
-                const double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
                 o_out.x = x * d + this._f0;
                 o_out.y = y * d + this._f1;
             }
@@ -148,7 +148,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public sealed override void ideal2Observ(NyARDoublePoint2d i_in, NyARIntPoint2d o_out)
+        public void ideal2Observ(NyARDoublePoint2d i_in, NyARIntPoint2d o_out)
         {
             this.ideal2Observ(i_in.x, i_in.y, o_out);
             return;
@@ -163,10 +163,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public sealed override void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
+        public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
         {
-            const double x = (i_x - this._f0) * this._f3;
-            const double y = (i_y - this._f1) * this._f3;
+            double x = (i_x - this._f0) * this._f3;
+            double y = (i_y - this._f1) * this._f3;
             if (x == 0.0 && y == 0.0)
             {
                 o_out.x = (int)(this._f0);
@@ -174,7 +174,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             else
             {
-                const double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
                 o_out.x = (int)(x * d + this._f0);
                 o_out.y = (int)(y * d + this._f1);
             }
@@ -190,13 +190,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          * 変換する座標の個数。
          */
-        public sealed override void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             double x, y;
-            const double d0 = this._f0;
-            const double d1 = this._f1;
-            const double d3 = this._f3;
-            const double d2_w = this._f2 / 100000000.0;
+            double d0 = this._f0;
+            double d1 = this._f1;
+            double d3 = this._f3;
+            double d2_w = this._f2 / 100000000.0;
             for (int i = 0; i < i_size; i++)
             {
                 x = (i_in[i].x - d0) * d3;
@@ -208,7 +208,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
                 else
                 {
-                    const double d = 1.0 - d2_w * (x * x + y * y);
+                    double d = 1.0 - d2_w * (x * x + y * y);
                     o_out[i].x = x * d + d0;
                     o_out[i].y = y * d + d1;
                 }
@@ -225,7 +225,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          * 変換する座標の個数。
          */
-        public sealed override void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
+        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
         {
             double x, y;
             double d0 = this._f0;
@@ -260,11 +260,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_point
          * 変換後の座標を受け取るオブジェクト
          */
-        public sealed override void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
+        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             double z02, z0, p, q, z, px, py, opttmp_1;
-            const double d0 = this._f0;
-            const double d1 = this._f1;
+            double d0 = this._f0;
+            double d1 = this._f1;
 
             px = ix - d0;
             py = iy - d1;
