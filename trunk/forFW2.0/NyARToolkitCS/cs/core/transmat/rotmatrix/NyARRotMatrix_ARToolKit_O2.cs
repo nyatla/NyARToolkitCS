@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
