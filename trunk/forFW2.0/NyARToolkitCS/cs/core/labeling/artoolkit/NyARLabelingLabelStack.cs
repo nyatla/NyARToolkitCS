@@ -29,64 +29,73 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-
-/**
- * このクラスは、NyARLabelingLabelの動的配列です。
- * {@link NyARLabeling_ARToolKit}が使います。
- * {@link NyARObjectStack}からの追加機能として、配列要素のソート機能があります。
- */
-public class NyARLabelingLabelStack : NyARObjectStack<NyARLabelingLabel>
 {
-	/**
-	 * コンストラクタです。
-	 * @param i_max_array_size
-	 * 配列の最大サイズ。
-	 * @throws NyARException
-	 */
-	public NyARLabelingLabelStack(int i_max_array_size)
-	{
-		super();
-		super.initInstance(i_max_array_size,NyARLabelingLabel.class);
-	}
-	/** {@link NyARLabelingLabel}要素を返します。*/
-	protected NyARLabelingLabel createElement()
-	{
-		return new NyARLabelingLabel();
-	}
-	/**
-	 * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
-	 */
-	sealed public void sortByArea()
-	{
-		int len=this._length;
-		if(len<1){
-			return;
-		}
-		int h = len *13/10;
-		NyARLabelingLabel[] item=this._items;
-		for(;;){
-		    int swaps = 0;
-		    for (int i = 0; i + h < len; i++) {
-		        if (item[i + h].area > item[i].area) {
-		            sealed NyARLabelingLabel temp = item[i + h];
-		            item[i + h] = item[i];
-		            item[i] = temp;
-		            swaps++;
-		        }
-		    }
-		    if (h == 1) {
-		        if (swaps == 0){
-		        	break;
-		        }
-		    }else{
-		        h=h*10/13;
-		    }
-		}		
-	}	
+
+
+
+
+
+
+    /**
+     * このクラスは、NyARLabelingLabelの動的配列です。
+     * {@link NyARLabeling_ARToolKit}が使います。
+     * {@link NyARObjectStack}からの追加機能として、配列要素のソート機能があります。
+     */
+    public class NyARLabelingLabelStack : NyARObjectStack<NyARLabelingLabel>
+    {
+        /**
+         * コンストラクタです。
+         * @param i_max_array_size
+         * 配列の最大サイズ。
+         * @
+         */
+        public NyARLabelingLabelStack(int i_max_array_size)
+        {
+            super();
+            super.initInstance(i_max_array_size, NyARLabelingLabel);
+        }
+        /** {@link NyARLabelingLabel}要素を返します。*/
+        protected NyARLabelingLabel createElement()
+        {
+            return new NyARLabelingLabel();
+        }
+        /**
+         * この関数は、配列を{@link NyARLabelingLabel#area}でソートします。
+         */
+        public sealed override void sortByArea()
+        {
+            int len = this._length;
+            if (len < 1)
+            {
+                return;
+            }
+            int h = len * 13 / 10;
+            NyARLabelingLabel[] item = this._items;
+            for (; ; )
+            {
+                int swaps = 0;
+                for (int i = 0; i + h < len; i++)
+                {
+                    if (item[i + h].area > item[i].area)
+                    {
+                        const NyARLabelingLabel temp = item[i + h];
+                        item[i + h] = item[i];
+                        item[i] = temp;
+                        swaps++;
+                    }
+                }
+                if (h == 1)
+                {
+                    if (swaps == 0)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    h = h * 10 / 13;
+                }
+            }
+        }
+    }
 }
-	

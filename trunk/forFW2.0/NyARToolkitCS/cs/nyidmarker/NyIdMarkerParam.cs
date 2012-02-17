@@ -24,19 +24,20 @@
  */
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
-    
-/**
- * このクラスは、NyIdマーカを抽出した時の画像処理パラメータを格納します。
- * {@link NyIdMarkerPickup#pickFromRaster}関数の返却値を受け取るために使います。
- */
-public class NyIdMarkerParam
-{
-	/**
-	 * ARToolKit準拠のマーカの方位値です。
-	 */
-	public int direction;
-	/**
-	 * マーカから求められたラべリング用閾値です。
-	 */
-	public int threshold; 
+
+    /**
+     * このクラスは、NyIdマーカを抽出した時の画像処理パラメータを格納します。
+     * {@link NyIdMarkerPickup#pickFromRaster}関数の返却値を受け取るために使います。
+     */
+    public class NyIdMarkerParam
+    {
+        /**
+         * ARToolKit準拠のマーカの方位値です。
+         */
+        public int direction;
+        /**
+         * マーカから求められたラべリング用閾値です。
+         */
+        public int threshold;
+    }
 }

@@ -29,142 +29,149 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-/**
- * このクラスは、ヒストグラムを格納するデータ型
- */
-public class NyARHistogram
 {
-	/** ヒストグラムを格納する配列です。
-	 * <p>注意 - 配列の長さ({@link #data})と{@link #length}の意味は異なります。
-	 * ヒストグラムの解像度に、この配列の長さを使わないでください。</p>
-	 */
-	public sealed int[] data;
-	/** ヒストグラムの解像度です。
-	 * {@link #data}配列の0から{@link #length}-1までの要素が、アクセス可能な要素です。
-	 */
-	public int length;
-	/**
-	 * ヒストグラムの合計値です。
-	 * ヒストグラム分析器は、ここにヒストグラム要素の合計値を書込みます。
-	 */
-	public int total_of_data;
-	
-	
-	/**
-	 * コンストラクタです。
-	 * ヒストグラムの解像度を指定してインスタンスを作ります。
-	 * @param i_length
-	 * ヒストグラムの解像度値。通常は256を指定してください。
-	 */
-	public NyARHistogram(int i_length)
-	{
-		this.data=new int[i_length];
-		this.length=i_length;
-		this.total_of_data=0;
-	}
-	/**
-	 * この関数は、ヒストグラム要素の、i_stからi_edまでの区間の、合計値を返します。
-	 * @param i_st
-	 * 集計開始点のインデクス
-	 * @param i_ed
-	 * 集計終了点のインデクス
-	 * @return
-	 * ヒストグラムの合計値
-	 */
-	public sealed int getTotal(int i_st,int i_ed)
-	{
-		assert(i_st<i_ed && i_ed<this.length);
-		int result=0;
-		int[] s=this.data;
-		for(int i=i_st;i<=i_ed;i++){
-			result+=s[i];
-		}
-		return result;
-	}
-	/**
-	 * この関数は、指定したインデクス以下のヒストグラム要素を0にします。
-	 *　実行結果は、{@link #total_of_data}に反映されます。
-	 * @param i_pos
-	 * 操作するヒストグラム要素のインデクス値。
-	 */
-	public void lowCut(int i_pos)
-	{
-		int s=0;
-		for(int i=0;i<i_pos;i++){
-			s+=this.data[i];
-			this.data[i]=0;
-		}
-		this.total_of_data-=s;
-	}
-	/**
-	 * この関数は、指定したインデクス以上のヒストグラム要素を0にします。
-	 *　実行結果は、{@link #total_of_data}に反映されます。
-	 * @param i_pos
-	 * 操作するヒストグラム要素のインデクス値。
-	 */
-	public void highCut(int i_pos)
-	{
-		int s=0;
-		for(int i=this.length-1;i>=i_pos;i--){
-			s+=this.data[i];
-			this.data[i]=0;
-		}
-		this.total_of_data-=s;
-	}
-	/**
-	 * この関数は、ヒストグラム要素の中で最小の要素のインデクス番号を返します。
-	 * @return
-	 * 最小要素のインデクス番号
-	 */
-	public int getMinSample()
-	{
-		int[] data=this.data;
-		int ret=this.length-1;
-		int min=data[ret];
-		for(int i=this.length-2;i>=0;i--)
-		{
-			if(data[i]<min){
-				min=data[i];
-				ret=i;
-			}
-		}
-		return ret;
-	}
-	/**
-	 * この関数は、ヒストグラム要素の中で最小の要素値を返します。
-	 * @return
-	 * 最小要素の値
-	 */
-	public int getMinData()
-	{
-		return this.data[this.getMinSample()];
-	}
-	/**
-	 * この関数は、ヒストグラム要素全体の平均値を計算します。
-	 * @return
-	 * ヒストグラム要素の平均値
-	 */
-	public int getAverage()
-	{
-		long sum=0;
-		for(int i=this.length-1;i>=0;i--)
-		{
-			sum+=this.data[i]*i;
-		}
-		return (int)(sum/this.total_of_data);
-	}
-	/**
-	 * この関数は、ヒストグラムを初期化します。
-	 */
-	public sealed void reset()
-	{
-		int[] d=this.data;
-		for(int i=this.length-1;i>=0;i--){
-			d[i]=0;
-		}
-		this.total_of_data=0;
-	}
-	
+
+
+    /**
+     * このクラスは、ヒストグラムを格納するデータ型
+     */
+    public class NyARHistogram
+    {
+        /** ヒストグラムを格納する配列です。
+         * <p>注意 - 配列の長さ({@link #data})と{@link #length}の意味は異なります。
+         * ヒストグラムの解像度に、この配列の長さを使わないでください。</p>
+         */
+        public int[] data;
+        /** ヒストグラムの解像度です。
+         * {@link #data}配列の0から{@link #length}-1までの要素が、アクセス可能な要素です。
+         */
+        public int length;
+        /**
+         * ヒストグラムの合計値です。
+         * ヒストグラム分析器は、ここにヒストグラム要素の合計値を書込みます。
+         */
+        public int total_of_data;
+
+
+        /**
+         * コンストラクタです。
+         * ヒストグラムの解像度を指定してインスタンスを作ります。
+         * @param i_length
+         * ヒストグラムの解像度値。通常は256を指定してください。
+         */
+        public NyARHistogram(int i_length)
+        {
+            this.data = new int[i_length];
+            this.length = i_length;
+            this.total_of_data = 0;
+        }
+        /**
+         * この関数は、ヒストグラム要素の、i_stからi_edまでの区間の、合計値を返します。
+         * @param i_st
+         * 集計開始点のインデクス
+         * @param i_ed
+         * 集計終了点のインデクス
+         * @return
+         * ヒストグラムの合計値
+         */
+        public int getTotal(int i_st, int i_ed)
+        {
+            Debug.Assert(i_st < i_ed && i_ed < this.length);
+            int result = 0;
+            int[] s = this.data;
+            for (int i = i_st; i <= i_ed; i++)
+            {
+                result += s[i];
+            }
+            return result;
+        }
+        /**
+         * この関数は、指定したインデクス以下のヒストグラム要素を0にします。
+         *　実行結果は、{@link #total_of_data}に反映されます。
+         * @param i_pos
+         * 操作するヒストグラム要素のインデクス値。
+         */
+        public void lowCut(int i_pos)
+        {
+            int s = 0;
+            for (int i = 0; i < i_pos; i++)
+            {
+                s += this.data[i];
+                this.data[i] = 0;
+            }
+            this.total_of_data -= s;
+        }
+        /**
+         * この関数は、指定したインデクス以上のヒストグラム要素を0にします。
+         *　実行結果は、{@link #total_of_data}に反映されます。
+         * @param i_pos
+         * 操作するヒストグラム要素のインデクス値。
+         */
+        public void highCut(int i_pos)
+        {
+            int s = 0;
+            for (int i = this.length - 1; i >= i_pos; i--)
+            {
+                s += this.data[i];
+                this.data[i] = 0;
+            }
+            this.total_of_data -= s;
+        }
+        /**
+         * この関数は、ヒストグラム要素の中で最小の要素のインデクス番号を返します。
+         * @return
+         * 最小要素のインデクス番号
+         */
+        public int getMinSample()
+        {
+            int[] data = this.data;
+            int ret = this.length - 1;
+            int min = data[ret];
+            for (int i = this.length - 2; i >= 0; i--)
+            {
+                if (data[i] < min)
+                {
+                    min = data[i];
+                    ret = i;
+                }
+            }
+            return ret;
+        }
+        /**
+         * この関数は、ヒストグラム要素の中で最小の要素値を返します。
+         * @return
+         * 最小要素の値
+         */
+        public int getMinData()
+        {
+            return this.data[this.getMinSample()];
+        }
+        /**
+         * この関数は、ヒストグラム要素全体の平均値を計算します。
+         * @return
+         * ヒストグラム要素の平均値
+         */
+        public int getAverage()
+        {
+            long sum = 0;
+            for (int i = this.length - 1; i >= 0; i--)
+            {
+                sum += this.data[i] * i;
+            }
+            return (int)(sum / this.total_of_data);
+        }
+        /**
+         * この関数は、ヒストグラムを初期化します。
+         */
+        public override sealed void reset()
+        {
+            int[] d = this.data;
+            for (int i = this.length - 1; i >= 0; i--)
+            {
+                d[i] = 0;
+            }
+            this.total_of_data = 0;
+        }
+
+    }
 }

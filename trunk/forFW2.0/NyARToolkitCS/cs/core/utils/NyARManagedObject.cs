@@ -23,91 +23,94 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-/**
- * このクラスは、{@link NyARManagedObjectPool}の要素の基本クラスです。
- * オブジェクトの有効性を判断するための、参照カウンタをもちます。
- * {@link NyARManagedObjectPool}に対して、オブジェクトの操作インタフェイスを提供します。
- */
-public class NyARManagedObject
 {
-	/**
-	 * このインタフェイスは、{@link NyARManagedObject}が{@link NyARManagedObjectPool}を
-	 * 所有される操作する関数を定義します。
-	 */
-	public interface INyARManagedObjectPoolOperater
-	{
-		/**
-		 * この関数は、指定したオブジェクトを、割り当て済みから未割り当てにします。
-		 * @param i_object
-		 * 未割当にするオブジェクト。
-		 */
-		public void deleteObject(NyARManagedObject i_object);	
-	}
-	
-	/** オブジェクトの参照カウンタ*/
-	private int _count;
 
-	/** 所有されるオブジェクトプールの操作インタフェイスのポインタ*/
-	private INyARManagedObjectPoolOperater _pool_operater;
-	
-	/**
-	 * コンストラクタです。
-	 * 所有される{@link NyARManagedObjectPool}を指定して、インスタンスを作成します。
-	 * この関数は、{@link NyARManagedObjectPool#createElement}関数が呼び出します。ユーザが使うことはありません。
-	 * @param i_ref_pool_operator
-	 * このオブジェクトの所有者の持つ、操作インタフェイス
-	 */
-	protected NyARManagedObject(INyARManagedObjectPoolOperater i_ref_pool_operator)
-	{
-		this._count=0;
-		this._pool_operater=i_ref_pool_operator;
-	}
-	/**
-	 * この関数は、オブジェクトを初期状態にします。
-	 * この関数は、{@link NyARManagedObjectPool}が呼び出します。ユーザが呼び出すことはありません。
-	 * @return
-	 * このオブジェクトを初期化したオブジェクト。
-	 */
-	public sealed NyARManagedObject initObject()
-	{
-		assert(this._count==0);
-		this._count=1;
-		return this;
-	}
-	/**
-	 * この関数は、オブジェクトの参照カウンタを1加算します。
-	 * @return
-	 * このオブジェクトの参照値。
-	 */
-	public sealed NyARManagedObject referenceObject()
-	{
-		assert(this._count>0);
-		this._count++;
-		return this;
-	}
-	/**
-	 * この関数は、オブジェクトの参照カウンタを1減算します。
-	 * 参照カウンタが0になると、オブジェクトは未参照状態となり、自動的に{@link NyARManagedObjectPool}へ返却されます。
-	 * @return
-	 * 減算後の参照カウンタ
-	 */
-	public int releaseObject()
-	{
-		assert(this._count>0);
-		this._count--;
-		if(this._count==0){
-			this._pool_operater.deleteObject(this);
-		}
-		return this._count;
-	}
-	/**
-	 * この関数は、現在のインスタンスの参照カウンタ値を返します。
-	 * @return
-	 * 参照カウンタ値
-	 */
-	public sealed int getCount()
-	{
-		return this._count;
-	}
+    /**
+     * このクラスは、{@link NyARManagedObjectPool}の要素の基本クラスです。
+     * オブジェクトの有効性を判断するための、参照カウンタをもちます。
+     * {@link NyARManagedObjectPool}に対して、オブジェクトの操作インタフェイスを提供します。
+     */
+    public class NyARManagedObject
+    {
+        /**
+         * このインタフェイスは、{@link NyARManagedObject}が{@link NyARManagedObjectPool}を
+         * 所有される操作する関数を定義します。
+         */
+        public interface INyARManagedObjectPoolOperater
+        {
+            /**
+             * この関数は、指定したオブジェクトを、割り当て済みから未割り当てにします。
+             * @param i_object
+             * 未割当にするオブジェクト。
+             */
+            void deleteObject(NyARManagedObject i_object);
+        }
+
+        /** オブジェクトの参照カウンタ*/
+        private int _count;
+
+        /** 所有されるオブジェクトプールの操作インタフェイスのポインタ*/
+        private INyARManagedObjectPoolOperater _pool_operater;
+
+        /**
+         * コンストラクタです。
+         * 所有される{@link NyARManagedObjectPool}を指定して、インスタンスを作成します。
+         * この関数は、{@link NyARManagedObjectPool#createElement}関数が呼び出します。ユーザが使うことはありません。
+         * @param i_ref_pool_operator
+         * このオブジェクトの所有者の持つ、操作インタフェイス
+         */
+        protected NyARManagedObject(INyARManagedObjectPoolOperater i_ref_pool_operator)
+        {
+            this._count = 0;
+            this._pool_operater = i_ref_pool_operator;
+        }
+        /**
+         * この関数は、オブジェクトを初期状態にします。
+         * この関数は、{@link NyARManagedObjectPool}が呼び出します。ユーザが呼び出すことはありません。
+         * @return
+         * このオブジェクトを初期化したオブジェクト。
+         */
+        public NyARManagedObject initObject()
+        {
+            Debug.Assert(this._count == 0);
+            this._count = 1;
+            return this;
+        }
+        /**
+         * この関数は、オブジェクトの参照カウンタを1加算します。
+         * @return
+         * このオブジェクトの参照値。
+         */
+        public NyARManagedObject referenceObject()
+        {
+            Debug.Assert(this._count > 0);
+            this._count++;
+            return this;
+        }
+        /**
+         * この関数は、オブジェクトの参照カウンタを1減算します。
+         * 参照カウンタが0になると、オブジェクトは未参照状態となり、自動的に{@link NyARManagedObjectPool}へ返却されます。
+         * @return
+         * 減算後の参照カウンタ
+         */
+        public int releaseObject()
+        {
+            Debug.Assert(this._count > 0);
+            this._count--;
+            if (this._count == 0)
+            {
+                this._pool_operater.deleteObject(this);
+            }
+            return this._count;
+        }
+        /**
+         * この関数は、現在のインスタンスの参照カウンタ値を返します。
+         * @return
+         * 参照カウンタ値
+         */
+        public int getCount()
+        {
+            return this._count;
+        }
+    }
 }

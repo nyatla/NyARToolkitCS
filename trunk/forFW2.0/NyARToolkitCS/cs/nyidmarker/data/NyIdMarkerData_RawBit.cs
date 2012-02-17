@@ -25,42 +25,46 @@
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
 
-/**
- * このクラスは、RawBitタイプのデータを格納します。
- * RawBitタイプのデータは、NyIdマーカのデータパケットをそのまま配列にするだけです。
- */
-public class NyIdMarkerData_RawBit : INyIdMarkerData
-{
-	/** パケットデータを格納した配列です。0から{@link #length}-1番目までの要素が有効です。*/
-	public sealed int[] packet=new int[22];
-	/** 有効なデータ長です。*/
-	public int length;
-	/**
-	 * この関数は、i_targetのマーカデータとインスタンスのデータを比較します。
-	 * 引数には、{@link NyIdMarkerData_RawBit}型のオブジェクトを指定してください。
-	 */
-	public bool isEqual(INyIdMarkerData i_target)
-	{
-		NyIdMarkerData_RawBit s=(NyIdMarkerData_RawBit)i_target;
-		if(s.length!=this.length){
-			return false;
-		}
-		for(int i=s.length-1;i>=0;i--){
-			if(s.packet[i]!=this.packet[i]){
-				return false;
-			}
-		}
-		return true;
-	}
-	/**
-	 * この関数は、i_sourceからインスタンスにマーカデータをコピーします。
-	 * 引数には、{@link NyIdMarkerData_RawBit}型のオブジェクトを指定してください。
-	 */	
-	public void copyFrom(INyIdMarkerData i_source)
-	{
-		sealed NyIdMarkerData_RawBit s=(NyIdMarkerData_RawBit)i_source;
-		System.arraycopy(s.packet,0,this.packet,0,s.length);
-		this.length=s.length;
-		return;
-	}
+    /**
+     * このクラスは、RawBitタイプのデータを格納します。
+     * RawBitタイプのデータは、NyIdマーカのデータパケットをそのまま配列にするだけです。
+     */
+    public class NyIdMarkerData_RawBit : INyIdMarkerData
+    {
+        /** パケットデータを格納した配列です。0から{@link #length}-1番目までの要素が有効です。*/
+        public readonly int[] packet = new int[22];
+        /** 有効なデータ長です。*/
+        public int length;
+        /**
+         * この関数は、i_targetのマーカデータとインスタンスのデータを比較します。
+         * 引数には、{@link NyIdMarkerData_RawBit}型のオブジェクトを指定してください。
+         */
+        public bool isEqual(INyIdMarkerData i_target)
+        {
+            NyIdMarkerData_RawBit s = (NyIdMarkerData_RawBit)i_target;
+            if (s.length != this.length)
+            {
+                return false;
+            }
+            for (int i = s.length - 1; i >= 0; i--)
+            {
+                if (s.packet[i] != this.packet[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /**
+         * この関数は、i_sourceからインスタンスにマーカデータをコピーします。
+         * 引数には、{@link NyIdMarkerData_RawBit}型のオブジェクトを指定してください。
+         */
+        public void copyFrom(INyIdMarkerData i_source)
+        {
+            const NyIdMarkerData_RawBit s = (NyIdMarkerData_RawBit)i_source;
+            System.arraycopy(s.packet, 0, this.packet, 0, s.length);
+            this.length = s.length;
+            return;
+        }
+    }
 }

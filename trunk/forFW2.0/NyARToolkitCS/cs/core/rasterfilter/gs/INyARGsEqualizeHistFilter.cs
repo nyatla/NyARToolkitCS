@@ -22,52 +22,51 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-package jp.nyatla.nyartoolkit.core.rasterfilter.gs;
-
-import jp.nyatla.nyartoolkit.NyARException;
-import jp.nyatla.nyartoolkit.core.raster.INyARGrayscaleRaster;
-import jp.nyatla.nyartoolkit.core.rasterdriver.INyARHistogramFromRaster;
-import jp.nyatla.nyartoolkit.core.types.NyARHistogram;
-
-/**
- * このクラスは、ヒストグラムの平滑化フィルタです。
- */
-public interface INyARGsEqualizeHistFilter
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-	public void doFilter(int i_hist_interval,INyARGrayscaleRaster i_output) throws NyARException;
-}
+
+
+    /**
+     * このクラスは、ヒストグラムの平滑化フィルタです。
+     */
+    public interface INyARGsEqualizeHistFilter
+    {
+        void doFilter(int i_hist_interval, INyARGrayscaleRaster i_output);
+    }
 
 
 
 
-class NyARGsEqualizeHistFilter_Any implements INyARGsEqualizeHistFilter
-{
-	private INyARGsCustomToneTableFilter _tone_table;
-	private INyARHistogramFromRaster _histdrv;
-	private NyARHistogram _histogram=new NyARHistogram(256);
-	private int[] _hist=new int[256];
+    class NyARGsEqualizeHistFilter_Any : INyARGsEqualizeHistFilter
+    {
+        private INyARGsCustomToneTableFilter _tone_table;
+        private INyARHistogramFromRaster _histdrv;
+        private NyARHistogram _histogram = new NyARHistogram(256);
+        private readonly int[] _hist = new int[256];
 
-	public NyARGsEqualizeHistFilter_Any(INyARGrayscaleRaster i_raster) throws NyARException
-	{
-		this._tone_table=NyARGsFilterFactory.createCustomToneTableFilter(i_raster);
-		this._histdrv=(INyARHistogramFromRaster) i_raster.createInterface(INyARHistogramFromRaster.class);
-	}
-	public void doFilter(int i_hist_interval,INyARGrayscaleRaster i_output) throws NyARException
-	{
-		//ヒストグラムを得る
-		NyARHistogram hist=this._histogram;
-		this._histdrv.createHistogram(i_hist_interval, hist);
-		//変換テーブルを作成
-		int hist_total=this._histogram.total_of_data;
-		int min=hist.getMinData();
-		int hist_size=this._histogram.length;
-		int sum=0;
-		for(int i=0;i<hist_size;i++){
-			sum+=hist.data[i];
-			this._hist[i]=(int)((sum-min)*(hist_size-1)/((hist_total-min)));
-		}
-		//変換
-		this._tone_table.doFilter(this._hist,i_output);
-		return;
-	}
+        public NyARGsEqualizeHistFilter_Any(INyARGrayscaleRaster i_raster)
+        {
+            this._tone_table = NyARGsFilterFactory.createCustomToneTableFilter(i_raster);
+            this._histdrv = (INyARHistogramFromRaster)i_raster.createInterface(INyARHistogramFromRaster);
+        }
+        public void doFilter(int i_hist_interval, INyARGrayscaleRaster i_output)
+        {
+            //ヒストグラムを得る
+            NyARHistogram hist = this._histogram;
+            this._histdrv.createHistogram(i_hist_interval, hist);
+            //変換テーブルを作成
+            int hist_total = this._histogram.total_of_data;
+            int min = hist.getMinData();
+            int hist_size = this._histogram.length;
+            int sum = 0;
+            for (int i = 0; i < hist_size; i++)
+            {
+                sum += hist.data[i];
+                this._hist[i] = (int)((sum - min) * (hist_size - 1) / ((hist_total - min)));
+            }
+            //変換
+            this._tone_table.doFilter(this._hist, i_output);
+            return;
+        }
+    }
 }

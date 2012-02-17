@@ -23,163 +23,169 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-/**
- * このクラスは、オブジェクトを格納する可変長配列です。
- * 配列に、オブジェクトの実態を所有します。
- * このクラスの実体化は禁止しています。継承して使ってください。
- * <p>継承クラスの実装方法 - 
- * 配列要素の生成シーケンスを実装するには、{@link #createElement}をオーバライドして、
- * コンストラクタから{@link #initInstance}を呼び出します。
- * {@link #initInstance}には２種類の関数があります。要素生成パラメータの有無で、どちらかを選択して呼び出してください。
- * </p>
- * @param <T>
- * 配列型を指定します。
- */
-public class NyARObjectStack<T> : NyARPointerStack<T>
 {
-	/**
-	 * コンストラクタです。
-	 * クラスの実体化を禁止するために宣言しています。
-	 * 継承クラスから呼び出してください。
-	 * @throws NyARException
-	 */
-	protected NyARObjectStack()
-	{
-		return;
-	}
-	/**
-	 * この関数は、インスタンスを初期化します。
-	 * 継承クラスのコンストラクタから呼び出します。
-	 * {@link #initInstance(int, Class, Object)}との違いは、オブジェクトの生成に引数を渡すかどうかです。
-	 * 引数が必要な時は、こちらの関数を使って、{@link #createElement()}をオーバライドします。
-	 * @param i_length
-	 * 配列の最大長さ
-	 * @param i_element_type
-	 * 配列型を示すクラスタイプ
-	 * @throws NyARException
-	 */
-	protected void initInstance(int i_length,Class<T> i_element_type)
-	{
-		//領域確保
-		super.initInstance(i_length,i_element_type);
-		for (int i =0; i < i_length; i++){
-			this._items[i] =createElement();
-		}
-		return;
-	}
-	/**
-	 * この関数は、インスタンスを初期化します。
-	 * 継承クラスのコンストラクタから呼び出します。
-	 * {@link #initInstance(int, Class)}との違いは、オブジェクトの生成に引数を渡すかどうかです。
-	 * 引数が必要な時は、こちらの関数を使って、{@link #createElement(Object)}をオーバライドします。
-	 * @param i_length
-	 * 配列の最大長さ
-	 * @param i_element_type
-	 * 配列型を示すクラスタイプ
-	 * @param i_param
-	 * 配列要素を生成するときに渡すパラメータ
-	 * @throws NyARException
-	 */
-	protected void initInstance(int i_length,Class<T> i_element_type,Object i_param)
-	{
-		//領域確保
-		super.initInstance(i_length,i_element_type);
-		for (int i =0; i < i_length; i++){
-			this._items[i] =createElement(i_param);
-		}
-		return;
-	}
-	/**
-	 * この関数は、配列要素のオブジェクトを１個作ります。
-	 * {@link #initInstance(int, Class)}から呼び出されます。
-	 * 継承クラスでオーバライドして、要素オブジェクトを１個生成して返す処理を実装してください。
-	 * @return
-	 * 新しいオブジェクトを返してください。
-	 * @throws NyARException
-	 */
-	protected T createElement()
-	{
-		throw new NyARException();
-	}
-	/**
-	 * この関数は、配列要素のオブジェクトを(引数付きで)１個作ります。
-	 * {@link #initInstance(int, Class, Object)}から呼び出されます。
-	 * 継承クラスでオーバライドして、要素オブジェクトを１個生成して返す処理を実装してください。
-	 * @return
-	 * 新しいオブジェクトを返してください。
-	 * @throws NyARException
-	 */
-	protected T createElement(Object i_param)
-	{
-		throw new NyARException();
-	}
-	
-	/**
-	 * この関数は、配列から新しい要素を１個わりあてて返します。
-	 * 関数が成功すると、有効な配列長が+1されます。
-	 * @return
-	 * 成功すると、新しい配列要素。
-	 * 失敗するとnull
-	 * @throws NyARException
-	 */
-	public sealed T prePush()
-	{
-		// 必要に応じてアロケート
-		if (this._length >= this._items.length){
-			return null;
-		}
-		// 使用領域を+1して、予約した領域を返す。
-		T ret = this._items[this._length];
-		this._length++;
-		return ret;
-	}
-	/**
-	 * この関数は機能しません。{@link #prePush}を使って下さい。
-	 */
-	public T push(T i_object)
-	{
-		return null;
-	}
-	/**
-	 * この関数は、配列の有効長を設定します。
-	 * @param i_reserv_length
-	 * 設定するサイズ
-	 */
-	public sealed void init(int i_reserv_length)
-	{
-		// 必要に応じてアロケート
-		if (i_reserv_length >= this._items.length){
-			throw new NyARException();
-		}
-		this._length=i_reserv_length;
-	}
-	//override
-	public sealed void remove(int i_index)
-	{
-		if(i_index!=this._length-1){
-			T item=this._items[i_index];
-			//要素をシフト
-			super.remove(i_index);
-			//外したオブジェクトを末端に取り付ける
-			this._items[i_index]=item;
-		}
-		this._length--;
-	}
-	//override
-	public sealed void removeIgnoreOrder(int i_index)
-	{
-		assert(this._length>i_index && i_index>=0);
-		if(i_index!=this._length-1){
-			//削除対象のオブジェクトを取り外す
-			T item=this._items[i_index];
-			//値の交換
-			this._items[i_index]=this._items[this._length-1];
-			this._items[this._length-1]=item;
-		}
-		this._length--;
-	}
+
+
+
+
+    /**
+     * このクラスは、オブジェクトを格納する可変長配列です。
+     * 配列に、オブジェクトの実態を所有します。
+     * このクラスの実体化は禁止しています。継承して使ってください。
+     * <p>継承クラスの実装方法 - 
+     * 配列要素の生成シーケンスを実装するには、{@link #createElement}をオーバライドして、
+     * コンストラクタから{@link #initInstance}を呼び出します。
+     * {@link #initInstance}には２種類の関数があります。要素生成パラメータの有無で、どちらかを選択して呼び出してください。
+     * </p>
+     * @param <T>
+     * 配列型を指定します。
+     */
+    public class NyARObjectStack<T> : NyARPointerStack<T>
+    {
+        /**
+         * コンストラクタです。
+         * クラスの実体化を禁止するために宣言しています。
+         * 継承クラスから呼び出してください。
+         * @
+         */
+        protected NyARObjectStack()
+        {
+            return;
+        }
+        /**
+         * この関数は、インスタンスを初期化します。
+         * 継承クラスのコンストラクタから呼び出します。
+         * {@link #initInstance(int, Class, Object)}との違いは、オブジェクトの生成に引数を渡すかどうかです。
+         * 引数が必要な時は、こちらの関数を使って、{@link #createElement()}をオーバライドします。
+         * @param i_length
+         * 配列の最大長さ
+         * @
+         */
+        protected void initInstance(int i_length)
+        {
+            //領域確保
+            super.initInstance(i_length);
+            for (int i = 0; i < i_length; i++)
+            {
+                this._items[i] = createElement();
+            }
+            return;
+        }
+        /**
+         * この関数は、インスタンスを初期化します。
+         * 継承クラスのコンストラクタから呼び出します。
+         * {@link #initInstance(int, Class)}との違いは、オブジェクトの生成に引数を渡すかどうかです。
+         * 引数が必要な時は、こちらの関数を使って、{@link #createElement(Object)}をオーバライドします。
+         * @param i_length
+         * 配列の最大長さ
+         * @param i_element_type
+         * 配列型を示すクラスタイプ
+         * @param i_param
+         * 配列要素を生成するときに渡すパラメータ
+         * @
+         */
+        protected void initInstance(int i_length, object i_param)
+        {
+            //領域確保
+            super.initInstance(i_length);
+            for (int i = 0; i < i_length; i++)
+            {
+                this._items[i] = createElement(i_param);
+            }
+            return;
+        }
+        /**
+         * この関数は、配列要素のオブジェクトを１個作ります。
+         * {@link #initInstance(int, Class)}から呼び出されます。
+         * 継承クラスでオーバライドして、要素オブジェクトを１個生成して返す処理を実装してください。
+         * @return
+         * 新しいオブジェクトを返してください。
+         * @
+         */
+        protected T createElement()
+        {
+            throw new NyARException();
+        }
+        /**
+         * この関数は、配列要素のオブジェクトを(引数付きで)１個作ります。
+         * {@link #initInstance(int, Class, object)}から呼び出されます。
+         * 継承クラスでオーバライドして、要素オブジェクトを１個生成して返す処理を実装してください。
+         * @return
+         * 新しいオブジェクトを返してください。
+         * @
+         */
+        protected T createElement(object i_param)
+        {
+            throw new NyARException();
+        }
+
+        /**
+         * この関数は、配列から新しい要素を１個わりあてて返します。
+         * 関数が成功すると、有効な配列長が+1されます。
+         * @return
+         * 成功すると、新しい配列要素。
+         * 失敗するとnull
+         * @
+         */
+        public T prePush()
+        {
+            // 必要に応じてアロケート
+            if (this._length >= this._items.length)
+            {
+                return null;
+            }
+            // 使用領域を+1して、予約した領域を返す。
+            T ret = this._items[this._length];
+            this._length++;
+            return ret;
+        }
+        /**
+         * この関数は機能しません。{@link #prePush}を使って下さい。
+         */
+        public T push(T i_object)
+        {
+            return null;
+        }
+        /**
+         * この関数は、配列の有効長を設定します。
+         * @param i_reserv_length
+         * 設定するサイズ
+         */
+        public void init(int i_reserv_length)
+        {
+            // 必要に応じてアロケート
+            if (i_reserv_length >= this._items.length)
+            {
+                throw new NyARException();
+            }
+            this._length = i_reserv_length;
+        }
+        //override
+        public void remove(int i_index)
+        {
+            if (i_index != this._length - 1)
+            {
+                T item = this._items[i_index];
+                //要素をシフト
+                super.remove(i_index);
+                //外したオブジェクトを末端に取り付ける
+                this._items[i_index] = item;
+            }
+            this._length--;
+        }
+        //override
+        public void removeIgnoreOrder(int i_index)
+        {
+            Debug.Assert(this._length > i_index && i_index >= 0);
+            if (i_index != this._length - 1)
+            {
+                //削除対象のオブジェクトを取り外す
+                T item = this._items[i_index];
+                //値の交換
+                this._items[i_index] = this._items[this._length - 1];
+                this._items[this._length - 1] = item;
+            }
+            this._length--;
+        }
+    }
 }

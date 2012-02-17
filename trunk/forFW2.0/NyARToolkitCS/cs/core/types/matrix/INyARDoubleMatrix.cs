@@ -23,24 +23,26 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-/**
- * このインタフェイスは、行列クラスに共通な関数を定義します。
- */
-public interface INyARDoubleMatrix
 {
-	/**
-	 * この関数は、配列の内容を行列にセットします。
-	 * 実装クラスでは、配列の内容をインスタンスにセットする処理を実装してください。
-	 * @param i_value
-	 * セットする配列。
-	 */
-	public void setValue(double[] i_value);
-	/**
-	 * この関数は、配列の内容を行列に返します。
-	 * 実装クラスでは、インスタンスの内容を配列に返す処理を実装してください。
-	 * @param o_value
-	 * 値を受け取る配列
-	 */
-	public void getValue(double[] o_value);
+    /**
+     * このインタフェイスは、行列クラスに共通な関数を定義します。
+     */
+    public interface INyARDoubleMatrix
+    {
+        /**
+         * この関数は、配列の内容を行列にセットします。
+         * 実装クラスでは、配列の内容をインスタンスにセットする処理を実装してください。
+         * @param i_value
+         * セットする配列。
+         */
+        void setValue(double[] i_value);
+        /**
+         * この関数は、配列の内容を行列に返します。
+         * 実装クラスでは、インスタンスの内容を配列に返す処理を実装してください。
+         * @param o_value
+         * 値を受け取る配列
+         */
+        void getValue(double[] o_value);
 
+    }
 }

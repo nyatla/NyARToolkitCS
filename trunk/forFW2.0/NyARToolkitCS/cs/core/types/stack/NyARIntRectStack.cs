@@ -29,32 +29,34 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-/**
- * このクラスは、{@link NyARIntRect}型の可変長配列です。
- */
-public class NyARIntRectStack : NyARObjectStack<NyARIntRect>
 {
-	/**
-	 * コンストラクタです。
-	 * 配列の最大長さを指定して、インスタンスを生成します。
-	 * @param i_length
-	 * 配列の最大長さ
-	 * @throws NyARException
-	 */	
-	public NyARIntRectStack(int i_length)
-	{
-		super.initInstance(i_length,NyARIntRect.class);
-	}
-	/**
-	 * この関数は、配列要素を作成します。
-	 */	
-	protected NyARIntRect createElement()
-	{
-		return new NyARIntRect();
-	}
-	
+
+
+
+
+    /**
+     * このクラスは、{@link NyARIntRect}型の可変長配列です。
+     */
+    public class NyARIntRectStack : NyARObjectStack<NyARIntRect>
+    {
+        /**
+         * コンストラクタです。
+         * 配列の最大長さを指定して、インスタンスを生成します。
+         * @param i_length
+         * 配列の最大長さ
+         * @
+         */
+        public NyARIntRectStack(int i_length)
+        {
+            super.initInstance(i_length, NyARIntRect);
+        }
+        /**
+         * この関数は、配列要素を作成します。
+         */
+        protected NyARIntRect createElement()
+        {
+            return new NyARIntRect();
+        }
+
+    }
 }

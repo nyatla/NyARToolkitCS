@@ -23,23 +23,25 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-/**
- * このインタフェイスは、{@link INyARRaster}に、カラー画像へアクセスする機能を追加します。
- */
-public interface INyARRgbRaster : INyARRaster
 {
-	/**
-	 * この関数は、画素形式によらない画素アクセスを行うオブジェクトへの参照値を返します。
-	 * 実装クラスでは、所有するバッファに関連したラスタ読出しオブジェクトを返す処理を実装してください。
-	 * @return
-	 * オブジェクトの参照値
-	 * @throws NyARException
-	 */
-	public INyARRgbPixelDriver getRgbPixelDriver();
 
+
+
+
+
+    /**
+     * このインタフェイスは、{@link INyARRaster}に、カラー画像へアクセスする機能を追加します。
+     */
+    public interface INyARRgbRaster : INyARRaster
+    {
+        /**
+         * この関数は、画素形式によらない画素アクセスを行うオブジェクトへの参照値を返します。
+         * 実装クラスでは、所有するバッファに関連したラスタ読出しオブジェクトを返す処理を実装してください。
+         * @return
+         * オブジェクトの参照値
+         * @
+         */
+        INyARRgbPixelDriver getRgbPixelDriver();
+
+    }
 }

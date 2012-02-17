@@ -23,51 +23,52 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-/**
- * このクラスは、2x2行列を格納します。
- */
-public class NyARDoubleMatrix22 : INyARDoubleMatrix
 {
-	/** 行列の要素値です。*/
-	public double m00;
-	/** 行列の要素値です。*/
-	public double m01;
-	/** 行列の要素値です。*/
-	public double m10;
-	/** 行列の要素値です。*/
-	public double m11;
-	/**
-	 * この関数は、要素数4の配列を、行列にセットします。
-	 */
-	public void setValue(double[] i_value)
+    /**
+     * このクラスは、2x2行列を格納します。
+     */
+    public class NyARDoubleMatrix22 : INyARDoubleMatrix
+    {
+        /** 行列の要素値です。*/
+        public double m00;
+        /** 行列の要素値です。*/
+        public double m01;
+        /** 行列の要素値です。*/
+        public double m10;
+        /** 行列の要素値です。*/
+        public double m11;
+        /**
+         * この関数は、要素数4の配列を、行列にセットします。
+         */
+        public void setValue(double[] i_value)
+        {
+            this.m00 = i_value[0];
+            this.m01 = i_value[1];
+            this.m10 = i_value[3];
+            this.m11 = i_value[4];
+            return;
+        }
+        /**
+         * この関数は、要素数4の配列に、行列の内容をコピーします。
+         */
+        public void getValue(double[] o_value)
+        {
+            o_value[0] = this.m00;
+            o_value[1] = this.m01;
+            o_value[3] = this.m10;
+            o_value[4] = this.m11;
+            return;
+        }
+        /**
+         * この関数は、逆行列を計算して、インスタンスにセットします。
+         * @param i_src
+         * 逆行列を計算するオブジェクト。thisを指定できます。
+         * @return
+         * 逆行列を得られると、trueを返します。
+         */
+        public bool inverse(NyARDoubleMatrix22 i_src)
 	{
-		this.m00=i_value[0];
-		this.m01=i_value[1];
-		this.m10=i_value[3];
-		this.m11=i_value[4];
-		return;
-	}
-	/**
-	 * この関数は、要素数4の配列に、行列の内容をコピーします。
-	 */
-	public void getValue(double[] o_value)
-	{
-		o_value[0]=this.m00;
-		o_value[1]=this.m01;
-		o_value[3]=this.m10;
-		o_value[4]=this.m11;
-		return;
-	}
-	/**
-	 * この関数は、逆行列を計算して、インスタンスにセットします。
-	 * @param i_src
-	 * 逆行列を計算するオブジェクト。thisを指定できます。
-	 * @return
-	 * 逆行列を得られると、trueを返します。
-	 */
-	public bool inverse(NyARDoubleMatrix22 i_src)
-	{
-		sealed double a11,a12,a21,a22;
+		const double a11,a12,a21,a22;
 		a11=i_src.m00;
 		a12=i_src.m01;
 		a21=i_src.m10;
@@ -83,13 +84,14 @@ public class NyARDoubleMatrix22 : INyARDoubleMatrix
 		this.m11=a11*det;
 		return true;
 	}
-	/**
-	 * この関数は、インスタンスに単位行列をロードします。
-	 */
-	public void loadIdentity()
-	{
-		this.m00=this.m11=1;
-		this.m01=
-		this.m10=0;
-	}	
+        /**
+         * この関数は、インスタンスに単位行列をロードします。
+         */
+        public void loadIdentity()
+        {
+            this.m00 = this.m11 = 1;
+            this.m01 =
+            this.m10 = 0;
+        }
+    }
 }

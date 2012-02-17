@@ -29,60 +29,62 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
+{
 
 
 
-/**
- * 回転行列計算用の、3x3行列
- * 計算方法はARToolKitと同じだが、ARToolKitにある不要な行列から角度を逆算する
- * 処理を省略しているため、下位12桁目の計算値が異なる。
- *
- */
-public class NyARRotMatrix_ARToolKit_O2 : NyARRotMatrix_ARToolKit
-{	
-	/**
-	 * コンストラクタです。
-	 * 参照する射影変換オブジェクトを指定して、インスタンスを生成します。
-	 * @param i_matrix
-	 * 参照する射影変換オブジェクト
-	 * @throws NyARException
-	 */
-	public NyARRotMatrix_ARToolKit_O2(NyARPerspectiveProjectionMatrix i_matrix)
-	{
-		super(i_matrix);
-		return;
-	}
-	//override
-	public sealed void setAngle(sealed double i_x, sealed double i_y, sealed double i_z)
-	{
-		sealed double sina = Math.sin(i_x);
-		sealed double cosa = Math.cos(i_x);
-		sealed double sinb = Math.sin(i_y);
-		sealed double cosb = Math.cos(i_y);
-		sealed double sinc = Math.sin(i_z);
-		sealed double cosc = Math.cos(i_z);
-		// Optimize
-		sealed double CACA = cosa * cosa;
-		sealed double SASA = sina * sina;
-		sealed double SACA = sina * cosa;
-		sealed double SASB = sina * sinb;
-		sealed double CASB = cosa * sinb;
-		sealed double SACACB = SACA * cosb;
+    /**
+     * 回転行列計算用の、3x3行列
+     * 計算方法はARToolKitと同じだが、ARToolKitにある不要な行列から角度を逆算する
+     * 処理を省略しているため、下位12桁目の計算値が異なる。
+     *
+     */
+    public class NyARRotMatrix_ARToolKit_O2 : NyARRotMatrix_ARToolKit
+    {
+        /**
+         * コンストラクタです。
+         * 参照する射影変換オブジェクトを指定して、インスタンスを生成します。
+         * @param i_matrix
+         * 参照する射影変換オブジェクト
+         * @
+         */
+        public NyARRotMatrix_ARToolKit_O2(NyARPerspectiveProjectionMatrix i_matrix)
+        {
+            super(i_matrix);
+            return;
+        }
+        //override
+        public sealed override void setAngle(double i_x, double i_y, double i_z)
+        {
+            const double sina = Math.sin(i_x);
+            const double cosa = Math.cos(i_x);
+            const double sinb = Math.sin(i_y);
+            const double cosb = Math.cos(i_y);
+            const double sinc = Math.sin(i_z);
+            const double cosc = Math.cos(i_z);
+            // Optimize
+            const double CACA = cosa * cosa;
+            const double SASA = sina * sina;
+            const double SACA = sina * cosa;
+            const double SASB = sina * sinb;
+            const double CASB = cosa * sinb;
+            const double SACACB = SACA * cosb;
 
-		this.m00 = CACA * cosb * cosc + SASA * cosc + SACACB * sinc - SACA * sinc;
-		this.m01 = -CACA * cosb * sinc - SASA * sinc + SACACB * cosc - SACA * cosc;
-		this.m02 = CASB;
-		this.m10 = SACACB * cosc - SACA * cosc + SASA * cosb * sinc + CACA * sinc;
-		this.m11 = -SACACB * sinc + SACA * sinc + SASA * cosb * cosc + CACA * cosc;
-		this.m12 = SASB;
-		this.m20 = -CASB * cosc - SASB * sinc;
-		this.m21 = CASB * sinc - SASB * cosc;
-		this.m22 = cosb;
-		//angleを逆計算せずに直接代入
-		this._angle.x=i_x;
-		this._angle.y=i_y;
-		this._angle.z=i_z;
-		return;
-	}
-	
+            this.m00 = CACA * cosb * cosc + SASA * cosc + SACACB * sinc - SACA * sinc;
+            this.m01 = -CACA * cosb * sinc - SASA * sinc + SACACB * cosc - SACA * cosc;
+            this.m02 = CASB;
+            this.m10 = SACACB * cosc - SACA * cosc + SASA * cosb * sinc + CACA * sinc;
+            this.m11 = -SACACB * sinc + SACA * sinc + SASA * cosb * cosc + CACA * cosc;
+            this.m12 = SASB;
+            this.m20 = -CASB * cosc - SASB * sinc;
+            this.m21 = CASB * sinc - SASB * cosc;
+            this.m22 = cosb;
+            //angleを逆計算せずに直接代入
+            this._angle.x = i_x;
+            this._angle.y = i_y;
+            this._angle.z = i_z;
+            return;
+        }
+
+    }
 }

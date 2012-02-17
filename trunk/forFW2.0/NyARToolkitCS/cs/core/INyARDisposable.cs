@@ -41,6 +41,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * オブジェクトの終期化のタイミングを与えます。
          * オブジェクトの終期化に必要な処理を実装しでください。
          */
-        public void dispose();
+        void dispose();
     }
 }

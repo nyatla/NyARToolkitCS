@@ -22,60 +22,62 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-/**
- * このクラスは、HSV画像を格納するラスタクラスです。
- * 内部バッファのみに対応します。
- */
-public sealed class NyARHsvRaster : NyARRaster_BasicClass
 {
 
-	private int[] _ref_buf;
-	/**
-	 * コンストラクタです。ラスタのサイズを指定して、インスタンスを生成します。
-	 * @param i_width
-	 * ラスタのサイズです。
-	 * @param i_height
-	 * ラスタのサイズです。
-	 */
-	public NyARHsvRaster(int i_width, int i_height)
-	{
-		//このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
-		super(i_width,i_height,NyARBufferType.INT1D_X7H9S8V8_32);
-		this._ref_buf = new int[i_height*i_width];
-	}
-	/**
-	 * この関数は、ラスタのバッファへの参照値を返します。
-	 * バッファの形式{@link NyARBufferType#INT1D_X7H9S8V8_32}です。
-	 */
-	public Object getBuffer()
-	{
-		return this._ref_buf;
-	}
-	/**
-	 * この関数は、インスタンスがバッファを所有するかを返します。
-	 * このクラスでは内部参照バッファのみをサポートするため、常にtrueです。
-	 */	
-	public bool hasBuffer()
-	{
-		return true;
-	}
 
-	/**
-	 * この関数は、ラスタに外部参照バッファをセットします。
-	 * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
-	 */	
-	public void wrapBuffer(Object i_ref_buf)
-	{
-		NyARException.notImplement();
-	}
-	@Override
-	public Object createInterface(Class<?> iIid)
-	{
-		throw new NyARException();
-	}	
+
+
+    /**
+     * このクラスは、HSV画像を格納するラスタクラスです。
+     * 内部バッファのみに対応します。
+     */
+    public sealed class NyARHsvRaster : NyARRaster_BasicClass
+    {
+
+        private int[] _ref_buf;
+        /**
+         * コンストラクタです。ラスタのサイズを指定して、インスタンスを生成します。
+         * @param i_width
+         * ラスタのサイズです。
+         * @param i_height
+         * ラスタのサイズです。
+         */
+        public NyARHsvRaster(int i_width, int i_height)
+        {
+            //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
+            super(i_width, i_height, NyARBufferType.INT1D_X7H9S8V8_32);
+            this._ref_buf = new int[i_height * i_width];
+        }
+        /**
+         * この関数は、ラスタのバッファへの参照値を返します。
+         * バッファの形式{@link NyARBufferType#INT1D_X7H9S8V8_32}です。
+         */
+        public object getBuffer()
+        {
+            return this._ref_buf;
+        }
+        /**
+         * この関数は、インスタンスがバッファを所有するかを返します。
+         * このクラスでは内部参照バッファのみをサポートするため、常にtrueです。
+         */
+        public bool hasBuffer()
+        {
+            return true;
+        }
+
+        /**
+         * この関数は、ラスタに外部参照バッファをセットします。
+         * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
+         */
+        public void wrapBuffer(object i_ref_buf)
+        {
+            NyARException.notImplement();
+        }
+        public object createInterface(Type iIid)
+        {
+            throw new NyARException();
+        }
+    }
 }

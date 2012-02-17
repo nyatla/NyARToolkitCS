@@ -29,27 +29,29 @@
  * 
  */
 namespace jp.nyatla.nyartoolkit.cs.core
-
-
-
-
-
-/**
- * このインタフェイスは、{@link INyARRgbRaster}に、RGBラスタから任意の４頂点で定義した領域を、自由変形して格納する関数を追加します。
- * 元々は、ARToolKitにある、画像からパターンを取得する処理用の関数です。
- */
-public interface INyARColorPatt : INyARRgbRaster
 {
-	/**
-	 * この関数は、画像の４頂点でかこまれる領域から、自由変形したパターンを取得して格納します。
-	 * 実装クラスでは、imageのi_vertexsで定義される四角形からパターンを取得して、インスタンスのバッファに格納する処理を書いてください。
-	 * @param image
-	 * 取得元の画像です。
-	 * @param i_vertexs
-	 * 収録元画像上の、４頂点を格納した配列です。要素数は4である必要があります。
-	 * @return
-	 * 取得に成功すると、trueを返します。
-	 * @throws NyARException
-	 */
-	public bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs);
+
+
+
+
+
+    /**
+     * このインタフェイスは、{@link INyARRgbRaster}に、RGBラスタから任意の４頂点で定義した領域を、自由変形して格納する関数を追加します。
+     * 元々は、ARToolKitにある、画像からパターンを取得する処理用の関数です。
+     */
+    public interface INyARColorPatt : INyARRgbRaster
+    {
+        /**
+         * この関数は、画像の４頂点でかこまれる領域から、自由変形したパターンを取得して格納します。
+         * 実装クラスでは、imageのi_vertexsで定義される四角形からパターンを取得して、インスタンスのバッファに格納する処理を書いてください。
+         * @param image
+         * 取得元の画像です。
+         * @param i_vertexs
+         * 収録元画像上の、４頂点を格納した配列です。要素数は4である必要があります。
+         * @return
+         * 取得に成功すると、trueを返します。
+         * @
+         */
+        bool pickFromRaster(INyARRgbRaster image, NyARIntPoint2d[] i_vertexs);
+    }
 }

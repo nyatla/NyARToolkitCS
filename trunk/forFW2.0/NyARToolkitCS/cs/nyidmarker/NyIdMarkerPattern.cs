@@ -25,32 +25,33 @@
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
 
-/**
- * このクラスは、Idマーカのデータ部の値を格納します。
- * Idマーカのデータ仕様については、以下のURLを参照してください。
- * http://sourceforge.jp/projects/nyartoolkit/docs/standards_document0001/ja/2/standards_document0001.pdf
- *
- */
-public class NyIdMarkerPattern
-{
-	/**
-	 * マーカのModel番号
-	 */
-	public int model;
-	/**
-	 * コントロールビットのDoamin番号
-	 */
-	public int ctrl_domain;
-	/**
-	 * コントロールビットのマスク番号
-	 */
-	public int ctrl_mask;
-	/**
-	 * コントロールビットのチェック値
-	 */
-	public int check;
-	/**
-	 * データパケットの配列。有効長はモデルによって異なります。
-	 */
-	public sealed int[] data=new int[32];
+    /**
+     * このクラスは、Idマーカのデータ部の値を格納します。
+     * Idマーカのデータ仕様については、以下のURLを参照してください。
+     * http://sourceforge.jp/projects/nyartoolkit/docs/standards_document0001/ja/2/standards_document0001.pdf
+     *
+     */
+    public class NyIdMarkerPattern
+    {
+        /**
+         * マーカのModel番号
+         */
+        public int model;
+        /**
+         * コントロールビットのDoamin番号
+         */
+        public int ctrl_domain;
+        /**
+         * コントロールビットのマスク番号
+         */
+        public int ctrl_mask;
+        /**
+         * コントロールビットのチェック値
+         */
+        public int check;
+        /**
+         * データパケットの配列。有効長はモデルによって異なります。
+         */
+        public readonly int[] data = new int[32];
+    }
 }

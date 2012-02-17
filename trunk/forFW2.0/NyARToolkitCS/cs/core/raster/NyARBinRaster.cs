@@ -22,69 +22,69 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
-
-import jp.nyatla.nyartoolkit.core.labeling.rlelabeling.NyARLabeling_Rle;
-
-
-
-
-
-/**
- * このクラスは、0/ 255 の二値GrayscaleRasterです。
- */
-public class NyARBinRaster : NyARGrayscaleRaster
 {
-	/**
-	 * コンストラクタです。
-	 * 画像のサイズパラメータを指定して、{@link NyARBufferType#INT2D_BIN_8}形式のバッファを持つインスタンスを生成します。
-	 * このラスタは、内部参照バッファを持ちます。
-	 * @param i_width
-	 * ラスタのサイズ
-	 * @param i_height
-	 * ラスタのサイズ
-	 * @throws NyARException
-	 */
-	public NyARBinRaster(int i_width, int i_height)
-	{
-		super(i_width,i_height,NyARBufferType.INT1D_BIN_8,true);
-	}
-	/*
-	 * この関数は、インスタンスの初期化シーケンスを実装します。
-	 * コンストラクタから呼び出します。
-	 * @param i_size
-	 * ラスタのサイズ
-	 * @param i_buf_type
-	 * バッファ形式定数
-	 * @param i_is_alloc
-	 * 内部バッファ/外部バッファのフラグ
-	 * @return
-	 * 初期化に成功するとtrue
-	 * @throws NyARException 
-	 */
-	protected void initInstance(NyARIntSize i_size,int i_buf_type,bool i_is_alloc)
-	{
-		switch(i_buf_type)
-		{
-			case NyARBufferType.INT1D_BIN_8:
-				this._buf = i_is_alloc?new int[i_size.w*i_size.h]:null;
-				break;
-			default:
-				super.initInstance(i_size, i_buf_type, i_is_alloc);
-				return;
-		}
-		this._pixdrv=NyARGsPixelDriverFactory.createDriver(this);
-		this._is_attached_buffer=i_is_alloc;
-		return;
-	}
-	public Object createInterface(Class<?> i_iid)
-	{
-		if(i_iid==NyARLabeling_Rle.IRasterDriver.class){
-			return NyARLabeling_Rle.RasterDriverFactory.createDriver(this);
-		}
-		if(i_iid==NyARContourPickup.IRasterDriver.class){
-			return NyARContourPickup.ImageDriverFactory.createDriver(this);
-		}
-		throw new NyARException();
-	}
+
+    /**
+     * このクラスは、0/ 255 の二値GrayscaleRasterです。
+     */
+    public class NyARBinRaster : NyARGrayscaleRaster
+    {
+        /**
+         * コンストラクタです。
+         * 画像のサイズパラメータを指定して、{@link NyARBufferType#INT2D_BIN_8}形式のバッファを持つインスタンスを生成します。
+         * このラスタは、内部参照バッファを持ちます。
+         * @param i_width
+         * ラスタのサイズ
+         * @param i_height
+         * ラスタのサイズ
+         * @
+         */
+        public NyARBinRaster(int i_width, int i_height)
+        {
+            super(i_width, i_height, NyARBufferType.INT1D_BIN_8, true);
+        }
+        /*
+         * この関数は、インスタンスの初期化シーケンスを実装します。
+         * コンストラクタから呼び出します。
+         * @param i_size
+         * ラスタのサイズ
+         * @param i_buf_type
+         * バッファ形式定数
+         * @param i_is_alloc
+         * 内部バッファ/外部バッファのフラグ
+         * @return
+         * 初期化に成功するとtrue
+         * @ 
+         */
+        protected void initInstance(NyARIntSize i_size, int i_buf_type, bool i_is_alloc)
+        {
+            switch (i_buf_type)
+            {
+                case NyARBufferType.INT1D_BIN_8:
+                    this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
+                    break;
+                default:
+                    super.initInstance(i_size, i_buf_type, i_is_alloc);
+                    return;
+            }
+            this._pixdrv = NyARGsPixelDriverFactory.createDriver(this);
+            this._is_attached_buffer = i_is_alloc;
+            return;
+        }
+        public object createInterface(Type i_iid)
+        {
+            if (i_iid == NyARLabeling_Rle.IRasterDriver)
+            {
+                return NyARLabeling_Rle.RasterDriverFactory.createDriver(this);
+            }
+            if (i_iid == NyARContourPickup.IRasterDriver)
+            {
+                return NyARContourPickup.ImageDriverFactory.createDriver(this);
+            }
+            throw new NyARException();
+        }
+    }
 }
