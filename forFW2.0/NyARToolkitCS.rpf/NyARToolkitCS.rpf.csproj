@@ -48,45 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\mklib\ARTKMarkerTable.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\mklib\ASyncIdMarkerTable.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\mklib\CardDetect.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\mklib\RawbitSerialIdTable.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\reality\nyartk\NyARReality.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\reality\nyartk\NyARRealityTarget.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\reality\nyartk\NyARRealityTargetList.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\reality\nyartk\NyARRealityTargetPool.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\realitysource\nyartk\NyARRealitySource.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\realitysource\nyartk\NyARRealitySource_Reference.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\sampler\lrlabel\LowResolutionLabelingSampler.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\sampler\lrlabel\LowResolutionLabelingSamplerOut.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\INyARVectorReader.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NegativeSqRoberts.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARRectTargetList.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTarget.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTargetList.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTargetPool.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTracker.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTrackerSource.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARTrackerSource_Reference.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARVectorReader_Base.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\NyARVectorReader_INT1D_GRAY_8.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARContourTargetStatus.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARContourTargetStatusPool.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARNewTargetStatus.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARNewTargetStatusPool.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARRectTargetStatus.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARRectTargetStatusPool.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\nyartk\status\NyARTargetStatus.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\utils\LineBaseVertexDetector.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\utils\VecLinearCoordinates.cs" />
-    <Compile Include="jp\nyatla\nyartoolkit\rpf\tracker\utils\VecLinearCoordinatesOperator.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>
