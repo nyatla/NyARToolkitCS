@@ -45,6 +45,111 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\mklib\ARTKMarkerTable.cs">
+      <Link>cs\rpf\mklib\ARTKMarkerTable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\mklib\ASyncIdMarkerTable.cs">
+      <Link>cs\rpf\mklib\ASyncIdMarkerTable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\mklib\CardDetect.cs">
+      <Link>cs\rpf\mklib\CardDetect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\mklib\RawbitSerialIdTable.cs">
+      <Link>cs\rpf\mklib\RawbitSerialIdTable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\realitysource\nyartk\NyARRealitySource.cs">
+      <Link>cs\rpf\realitysource\nyartk\NyARRealitySource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\realitysource\nyartk\NyARRealitySource_Reference.cs">
+      <Link>cs\rpf\realitysource\nyartk\NyARRealitySource_Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\reality\nyartk\NyARReality.cs">
+      <Link>cs\rpf\reality\nyartk\NyARReality.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\reality\nyartk\NyARRealityTarget.cs">
+      <Link>cs\rpf\reality\nyartk\NyARRealityTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\reality\nyartk\NyARRealityTargetList.cs">
+      <Link>cs\rpf\reality\nyartk\NyARRealityTargetList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\reality\nyartk\NyARRealityTargetPool.cs">
+      <Link>cs\rpf\reality\nyartk\NyARRealityTargetPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\sampler\lrlabel\LowResolutionLabelingSampler.cs">
+      <Link>cs\rpf\sampler\lrlabel\LowResolutionLabelingSampler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\sampler\lrlabel\LowResolutionLabelingSamplerOut.cs">
+      <Link>cs\rpf\sampler\lrlabel\LowResolutionLabelingSamplerOut.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\INyARVectorReader.cs">
+      <Link>cs\rpf\tracker\nyartk\INyARVectorReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NegativeSqRoberts.cs">
+      <Link>cs\rpf\tracker\nyartk\NegativeSqRoberts.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARRectTargetList.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARRectTargetList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTarget.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTargetList.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTargetList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTargetPool.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTargetPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTracker.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTrackerSource.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTrackerSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARTrackerSource_Reference.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARTrackerSource_Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARVectorReader_Base.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARVectorReader_Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\NyARVectorReader_INT1D_GRAY_8.cs">
+      <Link>cs\rpf\tracker\nyartk\NyARVectorReader_INT1D_GRAY_8.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARContourTargetStatus.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARContourTargetStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARContourTargetStatusPool.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARContourTargetStatusPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARNewTargetStatus.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARNewTargetStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARNewTargetStatusPool.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARNewTargetStatusPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARRectTargetStatus.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARRectTargetStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARRectTargetStatusPool.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARRectTargetStatusPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\nyartk\status\NyARTargetStatus.cs">
+      <Link>cs\rpf\tracker\nyartk\status\NyARTargetStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\utils\LineBaseVertexDetector.cs">
+      <Link>cs\rpf\tracker\utils\LineBaseVertexDetector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\utils\VecLinearCoordinates.cs">
+      <Link>cs\rpf\tracker\utils\VecLinearCoordinates.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\tracker\utils\VecLinearCoordinatesOperator.cs">
+      <Link>cs\rpf\tracker\utils\VecLinearCoordinatesOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\utils\INyARGsRasterGraphics.cs">
+      <Link>cs\rpf\utils\INyARGsRasterGraphics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src.rpf\cs\rpf\utils\NyARGsRasterGraphicsFactory.cs">
+      <Link>cs\rpf\utils\NyARGsRasterGraphicsFactory.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
