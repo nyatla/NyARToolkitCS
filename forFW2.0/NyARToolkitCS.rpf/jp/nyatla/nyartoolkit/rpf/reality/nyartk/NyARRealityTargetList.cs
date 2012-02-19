@@ -23,12 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
 
+namespace jp.nyatla.nyartoolkit.cs.rpf
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 {
     public class NyARRealityTargetList : NyARPointerStack<NyARRealityTarget>
     {

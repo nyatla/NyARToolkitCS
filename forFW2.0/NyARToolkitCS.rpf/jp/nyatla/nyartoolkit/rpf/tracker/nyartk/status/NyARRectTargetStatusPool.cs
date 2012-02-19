@@ -23,13 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.utils;
 using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.core;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
 
     public class NyARRectTargetStatusPool : NyARManagedObjectPool<NyARRectTargetStatus>

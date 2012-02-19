@@ -24,15 +24,10 @@
  */
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
 
+namespace jp.nyatla.nyartoolkit.cs.rpf
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 {
     /**
      * Realityターゲットを定義します。
@@ -276,7 +271,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 			    }
 		    }
 		    //パターンの取得
-		    return i_src.refPerspectiveRasterReader().read4Point(i_src.refRgbSource(),da4,0,0,i_resolution, o_raster);
+		    return i_src.refPerspectiveRasterReader().copyPatt(da4,0,0,i_resolution, o_raster);
 	    }
 	    /**
 	     * ターゲットと同じ平面に定義した矩形から、パターンを取得します。

@@ -23,17 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * NyARRealityモデルの駆動クラスです。
@@ -598,7 +591,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 	     */
         public bool getRgbPatt2d(NyARRealitySource i_src, NyARIntPoint2d[] i_vertex, int i_resolution, INyARRgbRaster o_raster)
 	    {
-		    return i_src.refPerspectiveRasterReader().read4Point(i_src.refRgbSource(),i_vertex,0,0,i_resolution, o_raster);
+            return i_src.refPerspectiveRasterReader().copyPatt(i_vertex, 0, 0, i_resolution, o_raster);
 	    }
 	    /**
 	     * 画面座標系の4頂点でかこまれる領域から、RGB画像をo_rasterに取得します。
@@ -611,7 +604,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 	     */
         public bool getRgbPatt2d(NyARRealitySource i_src, NyARDoublePoint2d[] i_vertex, int i_resolution, INyARRgbRaster o_raster)
 	    {
-		    return i_src.refPerspectiveRasterReader().read4Point(i_src.refRgbSource(),i_vertex,0,0,i_resolution, o_raster);
+		    return i_src.refPerspectiveRasterReader().copyPatt(i_vertex,0,0,i_resolution, o_raster);
 	    }	
 	    /**
 	     * カメラ座標系の4頂点でかこまれる領域から、RGB画像をo_rasterに取得します。
@@ -641,7 +634,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 			    }
 		    }
 		    //パターンの取得
-		    return i_src.refPerspectiveRasterReader().read4Point(i_src.refRgbSource(),vx,0,0,i_resolution, o_raster);
+            return i_src.refPerspectiveRasterReader().copyPatt(vx, 0, 0, i_resolution, o_raster);
 	    }
     }
 }

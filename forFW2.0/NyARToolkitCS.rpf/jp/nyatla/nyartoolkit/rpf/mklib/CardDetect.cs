@@ -23,12 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
+namespace jp.nyatla.nyartoolkit.cs.rpf
+
 {
     /**
      * 未知の矩形を認識するサンプル。

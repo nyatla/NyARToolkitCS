@@ -23,14 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.sampler.nyartk;
 using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.core;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * NyARTrackerSourceのリファレンス実装です。
@@ -44,6 +40,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
 	    private LowResolutionLabelingSampler _sampler;
 	    private NyARGrayscaleRaster _rb_source;
 	    private NegativeSqRoberts _rfilter=new NegativeSqRoberts(NyARBufferType.INT1D_GRAY_8);
+        private INyARGsRasterGraphics _gs_graphics;
 	    /**
 	     * @param i_number_of_sample
 	     * サンプラが検出する最大数。
@@ -69,7 +66,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
 		    int div=this._rob_resolution;
 		    //主GSラスタ
 		    this._base_raster=new NyARGrayscaleRaster(i_width,i_height,NyARBufferType.INT1D_GRAY_8,i_is_alloc);
-		    //Roberts変換ラスタ
+            this._gs_graphics = NyARGsRasterGraphicsFactory.createDriver(this._base_raster);
+            //Roberts変換ラスタ
 		    this._rb_source=new NyARGrayscaleRaster(i_width/div,i_height/div,NyARBufferType.INT1D_GRAY_8, true);
 		    //Robertsラスタは最も解像度の低いラスタと同じ
 		    this._rbraster=new NyARGrayscaleRaster(i_width/div,i_height/div,NyARBufferType.INT1D_GRAY_8, true);
@@ -94,8 +92,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
 	    public override void syncResource()
 	    {
 		    //内部状態の同期
-		    this._base_raster.copyTo(0,0,this._rob_resolution,this._rb_source);
-		    this._rfilter.doFilter(this._rb_source,this._rbraster);
+            this._gs_graphics.copyTo(0, 0, this._rob_resolution, this._rb_source);
+            this._rfilter.doFilter(this._rb_source, this._rbraster);
 	    }
 	    /**
 	     * SampleOutを計算して返します。

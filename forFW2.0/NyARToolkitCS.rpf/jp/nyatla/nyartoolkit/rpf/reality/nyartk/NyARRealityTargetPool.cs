@@ -23,13 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     public class NyARRealityTargetPool : NyARManagedObjectPool<NyARRealityTarget>
     {
@@ -62,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk
 			    return null;
 		    }
 		    ret.grab_rate=50;//開始時の捕捉レートは10%
-		    ret._ref_tracktarget=(NyARTarget) tt.refObject();
+		    ret._ref_tracktarget=(NyARTarget) tt.referenceObject();
 		    ret._serial=NyARRealityTarget.createSerialId();
 		    ret.tag=null;
 		    tt.tag=ret;//トラックターゲットのタグに自分の値設定しておく。
