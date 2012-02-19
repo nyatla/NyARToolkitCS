@@ -23,13 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
+
 {
 
     /**
@@ -39,7 +37,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
      */
     public class NyARRealitySource_Reference : NyARRealitySource
     {
-	    protected NyARRasterFilter_Rgb2Gs_RgbAve192 _filter;
+        protected INyARRgb2GsFilter _filter;
 	    /**
 	     * 
 	     * @param i_width
@@ -60,8 +58,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
 	    public NyARRealitySource_Reference(int i_width,int i_height,NyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample,int i_raster_type)
 	    {
 		    this._rgb_source=new NyARRgbRaster(i_width,i_height,i_raster_type);
-		    this._filter=new NyARRasterFilter_Rgb2Gs_RgbAve192(this._rgb_source.getBufferType());
-		    this._source_perspective_reader=new NyARPerspectiveRasterReader(_rgb_source.getBufferType());
+		    this._filter=(INyARRgb2GsFilter) this._rgb_source.createInterface(typeof(INyARRgb2GsFilter));
+		    this._source_perspective_reader=(INyARPerspectiveCopy)this._rgb_source.createInterface(typeof(INyARPerspectiveCopy));
 		    this._tracksource=new NyARTrackerSource_Reference(i_number_of_sample,i_ref_raster_distortion,i_width,i_height,i_depth,true);
 		    return;
 	    }
@@ -71,12 +69,12 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
 	    }
         public override void syncResource()
 	    {
-		    this._filter.doFilter(this._rgb_source,this._tracksource.refBaseRaster());
+            this._filter.convert(this._tracksource.refBaseRaster());
 		    base.syncResource();
 	    }
         public override NyARTrackerSource makeTrackSource()
 	    {
-		    this._filter.doFilter(this._rgb_source,this._tracksource.refBaseRaster());		
+            this._filter.convert(this._tracksource.refBaseRaster());
 		    return this._tracksource;
 	    }
 

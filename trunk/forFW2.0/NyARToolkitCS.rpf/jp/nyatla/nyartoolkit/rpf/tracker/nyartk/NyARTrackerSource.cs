@@ -23,13 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.sampler.nyartk;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * LowResolutionLabelingSamplerへの入力コンテナの抽象クラスです。

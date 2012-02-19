@@ -23,13 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using jp.nyatla.nyartoolkit.cs.core;
 using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.core;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * グレイスケールラスタに対する、特殊な画素アクセス手段を提供します。

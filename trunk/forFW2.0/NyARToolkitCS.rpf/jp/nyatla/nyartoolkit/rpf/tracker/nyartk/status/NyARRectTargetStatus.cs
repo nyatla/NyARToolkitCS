@@ -23,15 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.sampler.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.utils;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
 
     public class NyARRectTargetStatus : NyARTargetStatus

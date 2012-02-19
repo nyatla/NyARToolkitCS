@@ -23,14 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
 using System.Diagnostics;
+using jp.nyatla.nyartoolkit.cs.core;
+using System.IO;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
 
     /**
@@ -192,14 +189,14 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 	     * @return
 	     * @throws NyARException
 	     */
-	    public bool addMarkerFromARPattFile(String i_filename,int i_id,String i_name,double i_width,double i_height)
+	    public bool addMarkerFromARPatt(StreamReader i_stream,int i_id,String i_name,double i_width,double i_height)
 	    {
 		    MarkerTable.SerialTableRow d=this._table.prePush();
 		    if(d==null){
 			    return false;
 		    }
 		    NyARCode c=new NyARCode(this._resolution_width,this._resolution_height);
-		    c.loadARPattFromFile(i_filename);
+		    c.loadARPatt(i_stream);
 		    d.setValue(c,i_id,i_name,i_width,i_height);
 		    return true;
 	    }	
@@ -223,9 +220,9 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 	    {
 		    //パターン抽出
 		    NyARMatchPattResult tmp_patt_result=this.__tmp_patt_result;
-		    NyARPerspectiveRasterReader r=i_rtsorce.refPerspectiveRasterReader();
-		    r.read4Point(i_rtsorce.refRgbSource(),i_target.refTargetVertex(),this._edge_x,this._edge_y,this._sample_per_pix,this._tmp_raster);
-		    //比較パターン生成
+            INyARPerspectiveCopy r = i_rtsorce.refPerspectiveRasterReader();
+            r.copyPatt(i_target.refTargetVertex(), this._edge_x, this._edge_y, this._sample_per_pix, this._tmp_raster);
+            //比較パターン生成
 		    this._deviation_data.setRaster(this._tmp_raster);
 		    int ret=-1;
 		    int dir=-1;

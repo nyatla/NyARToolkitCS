@@ -23,13 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.sampler.nyartk;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     public sealed class NyARNewTargetStatus : NyARTargetStatus
     {
@@ -65,7 +62,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status
 			    this.current_sampleout.releaseObject();
 		    }
 		    if(i_src!=null){
-			    this.current_sampleout=(LowResolutionLabelingSamplerOut.Item)i_src.refObject();
+                this.current_sampleout = (LowResolutionLabelingSamplerOut.Item)i_src.referenceObject();
 		    }else{
 			    this.current_sampleout=null;
 		    }

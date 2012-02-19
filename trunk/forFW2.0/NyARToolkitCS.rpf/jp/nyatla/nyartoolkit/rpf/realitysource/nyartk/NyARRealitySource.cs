@@ -23,13 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
+
 {
     /**
      * NyARRealityクラスの入力コンテナです。
@@ -47,7 +45,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
 	    /**
 	     * RealitySourceの主ラスタにリンクしたPerspectiveReader。継承先のコンストラクタで実体を割り当ててください。
 	     */
-	    protected NyARPerspectiveRasterReader _source_perspective_reader;
+	    protected INyARPerspectiveCopy _source_perspective_reader;
+
 
 	    /**
 	     * TrackerSorceのホルダ。継承先のコンストラクタで実体を割り当ててください。
@@ -87,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk
 	     * {@link #_rgb_source}を参照するPerspectiveRasterReaderを返します。
 	     * @return
 	     */
-	    public NyARPerspectiveRasterReader refPerspectiveRasterReader()
+        public INyARPerspectiveCopy refPerspectiveRasterReader()
 	    {
 		    return this._source_perspective_reader;
 	    }

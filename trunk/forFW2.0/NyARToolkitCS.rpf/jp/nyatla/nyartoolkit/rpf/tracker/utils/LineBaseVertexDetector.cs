@@ -23,12 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.utils
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * このクラスは、直線式の集合から頂点集合を計算する関数を提供します。

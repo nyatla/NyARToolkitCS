@@ -23,14 +23,10 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-
 using jp.nyatla.nyartoolkit.cs.core;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
 
     /**
@@ -41,7 +37,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
      *   | 0, 1|    |1, 0|
      * V=sqrt(X^2+Y+2)/2
      */
-    public class NegativeSqRoberts : INyARRasterFilter
+    public class NegativeSqRoberts
     {
 	    private IdoFilterImpl _do_filter_impl; 
 	    public NegativeSqRoberts(int i_raster_type)

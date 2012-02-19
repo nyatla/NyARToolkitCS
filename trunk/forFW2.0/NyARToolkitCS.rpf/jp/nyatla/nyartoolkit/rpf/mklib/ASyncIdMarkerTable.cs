@@ -23,14 +23,12 @@
  * 
  */
 using System;
+using System.Diagnostics;
 using System.Threading;
-using System.Collections.Generic;
-using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
+namespace jp.nyatla.nyartoolkit.cs.rpf
+
 {
     /**
      * 外部パターン認識のサンプルです。非同期にIDマーカを認識します。

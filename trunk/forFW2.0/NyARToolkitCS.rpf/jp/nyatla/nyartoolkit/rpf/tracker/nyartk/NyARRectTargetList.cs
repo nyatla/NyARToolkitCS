@@ -23,13 +23,9 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.sampler.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status;
+using System.Diagnostics;
 
-namespace jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     public class NyARRectTargetList : NyARTargetList
     {

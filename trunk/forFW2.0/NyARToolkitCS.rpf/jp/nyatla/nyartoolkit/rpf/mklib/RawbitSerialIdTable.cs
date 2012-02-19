@@ -23,16 +23,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.nyidmarker;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status;
 
-
-namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
+namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     /**
      * 簡易な同期型NyIdマーカIDテーブルです。
@@ -106,12 +101,13 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 	    }
 
 	    private SerialTable _table;
-	    private NyIdMarkerPickup _id_pickup = new NyIdMarkerPickup();
+	    private readonly NyIdMarkerPickup _id_pickup;
 	    private NyIdMarkerPattern _temp_nyid_info=new NyIdMarkerPattern();
 	    private NyIdMarkerParam _temp_nyid_param=new NyIdMarkerParam();
     	
-	    private NyIdMarkerDataEncoder_RawBit _rb=new NyIdMarkerDataEncoder_RawBit();
-	    private NyIdMarkerData_RawBit _rb_dest=new NyIdMarkerData_RawBit();
+	    private NyIdMarkerDataEncoder_RawBitId _rb=new NyIdMarkerDataEncoder_RawBitId();
+	    private NyIdMarkerData_RawBitId _rb_dest=new NyIdMarkerData_RawBitId();
+
 
 	    /**
 	     * コンストラクタです。
@@ -121,6 +117,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 	     */
 	    public RawbitSerialIdTable(int i_max)
 	    {
+            this._id_pickup = new NyIdMarkerPickup();
 		    this._table=new SerialTable(i_max);
 	    }
 	    /**
@@ -177,7 +174,10 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 		    }
 		    d.setValue(i_name,0,long.MaxValue,i_width);
 		    return true;
-	    }	
+	    }
+        private INyARRaster _last_laster = null;
+        private INyARGsPixelDriver _gs_pix_reader;
+	
 	    /**
 	     * i_raster上にあるi_vertexの頂点で定義される四角形のパターンから、一致するID値を特定します。
 	     * @param i_vertex
@@ -189,48 +189,31 @@ namespace jp.nyatla.nyartoolkit.cs.rpf.mklib
 	     */
 	    public bool identifyId(NyARDoublePoint2d[] i_vertex,INyARRgbRaster i_raster,IdentifyIdResult o_result)
 	    {
-		    if(!this._id_pickup.pickFromRaster(i_raster,i_vertex,this._temp_nyid_info,this._temp_nyid_param))
-		    {
-			    return false;
-		    }
-		    //受け付けられるControlDomainは0のみ
-		    if(this._temp_nyid_info.ctrl_domain!=0)
-		    {
-			    return false;
-		    }
-		    //受け入れられるMaskは0のみ
-		    if(this._temp_nyid_info.ctrl_mask!=0)
-		    {
-			    return false;
-		    }
-		    //受け入れられるModelは5未満
-		    if(this._temp_nyid_info.model>=5)
-		    {
-			    return false;
-		    }
-
-		    this._rb.createDataInstance();
-		    if(!this._rb.encode(this._temp_nyid_info,this._rb_dest)){
-			    return false;
-		    }
-		    //SerialIDの再構成
-		    long s=0;
-            //最大4バイト繋げて１個のint値に変換
-            for (int i = 0; i < this._rb_dest.length; i++)
+            if (this._last_laster != i_raster)
             {
-                s = (s << 8)|(uint)this._rb_dest.packet[i];
-            }	
-		    //SerialID引きする。
-            SerialTable.SerialTableRow d=this._table.getItembySerialId(s);
-		    if(d==null){
-			    return false;
-		    }
-		    //戻り値を設定
-		    o_result.marker_width=d.marker_width;
-		    o_result.id=s;
-		    o_result.artk_direction=this._temp_nyid_param.direction;
-		    o_result.name=d.name;
-		    return true;		
+                this._gs_pix_reader = NyARGsPixelDriverFactory.createDriver(i_raster);
+                this._last_laster = i_raster;
+            }
+            if (!this._id_pickup.pickFromRaster(this._gs_pix_reader, i_vertex, this._temp_nyid_info, this._temp_nyid_param))
+            {
+                return false;
+            }
+            if (!this._rb.encode(this._temp_nyid_info, this._rb_dest))
+            {
+                return false;
+            }
+            //SerialID引きする。
+            SerialTable.SerialTableRow d = this._table.getItembySerialId(this._rb_dest.marker_id);
+            if (d == null)
+            {
+                return false;
+            }
+            //戻り値を設定
+            o_result.marker_width = d.marker_width;
+            o_result.id = this._rb_dest.marker_id;
+            o_result.artk_direction = this._temp_nyid_param.direction;
+            o_result.name = d.name;
+            return true;	
 	    }
 	    /**
 	     * RealityTargetに一致するID値を特定します。
