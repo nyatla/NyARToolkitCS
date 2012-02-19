@@ -52,23 +52,23 @@ namespace ConsoleApplication1
         {
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(camera_file);
+            ap.loadARParam(new StreamReader(camera_file));
             ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadARPattFromFile(code_file);
+            code.loadARPatt(new StreamReader(code_file));
 
             //試験イメージの読み出し(320x240 BGRAのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
-            NyARRgbRaster_BGRA ra = new NyARRgbRaster_BGRA(320, 240,false);
+            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
             ra.wrapBuffer(raw);
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
-            NyARSingleDetectMarker ar = new NyARSingleDetectMarker(ap, code, 80.0, ra.getBufferType(),NyARSingleDetectMarker.PF_NYARTOOLKIT);
+            NyARSingleDetectMarker ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0,NyARSingleDetectMarker.PF_NYARTOOLKIT);
             NyARTransMatResult result_mat = new NyARTransMatResult();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);

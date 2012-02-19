@@ -4,9 +4,8 @@ using System.Collections;
 using DirectShowLib;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
+using jp.nyatla.nyartoolkit.cs.rpf;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
 using NyARToolkitCSUtils.Direct3d;
 
 namespace NyARToolkitCSUtils.Capture.rpf
@@ -18,7 +17,7 @@ namespace NyARToolkitCSUtils.Capture.rpf
      */
     public class NyARRealitySource_DShow : NyARRealitySource
     {
-	    protected NyARRasterFilter_Rgb2Gs_RgbAve192 _filter;
+        protected INyARRgb2GsFilter _filter;
         /**
          * コンストラクタです。NyARBufferType.BYTE1D_B8G8R8X8_32形式のRGBラスタを所有するRealitySourceを生成します。
          * @param i_fmt_width
@@ -36,8 +35,8 @@ namespace NyARToolkitCSUtils.Capture.rpf
         public NyARRealitySource_DShow(int i_fmt_width,int i_fmt_height,NyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample)
 	    {
             this._rgb_source = new DsBGRX32Raster(i_fmt_width, i_fmt_height);
-		    this._filter=new NyARRasterFilter_Rgb2Gs_RgbAve192(this._rgb_source.getBufferType());
-		    this._source_perspective_reader=new NyARPerspectiveRasterReader(_rgb_source.getBufferType());
+            this._filter = (INyARRgb2GsFilter)this._rgb_source.createInterface(typeof(INyARRgb2GsFilter));
+		    this._source_perspective_reader=(INyARPerspectiveCopy)this._rgb_source.createInterface(typeof(INyARPerspectiveCopy));
             this._tracksource = new NyARTrackerSource_Reference(i_number_of_sample, i_ref_raster_distortion, i_fmt_width, i_fmt_height, i_depth, true);
 		    return;
 	    }
@@ -58,12 +57,12 @@ namespace NyARToolkitCSUtils.Capture.rpf
 	    }
 	    public sealed override void syncResource()
 	    {
-		    this._filter.doFilter(this._rgb_source,this._tracksource.refBaseRaster());
+		    this._filter.convert(this._tracksource.refBaseRaster());
 		    base.syncResource();
 	    }
 	    public sealed override NyARTrackerSource makeTrackSource()
 	    {
-		    this._filter.doFilter(this._rgb_source,this._tracksource.refBaseRaster());		
+		    this._filter.convert(this._tracksource.refBaseRaster());		
 		    return this._tracksource;
 	    }
     }

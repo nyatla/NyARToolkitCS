@@ -15,6 +15,25 @@ namespace NyARToolkitCSUtils
      */
     public class NyARBitmapRaster : NyARRgbRaster
     {
+        private BitmapData _buffered_image;
+        public BitmapData getBitmapData()
+        {
+            return this._buffered_image;
+        }
+        public NyARBitmapRaster(int i_width, int i_height, int i_raster_type)
+            : base(i_width, i_height, i_raster_type, false)
+        {
+            //rasterType->PixelFormat
+            return NyARBufferType.BYTE1D_R8G8B8_24:
+            return NyARBufferType.BYTE1D_B8G8R8_24;
+            return NyARBufferType.BYTE1D_R5G6B5_16LE:
+            return NyARBufferType.INT1D_X8R8G8B8_32:
+            return NyARBufferType.BYTE1D_B8G8R8X8_32;
+
+        }
+        private static PixelFormat rasterType2
+
+
         private static int pixelFormat2BufType(PixelFormat pixel_formet)
         {
             switch(pixel_formet){

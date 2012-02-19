@@ -22,16 +22,17 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Collections.Generic;
+using jp.nyatla.nyartoolkit.cs.core;
 namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 {
 
 
-    public class ARMarkerList : ArrayList<MarkerInfoARMarker>
+    public class ARMarkerList : System.Collections.Generic.List<MarkerInfoARMarker>
     {
         /**
          * 
          */
-        private static sealed long serialVersionUID = 1L;
         private double _configense_th = 0.7;
         private readonly NyARMatchPattResult _patt_result = new NyARMatchPattResult();
         private readonly MultiResolutionPattProvider _mpickup = new MultiResolutionPattProvider();
@@ -44,15 +45,15 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         /**
          * このAdd以外使わないでね。
          */
-        public bool add(MarkerInfoARMarker i_e)
+        public void add(MarkerInfoARMarker i_e)
         {
             //マッチテーブルのサイズを調整
-            int s = this.size() + 1;
+            int s = this.Count + 1;
             while (this._mkmap.getLength() < s * s)
             {
                 this._mkmap.append();
             }
-            return super.add(i_e);
+            base.Add(i_e);
         }
         /**
          * マーカの一致敷居値を設定する。
@@ -73,9 +74,9 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         {
             //sq_tmpに値を生成したかのフラグ
             bool is_ganalated_sq = false;
-            for (int i = this.size() - 1; i >= 0; i--)
+            for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoARMarker target = this.get(i);
+                MarkerInfoARMarker target = this[i];
                 //解像度に一致する画像を取得
                 NyARMatchPattDeviationColorData diff = this._mpickup.getDeviationColorData(target, i_pix_drv, i_sq.ob_vertex);
                 //マーカのパターン解像度に一致したサンプリング画像と比較する。
@@ -114,9 +115,9 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             this._mkmap.reset();
 
             //検出のために初期値設定
-            for (int i = this.size() - 1; i >= 0; i--)
+            for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoARMarker target = this.get(i);
+                MarkerInfoARMarker target = this[i];
                 if (target.life > 0)
                 {
                     target.lost_count++;

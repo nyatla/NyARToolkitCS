@@ -49,7 +49,7 @@ namespace ConsoleApplication1
 
             public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
             {
-                initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), 100,i_raster_format);
+                initInstance(i_cparam, new NyIdMarkerDataEncoder_RawBit(), 100);
 
                 //アプリケーションフレームワークの初期化
                 return;
@@ -102,14 +102,14 @@ namespace ConsoleApplication1
         {
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(camera_file);
+            ap.loadARParam(new StreamReader(camera_file));
             ap.changeScreenSize(320, 240);
 
             //試験イメージの読み出し(320x240 RGBのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 3);
-            NyARRgbRaster_RGB ra = new NyARRgbRaster_RGB(320, 240,false);
+            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_R8G8B8_24,false);
             ra.wrapBuffer(raw);
 
             MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferType());

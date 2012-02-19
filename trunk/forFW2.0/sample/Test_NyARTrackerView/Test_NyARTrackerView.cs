@@ -39,9 +39,7 @@ using NyARToolkitCSUtils.Capture;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.utils;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk.status;
+using jp.nyatla.nyartoolkit.cs.rpf;
 
 namespace Test_NyARTrackerView
 {

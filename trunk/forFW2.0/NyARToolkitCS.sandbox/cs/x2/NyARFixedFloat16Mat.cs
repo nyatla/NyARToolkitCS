@@ -29,7 +29,7 @@
  * 
  */
 using System;
-using jp.nyatla.nyartoolkit.cs.utils;
+using jp.nyatla.nyartoolkit.cs;
 
 namespace jp.nyatla.nyartoolkit.cs.sandbox.x2
 {

@@ -11,6 +11,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
+using System.IO;
 
 namespace CaptureTest
 {
@@ -27,12 +28,12 @@ namespace CaptureTest
             //ARの設定
             //AR用カメラパラメタファイルをロード
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadARPattFromFile(AR_CODE_FILE);
+            code.loadARPatt(new StreamReader(AR_CODE_FILE));
 
             NyARTransMatResult result_mat = new NyARTransMatResult();
             //計算モードの設定
@@ -52,7 +53,7 @@ namespace CaptureTest
             //ラスタを作る。
             this.m_raster = new DsBGRX32Raster(cap.video_width, cap.video_height);
             //１パターンのみを追跡するクラスを作成
-            this.m_ar = new NyARSingleDetectMarker(ap, code, 80.0, this.m_raster.getBufferType());
+            this.m_ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0);
             this.m_ar.setContinueMode(false);
         }
         public void OnBuffer(CaptureDevice i_sender, double i_sample_time, IntPtr i_buffer, int i_buffer_len)

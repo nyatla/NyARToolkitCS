@@ -22,35 +22,34 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-package jp.nyatla.nyartoolkit.markersystem.utils;
-
-import jp.nyatla.nyartoolkit.core.NyARException;
-
-
-
-
-public class MarkerInfoNyId : TMarkerData
+namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 {
-	/** MK_NyIdの情報。 反応するidの開始レンジ*/
-	public final long nyid_range_s;
-	/** MK_NyIdの情報。 反応するidの終了レンジ*/
-	public final long nyid_range_e;
-	/** MK_NyIdの情報。 実際のid値*/
-	public long nyid;
-	public int dir;
-	/**
-	 * コンストラクタです。初期値から、Idマーカのインスタンスを生成します。
-	 * @param i_range_s
-	 * @param i_range_e
-	 * @param i_patt_size
-	 * @
-	 */
-	public MarkerInfoNyId(long i_nyid_range_s,long i_nyid_range_e,double i_patt_size)
-	{
-		super();
-		this.marker_offset.setSquare(i_patt_size);
-		this.nyid_range_s=i_nyid_range_s;
-		this.nyid_range_e=i_nyid_range_e;
-		return;
-	}		
+
+
+
+
+    public class MarkerInfoNyId : TMarkerData
+    {
+        /** MK_NyIdの情報。 反応するidの開始レンジ*/
+        public readonly long nyid_range_s;
+        /** MK_NyIdの情報。 反応するidの終了レンジ*/
+        public readonly long nyid_range_e;
+        /** MK_NyIdの情報。 実際のid値*/
+        public long nyid;
+        public int dir;
+        /**
+         * コンストラクタです。初期値から、Idマーカのインスタンスを生成します。
+         * @param i_range_s
+         * @param i_range_e
+         * @param i_patt_size
+         * @
+         */
+        public MarkerInfoNyId(long i_nyid_range_s, long i_nyid_range_e, double i_patt_size):base()
+        {
+            this.marker_offset.setSquare(i_patt_size);
+            this.nyid_range_s = i_nyid_range_s;
+            this.nyid_range_e = i_nyid_range_e;
+            return;
+        }
+    }
 }
