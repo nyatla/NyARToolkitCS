@@ -34,8 +34,6 @@ using System;
 using System.Collections.Generic;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-
     /**
      * {@link NyARCode}クラスの支援クラスです。
      * このクラスは、{@link NyARCode}のマーカファイル読み取り機能のうち、InputStreamからARToolkit形式のマーカデータを読み取って配列に格納する手順を実装します。
