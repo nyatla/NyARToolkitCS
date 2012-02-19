@@ -24,7 +24,7 @@
  */
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.nyidmarker;
-
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.processor
 {
 
@@ -74,9 +74,9 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             private INyIdMarkerData _data_temp;
             private INyIdMarkerData _prev_data;
 
-            public RleDetector(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, NyIdMarkerPickup i_id_pickup)
+            public RleDetector(NyARParam i_param, INyIdMarkerDataEncoder i_encoder, NyIdMarkerPickup i_id_pickup): base(i_param.getScreenSize())
             {
-                super(i_param.getScreenSize());
+               
                 this._coordline = new NyARCoord2Linear(i_param.getScreenSize(), i_param.getDistortionFactor());
                 this._data_temp = i_encoder.createDataInstance();
                 this._current_data = i_encoder.createDataInstance();
@@ -220,7 +220,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
             // ２値画像バッファを作る
             this._gs_raster = new NyARGrayscaleRaster(scr_size.w, scr_size.h);
-            this._histmaker = (INyARHistogramFromRaster)this._gs_raster.createInterface(INyARHistogramFromRaster);
+            this._histmaker = (INyARHistogramFromRaster)this._gs_raster.createInterface(typeof(INyARHistogramFromRaster));
             //ワーク用のデータオブジェクトを２個作る
             this._data_current = i_encoder.createDataInstance();
             this._threshold_detect = new NyARHistogramAnalyzer_SlidePTile(15);
@@ -278,7 +278,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             // ラスタをGSへ変換する。
             if (this._last_input_raster != i_raster)
             {
-                this._togs_filter = (INyARRgb2GsFilter)i_raster.createInterface(INyARRgb2GsFilter);
+                this._togs_filter = (INyARRgb2GsFilter)i_raster.createInterface(typeof(INyARRgb2GsFilter));
                 this._last_input_raster = i_raster;
             }
             this._togs_filter.convert(this._gs_raster);

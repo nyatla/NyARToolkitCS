@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -64,7 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /* static double norm( double a, double b, double c ) */
         private static double norm(double a, double b, double c)
         {
-            return Math.sqrt(a * a + b * b + c * c);
+            return Math.Sqrt(a * a + b * b + c * c);
         }
         /**
          * この関数は、ARToolKitのarParamDecompMatと同じです。

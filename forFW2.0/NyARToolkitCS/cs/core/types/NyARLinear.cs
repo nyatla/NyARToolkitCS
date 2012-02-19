@@ -28,6 +28,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -201,7 +203,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             double dx = y2 - y1;
             double dy = x1 - x2;
-            double sq = Math.sqrt(dx * dx + dy * dy);
+            double sq = Math.Sqrt(dx * dx + dy * dy);
             if (sq == 0)
             {
                 return false;
@@ -251,7 +253,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             double dx = i_vector.dx;
             double dy = i_vector.dy;
-            double sq = Math.sqrt(dx * dx + dy * dy);
+            double sq = Math.Sqrt(dx * dx + dy * dy);
             if (sq == 0)
             {
                 return false;
@@ -467,7 +469,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             w1 = this.a * lb - la * this.b;
             if (w1 == 0.0)
             {
-                return Double.POSITIVE_INFINITY;
+                return Double.PositiveInfinity;
             }
             //i_sp1と、i_linerの交点
             lc = -(la * i_sp1.x + lb * i_sp1.y);

@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -127,7 +128,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             a = i_vertex[1].x - i_vertex[3].x;
             b = i_vertex[1].y - i_vertex[3].y;
             l2 = a * a + b * b;
-            return (Math.sqrt(l1 > l2 ? l1 : l2)) / 200;
+            return (Math.Sqrt(l1 > l2 ? l1 : l2)) / 200;
         }
 
         /**

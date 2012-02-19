@@ -133,7 +133,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // 必要に応じてアロケート
             if (this._length >= this._items.Length)
             {
-                return null;
+                return default(T);
             }
             // 使用領域を+1して、予約した領域を返す。
             T ret = this._items[this._length];
@@ -145,7 +145,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public override T push(T i_object)
         {
-            return null;
+            return default(T);
         }
         /**
          * この関数は、配列の有効長を設定します。

@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -353,15 +354,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 return;
             }
             // 要求されたインデクスは範囲外
-            if (i_index >= this.work2.length)
+            if (i_index >= this.work2.Length)
             {
                 throw new NyARException();
             }
             // 追加アロケート範囲を計算
             int range = i_index + ARRAY_APPEND_STEP;
-            if (range >= this.work2.length)
+            if (range >= this.work2.Length)
             {
-                range = this.work2.length;
+                range = this.work2.Length;
             }
             // アロケート
             for (int i = this.allocate_size; i < range; i++)

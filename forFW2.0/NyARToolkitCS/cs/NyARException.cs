@@ -45,8 +45,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 例外オブジェクトを生成します。
          */
         public NyARException()
+            : base()
         {
-            super();
         }
         /**
          * コンストラクタです。
@@ -54,18 +54,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param e
          * 継承する例外オブジェクト
          */
-        public NyARException(Exception e)
+        public NyARException(Exception e):base(e.ToString())
         {
-            super(e);
         }
         /**
          * コンストラクタです。
          * メッセージを指定して、例外を生成します。
          * @param m
          */
-        public NyARException(String m)
+        public NyARException(String m):base(m)
         {
-            super(m);
         }
         /**
          * ライブラリ開発者向けの関数です。

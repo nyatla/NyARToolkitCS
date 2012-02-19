@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * 重なりの判定アルゴリズムは、ARToolKitのそれと同一です。
      * 登録済のラベルリストに対して、調査対象のラベルが重なっているかを調べます。
      */
-    public class NyARLabelOverlapChecker<T>
+    public class NyARLabelOverlapChecker<T> where T : NyARLabelInfo
     {
         private T[] _labels;
         private int _length;

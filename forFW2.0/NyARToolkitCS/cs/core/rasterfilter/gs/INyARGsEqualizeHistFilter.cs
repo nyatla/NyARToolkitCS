@@ -47,7 +47,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public NyARGsEqualizeHistFilter_Any(INyARGrayscaleRaster i_raster)
         {
             this._tone_table = NyARGsFilterFactory.createCustomToneTableFilter(i_raster);
-            this._histdrv = (INyARHistogramFromRaster)i_raster.createInterface(INyARHistogramFromRaster);
+            this._histdrv = (INyARHistogramFromRaster)i_raster.createInterface(typeof(INyARHistogramFromRaster));
         }
         public void doFilter(int i_hist_interval, INyARGrayscaleRaster i_output)
         {

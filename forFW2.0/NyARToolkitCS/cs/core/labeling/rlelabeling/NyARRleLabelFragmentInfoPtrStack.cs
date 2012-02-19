@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         public NyARRleLabelFragmentInfoPtrStack(int i_length)
         {
-            this.initInstance(i_length, NyARRleLabelFragmentInfo);
+            this.initInstance(i_length);
             return;
         }
 

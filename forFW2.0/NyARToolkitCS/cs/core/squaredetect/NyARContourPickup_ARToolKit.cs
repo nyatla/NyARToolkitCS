@@ -50,9 +50,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /** 8方位探索の座標マップ*/
         protected readonly static int[] _getContour_ydir = { -1, -1, 0, 1, 1, 1, 0, -1, -1, -1, 0, 1, 1, 1, 0 };
 
-        protected NyARContourPickup_ARToolKit()
+        public NyARContourPickup_ARToolKit():base()
         {
-            super();
         }
         /**
          * この関数は、ラスタの指定点を基点に、輪郭線を抽出します。
@@ -79,7 +78,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int width = i_raster.getWidth();
             int height = i_raster.getHeight();
             NyARIntPoint2d[] coord = o_coord.items;
-            int i_array_size = o_coord.items.length;
+            int i_array_size = o_coord.items.Length;
             //クリップ領域の上端に接しているポイントを得る。
             int sx = i_entry_x;
             int sy = i_entry_y;

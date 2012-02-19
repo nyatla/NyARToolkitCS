@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -68,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public bool getParam(NyARIntSize i_size, NyARIntPoint2d[] i_vertex, double[] o_param)
         {
-            Debug.Assert(i_vertex.length == 4);
+            Debug.Assert(i_vertex.Length == 4);
             return this.getParam(i_size.w, i_size.h, i_vertex[0].x, i_vertex[0].y, i_vertex[1].x, i_vertex[1].y, i_vertex[2].x, i_vertex[2].y, i_vertex[3].x, i_vertex[3].y, o_param);
         }
         /**

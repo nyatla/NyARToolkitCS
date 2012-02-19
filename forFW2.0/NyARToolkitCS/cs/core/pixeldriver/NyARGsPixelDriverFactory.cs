@@ -93,22 +93,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
         public int getPixel(int i_x, int i_y)
-	{
-		final int[] ref_buf = this._ref_buf;
-		return ref_buf[(i_x + i_y * this._ref_size.w)];
-	}
+        {
+            int[] ref_buf = this._ref_buf;
+            return ref_buf[(i_x + i_y * this._ref_size.w)];
+        }
         public void setPixel(int i_x, int i_y, int i_gs)
         {
             this._ref_buf[(i_x + i_y * this._ref_size.w)] = i_gs;
         }
-        public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs) 
-	{
-		int w=this._ref_size.w;
-		int r[]=this._ref_buf;
-		for (int i = i_num - 1; i >= 0; i--){
-			r[(i_x[i] + i_y[i] * w)]=i_intgs[i];
-		}
-	}
+        public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs)
+        {
+            int w = this._ref_size.w;
+            int[] r = this._ref_buf;
+            for (int i = i_num - 1; i >= 0; i--)
+            {
+                r[(i_x[i] + i_y[i] * w)] = i_intgs[i];
+            }
+        }
         public void switchRaster(INyARRaster i_ref_raster)
         {
             this._ref_buf = (int[])i_ref_raster.getBuffer();

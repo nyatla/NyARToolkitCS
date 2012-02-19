@@ -48,7 +48,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         private readonly NyARLabelingImage _limage;
 
-        private readonly NyARLabelOverlapChecker<NyARLabelingLabel> _overlap_checker = new NyARLabelOverlapChecker<NyARLabelingLabel>(32, NyARLabelingLabel);
+        private readonly NyARLabelOverlapChecker<NyARLabelingLabel> _overlap_checker = new NyARLabelOverlapChecker<NyARLabelingLabel>(32);
         private readonly NyARContourPickup_ARToolKit _cpickup = new NyARContourPickup_ARToolKit();
         private readonly NyARCoord2SquareVertexIndexes _coord2vertex = new NyARCoord2SquareVertexIndexes();
 

@@ -42,7 +42,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         protected const int AR_PATT_SAMPLE_NUM = 64;
         protected const int BUFFER_FORMAT = NyARBufferType.INT1D_X8R8G8B8_32;
-        protected readonly double[][] CPARAM_WORLD = { { 100.0, 100.0 }, { 100.0 + 10.0, 100.0 }, { 100.0 + 10.0, 100.0 + 10.0 }, { 100.0, 100.0 + 10.0 } };
+        protected readonly double[][] CPARAM_WORLD = { new double[] { 100.0, 100.0 }, new double[] { 100.0 + 10.0, 100.0 }, new double[] { 100.0 + 10.0, 100.0 + 10.0 }, new double[] { 100.0, 100.0 + 10.0 } };
 
         protected NyARIntSize _size;
         protected int[] _patdata;
@@ -252,7 +252,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             //ピクセルリーダーを取得
             INyARRgbPixelDriver reader = image.getRgbPixelDriver();
-            const int xdiv_x_ydiv = xdiv * ydiv;
+            int xdiv_x_ydiv = xdiv * ydiv;
 
             for (int iy = 0; iy < this._size.h; iy++)
             {
@@ -291,7 +291,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public object createInterface(Type iIid)
         {
-            if (iIid == INyARPerspectiveCopy)
+            if (iIid == typeof(INyARPerspectiveCopy))
             {
                 return NyARPerspectiveCopyFactory.createDriver(this);
             }

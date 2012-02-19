@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
@@ -83,7 +84,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // 必要に応じてアロケート
             if (this._length >= this._items.Length)
             {
-                return null;
+                return default(T);
             }
             // 使用領域を+1して、予約した領域を返す。
             this._items[this._length] = i_object;

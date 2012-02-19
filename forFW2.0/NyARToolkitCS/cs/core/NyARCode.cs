@@ -123,7 +123,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 読み取った値を格納する配列です。
          * @
          */
-        private static void readBlock(string[] i_data, int i_width, int i_height, int[] o_buf)
+        private static int readBlock(string[] i_data, int i_idx, int i_width, int i_height, int[] o_buf)
         {
             int idx = i_idx;
             try

@@ -29,6 +29,7 @@
  * 
  */
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 

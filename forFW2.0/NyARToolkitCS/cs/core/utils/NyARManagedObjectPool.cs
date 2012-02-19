@@ -56,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * 
      * @param <T>
      */
-    public class NyARManagedObjectPool<T>
+    public class NyARManagedObjectPool<T> where T : NyARManagedObject
     {
         /**
          * このクラスは、{@link NyARManagedObject}へ提供する操作インタフェイスの実体です。
@@ -128,7 +128,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //使用中個数をリセット
             pool._pool_stock = i_length;
             //オブジェクトを作成
-            for (int i = pool._pool.length - 1; i >= 0; i--)
+            for (int i = pool._pool.Length - 1; i >= 0; i--)
             {
                 pool._buffer[i] = pool._pool[i] = createElement();
             }
@@ -156,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //使用中個数をリセット
             pool._pool_stock = i_length;
             //オブジェクトを作成
-            for (int i = pool._pool.length - 1; i >= 0; i--)
+            for (int i = pool._pool.Length - 1; i >= 0; i--)
             {
                 pool._buffer[i] = pool._pool[i] = createElement(i_param);
             }
@@ -170,7 +170,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しいオブジェクトを返してください。
          * @
          */
-        protected T createElement()
+        protected virtual T createElement()
         {
             throw new NyARException();
         }
@@ -182,7 +182,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しいオブジェクトを返してください。
          * @
          */
-        protected T createElement(object i_param)
+        protected virtual T createElement(object i_param)
         {
             throw new NyARException();
         }

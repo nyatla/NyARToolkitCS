@@ -76,11 +76,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public override object createInterface(Type i_iid)
         {
-            if (i_iid == NyARLabeling_Rle.IRasterDriver)
+            if (i_iid == typeof(NyARLabeling_Rle.IRasterDriver))
             {
                 return NyARLabeling_Rle.RasterDriverFactory.createDriver(this);
             }
-            if (i_iid == NyARContourPickup.IRasterDriver)
+            if (i_iid == typeof(NyARContourPickup.IRasterDriver))
             {
                 return NyARContourPickup.ImageDriverFactory.createDriver(this);
             }

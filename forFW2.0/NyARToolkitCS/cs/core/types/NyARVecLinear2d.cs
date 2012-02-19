@@ -94,7 +94,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double y1 = i_v1.dy;
             double x2 = this.dx;
             double y2 = this.dy;
-            double d = (x1 * x2 + y1 * y2) / Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2));
+            double d = (x1 * x2 + y1 * y2) / Math.Sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2));
             return d;
         }
         /**
@@ -219,7 +219,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             w1 = sa * (-sa) - sb * sb;
             if (w1 == 0.0)
             {
-                return Double.POSITIVE_INFINITY;
+                return Double.PositiveInfinity;
             }
             //i_sp1と、i_linerの交点
             lc = -(sb * i_sp1.x - sa * i_sp1.y);

@@ -112,7 +112,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             public int l;
             public int r;
-            int fid;
+            public int fid;
             public static RleElement[] createArray(int i_length)
             {
                 RleElement[] ret = new RleElement[i_length];
@@ -241,7 +241,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		Debug.Assert(i_raster.getSize().isEqualSize(this._raster_size));
 		//ラスタドライバのチェック
 		if(_last_input_raster!=i_raster){
-			this._image_driver=(IRasterDriver)i_raster.createInterface(IRasterDriver);
+			this._image_driver=(IRasterDriver)i_raster.createInterface(typeof(IRasterDriver));
 		}
 		IRasterDriver pixdrv=this._image_driver;
 		RleElement[] rle_prev = this._rle1;
@@ -276,11 +276,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
 			len_current = pixdrv.xLineToRle(i_left,ypos,i_width,i_th, rle_current);
 			int index_prev = 0;
 
-			SCAN_CUR: for (int i = 0; i < len_current; i++) {
+			for (int i = 0; i < len_current; i++) {
 				// index_prev,len_prevの位置を調整する
 				int id = -1;
 				// チェックすべきprevがあれば確認
-				SCAN_PREV: while (index_prev < len_prev) {
+				while (index_prev < len_prev) {
 					if (rle_current[i].l - rle_prev[index_prev].r > 0) {// 0なら8方位ラベリング
 						// prevがcurの左方にある→次のフラグメントを探索
 						index_prev++;
@@ -292,7 +292,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 							label_count++;
 						}
 						// 次のindexをしらべる
-						continue SCAN_CUR;
+						goto SCAN_CUR;
 					}
 					id=rle_prev[index_prev].fid;//ルートフラグメントid
 					NyARRleLabelFragmentInfo id_ptr = f_array[id];
@@ -315,11 +315,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
 					while (index_prev < len_prev) {
 						if (rle_current[i].l - rle_prev[index_prev].r > 0) {// 0なら8方位ラベリング
 							// prevがcurの左方にある→prevはcurに連結していない。
-							break SCAN_PREV;
+							goto SCAN_PREV;
 						} else if (rle_prev[index_prev].l - rle_current[i].r > 0) {// 0なら8方位ラベリングになる
 							// prevがcurの右方にある→prevはcurに連結していない。
 							index_prev--;
-							continue SCAN_CUR;
+							goto SCAN_CUR;
 						}
 						// prevとcurは連結している→ルートフラグメントの統合
 						
@@ -381,6 +381,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 					}
 					index_prev--;
 					break;
+                SCAN_PREV: ;
 				}
 				// curにidが割り当てられたかを確認
 				// 右端独立フラグメントを追加
@@ -390,7 +391,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						label_count++;
 					}
 				}
-			}
+            SCAN_CUR: ;
+            }
 			// prevとrelの交換
 			RleElement[] tmp = rle_prev;
 			rle_prev = rle_current;
