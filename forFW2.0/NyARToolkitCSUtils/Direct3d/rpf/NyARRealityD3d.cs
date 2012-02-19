@@ -30,8 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
+using jp.nyatla.nyartoolkit.cs.rpf;
 #if NyartoolkitCS_FRAMEWORK_CFW
 using Microsoft.WindowsMobile.DirectX.Direct3D;
 using Microsoft.WindowsMobile.DirectX;
@@ -93,7 +92,7 @@ namespace NyARToolkitCSUtils.Direct3d.rpf
          */
         public void getD3dCameraFrustum(ref Matrix o_mat)
         {
-            NyARD3dUtil.mat44ToD3dMatrixT(this._frustum.refMatrix(), ref o_mat);
+            NyARD3dUtil.mat44ToD3dMatrixT(this._frustum.getMatrix(), ref o_mat);
         }
         /**
          * 現在のViewPortに、i_rtsourceの内容を描画します。

@@ -22,27 +22,28 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using jp.nyatla.nyartoolkit.cs.core;
 namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 {
 
     public class ARMarkerSortList : NyARLinkList<ARMarkerSortList.Item>
     {
-        public class Item : NyARLinkList.Item
+        public new class Item : NyARLinkList<ARMarkerSortList.Item>.Item
         {
-            MarkerInfoARMarker marker;
-            double cf;
-            int dir;
-            SquareStack.Item ref_sq;
+            public MarkerInfoARMarker marker;
+            public double cf;
+            public int dir;
+            public SquareStack.Item ref_sq;
         };
         /**
          * 指定個数のリンクリストを生成。
          * @param i_num_of_item
          */
         public ARMarkerSortList()
+            : base(1)
         {
-            super(1);
         }
-        protected Item createElement()
+        protected override Item createElement()
         {
             return new Item();
         }

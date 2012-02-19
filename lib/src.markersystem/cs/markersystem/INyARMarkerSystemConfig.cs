@@ -22,35 +22,34 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-package jp.nyatla.nyartoolkit.markersystem;
-
-import jp.nyatla.nyartoolkit.core.NyARException;
-import jp.nyatla.nyartoolkit.core.analyzer.histogram.INyARHistogramAnalyzer_Threshold;
-import jp.nyatla.nyartoolkit.core.param.NyARParam;
-import jp.nyatla.nyartoolkit.core.transmat.INyARTransMat;
-
-/**
- * このインタフェイスは、NyARMarkerSystemのコンフィギュレーションインタフェイスを定義します。
- *
- */
-public interface INyARMarkerSystemConfig
+using jp.nyatla.nyartoolkit.cs.core;
+namespace jp.nyatla.nyartoolkit.cs.markersystem
 {
-	/**
-	 * 姿勢変換アルゴリズムクラスのオブジェクトを生成して返します。
-	 * @return
-	 * @
-	 */
-	public INyARTransMat createTransmatAlgorism() ;
-	/**
-	 * 敷居値決定クラスを生成して返します。
-	 * @return
-	 * @
-	 */
-	public INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism() ;
-	/**
-	 * ARToolKitパラメータオブジェクトを返します。
-	 * @return
-	 * [readonly]
-	 */
-	public NyARParam getNyARParam();
+
+
+    /**
+     * このインタフェイスは、NyARMarkerSystemのコンフィギュレーションインタフェイスを定義します。
+     *
+     */
+    public interface INyARMarkerSystemConfig
+    {
+        /**
+         * 姿勢変換アルゴリズムクラスのオブジェクトを生成して返します。
+         * @return
+         * @
+         */
+        INyARTransMat createTransmatAlgorism();
+        /**
+         * 敷居値決定クラスを生成して返します。
+         * @return
+         * @
+         */
+        INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism();
+        /**
+         * ARToolKitパラメータオブジェクトを返します。
+         * @return
+         * [readonly]
+         */
+        NyARParam getNyARParam();
+    }
 }

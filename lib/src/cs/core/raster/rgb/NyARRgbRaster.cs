@@ -123,7 +123,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 初期化が成功すると、trueです。
          * @ 
          */
-        protected bool initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
+        protected virtual bool initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
         {
             //バッファの構築
             switch (i_raster_type)

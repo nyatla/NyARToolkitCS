@@ -30,8 +30,7 @@ using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
+using jp.nyatla.nyartoolkit.cs.rpf;
 
 //using jp.nyatla.nyartoolkit.cs.sandbox.x2;
 //using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
@@ -54,7 +53,7 @@ namespace ConsoleApplication1
 
 		    try {
 			    NyARParam param=new NyARParam();
-			    param.loadARParamFromFile(PARAM_FILE);
+			    param.loadARParam(new StreamReader(PARAM_FILE));
 			    param.changeScreenSize(320,240);
 			    NyARReality reality=new NyARReality(param.getScreenSize(),10,1000,param.getPerspectiveProjectionMatrix(),null,10,10);
 			    NyARRealitySource reality_in=new NyARRealitySource_Reference(320,240,null,2,100,NyARBufferType.BYTE1D_B8G8R8X8_32);

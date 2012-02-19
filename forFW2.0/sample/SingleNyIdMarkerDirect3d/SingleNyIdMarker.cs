@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.nyidmarker;
 using jp.nyatla.nyartoolkit.cs.processor;
-using jp.nyatla.nyartoolkit.cs.utils;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
 using Microsoft.DirectX;

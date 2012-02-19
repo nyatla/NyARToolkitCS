@@ -37,10 +37,9 @@ namespace NyARToolkitCSUtils.WMCapture
 namespace NyARToolkitCSUtils.Capture
 #endif
 {
-    public class DsRGB565Raster : NyARRgbRaster_BasicClass
+    public class DsRGB565Raster : NyARRgbRaster
     {
-        private INyARRgbPixelReader _rgb_reader;
-        private short[] _buf;
+        private INyARRgbPixelDriver _rgb_reader;
         public DsRGB565Raster(int i_width, int i_height)
             : base(i_width, i_height,NyARBufferType.WORD1D_R5G6B5_16LE)
         {
@@ -48,28 +47,10 @@ namespace NyARToolkitCSUtils.Capture
             {
                 throw new NyARException();
             }
-            this._buf = new short[i_height * i_width];
-            this._rgb_reader = new NyARRgbPixelReader_WORD1D_R5G6B5_16LE(this._buf,this._size);
-            return;
-        }
-        public override INyARRgbPixelReader getRgbPixelReader()
-        {
-            return this._rgb_reader;
-        }
-        public override object getBuffer()
-        {
-            return this._buf;
-        }
-        public override bool hasBuffer()
-        {
-            return this._buf != null;
-        }
-        public override void wrapBuffer(object i_ref_buf)
-        {
-            NyARException.notImplement();
         }
         public void setBuffer(IntPtr i_buf, bool i_flip_vertical)
         {
+            short[] buf=(short[])(this._buf);
             if (i_flip_vertical)
             {
                 //上下反転させる
@@ -78,7 +59,7 @@ namespace NyARToolkitCSUtils.Capture
                 int et = 0;
                 for (int i = this._size.h - 1; i >= 0; i--)
                 {
-                    Marshal.Copy((IntPtr)((int)i_buf + et), this._buf, st, w);
+                    Marshal.Copy((IntPtr)((int)i_buf + et), buf, st, w);
                     st -= w;
                     et += w*2;
                 }
@@ -86,7 +67,7 @@ namespace NyARToolkitCSUtils.Capture
             else
             {
                 //上下を反転させない。
-                Marshal.Copy(i_buf, this._buf, 0, this._buf.Length);
+                Marshal.Copy(i_buf, buf, 0, buf.Length);
             }
             return;
         }
