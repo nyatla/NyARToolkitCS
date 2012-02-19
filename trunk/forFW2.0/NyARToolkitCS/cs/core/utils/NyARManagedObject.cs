@@ -94,7 +94,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 減算後の参照カウンタ
          */
-        public int releaseObject()
+        public virtual int releaseObject()
         {
             Debug.Assert(this._count > 0);
             this._count--;

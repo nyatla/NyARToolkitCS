@@ -294,8 +294,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARIntSize s = i_gsraster.getSize();
             int skip_dst = (s.w - i_w);
             int skip_src = skip_dst;
-            const int pix_count = i_w;
-            const int pix_mod_part = pix_count - (pix_count % 8);
+            int pix_count = i_w;
+            int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int pt_src = pt_dst;

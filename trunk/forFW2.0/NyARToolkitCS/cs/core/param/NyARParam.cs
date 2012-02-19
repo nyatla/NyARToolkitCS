@@ -160,7 +160,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         public void loadARParam(StreamReader i_stream)
         {
-            this.loadARParam(new BinaryReader(i_stream));
+            this.loadARParam(new BinaryReader(i_stream.BaseStream));
         }
         /**
          * この関数は、ストリームからARToolKit形式のカメラパラメーを1個目の設定をロードします。

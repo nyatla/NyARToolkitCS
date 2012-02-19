@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
@@ -41,8 +42,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
     class TSinCosValue
     {
-        public double cos_val;
-        public double sin_val;
         public static TSinCosValue[] createArray(int i_size)
         {
             TSinCosValue[] result = new TSinCosValue[i_size];
@@ -337,15 +336,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
 
             // 最小値２個を得ておく。
-            double min_ang_0 = Double.MAX_VALUE;
-            double min_ang_1 = Double.MAX_VALUE;
-            double min_err_0 = Double.MAX_VALUE;
-            double min_err_1 = Double.MAX_VALUE;
+            double min_ang_0 = Double.MaxValue;
+            double min_ang_1 = Double.MaxValue;
+            double min_err_0 = Double.MaxValue;
+            double min_err_1 = Double.MaxValue;
             for (int i = 0; i < number_of_sin; i++)
             {
                 // +-cos_v[i]が頂点候補
                 double sin_rt = sin_table[i];
-                double cos_rt = Math.sqrt(1 - (sin_rt * sin_rt));
+                double cos_rt = Math.Sqrt(1 - (sin_rt * sin_rt));
                 // cosを修復。微分式で0に近い方が正解
                 // 0 = 2*cos(x)*sin(x)*M - sin(x)^2 + cos(x)^2 + sin(x)*K + cos(x)*J
                 double a1 = 2 * cos_rt * sin_rt * M + sin_rt * (K - sin_rt) + cos_rt * (cos_rt + J);
@@ -354,7 +353,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 a1 = a1 < 0 ? -a1 : a1;
                 a2 = a2 < 0 ? -a2 : a2;
                 cos_rt = (a1 < a2) ? cos_rt : -cos_rt;
-                double ang = Math.atan2(sin_rt, cos_rt);
+                double ang = Math.Atan2(sin_rt, cos_rt);
                 // エラー値を計算
                 double err = iN * sin_rt * sin_rt + (iL * cos_rt + iJ) * sin_rt + iM * cos_rt * cos_rt + iK * cos_rt + iO;
                 // 最小の２個を獲得する。
@@ -393,7 +392,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 gap_1 = (min_ang_1 + Math.PI * 2) - i_hint_angle;
             }
-            return Math.abs(gap_1) < Math.abs(gap_0) ? gap_1 : gap_0;
+            return Math.Abs(gap_1) < Math.Abs(gap_0) ? gap_1 : gap_0;
         }
     }
 }

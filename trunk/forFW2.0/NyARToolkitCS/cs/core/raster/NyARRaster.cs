@@ -23,6 +23,7 @@
  * 
  */
 using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -62,9 +63,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @
          */
-        public NyARRaster(int i_width, int i_height, int i_buffer_type, bool i_is_alloc)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type, bool i_is_alloc):base(i_width, i_height, i_buffer_type)
         {
-            base(i_width, i_height, i_buffer_type);
+
             if (!initInstance(this._size, i_buffer_type, i_is_alloc))
             {
                 throw new NyARException();
@@ -84,9 +85,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 指定できる値は、クラスの説明を見てください。
          * @
          */
-        public NyARRaster(int i_width, int i_height, int i_buffer_type)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type): base(i_width, i_height, i_buffer_type)
         {
-            base(i_width, i_height, i_buffer_type);
             if (!initInstance(this._size, i_buffer_type, true))
             {
                 throw new NyARException();

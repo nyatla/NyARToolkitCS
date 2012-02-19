@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -123,7 +124,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             for (int i = 0; i < 256; i++)
             {
-                int v = 255 * (int)(1 / (1 + Math.exp(i_gain * (i - i_x))) - 0.5) + i_y;
+                int v = 255 * (int)(1 / (1 + Math.Exp(i_gain * (i - i_x))) - 0.5) + i_y;
                 this._table[i] = v < 0 ? 0 : v > 255 ? 255 : v;
             }
             this._tone_filter.doFilter(this._table, i_output);
@@ -133,7 +134,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             for (int i = 0; i < 256; i++)
             {
-                this._table[i] = (int)(Math.pow((double)i / 255.0, i_gamma) * 255.0);
+                this._table[i] = (int)(Math.Pow((double)i / 255.0, i_gamma) * 255.0);
             }
             this._tone_filter.doFilter(this._table, i_output);
         }

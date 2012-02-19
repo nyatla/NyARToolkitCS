@@ -29,7 +29,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     /**
      * このクラスは、可変長のリンクリストです。
      */
-    public abstract class NyARLinkList<T>
+    public abstract class NyARLinkList<T> where T : NyARLinkList<T>.Item
     {
         /**
          * リンクリストのアイテムのベースクラスです。

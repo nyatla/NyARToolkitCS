@@ -23,6 +23,7 @@
  * 
  */
 using jp.nyatla.nyartoolkit.cs.core;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.nyidmarker
 {
@@ -572,7 +573,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             int h3, h2, h1, h0, l3, l2, l1, l0;
             h3 = h2 = h1 = h0 = l3 = l2 = l1 = l0 = i_pixcel[0];
 
-            for (int i = i_pixcel.length - 1; i >= 1; i--)
+            for (int i = i_pixcel.Length - 1; i >= 1; i--)
             {
                 int pix = i_pixcel[i];
                 if (h0 < pix)
@@ -1034,7 +1035,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         public void setBitByBitIndex(int i_index_no, int i_value)
 	{
-		Debug.Assert i_value==0 || i_value==1;
+		Debug.Assert(i_value==0 || i_value==1);
 		int bit_no=this._bit_table[i_index_no];
 		if(bit_no==0){
 			this._bits[0]=i_value;
@@ -1054,7 +1055,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          */
         public void setBit(int i_bit_no, int i_value)
 	{
-		Debug.Assert i_value==0 || i_value==1;
+		Debug.Assert(i_value==0 || i_value==1);
 		if(i_bit_no==0){
 			this._bits[0]=i_value;
 		}else{

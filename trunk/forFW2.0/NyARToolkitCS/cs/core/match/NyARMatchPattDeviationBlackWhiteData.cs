@@ -28,6 +28,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -119,7 +121,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 linput[i] = w_sum;
                 sum += w_sum * w_sum;
             }
-            double p = Math.sqrt((double)sum);
+            double p = Math.Sqrt((double)sum);
             this._pow = p != 0.0 ? p : 0.0000001;
             return;
         }

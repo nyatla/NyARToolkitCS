@@ -137,7 +137,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             //最終入力ラスタを更新
             if (this._last_input_raster != i_raster)
             {
-                this._bin_filter = (INyARRgb2GsFilterArtkTh)i_raster.createInterface(INyARRgb2GsFilterArtkTh);
+                this._bin_filter = (INyARRgb2GsFilterArtkTh)i_raster.createInterface(typeof(INyARRgb2GsFilterArtkTh));
                 this._last_input_raster = i_raster;
             }
             //ラスタを２値イメージに変換する.
@@ -186,7 +186,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * @param i_vertex_index
          * @
          */
-        protected void updateSquareInfo(NyARIntCoordinates i_coord, int[] i_vertex_index)
+        protected internal void updateSquareInfo(NyARIntCoordinates i_coord, int[] i_vertex_index)
         {
             NyARMatchPattResult mr = this.__detectMarkerLite_mr;
             //輪郭座標から頂点リストに変換
@@ -318,9 +318,8 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 this._parent.updateSquareInfo(i_coord, i_vertex_index);
             }
         }
-        public NyARSingleDetectMarker_ARTKv2(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width)
+        public NyARSingleDetectMarker_ARTKv2(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width):base(i_ref_param, i_ref_code, i_marker_width)
         {
-            super(i_ref_param, i_ref_code, i_marker_width);
             this._inst_patt = new NyARColorPatt_O3(i_ref_code.getWidth(), i_ref_code.getHeight());
             this._transmat = new NyARTransMat_ARToolKit(i_ref_param);
             this._square_detect = new ARTKDetector(this, i_ref_param.getScreenSize());
@@ -336,8 +335,8 @@ namespace jp.nyatla.nyartoolkit.cs.detector
     {
         protected NyARSingleDetectMarker_ARTKv2.ARTKDetector _square_detect;
         public NyARSingleDetectMarker_NyARTK_FITTING_ARTKv2(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width)
+            : base(i_ref_param, i_ref_code, i_marker_width)
         {
-            super(i_ref_param, i_ref_code, i_marker_width);
             this._inst_patt = new NyARColorPatt_Perspective(i_ref_code.getWidth(), i_ref_code.getHeight(), 4, 25);
             this._transmat = new NyARTransMat_ARToolKit(i_ref_param);
             this._square_detect = new NyARSingleDetectMarker_ARTKv2.ARTKDetector(this, i_ref_param.getScreenSize());
@@ -362,9 +361,8 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         private class RleDetector : NyARSquareContourDetector_Rle
         {
             NyARSingleDetectMarker _parent;
-            public RleDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size)
+            public RleDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size):base(i_size)
             {
-                super(i_size);
                 this._parent = i_parent;
             }
             protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
@@ -373,9 +371,9 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             }
         }
 
-        public NyARSingleDetectMarker_NyARTK(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width)
+        public NyARSingleDetectMarker_NyARTK(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width):base(i_ref_param, i_ref_code, i_marker_width)
         {
-            super(i_ref_param, i_ref_code, i_marker_width);
+            
             this._inst_patt = new NyARColorPatt_Perspective(i_ref_code.getWidth(), i_ref_code.getHeight(), 4, 25);
             this._transmat = new NyARTransMat(i_ref_param);
             this._square_detect = new RleDetector(this, i_ref_param.getScreenSize());

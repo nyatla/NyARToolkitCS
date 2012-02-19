@@ -49,20 +49,19 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 参照する射影変換オブジェクト
          * @
          */
-        public NyARRotMatrix_ARToolKit_O2(NyARPerspectiveProjectionMatrix i_matrix)
+        public NyARRotMatrix_ARToolKit_O2(NyARPerspectiveProjectionMatrix i_matrix):base(i_matrix)
         {
-            super(i_matrix);
             return;
         }
         //override
         public override void setAngle(double i_x, double i_y, double i_z)
         {
-            double sina = Math.sin(i_x);
-            double cosa = Math.cos(i_x);
-            double sinb = Math.sin(i_y);
-            double cosb = Math.cos(i_y);
-            double sinc = Math.sin(i_z);
-            double cosc = Math.cos(i_z);
+            double sina = Math.Sin(i_x);
+            double cosa = Math.Cos(i_x);
+            double sinb = Math.Sin(i_y);
+            double cosb = Math.Cos(i_y);
+            double sinc = Math.Sin(i_z);
+            double cosc = Math.Cos(i_z);
             // Optimize
             double CACA = cosa * cosa;
             double SASA = sina * sina;

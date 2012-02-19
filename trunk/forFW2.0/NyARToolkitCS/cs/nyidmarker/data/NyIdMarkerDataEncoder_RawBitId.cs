@@ -51,18 +51,18 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 return false;
             }
             //エンコードしてみる
-            if (!super.encode(i_data, this._tmp))
+            if (!base.encode(i_data, this._tmp))
             {
                 return false;
             }
             //SerialIDの再構成
-            long s = 0;
+            ulong s = 0;
             //最大4バイト繋げて１個のint値に変換
             for (int i = 0; i < this._tmp.length; i++)
             {
-                s = (s << 8) | this._tmp.packet[i];
+                s = (s << 8) | (uint)this._tmp.packet[i];
             }
-            ((NyIdMarkerData_RawBitId)o_dest).marker_id = s;
+            ((NyIdMarkerData_RawBitId)o_dest).marker_id = (long)s;
             return true;
         }
         /**

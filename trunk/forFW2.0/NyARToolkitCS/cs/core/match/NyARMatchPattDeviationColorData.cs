@@ -91,7 +91,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public int[] getData(int[] i_buf)
         {
-            System.arraycopy(this._data, 0, i_buf, 0, this._data.Length);
+            Array.Copy(this._data,0,i_buf,0,this._data.Length);
             return i_buf;
         }
         /**
@@ -227,7 +227,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             //<差分値計算>
             //<差分値計算(FORの1/8展開)/>
-            double p = Math.sqrt((double)sum);
+            double p = Math.Sqrt((double)sum);
             this._pow = (p != 0.0 ? p : 0.0000001);
         }
     }

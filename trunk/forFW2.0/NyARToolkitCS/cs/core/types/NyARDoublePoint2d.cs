@@ -68,17 +68,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しい配列。
          */
         public static NyARDoublePoint2d[][] create2dArray(int i_length_x, int i_length_y)
-	{
-		NyARDoublePoint2d[][] ret=new NyARDoublePoint2d[i_length_y][i_length_x];
-		for(int i=0;i<i_length_y;i++)
-		{
-			for(int i2=0;i2<i_length_x;i2++)
-			{
-				ret[i][i2]=new NyARDoublePoint2d();
-			}
-		}
-		return ret;
-	}
+        {
+            NyARDoublePoint2d[][] ret = new NyARDoublePoint2d[i_length_y][];
+            for (int i = 0; i < i_length_y; i++)
+            {
+                ret[i] = new NyARDoublePoint2d[i_length_x];
+                for (int i2 = 0; i2 < i_length_x; i2++)
+                {
+                    ret[i][i2] = new NyARDoublePoint2d();
+                }
+            }
+            return ret;
+        }
         /**
          * この関数は、３点で定義される直線から、外積を計算します。
          * 外積は、p1->p2と、p2->p3で定義する直線の外積です。

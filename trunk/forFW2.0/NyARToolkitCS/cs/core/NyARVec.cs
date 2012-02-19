@@ -142,7 +142,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             NyARException.trap("この関数は動作確認できていません。");
             double s, t;
-            s = Math.sqrt(this.vecInnerproduct(this, i_start));
+            s = Math.Sqrt(this.vecInnerproduct(this, i_start));
             // double[] x_array=x.getArray();
             if (s != 0.0)
             {
@@ -154,7 +154,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 NyARException.trap("未チェックのパス");
                 {
                     this.v[i_start] += s;// x->v[0] += s;
-                    t = 1 / Math.sqrt(this.v[i_start] * s);// t = 1 / sqrt(x->v[0] * s);
+                    t = 1 / Math.Sqrt(this.v[i_start] * s);// t = 1 / sqrt(x->v[0] * s);
                 }
                 for (int i = i_start; i < this.clm; i++)
                 {

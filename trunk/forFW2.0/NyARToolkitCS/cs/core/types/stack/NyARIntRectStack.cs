@@ -48,7 +48,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARIntRectStack(int i_length)
         {
-            base.initInstance(i_length, NyARIntRect);
+            base.initInstance(i_length);
         }
         /**
          * この関数は、配列要素を作成します。

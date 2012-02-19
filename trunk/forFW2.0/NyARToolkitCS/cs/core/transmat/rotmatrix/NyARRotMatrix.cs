@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -113,7 +114,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double w02 = vec1.v2 * vec2.v3 - vec1.v3 * vec2.v2;
             double w12 = vec1.v3 * vec2.v1 - vec1.v1 * vec2.v3;
             double w22 = vec1.v1 * vec2.v2 - vec1.v2 * vec2.v1;
-            double w = Math.sqrt(w02 * w02 + w12 * w12 + w22 * w22);
+            double w = Math.Sqrt(w02 * w02 + w12 * w12 + w22 * w22);
             this.m02 = w02 / w;
             this.m12 = w12 / w;
             this.m22 = w22 / w;

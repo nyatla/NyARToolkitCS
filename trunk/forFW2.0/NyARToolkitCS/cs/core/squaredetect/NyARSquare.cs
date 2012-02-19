@@ -28,6 +28,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -70,7 +71,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARDoublePoint2d[] b = i_square.sqvertex;
 
             //3-0番目
-            int min_dist = Integer.MAX_VALUE;
+            int min_dist = int.MaxValue;
             int min_index = 0;
             int xd, yd;
             for (int i = 3; i >= 0; i--)

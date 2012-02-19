@@ -47,7 +47,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * 配列値を格納するバッファ。配列サイズと行列サイズは必ずしも一致しないことに注意。配列のサイズを行列の大きさとして使わないこと！
          */
-        protected double[][] _m;
+        protected internal double[][] _m;
         /**
          * 逆行列計算に使うワークエリア
          */
@@ -94,13 +94,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 列数です。
          */
         public NyARMat(int i_row, int i_clm)
-	{
-		this._m = new double[i_row][i_clm];
-		this.clm = i_clm;
-		this.row = i_row;
-		this.__matrixSelfInv_nos=new int[i_row];
-		return;
-	}
+        {
+            this._m = ArrayUtils.newDouble2dArray(i_row, i_clm);
+            this.clm = i_clm;
+            this.row = i_row;
+            this.__matrixSelfInv_nos = new int[i_row];
+            return;
+        }
         /**
          * 行列の列数を返します。
          * @return
@@ -215,7 +215,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 p = 0.0;
                 for (int i = n; i < dimen; i++)
                 {
-                    if (p < (pbuf = Math.abs(ap[i][0])))
+                    if (p < (pbuf = Math.Abs(ap[i][0])))
                     {
                         p = pbuf;
                         ip = i;

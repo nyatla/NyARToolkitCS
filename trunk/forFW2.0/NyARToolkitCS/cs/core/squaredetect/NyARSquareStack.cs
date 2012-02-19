@@ -48,7 +48,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARSquareStack(int i_length)
         {
-            super.initInstance(i_length, NyARSquare);
+            base.initInstance(i_length);
 
         }
         /**

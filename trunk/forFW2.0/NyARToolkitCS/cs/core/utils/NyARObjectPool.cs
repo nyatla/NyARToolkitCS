@@ -58,7 +58,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             if (this._pool_stock < 1)
             {
-                return null;
+                return default(T);
             }
             this._pool_stock--;
             return this._pool[this._pool_stock];
@@ -99,8 +99,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected void initInstance(int i_length)
         {
             //領域確保
-            this._buffer = new T(i_length);
-            this._pool = new T(i_length);
+            this._buffer = new T[i_length];
+            this._pool = new T[i_length];
             //使用中個数をリセット
             this._pool_stock = i_length;
             //オブジェクトを作成
@@ -118,7 +118,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 新しいオブジェクトを返してください。
          * @
          */
-        protected T createElement()
+        protected virtual T createElement()
         {
             throw new NyARException();
         }

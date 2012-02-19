@@ -49,7 +49,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARIntPointStack(int i_length)
         {
-            super.initInstance(i_length, NyARIntPoint2d);
+            base.initInstance(i_length);
             return;
         }
         /**

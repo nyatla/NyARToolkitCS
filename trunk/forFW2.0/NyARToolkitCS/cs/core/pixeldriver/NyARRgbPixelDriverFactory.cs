@@ -427,7 +427,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
-            const int width = this._ref_size.w;
+            int width = this._ref_size.w;
             int[] ref_buf = this._ref_buf;
             for (int i = i_num - 1; i >= 0; i--)
             {
