@@ -39,7 +39,6 @@ namespace NyARToolkitCSUtils.Capture
 {
     public class DsRGB565Raster : NyARRgbRaster
     {
-        private INyARRgbPixelDriver _rgb_reader;
         public DsRGB565Raster(int i_width, int i_height)
             : base(i_width, i_height,NyARBufferType.WORD1D_R5G6B5_16LE)
         {

@@ -176,6 +176,9 @@
     <Compile Include="..\..\lib\src\cs\core\rasterdriver\NyARPerspectiveCopyFactory.cs">
       <Link>cs\core\rasterdriver\NyARPerspectiveCopyFactory.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src\cs\core\rasterdriver\NyARPerspectiveCopy_Base.cs">
+      <Link>cs\core\rasterdriver\NyARPerspectiveCopy_Base.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src\cs\core\rasterfilter\gs\INyARGsCustomToneTableFilter.cs">
       <Link>cs\core\rasterfilter\gs\INyARGsCustomToneTableFilter.cs</Link>
     </Compile>

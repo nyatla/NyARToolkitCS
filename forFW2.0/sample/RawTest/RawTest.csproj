@@ -36,6 +36,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +50,10 @@
     <ProjectReference Include="..\..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
       <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
       <Name>NyARToolkitCS.rpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NyARToolkitCSUtils\NyARToolkitCSUtils.csproj">
+      <Project>{1D202933-65C8-4568-9756-87E57D294132}</Project>
+      <Name>NyARToolkitCSUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
