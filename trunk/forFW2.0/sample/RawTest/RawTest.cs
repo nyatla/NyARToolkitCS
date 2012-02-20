@@ -30,8 +30,8 @@ using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-//using jp.nyatla.nyartoolkit.cs.sandbox.x2;
-//using jp.nyatla.nyartoolkit.cs.sandbox.quadx2;
+using NyARToolkitCSUtils;
+using System.Drawing;
 namespace ConsoleApplication1
 {
     /**
@@ -63,8 +63,14 @@ namespace ConsoleApplication1
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
-            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
-            ra.wrapBuffer(raw);
+            
+            NyARBitmapRaster ra = new NyARBitmapRaster(320, 240);
+            Graphics g = Graphics.FromImage(ra.getBitmap());
+            g.DrawImage(new Bitmap("../../../../../data/320x240ABGR.png"), 0, 0);
+            
+
+//            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
+//            ra.wrapBuffer(raw);
             //		Blank_Raster ra=new Blank_Raster(320, 240);
 
             //１パターンのみを追跡するクラスを作成
@@ -81,7 +87,7 @@ namespace ConsoleApplication1
             {
                 //変換行列を取得
                 ar.detectMarkerLite(ra, 100);
-                ar.getTransmationMatrix(result_mat);
+//                ar.getTransmationMatrix(result_mat);
             }
             Console.WriteLine(result_mat.m00 + "," + result_mat.m01 + ","+result_mat.m02+","+result_mat.m03);
             Console.WriteLine(result_mat.m10 + "," + result_mat.m11 + ","+result_mat.m12+","+result_mat.m13);

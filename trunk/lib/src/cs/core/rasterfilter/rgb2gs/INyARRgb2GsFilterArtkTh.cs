@@ -345,10 +345,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
             int[] rgb = this.__rgb;
-            for (int y = i_h - 1; y >= 0; y -= 1)
+            for (int y = 0; y <i_h; y++)
             {
                 int x;
-                for (x = i_w - 1; x >= 0; x--)
+                for (x = 0; x < i_w; x++)
                 {
                     input.getPixel(x + i_l, y + i_t, rgb);
                     output[pt_dst++] = (rgb[0] + rgb[1] + rgb[2]) <= th ? 0 : 1;
