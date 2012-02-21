@@ -108,6 +108,10 @@ namespace NyARToolkitCSUtils.Capture
         {
             get { return m_video_info.BmiHeader.BitCount; } 
         }
+        public VideoInfoHeader getVideoInfo()
+        {
+            return this.m_video_info;
+        }
 
         public bool video_vertical_flip
         {

@@ -27,7 +27,10 @@ namespace NyARToolkitCSUtils
         public NyARBitmapRaster(int i_width, int i_heigth)
             : base(i_width, i_heigth, NyARBufferType.OBJECT_CS_Bitmap)
         {
-            //BitmapData用のラスタを生成
+        }
+        protected NyARBitmapRaster(int i_width, int i_heigth,int i_raster_type)
+            : base(i_width, i_heigth, i_raster_type)
+        {
         }
         /**
          * Readerとbufferを初期化する関数です。コンストラクタから呼び出します。
@@ -75,8 +78,7 @@ namespace NyARToolkitCSUtils
         {
             if (iIid == typeof(INyARPerspectiveCopy))
             {
-                return new PerspectiveCopy_CSBitmap(this);
-//                return NyARPerspectiveCopyFactory.createDriver(this);
+                return this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap) ? new PerspectiveCopy_CSBitmap(this) : NyARPerspectiveCopyFactory.createDriver(this);
             }
             if (iIid == typeof(NyARMatchPattDeviationColorData.IRasterDriver))
             {
@@ -101,11 +103,11 @@ namespace NyARToolkitCSUtils
             }
             if (iIid == typeof(INyARRgb2GsFilterArtkTh))
             {
-                return new NyARRgb2GsFilterArtkTh_CsBitmap(this);
+                return this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap) ? new NyARRgb2GsFilterArtkTh_CsBitmap(this) : NyARRgb2GsFilterArtkThFactory.createDriver(this);
             }
             throw new NyARException();
         }
-#region 
+        #region extension functions
         private int number_of_lock=0;
         private BitmapData _bm_cache;
         public BitmapData lockBitmap()
@@ -140,12 +142,100 @@ namespace NyARToolkitCSUtils
         {
             return (Bitmap)this._buf;
         }
-
-#endregion
+        #endregion
     }
-    class NyARRgb2GsFilterArtkTh_CsBitmap : INyARRgb2GsFilterArtkTh
+
+    #region pixel drivers
+    class NyARRgb2GsFilterRgbAve_CsBitmap : INyARRgb2GsFilterRgbAve
     {
-        protected NyARBitmapRaster _raster;
+        private NyARBitmapRaster _ref_raster;
+        public NyARRgb2GsFilterRgbAve_CsBitmap(NyARBitmapRaster i_ref_raster)
+        {
+            Debug.Assert(i_ref_raster.getBitmap().PixelFormat == PixelFormat.Format32bppRgb);
+            Debug.Assert(i_ref_raster.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap));
+            this._ref_raster = i_ref_raster;
+        }
+        public void convert(INyARGrayscaleRaster i_raster)
+        {
+            NyARIntSize s = this._ref_raster.getSize();
+            this.convertRect(0, 0, s.w, s.h, i_raster);
+        }
+        private byte[] _work = new byte[4 * 8];
+        public void convertRect(int l, int t, int w, int h, INyARGrayscaleRaster o_raster)
+        {
+            byte[] work = this._work;
+            BitmapData bm = this._ref_raster.lockBitmap();
+            NyARIntSize size = this._ref_raster.getSize();
+            int bp = (l + t * size.w) * 4 + (int)bm.Scan0;
+            int b = t + h;
+            int row_padding_dst = (size.w - w);
+            int row_padding_src = row_padding_dst * 4;
+            int pix_count = w;
+            int pix_mod_part = pix_count - (pix_count % 8);
+            int dst_ptr = t * size.w + l;
+            // in_buf = (byte[])this._ref_raster.getBuffer();
+            switch (o_raster.getBufferType())
+            {
+                case NyARBufferType.INT1D_GRAY_8:
+                    int[] out_buf = (int[])o_raster.getBuffer();
+                    for (int y = t; y < b; y++)
+                    {
+
+                        int x = 0;
+                        for (x = pix_count - 1; x >= pix_mod_part; x--)
+                        {
+                            int p = Marshal.ReadInt32((IntPtr)bp);
+                            out_buf[dst_ptr++] = (((p >> 16) & 0xff) + ((p >> 8) & 0xff) + (p & 0xff)) / 3;
+                            bp += 4;
+                        }
+                        for (; x >= 0; x -= 8)
+                        {
+                            Marshal.Copy((IntPtr)bp, work, 0, 32);
+                            out_buf[dst_ptr++] = (work[0] + work[1] + work[2]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[4] + work[5] + work[6]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[8] + work[9] + work[10]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[12] + work[13] + work[14]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[16] + work[17] + work[18]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[20] + work[21] + work[22]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[24] + work[25] + work[26]) / 3;
+                            bp += 4;
+                            out_buf[dst_ptr++] = (work[28] + work[29] + work[30]) / 3;
+                            bp += 4;
+                        }
+                        bp += row_padding_src;
+                        dst_ptr += row_padding_dst;
+                    }
+                    this._ref_raster.unlockBitmap();
+                    return;
+                default:
+                    INyARGsPixelDriver out_drv = o_raster.getGsPixelDriver();
+                    for (int y = t; y < b; y++)
+                    {
+                        for (int x = 0; x < pix_count; x++)
+                        {
+                            int p = Marshal.ReadInt32((IntPtr)bp);
+                            out_drv.setPixel(x, y, (((p >> 16) & 0xff) + ((p >> 8) & 0xff) + (p & 0xff)) / 3);
+                            bp += 4;
+                        }
+                        bp += row_padding_src;
+                    }
+                    this._ref_raster.unlockBitmap();
+                    return;
+            }
+
+        }
+    }
+
+
+    sealed class NyARRgb2GsFilterArtkTh_CsBitmap : INyARRgb2GsFilterArtkTh
+    {
+        private NyARBitmapRaster _raster;
         public void doFilter(int i_h, INyARGrayscaleRaster i_gsraster)
         {
             NyARIntSize s = this._raster.getSize();
@@ -155,9 +245,10 @@ namespace NyARToolkitCSUtils
         public NyARRgb2GsFilterArtkTh_CsBitmap(NyARBitmapRaster i_raster)
         {
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap));
+            Debug.Assert(i_raster.getBitmap().PixelFormat==PixelFormat.Format32bppRgb);
             this._raster = i_raster;
         }
-        private byte[] _work=new byte[4*8*3];
+        private byte[] _work=new byte[4*8];
         public void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
@@ -172,29 +263,30 @@ namespace NyARToolkitCSUtils
             int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
             int pt_dst = (i_t * s.w + i_l);
-            int pt_src = pt_dst * 4;
+            int pt_src = pt_dst * 4+(int)bm.Scan0;
             for (int y = i_h - 1; y >= 0; y -= 1)
             {
                 int x;
                 int p;
                 for (x = pix_count - 1; x >= pix_mod_part; x--)
                 {
-                    p=Marshal.ReadInt32(bm.Scan0,pt_src);
+                    p = Marshal.ReadInt32((IntPtr)pt_src);
                     output[pt_dst++] = (((p >> 16) & 0xff) + ((p >> 8) & 0xff) + (p & 0xff)) <= th ? 0 : 1;
                     pt_src += 4;
                 }
                 for (; x >= 0; x -= 8)
                 {
-                    Marshal.Copy((IntPtr)((int)bm.Scan0 + pt_src), work, 0, 32);
-                    output[pt_dst++] = (work[0]+work[1]+work[2]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[4] + work[5] + work[6]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[8] + work[9] + work[10]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[12] + work[13] + work[14]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[16] + work[17] + work[18]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[20] + work[21] + work[22]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[24] + work[25] + work[26]) <= th ? 0 : 1;
-                    output[pt_dst++] = (work[28] + work[29] + work[30]) <= th ? 0 : 1;
+                    Marshal.Copy((IntPtr)pt_src, work, 0, 32);
+                    output[pt_dst  ] = (work[0]+work[1]+work[2]) <= th ? 0 : 1;
+                    output[pt_dst+1] = (work[4] + work[5] + work[6]) <= th ? 0 : 1;
+                    output[pt_dst+2] = (work[8] + work[9] + work[10]) <= th ? 0 : 1;
+                    output[pt_dst+3] = (work[12] + work[13] + work[14]) <= th ? 0 : 1;
+                    output[pt_dst+4] = (work[16] + work[17] + work[18]) <= th ? 0 : 1;
+                    output[pt_dst+5] = (work[20] + work[21] + work[22]) <= th ? 0 : 1;
+                    output[pt_dst+6] = (work[24] + work[25] + work[26]) <= th ? 0 : 1;
+                    output[pt_dst+7] = (work[28] + work[29] + work[30]) <= th ? 0 : 1;
                     pt_src += 32;
+                    pt_dst += 8;
                 }
                 //スキップ
                 pt_src += skip_src;
@@ -279,22 +371,18 @@ namespace NyARToolkitCSUtils
 
         public void switchRaster(INyARRgbRaster i_raster)
         {
-
+            Debug.Assert(((NyARBitmapRaster)i_raster).getBitmap().PixelFormat==PixelFormat.Format32bppRgb);
             this._ref_raster = (NyARBitmapRaster)i_raster;
             this._ref_size = i_raster.getSize();
         }
 
     }
-
-
-
-
-
-    class PerspectiveCopy_CSBitmap : NyARPerspectiveCopy_Base
+    sealed class PerspectiveCopy_CSBitmap : NyARPerspectiveCopy_Base
     {
-        protected NyARBitmapRaster _ref_raster;
+        private NyARBitmapRaster _ref_raster;
         public PerspectiveCopy_CSBitmap(NyARBitmapRaster i_ref_raster)
         {
+            Debug.Assert(i_ref_raster.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap));
             this._ref_raster = i_ref_raster;
         }
         protected override bool onePixel(int pk_l, int pk_t, double[] cpara, INyARRaster o_out)
@@ -339,14 +427,16 @@ namespace NyARToolkitCSUtils
                             if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
                             //
-                            int px = Marshal.ReadInt32(in_bmp.Scan0, (x*4 + y * in_bmp.Stride));
-                            r = (px >> 16) & 0xff;// R
-                            g = (px >> 8) & 0xff; // G
-                            b = (px) & 0xff;    // B
+                            pat_data[p] = Marshal.ReadInt32(in_bmp.Scan0, (x * 4 + y * in_bmp.Stride));
+                            //r = (px >> 16) & 0xff;// R
+                            //g = (px >> 8) & 0xff; // G
+                            //b = (px) & 0xff;    // B
                             cp7_cy_1_cp6_cx += cp6;
                             cp1_cy_cp2_cp0_cx += cp0;
                             cp4_cy_cp5_cp3_cx += cp3;
-                            pat_data[p] = (r << 16) | (g << 8) | ((b & 0xff));
+                            //pat_data[p] = (r << 16) | (g << 8) | ((b & 0xff));
+                            //pat_data[p] = px;
+
                             p++;
                         }
                         cp7_cy_1 += cp7;
@@ -402,7 +492,6 @@ namespace NyARToolkitCSUtils
             BitmapData in_bmp = this._ref_raster.lockBitmap();
             int in_w = this._ref_raster.getWidth();
             int in_h = this._ref_raster.getHeight();
-//            byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
             int res_pix = i_resolution * i_resolution;
 
             //ピクセルリーダーを取得
@@ -468,8 +557,5 @@ namespace NyARToolkitCSUtils
             return false;
         }
     }
-
-
-
-
+    #endregion
 }
