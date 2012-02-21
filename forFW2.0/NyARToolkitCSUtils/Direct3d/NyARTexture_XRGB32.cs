@@ -25,20 +25,23 @@
  * 
  */
 using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
 using NyARToolkitCSUtils.Capture;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
-    /* DsXRGB32Rasterのラスタデータを取り込むことが出来るTextureです。
-     * このテクスチャはそのままARToolKitの背景描画に使います。
+    /* DirectShowのテクスチャをカプセル化して、NyARRgbRasterの入力インタフェイスを定義します。
+     * 入力できるNyARRgbRasterの種類には制限があります。注意してください。
      */
-    public class NyARTexture_XRGB32
+    public class NyARD3dTexture:IDisposable
     {
         private int m_width;
         private int m_height;
@@ -50,7 +53,7 @@ namespace NyARToolkitCSUtils.Direct3d
         /* i_valueを超える最も小さい2のべき乗の値を返します。
          * 
          */
-        private int GetSquareSize(int i_value)
+        private int getSquareSize(int i_value)
         {
             int u = 2;
             //2^nでサイズを超える一番小さな値を得る。
@@ -78,7 +81,7 @@ namespace NyARToolkitCSUtils.Direct3d
          * 2のべき乗サイズになります。
          * 
          */
-        public NyARTexture_XRGB32(Microsoft.DirectX.Direct3D.Device i_dev, int i_width, int i_height)
+        public NyARD3dTexture(Microsoft.DirectX.Direct3D.Device i_dev, int i_width, int i_height)
         {
             this.m_ref_dev = i_dev;
 
@@ -86,48 +89,80 @@ namespace NyARToolkitCSUtils.Direct3d
             this.m_width = i_width;
 
             //テクスチャサイズの確定
-            this.m_texture_height = GetSquareSize(i_height);
-            this.m_texture_width = GetSquareSize(i_width);
+            this.m_texture_height = getSquareSize(i_height);
+            this.m_texture_width = getSquareSize(i_width);
 
             //テクスチャを作るよ！
             this.m_texture = new Texture(this.m_ref_dev, this.m_texture_width, this.m_texture_height, 1, Usage.Dynamic, Format.X8R8G8B8, Pool.Default);
             //OK、完成だ。
             return;
         }
+        public void Dispose()
+        {
+            this.m_texture.Dispose();
+        }
         /* DsXRGB32Rasterの内容を保持しているテクスチャにコピーします。
          * i_rasterのサイズは、このインスタンスに指定したテクスチャサイズ（コンストラクタ等に指定したサイズ）と同じである必要です。
          * ラスタデータはテクスチャの左上を基点にwidth x heightだけコピーされ、残りの部分は更新されません。
          */
-        public void CopyFromXRGB32(DsBGRX32Raster i_raster)
+        public void CopyFromXRGB32(INyARRgbRaster i_raster)
         {
-            //BUFFERFORMAT_BYTE1D_B8G8R8X8_32しか受けられません。
-            Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             GraphicsStream texture_rect;
-            try
+            switch (i_raster.getBufferType())
             {
-                byte[] buf =(byte[])i_raster.getBuffer();
-                // テクスチャをロックする
-                texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
-                //テクスチャのピッチって何？
-                int cp_size = this.m_width * 4;
-                int sk_size = (this.m_texture_width - this.m_width) * 4;
-                int s = 0;
-                for (int r = this.m_height - 1; r >= 0; r--,s++)
-                {
-                    texture_rect.Write(buf, s * cp_size, cp_size);
-                    texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);
-                }
+                case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                    try
+                    {
+                        byte[] buf = (byte[])i_raster.getBuffer();
+                        // テクスチャをロックする
+                        texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
+                        //テクスチャのピッチって何？
+                        int cp_size = this.m_width * 4;
+                        int sk_size = (this.m_texture_width - this.m_width) * 4;
+                        int s = 0;
+                        for (int r = this.m_height - 1; r >= 0; r--, s++)
+                        {
+                            texture_rect.Write(buf, s * cp_size, cp_size);
+                            texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);
+                        }
+                    }
+                    finally
+                    {
+                        //テクスチャをアンロックする
+                        this.m_texture.UnlockRectangle(0);
+                    }
+                    break;
+                case NyARBufferType.OBJECT_CS_Bitmap:
+                    try
+                    {
+                        NyARBitmapRaster ra = (NyARBitmapRaster)(i_raster.getBuffer());
+                        // テクスチャをロックする
+                        texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
+                        //テクスチャのピッチって何？
+                        int cp_size = this.m_width * 4;
+                        int sk_size = (this.m_texture_width - this.m_width) * 4;
+                        int s = 0;
+                        BitmapData bm = ra.lockBitmap();
+                        byte[] tmp = new byte[cp_size];
+                        for (int r = this.m_height - 1; r >= 0; r--, s++)
+                        {
+                            Marshal.Copy((IntPtr)((int)bm.Stride+bm.Stride*s),tmp,0,cp_size);
+                            texture_rect.Write(tmp,0,cp_size);
+                            texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);//padding
+                        }
+                        ra.unlockBitmap();
+                    }
+                    finally
+                    {
+                        //テクスチャをアンロックする
+                        this.m_texture.UnlockRectangle(0);
+                    }
+                    break;
+                default:
+                    throw new NyARException();
             }
-            finally
-            {
-                //テクスチャをアンロックする
-                this.m_texture.UnlockRectangle(0);
-            }
+
             return;
-        }
-        public void Dispose()
-        {
-            this.d3d_texture.Dispose();
         }
     }
 }

@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NyARToolkitCS.markersystem\NyARToolkitCS.markersystem.csproj">
+      <Project>{AEE9408B-7E03-42AD-A0D9-A5B7F2D20B3C}</Project>
+      <Name>NyARToolkitCS.markersystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
       <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
       <Name>NyARToolkitCS.rpf</Name>
@@ -76,12 +80,16 @@
     <Compile Include="Capture\dialog\CameraSelectDialog.Designer.cs">
       <DependentUpon>CameraSelectDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Capture\DsBGRX32Raster.cs" />
     <Compile Include="Capture\DsRGB565Raster.cs" />
+    <Compile Include="Capture\DsRgbRaster.cs" />
+    <Compile Include="Direct3d\markersystem\D3dMarkerSystem.cs" />
     <Compile Include="Direct3d\draw\ColorCube.cs" />
     <Compile Include="Direct3d\draw\NyARD3dDrawUtil.cs" />
+    <Compile Include="Direct3d\markersystem\D3dRender.cs" />
+    <Compile Include="Direct3d\D3dSketch.cs" />
     <Compile Include="Direct3d\NyARD3dUtil.cs" />
     <Compile Include="Direct3d\rpf\NyARRealityD3d.cs" />
+    <Compile Include="Capture\markersystem\NyARDirectShowCamera.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Capture\dialog\CameraSelectDialog.resx">
