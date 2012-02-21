@@ -38,10 +38,9 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         private long _src_ts;
         private long _gs_id_ts;
         private long _gs_hist_ts;
-        private NyARParam _ref_param;
-        public NyARSensor(INyARMarkerSystemConfig i_config)
+        public NyARSensor(NyARIntSize i_size)
         {
-            this.initInstance(i_config.getNyARParam());
+            this.initInstance(i_size);
             this._hist_drv = (INyARHistogramFromRaster)this._gs_raster.createInterface(typeof(INyARHistogramFromRaster));
         }
         /**
@@ -64,11 +63,10 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @return
          * @
          */
-        private void initInstance(NyARParam i_param)
+        private void initInstance(NyARIntSize i_size)
         {
             //リソースの生成
-            this.initResource(i_param.getScreenSize());
-            this._ref_param = i_param;
+            this.initResource(i_size);
             this._gs_hist = new NyARHistogram(256);
             this._src_ts = 0;
             this._gs_id_ts = 0;

@@ -267,7 +267,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int row_padding_src = row_padding_dst;
             int pix_count = w;
             int pix_mod_part = pix_count - (pix_count % 8);
-            int dst_ptr = t * size.w + l;
+            int src_ptr = t * size.w + l;
             int[] in_buf = (int[])this._ref_raster.getBuffer();
             switch (o_raster.getBufferType())
             {
@@ -279,21 +279,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         int x = 0;
                         for (x = pix_count - 1; x >= pix_mod_part; x--)
                         {
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) >> 2;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) >> 2;
                         }
                         for (; x >= 0; x -= 8)
                         {
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
-                            v = in_buf[dst_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
+                            v = in_buf[src_ptr++]; out_buf[bp++] = (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3;
                         }
-                        bp += row_padding_src;
-                        dst_ptr += row_padding_dst;
+                        bp += row_padding_dst;
+                        src_ptr += row_padding_src;
                     }
                     return;
                 default:
@@ -302,7 +302,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     {
                         for (int x = 0; x < pix_count; x++)
                         {
-                            v = in_buf[dst_ptr++];
+                            v = in_buf[src_ptr++];
                             out_drv.setPixel(x, y, (((v >> 16) & 0xff) + ((v >> 8) & 0xff) + (v & 0xff)) / 3);
                         }
                     }

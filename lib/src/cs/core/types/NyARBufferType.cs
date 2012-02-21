@@ -148,7 +148,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /** AS3プラットフォーム固有オブジェクトのドメインです。*/
         public const int OBJECT_AS3 = T_OBJECT | 0x0300;
 
-
+        /**
+         * RGB形式。バッファは、C#のBitmap型オブジェクト
+         */
         public const int OBJECT_CS_Bitmap = OBJECT_CS | 0x01;
         /**
          * RGB形式。バッファは、JavaのBufferedImage型オブジェクト
