@@ -121,14 +121,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         {
             return this._src_ts;
         }
-        /**
-         * ARToolkitのパラメータオブジェクトの参照値を返します。
-         * @return
-         */
-        public NyARParam getARParam()
-        {
-            return this._ref_param;
-        }
+
         /**
          * この関数は、グレースケールに変換した現在の画像を返します。
          * @return
