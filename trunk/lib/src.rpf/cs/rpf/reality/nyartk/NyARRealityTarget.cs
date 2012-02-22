@@ -90,28 +90,28 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	    ////////////////////////
 	    //targetの基本情報
 
-	    /** 内部向けの公開メンバ変数です。{@link #getSerialId}を使ってください。*/
+	    /** 内部向けの公開メンバ変数です。{@link #getSerialId}を使ってください。 */
 	    public long _serial;
-	    /** 内部向けの公開メンバ変数です。{@link #refTransformMatrix}を使ってください。*/
+	    /** 内部向けの公開メンバ変数です。{@link #refTransformMatrix}を使ってください。 */
 	    public NyARTransMatResult _transform_matrix=new NyARTransMatResult();
 
-	    /** ターゲットの種類。未知のターゲット。*/
+	    /** ターゲットの種類。未知のターゲット。 */
 	    public const int RT_UNKNOWN   =0;
-	    /** ターゲットの種類。既知のターゲット。*/
+	    /** ターゲットの種類。既知のターゲット。 */
 	    public const int RT_KNOWN     =2;
-	    /** ターゲットの種類。間もなく消失するターゲット。次回のprogressでリストから除去される。*/
+	    /** ターゲットの種類。間もなく消失するターゲット。次回のprogressでリストから除去される。 */
 	    public const int RT_DEAD      =4;
 
-	    /** 内部向けpublicメンバ変数。{@link #getTargetType()}を使ってください。*/
+	    /** 内部向けpublicメンバ変数。{@link #getTargetType()}を使ってください。 */
 	    public int _target_type;
     	
-	    /** 内部向けpublicメンバ。 ターゲットのオフセット位置。*/
+	    /** 内部向けpublicメンバ。 ターゲットのオフセット位置。 */
 	    public NyARRectOffset _offset=new NyARRectOffset();
-	    /** 内部向けpublicメンバ。このターゲットが参照しているトラックターゲット*/
+	    /** 内部向けpublicメンバ。このターゲットが参照しているトラックターゲット */
 	    public NyARTarget _ref_tracktarget;
-	    /** 内部向けpublicメンバ。スクリーン上の歪み解除済み矩形。*/
+	    /** 内部向けpublicメンバ。スクリーン上の歪み解除済み矩形。 */
 	    public NyARSquare _screen_square=new NyARSquare();
-	    /** 内部向けpublicメンバ。getGrabbRateを使ってください。*/
+	    /** 内部向けpublicメンバ。getGrabbRateを使ってください。 */
 	    public int grab_rate;
     	
 
