@@ -26,6 +26,7 @@
  */
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
@@ -40,13 +41,17 @@ namespace NyARToolkitCSUtils.Direct3d
      */
     public class NyARD3dSurface:IDisposable
     {
+        #region APIs
+        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]
+        private static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
+        #endregion
         private int m_width;
         private int m_height;
         private Microsoft.DirectX.Direct3D.Device m_ref_dev;
-        private Surface m_surface;
+        private Surface _surface;
         public Surface d3d_surface
         {
-            get { return this.m_surface; }
+            get { return this._surface; }
         }
 
         /* i_width x i_heightのテクスチャを格納するインスタンスを生成します。
@@ -55,74 +60,58 @@ namespace NyARToolkitCSUtils.Direct3d
         public NyARD3dSurface(Microsoft.DirectX.Direct3D.Device i_dev, int i_width, int i_height)
         {
             this.m_ref_dev = i_dev;
-
             this.m_height = i_height;
             this.m_width = i_width;
-
-            this.m_surface = i_dev.CreateOffscreenPlainSurface(i_width, i_height, Format.X8R8G8B8, Pool.Default);
+            this._surface = i_dev.CreateOffscreenPlainSurface(i_width, i_height, Format.X8R8G8B8, Pool.Default);
 
             //OK、完成だ。
             return;
         }
         /* DsXRGB32Rasterの内容を保持しているサーフェイスにコピーします。
          */
-        public void CopyFromXRGB32(INyARRgbRaster i_sample)
+        public void setRaster(INyARRgbRaster i_sample)
         {
             Debug.Assert(i_sample.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             int pitch;
-            GraphicsStream gs = this.m_surface.LockRectangle(LockFlags.None, out pitch);
+            GraphicsStream gs = this._surface.LockRectangle(LockFlags.None, out pitch);
             int s_stride=this.m_width * 4;
-            switch(i_sample.getBufferType())
+            switch (i_sample.getBufferType())
             {
-            if (pitch % s_stride == 0)
-            {
-                Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4*this.m_height);
-            }
-            else
-            {
-                int s_idx = 0;
-                int d_idx = (int)gs.InternalData;
-                for (int i = this.m_height - 1; i >= 0; i--)
-                {
-                    //どう考えてもポインタです。
-                    Marshal.Copy((byte[])i_sample.getBuffer(), s_idx, (IntPtr)(d_idx), s_stride);
-                    s_idx += s_stride;
-                    d_idx += pitch;
-                }
-            }
-                case NyARBufferType.OBJECT_CS_Bitmap:
-                    try
+                case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                    if (pitch % s_stride == 0)
                     {
-                        NyARBitmapRaster ra = (NyARBitmapRaster)(i_raster.getBuffer());
-                        // テクスチャをロックする
-                        texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
-                        //テクスチャのピッチって何？
-                        int cp_size = this.m_width * 4;
-                        int sk_size = (this.m_texture_width - this.m_width) * 4;
-                        int s = 0;
-                        BitmapData bm = ra.lockBitmap();
-                        byte[] tmp = new byte[cp_size];
-                        for (int r = this.m_height - 1; r >= 0; r--, s++)
-                        {
-                            Marshal.Copy((IntPtr)((int)bm.Stride+bm.Stride*s),tmp,0,cp_size);
-                            texture_rect.Write(tmp,0,cp_size);
-                            texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);//padding
-                        }
-                        ra.unlockBitmap();
+                        Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4 * this.m_height);
                     }
-                    finally
+                    else
                     {
-                        //テクスチャをアンロックする
-                        this.m_texture.UnlockRectangle(0);
+                        int s_idx = 0;
+                        int d_idx = (int)gs.InternalData;
+                        for (int i = this.m_height - 1; i >= 0; i--)
+                        {
+                            //どう考えてもポインタです。
+                            Marshal.Copy((byte[])i_sample.getBuffer(), s_idx, (IntPtr)(d_idx), s_stride);
+                            s_idx += s_stride;
+                            d_idx += pitch;
+                        }
                     }
                     break;
-
-
-
-
-
-            this.m_surface.UnlockRectangle();
-
+                case NyARBufferType.OBJECT_CS_Bitmap:
+                    NyARBitmapRaster ra = (NyARBitmapRaster)(i_sample.getBuffer());
+                    BitmapData bm = ra.lockBitmap();
+                    //コピー
+                    int src = (int)bm.Scan0;
+                    int dst = (int)gs.InternalData;
+                    for (int r = this.m_height - 1; r >= 0;r--)
+                    {
+                        CopyMemory((IntPtr)dst, (IntPtr)src, s_stride);
+                        dst += pitch;
+                        src += bm.Stride;
+                    }
+                    ra.unlockBitmap();
+                    break;
+                default:
+                    throw new NyARException();
+            }
             return;
         }
         public void Dispose()
