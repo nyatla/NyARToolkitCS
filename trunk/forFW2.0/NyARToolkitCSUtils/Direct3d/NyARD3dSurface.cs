@@ -71,48 +71,51 @@ namespace NyARToolkitCSUtils.Direct3d
          */
         public void setRaster(INyARRgbRaster i_sample)
         {
-            Debug.Assert(i_sample.isEqualBufferType(NyARBufferType.BYTE1D_B8G8R8X8_32));
             int pitch;
-            GraphicsStream gs = this._surface.LockRectangle(LockFlags.None, out pitch);
-            int s_stride=this.m_width * 4;
-            switch (i_sample.getBufferType())
+            using (GraphicsStream gs = this._surface.LockRectangle(LockFlags.None, out pitch))
             {
-                case NyARBufferType.BYTE1D_B8G8R8X8_32:
-                    if (pitch % s_stride == 0)
-                    {
-                        Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4 * this.m_height);
-                    }
-                    else
-                    {
-                        int s_idx = 0;
-                        int d_idx = (int)gs.InternalData;
-                        for (int i = this.m_height - 1; i >= 0; i--)
+                int s_stride = this.m_width * 4;
+                switch (i_sample.getBufferType())
+                {
+                    case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                        if (pitch % s_stride == 0)
                         {
-                            //どう考えてもポインタです。
-                            Marshal.Copy((byte[])i_sample.getBuffer(), s_idx, (IntPtr)(d_idx), s_stride);
-                            s_idx += s_stride;
-                            d_idx += pitch;
+                            Marshal.Copy((byte[])i_sample.getBuffer(), 0, (IntPtr)((int)gs.InternalData), this.m_width * 4 * this.m_height);
                         }
-                    }
-                    break;
-                case NyARBufferType.OBJECT_CS_Bitmap:
-                    NyARBitmapRaster ra = (NyARBitmapRaster)(i_sample.getBuffer());
-                    BitmapData bm = ra.lockBitmap();
-                    //コピー
-                    int src = (int)bm.Scan0;
-                    int dst = (int)gs.InternalData;
-                    for (int r = this.m_height - 1; r >= 0;r--)
-                    {
-                        CopyMemory((IntPtr)dst, (IntPtr)src, s_stride);
-                        dst += pitch;
-                        src += bm.Stride;
-                    }
-                    ra.unlockBitmap();
-                    break;
-                default:
-                    throw new NyARException();
+                        else
+                        {
+                            int s_idx = 0;
+                            int d_idx = (int)gs.InternalData;
+                            for (int i = this.m_height - 1; i >= 0; i--)
+                            {
+                                //どう考えてもポインタです。
+                                Marshal.Copy((byte[])i_sample.getBuffer(), s_idx, (IntPtr)(d_idx), s_stride);
+                                s_idx += s_stride;
+                                d_idx += pitch;
+                            }
+                        }
+                        break;
+                    case NyARBufferType.OBJECT_CS_Bitmap:
+                        NyARBitmapRaster ra = (NyARBitmapRaster)(i_sample);
+                        BitmapData bm = ra.lockBitmap();
+                        //コピー
+                        int src = (int)bm.Scan0;
+                        int dst = (int)gs.InternalData;
+                        for (int r = this.m_height - 1; r >= 0; r--)
+                        {
+                            CopyMemory((IntPtr)dst, (IntPtr)src, s_stride);
+                            dst += pitch;
+                            src += bm.Stride;
+                        }
+                        ra.unlockBitmap();
+                        break;
+                    default:
+                        this._surface.UnlockRectangle();
+                        throw new NyARException();
+                }
+                this._surface.UnlockRectangle();
+                return;
             }
-            return;
         }
         public void Dispose()
         {

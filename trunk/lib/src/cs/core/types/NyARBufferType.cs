@@ -152,6 +152,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * RGB形式。バッファは、C#のBitmap型オブジェクト
          */
         public const int OBJECT_CS_Bitmap = OBJECT_CS | 0x01;
+        public const int OBJECT_CS_Unity = OBJECT_CS | 0x11;
         /**
          * RGB形式。バッファは、JavaのBufferedImage型オブジェクト
          */

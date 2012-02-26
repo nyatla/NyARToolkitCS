@@ -101,7 +101,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void rotateVertexL(int i_shift)
         {
-            Debug.Assert(i_shift < 4);
+            //Debug.Assert(i_shift < 4);
             NyARDoublePoint2d vertext;
             NyARLinear linet;
             if (i_shift == 0)

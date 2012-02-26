@@ -42,7 +42,8 @@ namespace NyARToolkitCSUtils.Direct3d
 {
     public class NyARD3dDrawUtil
     {
-        ///**
+
+        //**
         // * フォントカラーをセットします。
         // * @param i_c
         // */

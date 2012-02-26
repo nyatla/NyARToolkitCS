@@ -39,7 +39,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 #endif
 
-namespace NyARToolkitCSUtils.Direct3d.rpf
+namespace NyARToolkitCSUtils.Direct3d
 {
 
     /**

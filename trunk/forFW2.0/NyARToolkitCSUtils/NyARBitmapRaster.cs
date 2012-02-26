@@ -10,11 +10,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 
 namespace NyARToolkitCSUtils
 {
-    public interface INyARRgbRasterProvider
-    {
-        INyARRgbRaster lockRgbRaster();
-        void releaseRgbRaster();
-    }
+
 
     /**
      * bitmapと互換性のあるラスタです。
@@ -329,9 +325,9 @@ namespace NyARToolkitCSUtils
             for (int i = i_num - 1; i >= 0; i--)
             {
                 int pix = Marshal.ReadInt32(bm.Scan0, i_x[i] * 4 + i_y[i] * bm.Stride);
-                o_rgb[0] = (pix >> 16) & 0xff;// R
-                o_rgb[1] = (pix >> 8) & 0xff; // G
-                o_rgb[2] = (pix) & 0xff;      // B
+                o_rgb[i * 3 + 0] = (pix >> 16) & 0xff;// R
+                o_rgb[i * 3 + 1] = (pix >> 8) & 0xff; // G
+                o_rgb[i * 3 + 2] = (pix) & 0xff;      // B
             }
             this._ref_raster.unlockBitmap();
             return;

@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1D202933-65C8-4568-9756-87E57D294132}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{30925E67-3B3B-4360-8202-AD537CB75E94}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NyARToolkitCSUtils</RootNamespace>
-    <AssemblyName>NyARToolkitCSUtils</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>SimpleLiteForm</RootNamespace>
+    <AssemblyName>SimpleLiteForm</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,74 +38,68 @@
     </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Capture\CaptureDevice.cs" />
-    <Compile Include="Capture\CaptureDeviceList.cs" />
-    <Compile Include="Capture\CaptureListener.cs" />
-    <Compile Include="Direct3d\NyARTexture_XRGB32.cs" />
-    <Compile Include="NyARBitmapRaster.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SimpleLiteMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NyARToolkitCS.markersystem\NyARToolkitCS.markersystem.csproj">
       <Project>{AEE9408B-7E03-42AD-A0D9-A5B7F2D20B3C}</Project>
       <Name>NyARToolkitCS.markersystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
-      <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
-      <Name>NyARToolkitCS.rpf</Name>
+    <ProjectReference Include="..\NyARToolkitCSUtils\NyARToolkitCSUtils.csproj">
+      <Project>{1D202933-65C8-4568-9756-87E57D294132}</Project>
+      <Name>NyARToolkitCSUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Capture\rpf\NyARRealitySource_DShow.cs" />
-    <Compile Include="Capture\VideoFormat.cs" />
-    <Compile Include="Capture\VideoFormatList.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Capture\dialog\CameraSelectDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Capture\dialog\CameraSelectDialog.Designer.cs">
-      <DependentUpon>CameraSelectDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Capture\DsRGB565Raster.cs" />
-    <Compile Include="Capture\DsRgbRaster.cs" />
-    <Compile Include="Direct3d\markersystem\D3dMarkerSystem.cs" />
-    <Compile Include="Direct3d\draw\ColorCube.cs" />
-    <Compile Include="Direct3d\draw\NyARD3dDrawUtil.cs" />
-    <Compile Include="Direct3d\markersystem\D3dRender.cs" />
-    <Compile Include="Direct3d\NyARD3dSurface.cs" />
-    <Compile Include="Direct3d\sketch\D3dSketch.cs" />
-    <Compile Include="Direct3d\NyARD3dUtil.cs" />
-    <Compile Include="Direct3d\rpf\NyARRealityD3d.cs" />
-    <Compile Include="Capture\markersystem\NyARDirectShowCamera.cs" />
-    <Compile Include="Direct3d\sketch\D3dSketchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Direct3d\sketch\D3dSketchForm.Designer.cs">
-      <DependentUpon>D3dSketchForm.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Capture\dialog\CameraSelectDialog.resx">
-      <DependentUpon>CameraSelectDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Direct3d\sketch\D3dSketchForm.resx">
-      <DependentUpon>D3dSketchForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

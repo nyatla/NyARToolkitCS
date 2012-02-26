@@ -33,7 +33,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         /**
          * 
          */
-        private double _configense_th = 0.7;
+        private double _configense_th = 0.5;
         private readonly NyARMatchPattResult _patt_result = new NyARMatchPattResult();
         private readonly MultiResolutionPattProvider _mpickup = new MultiResolutionPattProvider();
         private ARMarkerSortList _mkmap;

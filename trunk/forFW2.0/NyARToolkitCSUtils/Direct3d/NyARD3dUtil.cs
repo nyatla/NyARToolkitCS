@@ -28,6 +28,8 @@
 //#define NyartoolkitCS_FRAMEWORK_CFW
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
 #if NyartoolkitCS_FRAMEWORK_CFW
 using Microsoft.WindowsMobile.DirectX.Direct3D;
@@ -39,10 +41,62 @@ using Microsoft.DirectX.Direct3D;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
-    public class NyARD3dUtil
+    public static class NyARD3dUtil
     {
-        private NyARD3dUtil()
-        {//生成の禁止
+        /// <summary>
+        /// この関数は、ControlにバインドしたDirectXデバイスを生成します。
+        /// </summary>
+        /// <param name="i_window"></param>
+        /// <returns></returns>
+        public static Device createD3dDevice(Control i_window)
+        {
+            PresentParameters pp = new PresentParameters();
+            pp.Windowed = true;
+            pp.SwapEffect = SwapEffect.Flip;
+            pp.BackBufferFormat = Format.X8R8G8B8;
+            pp.BackBufferCount = 1;
+            pp.EnableAutoDepthStencil = true;
+            pp.AutoDepthStencilFormat = DepthFormat.D16;
+            CreateFlags fl_base = CreateFlags.FpuPreserve;
+            try
+            {
+                return new Device(0, DeviceType.Hardware, i_window.Handle, fl_base | CreateFlags.HardwareVertexProcessing, pp);
+            }
+            catch (Exception ex1)
+            {
+                Debug.WriteLine(ex1.ToString());
+                try
+                {
+                    return new Device(0, DeviceType.Hardware, i_window.Handle, fl_base | CreateFlags.SoftwareVertexProcessing, pp);
+                }
+                catch (Exception ex2)
+                {
+                    // 作成に失敗
+                    Debug.WriteLine(ex2.ToString());
+                    try
+                    {
+                        return new Device(0, DeviceType.Reference, i_window.Handle, fl_base | CreateFlags.SoftwareVertexProcessing, pp);
+                    }
+                    catch (Exception ex3)
+                    {
+                        throw ex3;
+                    }
+                }
+            }
+        }
+        public static Matrix getARView()
+        {
+            return Matrix.LookAtLH(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.0f));
+        }
+        public static Viewport getARViewPort(int i_width,int i_height)
+        {
+            Viewport vp = new Viewport();
+            vp.X = 0;
+            vp.Y = 0;
+            vp.Height = i_height;
+            vp.Width = i_width;
+            vp.MaxZ = 1.0f;
+            return vp;
         }
 
         /* カメラのプロジェクションMatrix(RH)を返します。
@@ -58,71 +112,7 @@ namespace NyARToolkitCSUtils.Direct3d
 
         public static void toCameraFrustumRH(NyARParam i_arparam, double i_near, double i_far, ref Matrix o_d3d_projection)
         {
-
-
-            NyARMat trans_mat = new NyARMat(3, 4);
-            NyARMat icpara_mat = new NyARMat(3, 4);
-            double[,] p = new double[3, 3], q = new double[4, 4];
-            int width, height;
-            int i, j;
-
-            NyARIntSize size = i_arparam.getScreenSize();
-            width = size.w;
-            height = size.h;
-
-            i_arparam.getPerspectiveProjectionMatrix().decompMat(icpara_mat, trans_mat);
-
-            double[][] icpara = icpara_mat.getArray();
-            double[][] trans = trans_mat.getArray();
-            for (i = 0; i < 4; i++)
-            {
-                icpara[1][i] = (height - 1) * (icpara[2][i]) - icpara[1][i];
-            }
-
-            for (i = 0; i < 3; i++)
-            {
-                for (j = 0; j < 3; j++)
-                {
-                    p[i, j] = icpara[i][j] / icpara[2][2];
-                }
-            }
-            q[0, 0] = (2.0 * p[0, 0] / (width - 1));
-            q[0, 1] = (2.0 * p[0, 1] / (width - 1));
-            q[0, 2] = -((2.0 * p[0, 2] / (width - 1)) - 1.0);
-            q[0, 3] = 0.0;
-
-            q[1, 0] = 0.0;
-            q[1, 1] = -(2.0 * p[1, 1] / (height - 1));
-            q[1, 2] = -((2.0 * p[1, 2] / (height - 1)) - 1.0);
-            q[1, 3] = 0.0;
-
-            q[2, 0] = 0.0;
-            q[2, 1] = 0.0;
-            q[2, 2] = (i_far + i_near) / (i_near - i_far);
-            q[2, 3] = 2.0 * i_far * i_near / (i_near - i_far);
-
-            q[3, 0] = 0.0;
-            q[3, 1] = 0.0;
-            q[3, 2] = -1.0;
-            q[3, 3] = 0.0;
-
-            o_d3d_projection.M11 = (float)(q[0, 0] * trans[0][0] + q[0, 1] * trans[1][0] + q[0, 2] * trans[2][0]);
-            o_d3d_projection.M12 = (float)(q[1, 0] * trans[0][0] + q[1, 1] * trans[1][0] + q[1, 2] * trans[2][0]);
-            o_d3d_projection.M13 = (float)(q[2, 0] * trans[0][0] + q[2, 1] * trans[1][0] + q[2, 2] * trans[2][0]);
-            o_d3d_projection.M14 = (float)(q[3, 0] * trans[0][0] + q[3, 1] * trans[1][0] + q[3, 2] * trans[2][0]);
-            o_d3d_projection.M21 = (float)(q[0, 0] * trans[0][1] + q[0, 1] * trans[1][1] + q[0, 2] * trans[2][1]);
-            o_d3d_projection.M22 = (float)(q[1, 0] * trans[0][1] + q[1, 1] * trans[1][1] + q[1, 2] * trans[2][1]);
-            o_d3d_projection.M23 = (float)(q[2, 0] * trans[0][1] + q[2, 1] * trans[1][1] + q[2, 2] * trans[2][1]);
-            o_d3d_projection.M24 = (float)(q[3, 0] * trans[0][1] + q[3, 1] * trans[1][1] + q[3, 2] * trans[2][1]);
-            o_d3d_projection.M31 = (float)(q[0, 0] * trans[0][2] + q[0, 1] * trans[1][2] + q[0, 2] * trans[2][2]);
-            o_d3d_projection.M32 = (float)(q[1, 0] * trans[0][2] + q[1, 1] * trans[1][2] + q[1, 2] * trans[2][2]);
-            o_d3d_projection.M33 = (float)(q[2, 0] * trans[0][2] + q[2, 1] * trans[1][2] + q[2, 2] * trans[2][2]);
-            o_d3d_projection.M34 = (float)(q[3, 0] * trans[0][2] + q[3, 1] * trans[1][2] + q[3, 2] * trans[2][2]);
-            o_d3d_projection.M41 = (float)(q[0, 0] * trans[0][3] + q[0, 1] * trans[1][3] + q[0, 2] * trans[2][3] + q[0, 3]);
-            o_d3d_projection.M42 = (float)(q[1, 0] * trans[0][3] + q[1, 1] * trans[1][3] + q[1, 2] * trans[2][3] + q[1, 3]);
-            o_d3d_projection.M43 = (float)(q[2, 0] * trans[0][3] + q[2, 1] * trans[1][3] + q[2, 2] * trans[2][3] + q[2, 3]);
-            o_d3d_projection.M44 = (float)(q[3, 0] * trans[0][3] + q[3, 1] * trans[1][3] + q[3, 2] * trans[2][3] + q[3, 3]);
-            return;
+            toCameraFrustumRH(i_arparam.getPerspectiveProjectionMatrix(),i_arparam.getScreenSize(),1.0,i_near, i_far,ref o_d3d_projection);
         }
         /**
          * 
