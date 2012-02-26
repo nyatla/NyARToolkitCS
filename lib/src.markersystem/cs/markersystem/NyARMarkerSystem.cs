@@ -58,7 +58,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             this.initInstance(i_config);
             this.setProjectionMatrixClipping(FRUSTUM_DEFAULT_NEAR_CLIP, FRUSTUM_DEFAULT_FAR_CLIP);
         }
-        protected void initInstance(INyARMarkerSystemConfig i_ref_config)
+        protected virtual void initInstance(INyARMarkerSystemConfig i_ref_config)
         {
             this._rledetect = new RleDetector(i_ref_config);
             this._hist_th = i_ref_config.createAutoThresholdArgorism();
@@ -77,7 +77,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @param i_near
          * @param i_far
          */
-        public void setProjectionMatrixClipping(double i_near, double i_far)
+        public virtual void setProjectionMatrixClipping(double i_near, double i_far)
         {
             NyARIntSize s = this._ref_param.getScreenSize();
             this._frustum.setValue(this._ref_param.getPerspectiveProjectionMatrix(), s.w, s.h, i_near, i_far);

@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @param i_input
          * @ 
          */
-        public void update(INyARRgbRaster i_input)
+        public virtual void update(INyARRgbRaster i_input)
         {
             //ラスタドライバの準備
             if (this._last_input_rasster != i_input)

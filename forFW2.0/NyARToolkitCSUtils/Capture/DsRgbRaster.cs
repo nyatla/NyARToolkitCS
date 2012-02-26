@@ -38,7 +38,7 @@ using System.Drawing;
 
 namespace NyARToolkitCSUtils.Capture
 {
-    public class DsRgbRaster : NyARBitmapRaster, CaptureListener
+    public class DsRgbRaster : NyARBitmapRaster
     {
         #region APIs
         [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]

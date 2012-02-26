@@ -1,4 +1,4 @@
-﻿namespace SimpleLiteDirect3d
+﻿namespace SimpleLiteForm
 {
     partial class Form1
     {
@@ -38,7 +38,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "NyARToolkitCS SimpleLite form";
+            this.Text = "NyARToolkitCS SimpleLiteDirect3d";
             this.ResumeLayout(false);
 
         }

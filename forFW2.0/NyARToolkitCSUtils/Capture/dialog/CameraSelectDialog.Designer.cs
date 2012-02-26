@@ -1,4 +1,4 @@
-﻿namespace NyARToolkitCSUtils.Capture.dialog
+﻿namespace NyARToolkitCSUtils.Capture
 {
     partial class CameraSelectDialog
     {

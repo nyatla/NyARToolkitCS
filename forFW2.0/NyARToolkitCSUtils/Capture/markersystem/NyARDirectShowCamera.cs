@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
 using NyARToolkitCSUtils.Capture;
+using jp.nyatla.nyartoolkit.cs.markersystem;
 using DirectShowLib;
 using System.Threading;
 
-namespace NyARToolkitCSUtils.markersystem
+namespace NyARToolkitCSUtils.Capture
 {
-    class NyARDirectShowCamera : NyARSensor
+    public class NyARDirectShowCamera : NyARSensor,CaptureListener
     {
         private CaptureDevice _cdev;
         private DsRgbRaster _raster;
-        public NyARDirectShowCamera(CaptureDevice i_cdev, float i_fps)
-            : base(new nyARIntSize(i_cdev.video_width, i_cdev.video_height))
+        public NyARDirectShowCamera(CaptureDevice i_cdev)
+            : base(new NyARIntSize(i_cdev.video_width, i_cdev.video_height))
         {
             //RGBラスタの生成
             this._raster = new DsRgbRaster(i_cdev.video_width, i_cdev.video_height, NyARBufferType.OBJECT_CS_Bitmap);
@@ -49,12 +50,12 @@ namespace NyARToolkitCSUtils.markersystem
             {
                 try
                 {
-                    this._raster.setBuffer(i_buffer, false);
+                    this._raster.setBuffer(i_buffer, i_buffer_len, i_sender.video_vertical_flip);
                     this.updateTimeStamp();
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    System.Console.Error.WriteLine(e.Message);
                 }
             }
         }

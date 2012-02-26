@@ -8,7 +8,7 @@ using jp.nyatla.nyartoolkit.cs.rpf;
 using jp.nyatla.nyartoolkit.cs.core;
 using NyARToolkitCSUtils.Direct3d;
 
-namespace NyARToolkitCSUtils.Capture.rpf
+namespace NyARToolkitCSUtils.Capture
 {
     /**
      * このクラスは、JMFと互換性のあるNyARRealitySourceです。
@@ -34,7 +34,7 @@ namespace NyARToolkitCSUtils.Capture.rpf
          */
         public NyARRealitySource_DShow(int i_fmt_width,int i_fmt_height,NyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample)
 	    {
-            this._rgb_source = new DsBGRX32Raster(i_fmt_width, i_fmt_height);
+            this._rgb_source = new DsRgbRaster(i_fmt_width, i_fmt_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
             this._filter = (INyARRgb2GsFilter)this._rgb_source.createInterface(typeof(INyARRgb2GsFilter));
 		    this._source_perspective_reader=(INyARPerspectiveCopy)this._rgb_source.createInterface(typeof(INyARPerspectiveCopy));
             this._tracksource = new NyARTrackerSource_Reference(i_number_of_sample, i_ref_raster_distortion, i_fmt_width, i_fmt_height, i_depth, true);
@@ -46,14 +46,14 @@ namespace NyARToolkitCSUtils.Capture.rpf
 	     * @param i_buffer
 	     * @throws NyARException
 	     */
-	    public void setDShowImage(IntPtr i_buffer,bool i_flip_virtical)
+	    public void setDShowImage(IntPtr i_buffer,int i_buf_size,bool i_flip_virtical)
 	    {
-            ((DsBGRX32Raster)this._rgb_source).setBuffer(i_buffer, i_flip_virtical);
+            ((DsRgbRaster)this._rgb_source).setBuffer(i_buffer,i_buf_size,i_flip_virtical);
 		    return;
 	    }
 	    public sealed override bool isReady()
 	    {
-            return ((DsBGRX32Raster)this._rgb_source).hasBuffer();
+            return ((DsRgbRaster)this._rgb_source).hasBuffer();
 	    }
 	    public sealed override void syncResource()
 	    {
