@@ -40,7 +40,7 @@ using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.markersystem;
 
 /**
- * このプログラムは、スケッチシステムを使わないNyARMarkerSystemのテンプレートです。
+ * このプログラムは、スケッチシステムを使わないNyARMarkerSystemのアプリケーションのサンプルです。
  */
 namespace SimpleLiteForm
 {
