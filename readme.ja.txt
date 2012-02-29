@@ -1,6 +1,6 @@
 ======================================================================
 NyARToolkitCS
- version 3.0.0
+ version 4.0.0a
 ======================================================================
 
 Copyright (C)2008-2010 Ryo Iizuka
@@ -13,9 +13,9 @@ wm(at)nyatla.jp
 ----------------------------------------------------------------------
  About NyARToolkit
 ----------------------------------------------------------------------
- * NyARToolkitCSは、NyARToolKit 3.0.0のAPIを基盤としたARアプリケーション向けの
+ * NyARToolkitCSは、NyARToolKit 4.0.0aのAPIを基盤としたARアプリケーション向けの
    クラスライブラリです。
- * .Net Framework 2.0以上と、.net Compact Framework 2.0以上に対応しています。
+ * .Net Framework 2.0以上/Unity3D 3.5以上に対応しています。
  * ライブラリの構成は、ARToolKitの基本機能と、NyARToolKitオリジナルの拡張機能、
    アプリケーション向けのフレームワークです。
  * ライブラリは、NyARTookitを純粋に移植したNyARToolkitCS、NyARToolkitの

@@ -188,21 +188,14 @@ namespace NyARToolkitCSUtils
                         {
                             Marshal.Copy((IntPtr)bp, work, 0, 32);
                             out_buf[dst_ptr++] = (work[0] + work[1] + work[2]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[4] + work[5] + work[6]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[8] + work[9] + work[10]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[12] + work[13] + work[14]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[16] + work[17] + work[18]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[20] + work[21] + work[22]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[24] + work[25] + work[26]) / 3;
-                            bp += 4;
                             out_buf[dst_ptr++] = (work[28] + work[29] + work[30]) / 3;
-                            bp += 4;
+                            bp += 32;
                         }
                         bp += row_padding_src;
                         dst_ptr += row_padding_dst;
