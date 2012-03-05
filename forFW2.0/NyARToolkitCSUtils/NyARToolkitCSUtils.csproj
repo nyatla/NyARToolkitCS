@@ -80,10 +80,11 @@
     </Compile>
     <Compile Include="Capture\DsRGB565Raster.cs" />
     <Compile Include="Capture\DsRgbRaster.cs" />
-    <Compile Include="Direct3d\markersystem\D3dMarkerSystem.cs" />
+    <Compile Include="Direct3d\draw\TextPanel.cs" />
     <Compile Include="Direct3d\draw\ColorCube.cs" />
     <Compile Include="Direct3d\draw\NyARD3dDrawUtil.cs" />
-    <Compile Include="Direct3d\markersystem\D3dRender.cs" />
+    <Compile Include="Direct3d\markersystem\NyARD3dMarkerSystem.cs" />
+    <Compile Include="Direct3d\markersystem\NyARD3dRender.cs" />
     <Compile Include="Direct3d\NyARD3dSurface.cs" />
     <Compile Include="Direct3d\sketch\D3dSketch.cs" />
     <Compile Include="Direct3d\NyARD3dUtil.cs" />

@@ -43,6 +43,7 @@ namespace NyARToolkitCSUtils.Direct3d
      */
     public class NyARD3dTexture:IDisposable
     {
+        private bool _is_dispose = false;
         private int m_width;
         private int m_height;
         private int m_texture_width;
@@ -53,7 +54,7 @@ namespace NyARToolkitCSUtils.Direct3d
         /* i_valueを超える最も小さい2のべき乗の値を返します。
          * 
          */
-        private int getSquareSize(int i_value)
+        private static int getSquareSize(int i_value)
         {
             int u = 2;
             //2^nでサイズを超える一番小さな値を得る。
@@ -71,9 +72,14 @@ namespace NyARToolkitCSUtils.Direct3d
             }
             return u;
         }
-        public Texture d3d_texture
+        public static explicit operator Texture(NyARD3dTexture t)
         {
-            get { return this.m_texture; }
+            return t.m_texture;
+        }
+
+        public bool isEqualSize(NyARIntSize i_s)
+        {
+            return (this.m_height==i_s.h && this.m_width==i_s.w);
         }
 
         /* i_width x i_heightのテクスチャを格納するインスタンスを生成します。
@@ -97,71 +103,78 @@ namespace NyARToolkitCSUtils.Direct3d
             //OK、完成だ。
             return;
         }
+        ~NyARD3dTexture()
+        {
+            this.Dispose();
+        }
         public void Dispose()
         {
-            this.m_texture.Dispose();
+            if (this.m_texture != null)
+            {
+                this.m_texture.Dispose();
+                this.m_texture = null;
+            }
+            this._is_dispose = true;
+            //GCからデストラクタを除外
+            GC.SuppressFinalize(this);
+
         }
         /* DsXRGB32Rasterの内容を保持しているテクスチャにコピーします。
          * i_rasterのサイズは、このインスタンスに指定したテクスチャサイズ（コンストラクタ等に指定したサイズ）と同じである必要です。
          * ラスタデータはテクスチャの左上を基点にwidth x heightだけコピーされ、残りの部分は更新されません。
          */
-        public void CopyFromXRGB32(INyARRgbRaster i_raster)
+        public void setRaster(INyARRgbRaster i_raster)
         {
-            GraphicsStream texture_rect;
-            switch (i_raster.getBufferType())
+            Debug.Assert(!this._is_dispose);
+            int pitch;
+            using(GraphicsStream texture_rect = this.m_texture.LockRectangle(0, LockFlags.None, out pitch))
             {
-                case NyARBufferType.BYTE1D_B8G8R8X8_32:
-                    try
+                try{
+                    int dst = (int)texture_rect.InternalData;
+                    switch (i_raster.getBufferType())
                     {
-                        byte[] buf = (byte[])i_raster.getBuffer();
-                        // テクスチャをロックする
-                        texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
-                        //テクスチャのピッチって何？
-                        int cp_size = this.m_width * 4;
-                        int sk_size = (this.m_texture_width - this.m_width) * 4;
-                        int s = 0;
-                        for (int r = this.m_height - 1; r >= 0; r--, s++)
-                        {
-                            texture_rect.Write(buf, s * cp_size, cp_size);
-                            texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);
-                        }
+                        case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                            {
+                                byte[] buf = (byte[])i_raster.getBuffer();
+                                //テクスチャのピッチって何？
+                                int src_w = this.m_width * 4;
+                                int src = 0;
+                                for (int r = this.m_height - 1; r >= 0; r--)
+                                {
+                                    Marshal.Copy(buf, src, (IntPtr)dst, pitch);
+                                    dst += pitch;
+                                    src += src_w;
+                                }
+                            }
+                            break;
+                        case NyARBufferType.OBJECT_CS_Bitmap:
+                            NyARBitmapRaster ra = (NyARBitmapRaster)(i_raster);
+                            BitmapData bm = ra.lockBitmap(); 
+                            try
+                            {
+                                int src = (int)bm.Scan0;
+                                for (int r = this.m_height - 1; r >= 0; r--)
+                                {
+                                    NyARD3dUtil.RtlCopyMemory((IntPtr)dst, (IntPtr)src, pitch);
+                                    dst += pitch;
+                                    src += bm.Stride;
+                                }
+                            }
+                            finally
+                            {
+                                ra.unlockBitmap();
+                            }
+                            break;
+                        default:
+                            throw new NyARException();
                     }
-                    finally
-                    {
-                        //テクスチャをアンロックする
-                        this.m_texture.UnlockRectangle(0);
-                    }
-                    break;
-                case NyARBufferType.OBJECT_CS_Bitmap:
-                    try
-                    {
-                        NyARBitmapRaster ra = (NyARBitmapRaster)(i_raster.getBuffer());
-                        // テクスチャをロックする
-                        texture_rect = this.m_texture.LockRectangle(0, LockFlags.None);
-                        //テクスチャのピッチって何？
-                        int cp_size = this.m_width * 4;
-                        int sk_size = (this.m_texture_width - this.m_width) * 4;
-                        int s = 0;
-                        BitmapData bm = ra.lockBitmap();
-                        byte[] tmp = new byte[cp_size];
-                        for (int r = this.m_height - 1; r >= 0; r--, s++)
-                        {
-                            Marshal.Copy((IntPtr)((int)bm.Stride+bm.Stride*s),tmp,0,cp_size);
-                            texture_rect.Write(tmp,0,cp_size);
-                            texture_rect.Seek(sk_size, System.IO.SeekOrigin.Current);//padding
-                        }
-                        ra.unlockBitmap();
-                    }
-                    finally
-                    {
-                        //テクスチャをアンロックする
-                        this.m_texture.UnlockRectangle(0);
-                    }
-                    break;
-                default:
-                    throw new NyARException();
+                }
+                finally
+                {
+                    //テクスチャをアンロックする
+                    this.m_texture.UnlockRectangle(0);
+                }
             }
-
             return;
         }
     }

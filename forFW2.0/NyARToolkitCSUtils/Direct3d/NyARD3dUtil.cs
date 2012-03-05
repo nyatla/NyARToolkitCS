@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using jp.nyatla.nyartoolkit.cs.core;
 #if NyartoolkitCS_FRAMEWORK_CFW
 using Microsoft.WindowsMobile.DirectX.Direct3D;
@@ -43,6 +44,11 @@ namespace NyARToolkitCSUtils.Direct3d
 {
     public static class NyARD3dUtil
     {
+        #region APIs
+        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]
+        public static extern void RtlCopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
+        #endregion
+
         /// <summary>
         /// この関数は、ControlにバインドしたDirectXデバイスを生成します。
         /// </summary>

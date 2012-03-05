@@ -374,6 +374,9 @@
     <Compile Include="..\..\lib\src\cs\core\types\NyARLinear.cs">
       <Link>cs\core\types\NyARLinear.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src\cs\core\types\NyARQuaternion.cs">
+      <Link>cs\core\types\NyARQuaternion.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src\cs\core\types\NyARVecLinear2d.cs">
       <Link>cs\core\types\NyARVecLinear2d.cs</Link>
     </Compile>

@@ -56,23 +56,23 @@ namespace NyARToolkitCSUtils.Direct3d
 
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
-        public ColorCube(Device i_dev, int i_size)
+        public ColorCube(Device i_dev, float i_size)
         {
             //立方体（頂点数8）の準備
             this._vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored),
                 8, i_dev, Usage.None, CustomVertex.PositionColored.Format, _pool_mode);
             //8点の情報を格納するためのメモリを確保
             CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[8];
-            const float CUBE_SIZE = 20.0f;//1辺40[mm]の
+            float size = i_size / 2;
             //頂点を設定
-            vertices[0] = new CustomVertex.PositionColored(-CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, Color.Yellow.ToArgb());
-            vertices[1] = new CustomVertex.PositionColored(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, Color.Gray.ToArgb());
-            vertices[2] = new CustomVertex.PositionColored(-CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE, Color.Purple.ToArgb());
-            vertices[3] = new CustomVertex.PositionColored(CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE, Color.Red.ToArgb());
-            vertices[4] = new CustomVertex.PositionColored(-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE, Color.SkyBlue.ToArgb());
-            vertices[5] = new CustomVertex.PositionColored(CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE, Color.Orange.ToArgb());
-            vertices[6] = new CustomVertex.PositionColored(-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE, Color.Green.ToArgb());
-            vertices[7] = new CustomVertex.PositionColored(CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE, Color.Blue.ToArgb());
+            vertices[0] = new CustomVertex.PositionColored(-size, size, size, Color.Yellow.ToArgb());
+            vertices[1] = new CustomVertex.PositionColored(size, size, size, Color.Gray.ToArgb());
+            vertices[2] = new CustomVertex.PositionColored(-size, size, -size, Color.Purple.ToArgb());
+            vertices[3] = new CustomVertex.PositionColored(size, size, -size, Color.Red.ToArgb());
+            vertices[4] = new CustomVertex.PositionColored(-size, -size, size, Color.SkyBlue.ToArgb());
+            vertices[5] = new CustomVertex.PositionColored(size, -size, size, Color.Orange.ToArgb());
+            vertices[6] = new CustomVertex.PositionColored(-size, -size, -size, Color.Green.ToArgb());
+            vertices[7] = new CustomVertex.PositionColored(size, -size, -size, Color.Blue.ToArgb());
 
             //頂点バッファをロックする
             using (GraphicsStream data = this._vertexBuffer.Lock(0, 0, LockFlags.None))

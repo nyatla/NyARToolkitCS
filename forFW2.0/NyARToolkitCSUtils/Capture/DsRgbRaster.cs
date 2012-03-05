@@ -82,33 +82,40 @@ namespace NyARToolkitCSUtils.Capture
                     break;
                 case NyARBufferType.OBJECT_CS_Bitmap:
                     BitmapData bm=this.lockBitmap();
-                    if (i_flip_vertical)
+                    try
                     {
-                        //上下反転させる
-                        int w = this._size.w * 4;
-                        int st = (int)i_buf+w * (this._size.h - 1);
-                        int et = (int)bm.Scan0;
-                        for (int i = this._size.h - 1; i >= 0; i--)
+                        if (i_flip_vertical)
                         {
-                            CopyMemory((IntPtr)et, (IntPtr)st, w);
-                            st -= w;
-                            et += bm.Stride;
-                        }
-                    }
-                    else
-                    {
-                        if (bm.Width * 4 == bm.Stride)
-                        {
-                            //そのままコピー
-                            CopyMemory(bm.Scan0, i_buf, bm.Height * bm.Width * 4);
+                            //上下反転させる
+                            int w = this._size.w * 4;
+                            int st = (int)i_buf + w * (this._size.h - 1);
+                            int et = (int)bm.Scan0;
+                            for (int i = this._size.h - 1; i >= 0; i--)
+                            {
+                                CopyMemory((IntPtr)et, (IntPtr)st, w);
+                                st -= w;
+                                et += bm.Stride;
+                            }
                         }
                         else
                         {
-                            for (int i = this._size.h - 1; i >= 0; i--)
+                            if (bm.Width * 4 == bm.Stride)
                             {
-                                CopyMemory((IntPtr)((int)bm.Scan0 + bm.Stride * i), (IntPtr)((int)bm.Scan0 + bm.Width * i), bm.Width * 4);
+                                //そのままコピー
+                                CopyMemory(bm.Scan0, i_buf, bm.Height * bm.Width * 4);
+                            }
+                            else
+                            {
+                                for (int i = this._size.h - 1; i >= 0; i--)
+                                {
+                                    CopyMemory((IntPtr)((int)bm.Scan0 + bm.Stride * i), (IntPtr)((int)bm.Scan0 + bm.Width * i), bm.Width * 4);
+                                }
                             }
                         }
+                    }
+                    finally
+                    {
+                        this.unlockBitmap();
                     }
                     break;
                 default:
