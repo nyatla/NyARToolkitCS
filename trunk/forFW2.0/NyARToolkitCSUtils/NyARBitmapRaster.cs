@@ -22,10 +22,14 @@ namespace NyARToolkitCSUtils
         private static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
         #endregion
         private bool _is_disposed=false;
+
         /// <summary>
         /// Bitmapを参照するインスタンスを生成する。
         /// </summary>
-        /// <param name="i_img"></param>
+        /// <param name="i_img">
+        /// PixelFormat.Format32bppRgb形式のビットマップである必要がある。
+        /// 形式な不明なビットマップからインスタンスを作るときは、一度同じサイズのビットマップを作って、copyFrom関数でコピーします。
+        /// </param>
         public NyARBitmapRaster(Bitmap i_img)
             : base(i_img.Width, i_img.Height, NyARBufferType.OBJECT_CS_Bitmap, false)
 	    {
@@ -46,6 +50,17 @@ namespace NyARToolkitCSUtils
             : base(i_width, i_heigth, i_raster_type)
         {
         }
+        /// <summary>
+        /// i_srcからインスタンスにビットマップをコピーします。
+        /// </summary>
+        /// <param name="i_src"></param>
+        public void copyFrom(Bitmap i_src)
+        {
+            using (Graphics g = Graphics.FromImage((Bitmap)(this._buf)))
+            {
+                g.DrawImage(i_src, 0, 0);
+            }
+        }
         /**
          * Readerとbufferを初期化する関数です。コンストラクタから呼び出します。
          * 継承クラスでこの関数を拡張することで、対応するバッファタイプの種類を増やせます。
@@ -65,9 +80,16 @@ namespace NyARToolkitCSUtils
             switch (i_raster_type)
             {
                 case NyARBufferType.OBJECT_CS_Bitmap:
-                    this._buf = i_is_alloc?new Bitmap(i_size.w,i_size.h,PixelFormat.Format32bppRgb):null;
                     this._rgb_pixel_driver = new NyARRgbPixelDriver_CsBitmap();
-                    this._rgb_pixel_driver.switchRaster(this);
+                    if (i_is_alloc)
+                    {
+                        this._buf = new Bitmap(i_size.w, i_size.h, PixelFormat.Format32bppRgb);
+                        this._rgb_pixel_driver.switchRaster(this);
+                    }
+                    else
+                    {
+                        this._buf = null;
+                    }
                     this._is_attached_buffer = i_is_alloc;
                     break;
                 default:

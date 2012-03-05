@@ -48,7 +48,6 @@
     <Compile Include="Capture\CaptureDevice.cs" />
     <Compile Include="Capture\CaptureDeviceList.cs" />
     <Compile Include="Capture\CaptureListener.cs" />
-    <Compile Include="Direct3d\NyARTexture_XRGB32.cs" />
     <Compile Include="NyARBitmapRaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,6 +85,7 @@
     <Compile Include="Direct3d\markersystem\NyARD3dMarkerSystem.cs" />
     <Compile Include="Direct3d\markersystem\NyARD3dRender.cs" />
     <Compile Include="Direct3d\NyARD3dSurface.cs" />
+    <Compile Include="Direct3d\NyARD3dTexture.cs" />
     <Compile Include="Direct3d\sketch\D3dSketch.cs" />
     <Compile Include="Direct3d\NyARD3dUtil.cs" />
     <Compile Include="Direct3d\rpf\NyARRealityD3d.cs" />

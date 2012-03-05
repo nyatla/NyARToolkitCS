@@ -88,15 +88,15 @@
     <Compile Include="SimpleLiteMain.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NyARToolkitCS.markersystem\NyARToolkitCS.markersystem.csproj">
+    <ProjectReference Include="..\..\NyARToolkitCS.markersystem\NyARToolkitCS.markersystem.csproj">
       <Project>{AEE9408B-7E03-42AD-A0D9-A5B7F2D20B3C}</Project>
       <Name>NyARToolkitCS.markersystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NyARToolkitCSUtils\NyARToolkitCSUtils.csproj">
+    <ProjectReference Include="..\..\NyARToolkitCSUtils\NyARToolkitCSUtils.csproj">
       <Project>{1D202933-65C8-4568-9756-87E57D294132}</Project>
       <Name>NyARToolkitCSUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NyARToolkitCS\NyARToolkitCS.csproj">
+    <ProjectReference Include="..\..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>
     </ProjectReference>
