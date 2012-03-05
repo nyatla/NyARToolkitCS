@@ -15,8 +15,26 @@ namespace NyARToolkitCSUtils
     /**
      * bitmapと互換性のあるラスタです。
      */
-    public class NyARBitmapRaster : NyARRgbRaster
+    public class NyARBitmapRaster : NyARRgbRaster,IDisposable
     {
+        #region APIs
+        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]
+        private static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
+        #endregion
+        private bool _is_disposed=false;
+        /// <summary>
+        /// Bitmapを参照するインスタンスを生成する。
+        /// </summary>
+        /// <param name="i_img"></param>
+        public NyARBitmapRaster(Bitmap i_img)
+            : base(i_img.Width, i_img.Height, NyARBufferType.OBJECT_CS_Bitmap, false)
+	    {
+		    this.wrapBuffer(i_img);
+	    }
+        public NyARBitmapRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc)
+            : base(i_width, i_height, i_raster_type, i_is_alloc)
+	    {
+	    }
         /**
          * インスタンスを生成します。インスタンスは、PixelFormat.Format32bppRgb形式のビットマップをバッファに持ちます。
          */
@@ -24,7 +42,7 @@ namespace NyARToolkitCSUtils
             : base(i_width, i_heigth, NyARBufferType.OBJECT_CS_Bitmap)
         {
         }
-        protected NyARBitmapRaster(int i_width, int i_heigth,int i_raster_type)
+        public NyARBitmapRaster(int i_width, int i_heigth, int i_raster_type)
             : base(i_width, i_heigth, i_raster_type)
         {
         }
@@ -58,12 +76,35 @@ namespace NyARToolkitCSUtils
             //readerの構築
             return true;
         }
+        public void Dispose()
+        {
+            //ロックを解除
+            while (this.number_of_lock > 0)
+            {
+                this.unlockBitmap();
+            }
+            //Unmanaged Resourceの開放
+            if (this._is_attached_buffer && this._buf != null && this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap))
+            {
+                ((Bitmap)this._buf).Dispose();
+                this._buf = null;
+            }
+            //Disposed
+            this._is_disposed = true;
+            //GCからデストラクタを除外
+            GC.SuppressFinalize(this);
+        }
+        ~NyARBitmapRaster()
+        {
+            this.Dispose();
+        }
         /**
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファの時にだけ使えます。
          */
         public override void wrapBuffer(object i_ref_buf)
         {
+            Debug.Assert(!this._is_disposed);
             Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
             this._buf = i_ref_buf;
             //ピクセルリーダーの参照バッファを切り替える。
@@ -72,6 +113,7 @@ namespace NyARToolkitCSUtils
 
         public override object createInterface(Type iIid)
         {
+            Debug.Assert(!this._is_disposed);
             if (iIid == typeof(INyARPerspectiveCopy))
             {
                 return this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap) ? new PerspectiveCopy_CSBitmap(this) : NyARPerspectiveCopyFactory.createDriver(this);
@@ -82,12 +124,11 @@ namespace NyARToolkitCSUtils
             }
             if (iIid == typeof(INyARRgb2GsFilter))
             {
-                //デフォルトのインタフェイス
-                return NyARRgb2GsFilterFactory.createRgbAveDriver(this);
+                return this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap) ? new NyARRgb2GsFilterRgbAve_CsBitmap(this) : NyARRgb2GsFilterFactory.createRgbAveDriver(this);
             }
             else if (iIid == typeof(INyARRgb2GsFilterRgbAve))
             {
-                return NyARRgb2GsFilterFactory.createRgbAveDriver(this);
+                return this.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap) ? new NyARRgb2GsFilterRgbAve_CsBitmap(this) : NyARRgb2GsFilterFactory.createRgbAveDriver(this);
             }
             else if (iIid == typeof(INyARRgb2GsFilterRgbCube))
             {
@@ -108,6 +149,8 @@ namespace NyARToolkitCSUtils
         private BitmapData _bm_cache;
         public BitmapData lockBitmap()
         {
+            Debug.Assert(!this._is_disposed);
+
             if(this.number_of_lock==0){
                 Bitmap bm=(Bitmap)this._buf;
                 this.number_of_lock++;
@@ -119,6 +162,8 @@ namespace NyARToolkitCSUtils
         }
         public void unlockBitmap()
         {
+            Debug.Assert(!this._is_disposed);
+
             if (this.number_of_lock>1)
             {
                 this.number_of_lock--;
@@ -136,6 +181,8 @@ namespace NyARToolkitCSUtils
         }
         public Bitmap getBitmap()
         {
+            Debug.Assert(!this._is_disposed);
+
             return (Bitmap)this._buf;
         }
         #endregion
@@ -380,8 +427,7 @@ namespace NyARToolkitCSUtils
             int in_w = this._ref_raster.getWidth();
             int in_h = this._ref_raster.getHeight();
 
-            int[] pat_data = (int[])o_out.getBuffer();
-            //ピクセルリーダーを取得
+             //ピクセルリーダーを取得
             double cp0 = cpara[0];
             double cp3 = cpara[3];
             double cp6 = cpara[6];
@@ -398,6 +444,7 @@ namespace NyARToolkitCSUtils
             switch (o_out.getBufferType())
             {
                 case NyARBufferType.INT1D_X8R8G8B8_32:
+                    int[] pat_data = (int[])o_out.getBuffer();
                     p = 0;
                     for (int iy = 0; iy < out_h; iy++)
                     {
@@ -435,9 +482,44 @@ namespace NyARToolkitCSUtils
                     this._ref_raster.unlockBitmap();
                     return true;
                 default:
-                    //ANY to RGBx
-                    if (o_out is INyARRgbRaster)
+                    if (o_out is NyARBitmapRaster)
                     {
+                        NyARBitmapRaster bmr = (NyARBitmapRaster)o_out;
+                        BitmapData bm = bmr.lockBitmap();
+                        p = 0;
+                        for (int iy = 0; iy < out_h; iy++)
+                        {
+                            //解像度分の点を取る。
+                            double cp7_cy_1_cp6_cx = cp7_cy_1;
+                            double cp1_cy_cp2_cp0_cx = cp1_cy_cp2;
+                            double cp4_cy_cp5_cp3_cx = cp4_cy_cp5;
+
+                            for (int ix = 0; ix < out_w; ix++)
+                            {
+                                //1ピクセルを作成
+                                double d = 1 / (cp7_cy_1_cp6_cx);
+                                int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+                                int pix = Marshal.ReadInt32(in_bmp.Scan0, (x * 4 + y * in_bmp.Stride));
+                                Marshal.WriteInt32(bm.Scan0, ix * 4 + iy * bm.Stride, pix);
+                                cp7_cy_1_cp6_cx += cp6;
+                                cp1_cy_cp2_cp0_cx += cp0;
+                                cp4_cy_cp5_cp3_cx += cp3;
+                                p++;
+                            }
+                            cp7_cy_1 += cp7;
+                            cp1_cy_cp2 += cp1;
+                            cp4_cy_cp5 += cp4;
+                        }
+                        bmr.unlockBitmap();
+                        this._ref_raster.unlockBitmap();
+                        return true;
+                    }
+                    else if (o_out is INyARRgbRaster)                    
+                    {
+                        //ANY to RGBx
                         INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
                         for (int iy = 0; iy < out_h; iy++)
                         {
@@ -495,7 +577,57 @@ namespace NyARToolkitCSUtils
 
             int out_w = o_out.getWidth();
             int out_h = o_out.getHeight();
-            if (o_out is INyARRgbRaster)
+            if (o_out is NyARBitmapRaster)
+            {
+                NyARBitmapRaster bmr=((NyARBitmapRaster)o_out);
+                BitmapData bm=bmr.lockBitmap();
+                for (int iy = out_h - 1; iy >= 0; iy--)
+                {
+                    //解像度分の点を取る。
+                    for (int ix = out_w - 1; ix >= 0; ix--)
+                    {
+                        int r, g, b;
+                        r = g = b = 0;
+                        int cy = pk_t + iy * i_resolution;
+                        int cx = pk_l + ix * i_resolution;
+                        double cp7_cy_1_cp6_cx_b = cp7 * cy + 1.0 + cp6 * cx;
+                        double cp1_cy_cp2_cp0_cx_b = cp1 * cy + cp2 + cp0 * cx;
+                        double cp4_cy_cp5_cp3_cx_b = cp4 * cy + cp5 + cp3 * cx;
+                        for (int i2y = i_resolution - 1; i2y >= 0; i2y--)
+                        {
+                            double cp7_cy_1_cp6_cx = cp7_cy_1_cp6_cx_b;
+                            double cp1_cy_cp2_cp0_cx = cp1_cy_cp2_cp0_cx_b;
+                            double cp4_cy_cp5_cp3_cx = cp4_cy_cp5_cp3_cx_b;
+                            for (int i2x = i_resolution - 1; i2x >= 0; i2x--)
+                            {
+                                //1ピクセルを作成
+                                double d = 1 / (cp7_cy_1_cp6_cx);
+                                int x = (int)((cp1_cy_cp2_cp0_cx) * d);
+                                int y = (int)((cp4_cy_cp5_cp3_cx) * d);
+                                if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
+                                if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
+
+                                int px = Marshal.ReadInt32(in_bmp.Scan0, (x * 4 + y * in_bmp.Stride));
+                                r += (px >> 16) & 0xff;// R
+                                g += (px >> 8) & 0xff; // G
+                                b += (px) & 0xff;    // B
+                                cp7_cy_1_cp6_cx += cp6;
+                                cp1_cy_cp2_cp0_cx += cp0;
+                                cp4_cy_cp5_cp3_cx += cp3;
+                            }
+                            cp7_cy_1_cp6_cx_b += cp7;
+                            cp1_cy_cp2_cp0_cx_b += cp1;
+                            cp4_cy_cp5_cp3_cx_b += cp4;
+                        }
+                        Marshal.WriteInt32(bm.Scan0, ix * 4 + iy * bm.Stride,
+                            (0x00ff0000 & ((r / res_pix) << 16)) | (0x0000ff00 & ((g / res_pix) << 8)) | (0x0000ff & (b / res_pix)));
+                    }
+                }
+                bmr.unlockBitmap();
+                this._ref_raster.unlockBitmap();
+                return true;
+            }
+            else if (o_out is INyARRgbRaster)
             {
                 INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
                 for (int iy = out_h - 1; iy >= 0; iy--)
@@ -524,7 +656,7 @@ namespace NyARToolkitCSUtils
                                 if (x < 0) { x = 0; } else if (x >= in_w) { x = in_w - 1; }
                                 if (y < 0) { y = 0; } else if (y >= in_h) { y = in_h - 1; }
 
-                                int px = Marshal.ReadInt32(in_bmp.Scan0, (x*4 + y * in_bmp.Stride));
+                                int px = Marshal.ReadInt32(in_bmp.Scan0, (x * 4 + y * in_bmp.Stride));
                                 r += (px >> 16) & 0xff;// R
                                 g += (px >> 8) & 0xff; // G
                                 b += (px) & 0xff;    // B
@@ -542,8 +674,10 @@ namespace NyARToolkitCSUtils
                 this._ref_raster.unlockBitmap();
                 return true;
             }
-            this._ref_raster.unlockBitmap();
-            return false;
+            else
+            {
+                throw new NyARException();
+            }
         }
     }
     #endregion

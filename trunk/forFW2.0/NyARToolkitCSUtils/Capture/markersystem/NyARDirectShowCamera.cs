@@ -13,11 +13,32 @@ namespace NyARToolkitCSUtils.Capture
     {
         private CaptureDevice _cdev;
         private DsRgbRaster _raster;
+        /// <summary>
+        /// </summary>
+        /// <param name="i_cdev"></param>
+        /// <param name="i_raster_type">
+        /// OBJECT_CS_Bitmap is slower than BYTE1D_B8G8R8X8_32(20%) but compatible with Bitmap.
+        /// OBJECT_CS_Bitmap is fast but not compatible with Bitmap.
+        /// </param>
+        public NyARDirectShowCamera(CaptureDevice i_cdev,int i_raster_type)
+            : base(new NyARIntSize(i_cdev.video_width, i_cdev.video_height))
+        {
+            //RGBラスタの生成
+            this.initInstance(i_cdev, i_raster_type);
+        }
+        /// <summary>
+        /// This function as is NyARDirectShowCamera(i_cdev,NyARBufferType.OBJECT_CS_Bitmap)
+        /// </summary>
+        /// <param name="i_cdev"></param>
         public NyARDirectShowCamera(CaptureDevice i_cdev)
             : base(new NyARIntSize(i_cdev.video_width, i_cdev.video_height))
         {
             //RGBラスタの生成
-            this._raster = new DsRgbRaster(i_cdev.video_width, i_cdev.video_height, NyARBufferType.OBJECT_CS_Bitmap);
+            this.initInstance(i_cdev, NyARBufferType.OBJECT_CS_Bitmap);
+        }
+        private void initInstance(CaptureDevice i_cdev, int i_raster_type)
+        {
+            this._raster = new DsRgbRaster(i_cdev.video_width, i_cdev.video_height,i_raster_type);
             //ラスタのセット
             this.update(this._raster);
             this._cdev = i_cdev;

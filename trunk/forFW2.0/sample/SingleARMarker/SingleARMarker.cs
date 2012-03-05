@@ -16,26 +16,6 @@ using Microsoft.DirectX.Direct3D;
 
 namespace SingleARMarker
 {
-    class TextPanel
-    {
-        private Device _device;
-        private System.Drawing.Font _font;
-        public TextPanel(Device i_device,int i_size)
-        {
-            this._device = i_device;
-            this._font = new System.Drawing.Font("System", i_size);
-            return;
-        }
-        public void draw(String i_str, float i_scale)
-        {
-            Mesh m= Mesh.TextFromFont(this._device, this._font, i_str, 5.0f, 0.1f);
-
-            m.DrawSubset(0);
-            m.Dispose();
-            return;
-        }
-    }
-
     /**
      * １個のRawBit-Idマーカを認識するロジッククラス。
      * detectMarker関数の呼び出しに同期して、transmatとcurrent_idパラメタを更新します。

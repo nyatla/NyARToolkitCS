@@ -47,8 +47,8 @@ namespace SimpleLiteForm
 
     public class SimpleLiteMain : IDisposable
     {
-        private const int SCREEN_WIDTH=320;
-        private const int SCREEN_HEIGHT=240;
+        private const int SCREEN_WIDTH=640;
+        private const int SCREEN_HEIGHT=480;
         private const String AR_CODE_FILE = "../../../../data/patt.hiro";
         //NyAR
         //背景テクスチャ
