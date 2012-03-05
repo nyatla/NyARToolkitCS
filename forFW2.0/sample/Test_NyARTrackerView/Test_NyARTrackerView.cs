@@ -34,7 +34,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NyARToolkitCSUtils.Capture;
-
+using NyARToolkitCSUtils;
 
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -51,7 +51,7 @@ namespace Test_NyARTrackerView
         //DirectShowからのキャプチャ
         private CaptureDevice  _cap;
         //NyAR
-        private DsBGRX32Raster _raster;
+        private NyARBitmapRaster _raster;
 
         /* 非同期イベントハンドラ
           * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
@@ -66,8 +66,8 @@ namespace Test_NyARTrackerView
             lock (this)
             {
                 //カメラ映像をARのバッファにコピー
-                this._raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
-                this.filter.doFilter(this._raster, this.gs);
+                this._raster.wrapBuffer(i_buffer);
+                this.filter.doFilter(this.gs);
                 this.tracksource.wrapBuffer(this.gs);
                 this.tracker.progress(this.tracksource);
 
@@ -92,7 +92,7 @@ namespace Test_NyARTrackerView
         private Bitmap _bmp;
         NyARTrackerSource_Reference tracksource;
         NyARTracker tracker;
-        NyARRasterFilter_Rgb2Gs_RgbAve192 filter;
+        INyARRgb2GsFilter filter;
         NyARGrayscaleRaster gs;
         public bool InitializeApplication(Form1 topLevelForm, CaptureDevice i_cap_device)
         {
@@ -110,7 +110,7 @@ namespace Test_NyARTrackerView
             this._bmp = new Bitmap(i_cap_device.video_width, i_cap_device.video_height, PixelFormat.Format32bppRgb);
 
             this.gs = new NyARGrayscaleRaster(i_cap_device.video_width, i_cap_device.video_height);
-            this.filter = new NyARRasterFilter_Rgb2Gs_RgbAve192(this._raster.getBufferType());
+            this.filter = NyARRgb2GsFilterFactory.createRgbAveDriver(this._raster);
 
             this.tracker = new NyARTracker(100, 1, 10);
             this.tracksource = new NyARTrackerSource_Reference(100, null, i_cap_device.video_width, i_cap_device.video_height,2, false);

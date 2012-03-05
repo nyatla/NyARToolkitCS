@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.nyidmarker;
 using jp.nyatla.nyartoolkit.cs.processor;
-using jp.nyatla.nyartoolkit.cs.utils;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
+using NyARToolkitCSUtils;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
@@ -30,7 +30,7 @@ namespace SingleARMarker
         public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
         {
             //アプリケーションフレームワークの初期化
-            initInstance(i_cparam, i_raster_format);
+            initInstance(i_cparam);
             return;
         }
         /**
@@ -68,9 +68,9 @@ namespace SingleARMarker
         private CaptureDevice _cap;
         private MarkerProcessor _processor;
         //NyAR
-        private DsBGRX32Raster _raster;
+        private DsRgbRaster _raster;
         //背景テクスチャ
-        private NyARSurface_XRGB32 _surface;
+        private NyARD3dSurface _surface;
         /// Direct3D デバイス
         private Device _device = null;
         //表示オブジェクト
@@ -89,11 +89,11 @@ namespace SingleARMarker
             lock (this)//このロックは、OnEnterとOnUpdateの間でMainLoopがtransmatを参照することを防ぎます。
             {
                 //カメラ映像をARのバッファにコピー
-                this._raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
+                this._raster.setBuffer(i_buffer,i_buffer_len, i_sender.video_vertical_flip);
                 //フレームワークに画像を転送
                 this._processor.detectMarker(this._raster);
                 //テクスチャ内容を更新
-                this._surface.CopyFromXRGB32(this._raster);
+                this._surface.setRaster(this._raster);
             }
             return;
         }
@@ -164,11 +164,11 @@ namespace SingleARMarker
             this._cap = i_cap_device;
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height);
+            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //Direct3d用のユーティリティ準備
@@ -178,8 +178,8 @@ namespace SingleARMarker
             NyARCode[] codes = new NyARCode[2];
             codes[0] = new NyARCode(16, 16);
             codes[1] = new NyARCode(16, 16);
-            codes[0].loadARPattFromFile(AR_CODE_FILE1);
-            codes[1].loadARPattFromFile(AR_CODE_FILE2);
+            codes[0].loadARPatt(new StreamReader(AR_CODE_FILE1));
+            codes[1].loadARPatt(new StreamReader(AR_CODE_FILE2));
             this._processor.setARCodeTable(codes,16,80.0);
 
 
@@ -210,7 +210,7 @@ namespace SingleARMarker
                 new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 1.0f), new Vector3(0.0f, 1.0f, 0.0f));
 
             //背景サーフェイスを作成
-            this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
+            this._surface = new NyARD3dSurface(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             return true;
         }
@@ -223,7 +223,7 @@ namespace SingleARMarker
                 // 背景サーフェイスを直接描画
                 Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
                 Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                this._device.StretchRectangle(this._surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
+                this._device.StretchRectangle((Surface)this._surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
 
                 // 3Dオブジェクトの描画はここから
                 this._device.BeginScene();

@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 using NyARToolkitCSUtils.Capture;
-using NyARToolkitCSUtils.Capture.dialog;
 /**
  * 
  * このサンプルプログラムは、NyARToolkitのSimpleLite相当のサンプルプログラムです。

@@ -56,7 +56,7 @@ namespace SimpleLite_ImageSource
         private NyARSingleDetectMarker _ar;
         private NyARBitmapRaster _raster;
         //背景テクスチャ
-        private NyARSurface_XRGB32 _surface;
+        private NyARD3dSurface _surface;
         /// Direct3D デバイス
         private Device _device = null;
         private ColorCube _cube;
@@ -101,24 +101,24 @@ namespace SimpleLite_ImageSource
         {
             topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);            
             //画像読み込み
-
-            Image bmp = Bitmap.FromFile(TEST_IMAGE);
-            BitmapData bmd=((Bitmap)bmp).LockBits(new Rectangle(0,0,bmp.Width,bmp.Height),ImageLockMode.ReadOnly,PixelFormat.Format32bppArgb);
-            this._raster = new NyARBitmapRaster(bmp.Width, bmp.Height, bmd.PixelFormat);
-            this._raster.setBitmapData(bmd);
-            ((Bitmap)bmp).UnlockBits(bmd);
+            using (Bitmap tbmp = new Bitmap(TEST_IMAGE))
+            {
+                this._raster = new NyARBitmapRaster(tbmp.Width,tbmp.Height);
+                this._raster.copyFrom(tbmp);
+            }
+            
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //AR用のパターンコードを読み出し	
             NyARCode code = new NyARCode(16, 16);
-            code.loadARPattFromFile(AR_CODE_FILE);
+            code.loadARPatt(new StreamReader(AR_CODE_FILE));
 
             //１パターンのみを追跡するクラスを作成
-            this._ar = new NyARSingleDetectMarker(ap, code, 80.0, this._raster.getBufferType(), NyARSingleDetectMarker.PF_NYARTOOLKIT);
+            this._ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0,NyARSingleDetectMarker.PF_NYARTOOLKIT);
             
             //計算モードの設定
             this._ar.setContinueMode(true);
@@ -151,7 +151,7 @@ namespace SimpleLite_ImageSource
             this._cube = new ColorCube(this._device, 40);
 
             //背景サーフェイスを作成
-            this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
+            this._surface = new NyARD3dSurface(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
             //マーカの認識
@@ -164,7 +164,7 @@ namespace SimpleLite_ImageSource
             }
             this._is_marker_enable = is_marker_enable;
             //サーフェイスへ背景をコピー
-            this._surface.CopyFromXRGB32(this._raster);
+            this._surface.setRaster(this._raster);
             return true;
         }
         //メインループ処理
@@ -176,7 +176,7 @@ namespace SimpleLite_ImageSource
                 // 背景サーフェイスを直接描画
                 Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
                 Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                this._device.StretchRectangle(this._surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
+                this._device.StretchRectangle((Surface)this._surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
 
                 // 3Dオブジェクトの描画はここから
                 this._device.BeginScene();

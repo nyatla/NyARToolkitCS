@@ -33,7 +33,7 @@ namespace ImagePickup
             d3d.RenderState.CullMode = Cull.CounterClockwise;
             this._ms = new NyARD3dMarkerSystem(cf);
             //recommended be NyARBufferType.BYTE1D_B8G8R8X8_32 or NyARBufferType.CS_BITMAP
-            this._ss = new NyARDirectShowCamera(i_cap, NyARBufferType.BYTE1D_B8G8R8X8_32);
+            this._ss = new NyARDirectShowCamera(i_cap, NyARBufferType.OBJECT_CS_Bitmap);
             this._rs = new NyARD3dRender(d3d, this._ms);
             this.mid = this._ms.addARMarker(AR_CODE_FILE, 16, 25, 80);
 
@@ -45,7 +45,7 @@ namespace ImagePickup
             this._rs.loadARProjectionMatrix(d3d);
             this._ss.start();
             //should be NyARBufferType.BYTE1D_B8G8R8X8_32 or NyARBufferType.CS_BITMAP
-            this._raster = new NyARBitmapRaster(64, 64, NyARBufferType.BYTE1D_B8G8R8X8_32);
+            this._raster = new NyARBitmapRaster(64, 64, NyARBufferType.OBJECT_CS_Bitmap);
         }
         private INyARRgbRaster _raster;
         public override void loop(Device i_d3d)
