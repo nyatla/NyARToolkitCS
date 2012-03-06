@@ -22,6 +22,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -241,6 +242,48 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             return this._inv_frustum_rh;
         }
-
+        /**
+         * 透視変換パラメータを行列から復元します。
+         * @param o_value
+         * @return
+         * 値をセットしたo_valueを返します。
+         */
+        public FrustumParam getFrustumParam(FrustumParam o_value)
+        {
+            double near;
+            NyARDoubleMatrix44 mat = this._frustum_rh;
+            o_value.far = mat.m23 / (mat.m22 + 1);
+            o_value.near = near = mat.m23 / (mat.m22 - 1);
+            o_value.left = (mat.m02 - 1) * near / mat.m00;
+            o_value.right = (mat.m02 + 1) * near / mat.m00;
+            o_value.bottom = (mat.m12 - 1) * near / mat.m11;
+            o_value.top = (mat.m12 + 1) * near / mat.m11;
+            return o_value;
+        }
+        public class FrustumParam
+        {
+            public double far;
+            public double near;
+            public double left;
+            public double right;
+            public double bottom;
+            public double top;
+        }
+        public PerspectiveParam getPerspectiveParam(PerspectiveParam o_value)
+        {
+            NyARDoubleMatrix44 mat = this._frustum_rh;
+            o_value.far = mat.m23 / (mat.m22 + 1);
+            o_value.near = mat.m23 / (mat.m22 - 1);
+            o_value.aspect = mat.m11 / mat.m00;
+            o_value.fovy = 2 * Math.Atan(1 / (mat.m00 * o_value.aspect));
+            return o_value;
+        }
+        public class PerspectiveParam
+        {
+            public double far;
+            public double near;
+            public double aspect;
+            public double fovy;
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace Test_NyARTrackerView
         //DirectShowからのキャプチャ
         private CaptureDevice  _cap;
         //NyAR
-        private NyARBitmapRaster _raster;
+        private DsRgbRaster _raster;
 
         /* 非同期イベントハンドラ
           * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
@@ -66,8 +66,8 @@ namespace Test_NyARTrackerView
             lock (this)
             {
                 //カメラ映像をARのバッファにコピー
-                this._raster.wrapBuffer(i_buffer);
-                this.filter.doFilter(this.gs);
+                this._raster.setBuffer(i_buffer,i_buffer_len,i_sender.video_vertical_flip);
+                this.filter.convert(this.gs);
                 this.tracksource.wrapBuffer(this.gs);
                 this.tracker.progress(this.tracksource);
 
@@ -89,7 +89,6 @@ namespace Test_NyARTrackerView
             return;
         }
         private Form1 _top_form;
-        private Bitmap _bmp;
         NyARTrackerSource_Reference tracksource;
         NyARTracker tracker;
         INyARRgb2GsFilter filter;
@@ -106,8 +105,7 @@ namespace Test_NyARTrackerView
             //ARの設定
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsBGRX32Raster(i_cap_device.video_width, i_cap_device.video_height);
-            this._bmp = new Bitmap(i_cap_device.video_width, i_cap_device.video_height, PixelFormat.Format32bppRgb);
+            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.OBJECT_CS_Bitmap);
 
             this.gs = new NyARGrayscaleRaster(i_cap_device.video_width, i_cap_device.video_height);
             this.filter = NyARRgb2GsFilterFactory.createRgbAveDriver(this._raster);
@@ -122,13 +120,8 @@ namespace Test_NyARTrackerView
             //状態の表示
             lock (this)
             {
-                //ビットマップ化
-                BitmapData bmd = this._bmp.LockBits(new Rectangle(0, 0, this._cap.video_width, this._cap.video_height), ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
-                Marshal.Copy((byte[])this._raster.getBuffer(), 0, bmd.Scan0, ((byte[])this._raster.getBuffer()).Length);
-                //背景描画
-                this._bmp.UnlockBits(bmd);
                 Graphics g = this._top_form.CreateGraphics();
-                Graphics g2 = Graphics.FromImage(this._bmp);
+                Graphics g2 = Graphics.FromImage(this._raster.getBitmap());
 
 
                 for(int i=this.tracker._targets.getLength()-1;i>=0;i--){
@@ -149,7 +142,7 @@ namespace Test_NyARTrackerView
     		        }
     	        }
                 g2.Dispose();
-                g.DrawImage(this._bmp, 0, 0);
+                g.DrawImage(this._raster.getBitmap(), 0, 0);
                 g.Dispose();
             }
             return;

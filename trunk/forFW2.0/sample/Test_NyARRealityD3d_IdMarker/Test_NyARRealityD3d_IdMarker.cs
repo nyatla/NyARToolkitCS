@@ -38,13 +38,7 @@ using NyARToolkitCSUtils.Direct3d;
 using jp.nyatla.nyartoolkit.cs;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
-using jp.nyatla.nyartoolkit.cs.rpf.reality.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.realitysource.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.nyartk;
-using jp.nyatla.nyartoolkit.cs.rpf.tracker.utils;
-using NyARToolkitCSUtils.Capture.rpf;
-using NyARToolkitCSUtils.Direct3d.rpf;
-using jp.nyatla.nyartoolkit.cs.rpf.mklib;
+using jp.nyatla.nyartoolkit.cs.rpf;
 
 namespace Test_NyARRealityGl_IdMarker
 {
@@ -60,7 +54,7 @@ namespace Test_NyARRealityGl_IdMarker
         private Device _device = null;
         private ColorCube _cube;
         //背景テクスチャ
-        private NyARSurface_XRGB32 _surface;
+        private NyARD3dSurface _surface;
         private NyARRealityD3d _reality;
         private NyARRealitySource_DShow _reality_source;
         private RawbitSerialIdTable _mklib;
@@ -72,10 +66,10 @@ namespace Test_NyARRealityGl_IdMarker
 		    try {
 			    lock (this)
 			    {
-				    this._reality_source.setDShowImage(i_buffer,i_sender.video_vertical_flip);
+                    this._reality_source.setDShowImage(i_buffer, i_buffer_len,i_sender.video_vertical_flip);
                     this._reality.progress(this._reality_source);
                     //テクスチャ内容を更新
-                    this._surface.CopyFromXRGB32(this._reality_source.refRgbSource());
+                    this._surface.setRaster(this._reality_source.refRgbSource());
 
 				    //UnknownTargetを1個取得して、遷移を試す。
 				    NyARRealityTarget t=this._reality.selectSingleUnknownTarget();
@@ -161,7 +155,7 @@ namespace Test_NyARRealityGl_IdMarker
 
             //AR用カメラパラメタファイルをロードして設定
             NyARParam ap = new NyARParam();
-            ap.loadARParamFromFile(AR_CAMERA_FILE);
+            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //マーカライブラリ(NyId)の構築
@@ -200,7 +194,7 @@ namespace Test_NyARRealityGl_IdMarker
             //カラーキューブの描画インスタンス
             this._cube = new ColorCube(this._device, 40);
             //背景サーフェイスを作成
-            this._surface = new NyARSurface_XRGB32(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
+            this._surface = new NyARD3dSurface(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
             return true;
         }
@@ -219,7 +213,7 @@ namespace Test_NyARRealityGl_IdMarker
                     // 背景サーフェイスを直接描画
                     Surface dest_surface = this._device.GetBackBuffer(0, 0, BackBufferType.Mono);
                     Rectangle src_dest_rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                    this._device.StretchRectangle(this._surface.d3d_surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
+                    this._device.StretchRectangle((Surface)this._surface, src_dest_rect, dest_surface, src_dest_rect, TextureFilter.None);
 
                     // 3Dオブジェクトの描画はここから
                     this._device.BeginScene();

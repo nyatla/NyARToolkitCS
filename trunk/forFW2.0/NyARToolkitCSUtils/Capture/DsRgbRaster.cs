@@ -44,6 +44,10 @@ namespace NyARToolkitCSUtils.Capture
         [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]
         private static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
         #endregion
+        public DsRgbRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc)
+            : base(i_width, i_height,i_raster_type,i_is_alloc)
+        {
+        }
         /**
          * DirectShowと互換性のあるRasterを生成します。
          * @param i_raster_type

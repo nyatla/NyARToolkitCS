@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using NyARToolkitCSUtils.Capture;
-using NyARToolkitCSUtils.Capture.dialog;
+
 namespace Test_NyARRealityGl_IdMarker
 {
     static class Program

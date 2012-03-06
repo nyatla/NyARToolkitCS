@@ -49,7 +49,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //RGBRasterインタフェイスがある場合
                     if (i_ref_raster is INyARRgbRaster)
                     {
-                        ret = new NyARGsPixelDriver_RGBX();
+                        ret = new NyARGsPixelDriver_RGBX((INyARRgbRaster)i_ref_raster);
                         break;
                     }
                     throw new NyARException();
@@ -60,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public static INyARGsPixelDriver createDriver(INyARRgbRaster i_ref_raster)
         {
             //RGBRasterインタフェイスがある場合
-            return new NyARGsPixelDriver_RGBX();
+            return new NyARGsPixelDriver_RGBX(i_ref_raster);
         }
     }
     //
@@ -127,6 +127,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         private INyARRgbPixelDriver _rgbd;
         private int[] _tmp = new int[3];
+        public NyARGsPixelDriver_RGBX(INyARRgbRaster i_raster)
+        {
+            this._rgbd = i_raster.getRgbPixelDriver();
+        }
         public NyARIntSize getSize()
         {
             return this._rgbd.getSize();

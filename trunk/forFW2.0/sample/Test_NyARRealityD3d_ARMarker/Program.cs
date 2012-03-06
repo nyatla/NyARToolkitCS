@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 using NyARToolkitCSUtils.Capture;
-using NyARToolkitCSUtils.Capture.dialog;
 namespace Test_NyARRealityD3d_ARMarker
 {
     static class Program

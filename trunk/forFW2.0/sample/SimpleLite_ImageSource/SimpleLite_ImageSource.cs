@@ -99,13 +99,8 @@ namespace SimpleLite_ImageSource
 
         public bool InitializeApplication(Form1 topLevelForm)
         {
-            topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);            
-            //画像読み込み
-            using (Bitmap tbmp = new Bitmap(TEST_IMAGE))
-            {
-                this._raster = new NyARBitmapRaster(tbmp.Width,tbmp.Height);
-                this._raster.copyFrom(tbmp);
-            }
+            topLevelForm.ClientSize=new Size(SCREEN_WIDTH,SCREEN_HEIGHT);
+            this._raster = new NyARBitmapRaster(new Bitmap(TEST_IMAGE));
             
 
             //AR用カメラパラメタファイルをロードして設定

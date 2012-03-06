@@ -73,6 +73,15 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             return this._frustum;
         }
         /**
+         * 現在のパラメータを返します。
+         * @return
+         * [readonly]
+         */
+        public NyARParam getARParam()
+        {
+            return this._ref_param;
+        }
+        /**
          * 射影変換行列の視錐台パラメータを設定します。
          * @param i_near
          * @param i_far
@@ -587,15 +596,6 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 
         public void detectMarker(NyARSensor i_sensor, long i_time_stamp, int i_th)
         {
-            //準備(ミスカウンタを+1する。)
-            for (int i = this._idmk_list.Count - 1; i >= 0; i--)
-            {
-                MarkerInfoNyId target = this._idmk_list[i];
-                if (target.lost_count < int.MaxValue)
-                {
-                    target.lost_count++;
-                }
-            }
             this._sq_stack.clear();//矩形情報の保持スタック初期化
             this._tracking_list.prepare();
             this._idmk_list.prepare();

@@ -1,6 +1,6 @@
 ======================================================================
 NyARToolkitCS
- version 4.0.0a
+ version 4.0.0
 ======================================================================
 
 Copyright (C)2008-2010 Ryo Iizuka
@@ -13,7 +13,7 @@ wm(at)nyatla.jp
 ----------------------------------------------------------------------
  About NyARToolkit
 ----------------------------------------------------------------------
- * NyARToolkitCSは、NyARToolKit 4.0.0aのAPIを基盤としたARアプリケーション向けの
+ * NyARToolkitCSは、NyARToolKit 4.0.0のAPIを基盤としたARアプリケーション向けの
    クラスライブラリです。
  * .Net Framework 2.0以上/Unity3D 3.5以上に対応しています。
  * ライブラリの構成は、ARToolKitの基本機能と、NyARToolKitオリジナルの拡張機能、
@@ -40,15 +40,14 @@ NyARToolkitCSの特徴を紹介します。
  * 次の項目について、高速な機能が利用できます。(ラべリング、姿勢最適化、
    画像処理、行列計算、方程式計算)
  * NyId規格のIDマーカが使用できます。
- * RPF(RealityPlatform - マーカ状態管理システム)が利用できます。
+ * 複数のAR/NyIdマーカを容易に利用する為のMarkerSystemクラスがあります。
+ * ManagedDirect3d向けの簡易なスケッチシステムがあります。
+ * Bitmapと互換性のあるAPIがあります。PNG画像をそのままマーカイメージ
+   にしたり、撮影画像の一部を切り出す機能があります。
 
-(注意)
- * RPFの不具合の為、RPFを使用してアプリケーションを作成すると、小さなマーカ
-   の認識率が低くなります。修正まで、しばらくお待ちください。
-   
 
 ----------------------------------------------------------------------
- NyARToolkitAS3 License
+ NyARToolkitCS License
 ----------------------------------------------------------------------
 
 
@@ -86,7 +85,7 @@ GPLv3を承諾された場合には、商用、非商用にかかわらず、無
  * .Net Framefork
     forFW2.0
  * .Net Framefork
-    forWM5
+    forWM5 現在サポートしていません
 
 (注意)
  64bit環境でコンパイルした場合、例外が発生し、「は有効な Win32 アプ
@@ -128,6 +127,10 @@ forFW2.0
    NyARToolkitライブラリの本体です。基本的は.Net Framework 2.0規格の
    コードです。依存する外部ライブラリはありません。 
    
+ * NyARToolkitCS.markersystem
+   NyARToolkit/4.0で追加したNyARToolkitライブラリのmarkerSystemモジュールです。
+   依存する外部ライブラリはありません。 
+   
  * NyARToolkitCS.rpf
    NyARToolkitライブラリのRPFモジュールです。NyARToolkit/3.0で追加した
    RPFモジュールのコードです。依存する外部ライブラリはありません。 
@@ -140,73 +143,82 @@ forFW2.0
  * NyARToolkitCS.sandbox
   実験的なコードをまとめたプロジェクトです。
   このプロジェクトはコンパイルできないかもしれません。
+ 
+ * Sample
+  サンプルプログラムです。
   
- * Sample/CaptureTest
-  カメラキャプチャの実験プログラムです。DirectShowNetに依存します。
- 
- * Sample/RawTest
-  NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出
-  処理をして、処理時間を計測します。
- 
- * Sample/SimpleLite_ImageSource
-  静止画からマーカ検出をするサンプルプログラムです。
-  NyARSingleDetectMarkerのサンプルプログラムでもあります。
- 
- * Sample/SimpleLiteDirect3d
-  ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示する
-  プログラムです。
-  NyARSingleDetectMarkerのサンプルプログラムでもあります。
- 
- * Sample/SingleARMarkerDirect3d
-  ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
-  に、マーカ番号を表示するプログラムです。
-  SingleARMarkerProcesserのサンプルプログラムでもあります。
- 
- * Sample/SingleNyIdMarkerDirect3d
-  ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
-  に、Idマーカ番号を表示するプログラムです。
-  SingleNyIdMarkerProcesserのサンプルプログラムでもあります。
+  ** test
+    ライブラリの動作チェックプログラムがあります。サンプルとしては役に立ちません。
 
- * Sample/Test_NyARRealityD3d_ARMarker
-  RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
-  NyARRealityD3dと、ARTKMarkerTableのサンプルプログラムでもあります。
+   1.Sample/CaptureTest
+     カメラキャプチャの実験プログラムです。DirectShowNetに依存します。
  
- * Sample/Test_NyARRealityD3d_IdMarker
-  RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
-  NyARRealityD3dと、RawbitSerialIdTableのサンプルプログラムでもあります。
+   2.Sample/RawTest
+     NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出
+     処理をして、処理時間を計測します。
+
+
+  ** old
+    NyARToolkit3.0.0以前のサンプルがあります。
+
+   1. SimpleLite_ImageSource
+     静止画からマーカ検出をするサンプルプログラムです。
+     NyARSingleDetectMarkerのサンプルプログラムでもあります。
+ 
+   2. SimpleLiteDirect3d
+     ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示する
+     プログラムです。
+     NyARSingleDetectMarkerのサンプルプログラムでもあります。
+ 
+   3. SingleARMarkerDirect3d
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
+     に、マーカ番号を表示するプログラムです。
+     SingleARMarkerProcesserのサンプルプログラムでもあります。
+ 
+   4. SingleNyIdMarkerDirect3d
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
+     に、Idマーカ番号を表示するプログラムです。
+     SingleNyIdMarkerProcesserのサンプルプログラムでもあります。
+
+
+
+  ** rpf
+   NyARToolkit3.0.0の、RPFモジュールを使ったサンプルがあります。特にこだわりがなければ、
+   MarkerSystemのほうが使いやすいので、そちらを使ってください。
+
+   1. Test_NyARRealityD3d_ARMarker
+     RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
+     NyARRealityD3dと、ARTKMarkerTableのサンプルプログラムでもあります。
+ 
+   2. Test_NyARRealityD3d_IdMarker
+     RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
+     NyARRealityD3dと、RawbitSerialIdTableのサンプルプログラムでもあります。
+
+
+
+   
+  ** sketch
+   NyARToolkit4.0.0から追加した、簡易スケッチシステムを使ったサンプルです。
+   他のサンプルよりもコードが短縮されています。
+
+   1. SimpleLite
+     SimpleLiteDirect3dを、MarkerSystemモジュールを使って書き直したものです。
+   2. ImagePickup
+     撮影画像の取得や、座標変換のサンプルです。
+   3. MarkerPlane
+     マーカ表面の座標を得るサンプルです。
+   4. SimpleLiteM
+     ２つのマーカを同時に認識するサンプルです。
+
+  **SimpleLiteForm
+   スケッチシステムを使わないMarkerSystemのサンプルです。 SimpleLiteと同じです。 
+ 
+
+
 
 forWM5
 
- * NyARToolkitCS.WindowsMobile5
-   NyARToolkitライブラリの本体です。基本的は.Net Compact Framework 2.0規格の
-   コードです。forFW2.0との差はありません。
-   
- * NyARToolkitCS.rpf.WindowsMobile5
-   NyARToolkitライブラリのRPFモジュールです。NyARToolkit/3.0で追加した
-   RPFモジュールのコードです。forFW2.0との差はありません。
-   
- * NyARToolkitCSUtils.WindowsMobile5
-  .Net Compact Frameworkに依存するコードをまとめたプロジェクトです。
-  MobileManagedDirectX向けのコードと、NyWMCapture向けのクラスがあります。
-  ManagedDirectXと、NyWMCaptureに依存します。
-
- * NyARToolkitCS.sandbox.WindowsMobile5
-  実験的なコードをまとめたプロジェクトです。
-  このプロジェクトはコンパイルできないかもしれません。
-
- * NyWMCaptureCS
-  WindowsMobile用のキャプチャライブラリNyWMCaptureのC#インタフェイス
-  です。
-
- * Sample/NyARToolkitCS.WM5.RPF
-  WindowsMobile用の、Test_NyARRealityD3d_ARMarker相当のサンプルプログラムです。
-
- * Sample/RawTest
-  WindowsMobile用の、RawTest相当のサンプルプログラムです。
-  ただし、計測回数は10回です。
-
- * Sample/SimpleLiteDirect3d.WindowsMobile5
-  WindowsMobile用の、Sample/SingleNyIdMarkerDirect3d相当のサンプルプログラムです。
+現在サポートしていません。
 
   
 ----------------------------------------------------------------------

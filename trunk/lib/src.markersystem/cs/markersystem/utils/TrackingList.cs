@@ -65,8 +65,8 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 			compareVertexSet(i_new_sq.ob_vertex,target.tl_vertex,ret);
 			int sqdist=ret[1];
 			int shift=ret[0];
-			//頂点移動距離の合計が、(中心点移動距離+4)の10倍を超えてたらNG <-
-			if(sqdist>(sq_move+4)*10){
+			//頂点移動距離の合計が、(中心点移動距離+8)の10倍を超えてたらNG <-
+			if(sqdist>(sq_move+8)*10){
 				continue;
 			}
 			//登録可能か確認
