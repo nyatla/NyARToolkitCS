@@ -187,7 +187,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int res_pix = i_resolution * i_resolution;
 
             int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
-            int[] pat_data = (int[])o_out.getBuffer();
             int in_w = this._ref_raster.getWidth();
             int in_h = this._ref_raster.getHeight();
             INyARRgbPixelDriver i_in_reader = this._ref_raster.getRgbPixelDriver();
@@ -207,6 +206,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             switch (o_out.getBufferType())
             {
                 case NyARBufferType.INT1D_X8R8G8B8_32:
+                    int[] pat_data = (int[])o_out.getBuffer();
                     int p = (out_w * out_h - 1);
                     for (int iy = out_h - 1; iy >= 0; iy--)
                     {
@@ -321,7 +321,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int in_h = this._ref_raster.getHeight();
             byte[] i_in_buf = (byte[])this._ref_raster.getBuffer();
 
-            int[] pat_data = (int[])o_out.getBuffer();
             //ピクセルリーダーを取得
             double cp0 = cpara[0];
             double cp3 = cpara[3];
@@ -339,6 +338,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             switch (o_out.getBufferType())
             {
                 case NyARBufferType.INT1D_X8R8G8B8_32:
+                    int[] pat_data = (int[])o_out.getBuffer();
                     p = 0;
                     for (int iy = 0; iy < out_h; iy++)
                     {

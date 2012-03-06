@@ -176,7 +176,7 @@ namespace NyARToolkitCSUtils
             if(this.number_of_lock==0){
                 Bitmap bm=(Bitmap)this._buf;
                 this.number_of_lock++;
-                this._bm_cache = bm.LockBits(new Rectangle(0, 0, bm.Width, bm.Height),ImageLockMode.ReadWrite,bm.PixelFormat);
+                this._bm_cache = bm.LockBits(new Rectangle(0, 0, bm.Width, bm.Height),ImageLockMode.ReadWrite,PixelFormat.Format32bppRgb);
             }else{
                 this.number_of_lock++;
             }
@@ -216,7 +216,6 @@ namespace NyARToolkitCSUtils
         private NyARBitmapRaster _ref_raster;
         public NyARRgb2GsFilterRgbAve_CsBitmap(NyARBitmapRaster i_ref_raster)
         {
-            Debug.Assert(i_ref_raster.getBitmap().PixelFormat == PixelFormat.Format32bppRgb);
             Debug.Assert(i_ref_raster.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap));
             this._ref_raster = i_ref_raster;
         }
@@ -303,7 +302,6 @@ namespace NyARToolkitCSUtils
         public NyARRgb2GsFilterArtkTh_CsBitmap(NyARBitmapRaster i_raster)
         {
             Debug.Assert(i_raster.isEqualBufferType(NyARBufferType.OBJECT_CS_Bitmap));
-            Debug.Assert(i_raster.getBitmap().PixelFormat==PixelFormat.Format32bppRgb);
             this._raster = i_raster;
         }
         private byte[] _work=new byte[4*8];
@@ -429,7 +427,6 @@ namespace NyARToolkitCSUtils
 
         public void switchRaster(INyARRgbRaster i_raster)
         {
-            Debug.Assert(((NyARBitmapRaster)i_raster).getBitmap().PixelFormat==PixelFormat.Format32bppRgb);
             this._ref_raster = (NyARBitmapRaster)i_raster;
             this._ref_size = i_raster.getSize();
         }

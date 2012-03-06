@@ -139,6 +139,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._screen_size.h = i_ysize;// newparam->ysize = ysize;
             return;
         }
+        public void changeScreenSize(NyARIntSize i_size)
+        {
+            this.changeScreenSize(i_size.w, i_size.w);
+            return;
+        }
         /**
          * この関数は、カメラパラメータから右手系の視錐台を作ります。
          * <p>注意 -

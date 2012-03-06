@@ -103,7 +103,7 @@ namespace SimpleLiteForm
                 this._surface.setRaster(this._ss.getSourceImage());
                 Surface dest_surface = this._d3d.GetBackBuffer(0, 0, BackBufferType.Mono);
                 Rectangle rect = new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                this._d3d.StretchRectangle(this._surface.d3d_surface, rect, dest_surface, rect, TextureFilter.None);
+                this._d3d.StretchRectangle((Surface)this._surface, rect, dest_surface, rect, TextureFilter.None);
 
                 // 3Dオブジェクトの描画はここから
                 this._d3d.BeginScene();

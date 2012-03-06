@@ -368,28 +368,36 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        /**
-         * この関数は、機能しません。
-         */
         public void setPixel(int i_x, int i_y, int[] i_rgb)
         {
-            NyARException.notImplement();
+            byte[] ref_buf = this._ref_buf;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
+            ref_buf[bp + 1] = (byte)i_rgb[0];
+            ref_buf[bp + 2] = (byte)i_rgb[1];
+            ref_buf[bp + 3] = (byte)i_rgb[2];
         }
 
-        /**
-         * この関数は、機能しません。
-         */
+
         public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
         {
-            NyARException.notImplement();
+            byte[] ref_buf = this._ref_buf;
+            int bp = (i_x + i_y * this._ref_size.w) * 4;
+            ref_buf[bp + 1] = (byte)i_r;
+            ref_buf[bp + 2] = (byte)i_g;
+            ref_buf[bp + 3] = (byte)i_b;
         }
 
-        /**
-         * この関数は、機能しません。
-         */
+
         public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
         {
-            NyARException.notImplement();
+            byte[] ref_buf = this._ref_buf;
+            for (int i = i_num - 1; i >= 0; i--)
+            {
+                int bp = (i_x[i] + i_y[i] * this._ref_size.w) * 4;
+                ref_buf[bp + 1] = (byte)i_intrgb[3 * i + 0];
+                ref_buf[bp + 2] = (byte)i_intrgb[3 * i + 1];
+                ref_buf[bp + 3] = (byte)i_intrgb[3 * i + 2];
+            }
         }
 
         public void switchRaster(INyARRgbRaster i_raster)

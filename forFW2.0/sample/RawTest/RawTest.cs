@@ -64,14 +64,13 @@ namespace ConsoleApplication1
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 4);
             
-            NyARBitmapRaster ra = new NyARBitmapRaster(320, 240);
-            Graphics g = Graphics.FromImage(ra.getBitmap());
-            g.DrawImage(new Bitmap("../../../../../data/320x240ABGR.png"), 0, 0);
+//            NyARBitmapRaster ra = new NyARBitmapRaster(320, 240);
+//            Graphics g = Graphics.FromImage(ra.getBitmap());
+//            g.DrawImage(new Bitmap("../../../../../data/320x240ABGR.png"), 0, 0);
             
 
-//            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
-//            ra.wrapBuffer(raw);
-            //		Blank_Raster ra=new Blank_Raster(320, 240);
+            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
+            ra.wrapBuffer(raw);
 
             //１パターンのみを追跡するクラスを作成
             NyARSingleDetectMarker ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0,NyARSingleDetectMarker.PF_NYARTOOLKIT);
