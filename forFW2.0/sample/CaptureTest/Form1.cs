@@ -21,7 +21,7 @@ namespace CaptureTest
         private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         private const String AR_CAMERA_FILE = "../../../../../data/camera_para.dat";
         private NyARSingleDetectMarker m_ar;
-        private DsBGRX32Raster m_raster;
+        private DsRgbRaster m_raster;
         public Form1()
         {
             InitializeComponent();
@@ -51,7 +51,7 @@ namespace CaptureTest
             cap.PrepareCapture(320, 240,30);
             this.m_cap = cap;
             //ラスタを作る。
-            this.m_raster = new DsBGRX32Raster(cap.video_width, cap.video_height);
+            this.m_raster = new DsRgbRaster(cap.video_width, cap.video_height,NyARBufferType.OBJECT_CS_Bitmap);
             //１パターンのみを追跡するクラスを作成
             this.m_ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0);
             this.m_ar.setContinueMode(false);
@@ -71,7 +71,7 @@ namespace CaptureTest
             pictureBox1.Image = b;
 
             //ARの計算
-            this.m_raster.setBuffer(i_buffer, i_sender.video_vertical_flip);
+            this.m_raster.setBuffer(i_buffer,i_buffer_len,i_sender.video_vertical_flip);
             if (this.m_ar.detectMarkerLite(this.m_raster, 100))
             {
                 NyARTransMatResult result_mat = new NyARTransMatResult();
