@@ -60,7 +60,8 @@ namespace MarkerPlane
                 {
                     //get marker plane pos from Mouse X,Y
                     Point p=this.form.PointToClient(Cursor.Position);
-                    NyARDoublePoint3d mp=this._ms.getMarkerPlanePos(this.mid, p.X,p.Y,new NyARDoublePoint3d());
+                    NyARDoublePoint3d mp = new NyARDoublePoint3d();
+                    this._ms.getMarkerPlanePos(this.mid, p.X,p.Y,mp);
 
                     //立方体の平面状の位置を計算
                     Matrix transform_mat2 = Matrix.Translation((float)mp.x, (float)mp.y, 20.0f);

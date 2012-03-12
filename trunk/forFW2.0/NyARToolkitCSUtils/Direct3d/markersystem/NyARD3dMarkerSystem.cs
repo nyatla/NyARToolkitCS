@@ -40,31 +40,33 @@ namespace NyARToolkitCSUtils.Direct3d
             base.setProjectionMatrixClipping(i_near, i_far);
             NyARD3dUtil.toCameraFrustumRH(this._ref_param, i_near, i_far, ref this._projection_mat);
         }
-        private Matrix _work = new Matrix();
-
-        /**
-         * 
-         * この関数はDirect3d形式の姿勢変換行列を返します。
-         * 返却値の有効期間は、次回の{@link #getGlMarkerTransMat()}をコールするまでです。
-         * 値を保持する場合は、{@link #getGlMarkerMatrix(double[])}を使用します。
-         * @param i_buf
-         * @return
-         * [readonly]
-         */
-        public Matrix getD3dMarkerMatrix(int i_id)
-        {
-            return this.getD3dMarkerMatrix(i_id, ref this._work);
-        }
         /**
          * この関数は、i_bufに指定idのOpenGL形式の姿勢変換行列を設定して返します。
          * @param i_id
          * @param i_buf
          * @return
          */
-        public Matrix getD3dMarkerMatrix(int i_id, ref Matrix i_buf)
+        public void getMarkerMatrix(int i_id, ref Matrix i_buf)
         {
-            NyARD3dUtil.toD3dCameraView(this.getMarkerMatrix(i_id), 1, ref i_buf);
-            return i_buf;
+            NyARD3dUtil.toD3dCameraView(base.getMarkerMatrix(i_id), 1, ref i_buf);
+            return;
+        }
+
+        public Matrix getD3dMarkerMatrix(int i_id)
+        {
+            Matrix p = new Matrix();
+            this.getMarkerMatrix(i_id,ref p);
+            return p;
+        }
+
+        public void getMarkerPlanePos(int i_id, int i_x, int i_y, ref Vector3 i_buf)
+        {
+            NyARDoublePoint3d p = new NyARDoublePoint3d();
+            base.getMarkerPlanePos(i_id, i_x, i_y, p);
+            i_buf.X = (float)p.x;
+            i_buf.Y = (float)p.y;
+            i_buf.Z = (float)p.z;
+            return;
         }
 
         //
@@ -115,7 +117,7 @@ namespace NyARToolkitCSUtils.Direct3d
         /// <param name="i_img"></param>
         /// <returns></returns>
 
-        public Bitmap getMarkerPlaneImage(
+        public void getMarkerPlaneImage(
             int i_id,
             NyARSensor i_sensor,
             int i_x1, int i_y1,
@@ -127,7 +129,7 @@ namespace NyARToolkitCSUtils.Direct3d
             using (NyARBitmapRaster bmr = new NyARBitmapRaster(i_img))
             {
                 base.getMarkerPlaneImage(i_id, i_sensor, i_x1, i_y1, i_x2, i_y2, i_x3, i_y3, i_x4, i_y4, bmr);
-                return i_img;
+                return;
             }
         }
         /**
@@ -147,7 +149,7 @@ namespace NyARToolkitCSUtils.Direct3d
          * 結果を格納したi_rasterオブジェクト
          * @throws NyARException
          */
-        public Bitmap getMarkerPlaneImage(
+        public void getMarkerPlaneImage(
             int i_id,
             NyARSensor i_sensor,
             int i_l, int i_t,
@@ -158,7 +160,7 @@ namespace NyARToolkitCSUtils.Direct3d
             {
                 base.getMarkerPlaneImage(i_id, i_sensor, i_l, i_t, i_w, i_h, bmr);
                 this.getMarkerPlaneImage(i_id, i_sensor, i_l + i_w - 1, i_t + i_h - 1, i_l, i_t + i_h - 1, i_l, i_t, i_l + i_w - 1, i_t, bmr);
-                return i_img;
+                return;
             }
         }
     }
