@@ -87,6 +87,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public const int BYTE1D_X8R8G8B8_32 = T_BYTE1D | 0x0102;
 
+        public const int BYTE1D_X8B8G8R8_32 = T_BYTE1D|0x0103;
+
         /**　RGB形式。byte[2]で、RGB565の16ビット(little endian)の画素形式。
          */
         public const int BYTE1D_R5G6B5_16LE = T_BYTE1D | 0x0201;

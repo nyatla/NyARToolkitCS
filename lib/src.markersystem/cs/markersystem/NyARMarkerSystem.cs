@@ -304,10 +304,10 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @return
          * 結果を格納したi_outに設定したオブジェクト
          */
-        public NyARDoublePoint3d getMarkerPlanePos(int i_id, int i_x, int i_y, NyARDoublePoint3d i_out)
+        public void getMarkerPlanePos(int i_id, int i_x, int i_y, NyARDoublePoint3d i_out)
         {
             this._frustum.unProjectOnMatrix(i_x, i_y, this.getMarkerMatrix(i_id), i_out);
-            return i_out;
+            return;
         }
         private NyARDoublePoint3d _wk_3dpos = new NyARDoublePoint3d();
         /**
@@ -322,15 +322,13 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * マーカ座標系のZ座標
          * @param i_out
          * 結果を格納するオブジェクト
-         * @return
-         * 結果を格納したi_outに設定したオブジェクト
          */
-        public NyARDoublePoint2d getScreenPos(int i_id, double i_x, double i_y, double i_z, NyARDoublePoint2d i_out)
+        public void getScreenPos(int i_id, double i_x, double i_y, double i_z, NyARDoublePoint2d i_out)
         {
             NyARDoublePoint3d _wk_3dpos = this._wk_3dpos;
             this.getMarkerMatrix(i_id).transform3d(i_x, i_y, i_z, _wk_3dpos);
             this._frustum.project(_wk_3dpos, i_out);
-            return i_out;
+            return;
         }
         private NyARDoublePoint3d[] __pos3d = NyARDoublePoint3d.createArray(4);
         private NyARDoublePoint2d[] __pos2d = NyARDoublePoint2d.createArray(4);
@@ -352,11 +350,9 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @param i_y4
          * @param i_raster
          * 出力先のオブジェクト
-         * @return
-         * 結果を格納したi_rasterオブジェクト
          * @
          */
-        public INyARRgbRaster getMarkerPlaneImage(
+        public void getMarkerPlaneImage(
             int i_id,
             NyARSensor i_sensor,
             int i_x1, int i_y1,
@@ -376,7 +372,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             {
                 this._frustum.project(pos[i], pos2[i]);
             }
-            return i_sensor.getPerspectiveImage(pos2[0].x, pos2[0].y, pos2[1].x, pos2[1].y, pos2[2].x, pos2[2].y, pos2[3].x, pos2[3].y, i_raster);
+            i_sensor.getPerspectiveImage(pos2[0].x, pos2[0].y, pos2[1].x, pos2[1].y, pos2[2].x, pos2[2].y, pos2[3].x, pos2[3].y, i_raster);
         }
         /**
          * この関数は、マーカ平面上の任意の４点で囲まれる領域から、画像を射影変換して返します。
@@ -391,18 +387,15 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @param i_h
          * @param i_raster
          * 出力先のオブジェクト
-         * @return
-         * 結果を格納したi_rasterオブジェクト
-         * @
          */
-        public INyARRgbRaster getMarkerPlaneImage(
+        public void getMarkerPlaneImage(
             int i_id,
             NyARSensor i_sensor,
             int i_l, int i_t,
             int i_w, int i_h,
             INyARRgbRaster i_raster)
         {
-            return this.getMarkerPlaneImage(i_id, i_sensor, i_l + i_w - 1, i_t + i_h - 1, i_l, i_t + i_h - 1, i_l, i_t, i_l + i_w - 1, i_t, i_raster);
+            this.getMarkerPlaneImage(i_id, i_sensor, i_l + i_w - 1, i_t + i_h - 1, i_l, i_t + i_h - 1, i_l, i_t, i_l + i_w - 1, i_t, i_raster);
         }
         /**
          * この関数は、マーカの姿勢変換行列を返します。
