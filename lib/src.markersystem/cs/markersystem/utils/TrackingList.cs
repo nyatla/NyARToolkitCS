@@ -39,51 +39,56 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             this._tracking_list.reset();
         }
         private int[] __ret = new int[2];
-        public bool update(SquareStack.Item i_new_sq) 
-	{
-        int[] ret = this.__ret;
-		int new_area=i_new_sq.rect_area;
-		//頂点の対角距離
-		int new_sq_dist=i_new_sq.vertex_area.getDiagonalSqDist();
-		bool is_dispatched=false;
-		for(int i=this.Count-1;i>=0;i--)
-		{
-			TMarkerData target=this[i];
-			if(target.lost_count>1){
-				continue;
-			}
-			//面積比が急激0.8-1.2倍以外の変動なら無視
-			int a_rate=new_area*100/target.tl_rect_area;
-			if(a_rate<50 || 150<a_rate){
-				continue;
-			}
-			//移動距離^2の二乗が対角線距離^2の4倍以上なら無視
-			long sq_move=target.tl_center.sqDist(i_new_sq.center2d);
-			if(sq_move*4/new_sq_dist>0){
-				continue;
-			}
-			compareVertexSet(i_new_sq.ob_vertex,target.tl_vertex,ret);
-			int sqdist=ret[1];
-			int shift=ret[0];
-			//頂点移動距離の合計が、(中心点移動距離+8)の10倍を超えてたらNG <-
-			if(sqdist>(sq_move+8)*10){
-				continue;
-			}
-			//登録可能か確認
-			VertexSortTable.Item item=this._tracking_list.getInsertPoint(sqdist);
-			if(item==null){
-				continue;
-			}
-			//登録
-			item=this._tracking_list.insertFromTailBefore(item);
-			item.marker=target;
-			item.shift=shift;
-			item.sq_dist=sqdist;
-			item.ref_sq=i_new_sq;
-			is_dispatched=true;
-		}
-		return is_dispatched;
-	}
+        public bool update(SquareStack.Item i_new_sq)
+        {
+            int[] ret = this.__ret;
+            int new_area = i_new_sq.rect_area;
+            //頂点の対角距離
+            int new_sq_dist = i_new_sq.vertex_area.getDiagonalSqDist();
+            bool is_dispatched = false;
+            for (int i = this.Count - 1; i >= 0; i--)
+            {
+                TMarkerData target = this[i];
+                if (target.lost_count > 1)
+                {
+                    continue;
+                }
+                //面積比が急激0.8-1.2倍以外の変動なら無視
+                int a_rate = new_area * 100 / target.tl_rect_area;
+                if (a_rate < 50 || 150 < a_rate)
+                {
+                    continue;
+                }
+                //移動距離^2の二乗が対角線距離^2の4倍以上なら無視
+                long sq_move = target.tl_center.sqDist(i_new_sq.center2d);
+                if (sq_move * 4 / new_sq_dist > 0)
+                {
+                    continue;
+                }
+                compareVertexSet(i_new_sq.ob_vertex, target.tl_vertex, ret);
+                int sqdist = ret[1];
+                int shift = ret[0];
+                //頂点移動距離の合計が、(中心点移動距離+8)の10倍を超えてたらNG <-
+                if (sqdist > (sq_move + 8) * 10)
+                {
+                    continue;
+                }
+                //登録可能か確認
+                VertexSortTable.Item item = this._tracking_list.getInsertPoint(sqdist);
+                if (item == null)
+                {
+                    continue;
+                }
+                //登録
+                item = this._tracking_list.insertFromTailBefore(item);
+                item.marker = target;
+                item.shift = shift;
+                item.sq_dist = sqdist;
+                item.ref_sq = i_new_sq;
+                is_dispatched = true;
+            }
+            return is_dispatched;
+        }
 
         /**
          * この関数は、頂点セット同士のシフト量を計算して、配列に値を返します。
