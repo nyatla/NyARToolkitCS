@@ -49,7 +49,7 @@ namespace SimpleLiteForm
     {
         private const int SCREEN_WIDTH=640;
         private const int SCREEN_HEIGHT=480;
-        private const String AR_CODE_FILE = "../../../../data/patt.hiro";
+        private const String AR_CODE_FILE = "../../../../../data/patt.hiro";
         //NyAR
         //背景テクスチャ
         private NyARD3dSurface _surface;
