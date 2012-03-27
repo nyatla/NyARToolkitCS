@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLiteForm", "sample\Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLiteM", "sample\SimpleLiteM\SimpleLiteM.csproj", "{09EBFAAF-00E8-48AE-B9B6-6973504DDAD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NyARToolkitCSPro", "..\..\..\..\..\ARToolworks.project\NyARToolkitCSPro\trunk\forFW2.0\NyARToolkitCSPro\NyARToolkitCSPro.csproj", "{D9E5A988-1FD4-4BB5-8BB9-0E84F5AAA1D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,10 @@ Global
 		{09EBFAAF-00E8-48AE-B9B6-6973504DDAD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09EBFAAF-00E8-48AE-B9B6-6973504DDAD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09EBFAAF-00E8-48AE-B9B6-6973504DDAD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9E5A988-1FD4-4BB5-8BB9-0E84F5AAA1D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9E5A988-1FD4-4BB5-8BB9-0E84F5AAA1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9E5A988-1FD4-4BB5-8BB9-0E84F5AAA1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9E5A988-1FD4-4BB5-8BB9-0E84F5AAA1D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
