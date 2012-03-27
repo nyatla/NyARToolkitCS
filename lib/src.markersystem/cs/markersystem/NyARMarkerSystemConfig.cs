@@ -53,15 +53,15 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             this._param.loadDefaultParameter();
             this._param.changeScreenSize(i_width, i_height);
         }
-        public INyARTransMat createTransmatAlgorism()
+        public virtual INyARTransMat createTransmatAlgorism()
         {
             return new NyARTransMat(this._param);
         }
-        public INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism()
+        public virtual INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism()
         {
             return new NyARHistogramAnalyzer_SlidePTile(15);
         }
-        public NyARParam getNyARParam()
+        public virtual NyARParam getNyARParam()
         {
             return this._param;
         }
