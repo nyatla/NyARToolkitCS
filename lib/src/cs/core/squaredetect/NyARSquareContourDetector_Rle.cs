@@ -220,7 +220,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 return;
             }
             int label_num = flagment.getLength();
-            // ラベル数が0ならここまで            if (label_num < 1)
+            // ラベル数が0ならここまで
+            if (label_num < 1)
             {
                 return;
             }
