@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
     public class NyARDetectMarker
     {
         /** 矩形検出器のブリッジ*/
-        private class RleDetector : NyARSquareContourDetector_Rle
+ 	    private class RleDetector : NyARSquareContourDetector_Rle, NyARSquareContourDetector.CbHandler
         {
             //公開プロパティ
             public NyARDetectMarkerResultStack result_stack = new NyARDetectMarkerResultStack(NyARDetectMarker.AR_SQUARE_MAX);
@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            public void detectMarkerCallback(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 NyARMatchPattResult mr = this.__detectMarkerLite_mr;
                 //輪郭座標から頂点リストに変換
@@ -259,7 +259,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._tobin_filter.doFilter(i_threshold, this._bin_raster);
             //detect
             this._square_detect.init(i_raster);
-            this._square_detect.detectMarker(this._bin_raster, 0);
+            this._square_detect.detectMarker(this._bin_raster, 0, this._square_detect);
 
             //見付かった数を返す。
             return this._square_detect.result_stack.getLength();

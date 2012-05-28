@@ -51,7 +51,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             else if (elem1 > elem2 && elem1 > elem3)
             {
-                double v = Math.Sqrt(elem1) * 0.5f;
+                double v = Math.Sqrt(elem1) * 0.5;
                 double mult = 0.25 / v;
                 this.x = ((i_mat.m10 + i_mat.m01) * mult);
                 this.y = (v);
@@ -60,8 +60,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             else if (elem2 > elem3)
             {
-                double v = Math.Sqrt(elem2) * 0.5f;
-                double mult = 0.25f / v;
+                double v = Math.Sqrt(elem2) * 0.5;
+                double mult = 0.25 / v;
                 this.x = ((i_mat.m02 + i_mat.m20) * mult);
                 this.y = ((i_mat.m21 + i_mat.m12) * mult);
                 this.z = (v);
@@ -69,8 +69,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             else
             {
-                double v = Math.Sqrt(elem3) * 0.5f;
-                double mult = 0.25f / v;
+                double v = Math.Sqrt(elem3) * 0.5;
+                double mult = 0.25 / v;
                 this.x = ((i_mat.m21 - i_mat.m12) * mult);
                 this.y = ((i_mat.m02 - i_mat.m20) * mult);
                 this.z = ((i_mat.m10 - i_mat.m01) * mult);

@@ -51,5 +51,12 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * [readonly]
          */
         NyARParam getNyARParam();
+		/**
+		 * このコンフィギュレーションのスクリーンサイズを返します。
+		 * @return
+		 * [readonly]
+		 * 参照値です。
+		 */
+		NyARIntSize getScreenSize();
     }
 }

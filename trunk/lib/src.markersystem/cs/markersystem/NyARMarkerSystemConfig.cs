@@ -65,5 +65,13 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         {
             return this._param;
         }
+	    /**
+	     * この値は、カメラパラメータのスクリーンサイズです。
+	     */
+	    public NyARIntSize getScreenSize()
+	    {
+		    return this._param.getScreenSize();
+	    }
+
     }
 }

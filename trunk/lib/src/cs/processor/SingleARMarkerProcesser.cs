@@ -57,7 +57,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         /**
          * detectMarkerのコールバック関数
          */
-        private class DetectSquare : NyARSquareContourDetector_Rle
+        private class DetectSquare : NyARSquareContourDetector_Rle, NyARSquareContourDetector.CbHandler
         {
             //公開プロパティ
             public readonly NyARSquare square = new NyARSquare();
@@ -109,7 +109,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
              * 矩形が見付かるたびに呼び出されます。
              * 発見した矩形のパターンを検査して、方位を考慮した頂点データを確保します。
              */
-            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            public void detectMarkerCallback(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 if (this._match_patt == null)
                 {
@@ -335,7 +335,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
             // スクエアコードを探す
             this._detectmarker.init(i_raster, this._current_arcode_index);
-            this._detectmarker.detectMarker(this._gs_raster, this._thdetect.getThreshold(this._hist));
+            this._detectmarker.detectMarker(this._gs_raster, this._thdetect.getThreshold(this._hist),this._detectmarker);
 
             // 認識状態を更新
             this.updateStatus(this._detectmarker.square, this._detectmarker.code_index);

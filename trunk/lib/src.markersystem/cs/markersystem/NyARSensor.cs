@@ -33,11 +33,11 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
     public class NyARSensor
     {
         protected NyARHistogram _gs_hist;
-        private INyARRgbRaster _ref_raster;
+        protected INyARRgbRaster _ref_raster = null;
         protected INyARGrayscaleRaster _gs_raster;
-        private long _src_ts;
-        private long _gs_id_ts;
-        private long _gs_hist_ts;
+        protected long _src_ts;
+        protected long _gs_id_ts;
+        protected long _gs_hist_ts;
         public NyARSensor(NyARIntSize i_size)
         {
             this.initInstance(i_size);
@@ -83,7 +83,6 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             return this._pcopy;
         }
         private INyARHistogramFromRaster _hist_drv = null;
-        private INyARRaster _last_input_rasster = null;
         private INyARPerspectiveCopy _pcopy;
         private INyARRgb2GsFilter _rgb2gs = null;
         /**
@@ -95,14 +94,12 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         public virtual void update(INyARRgbRaster i_input)
         {
             //ラスタドライバの準備
-            if (this._last_input_rasster != i_input)
+            if (this._ref_raster != i_input)
             {
                 this._rgb2gs = (INyARRgb2GsFilter)i_input.createInterface(typeof(INyARRgb2GsFilter));
                 this._pcopy = (INyARPerspectiveCopy)i_input.createInterface(typeof(INyARPerspectiveCopy));
-                this._last_input_rasster = i_input;
+                this._ref_raster = i_input;
             }
-            //RGB画像の差し替え
-            this._ref_raster = i_input;
             //ソースidのインクリメント
             this._src_ts++;
         }

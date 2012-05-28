@@ -69,10 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARRgbRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc):base(i_width, i_height, i_raster_type)
         {
-            if (!initInstance(this._size, i_raster_type, i_is_alloc))
-            {
-                throw new NyARException();
-            }
+            initInstance(this._size, i_raster_type, i_is_alloc);
         }
         /**
          * コンストラクタです。
@@ -89,10 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARRgbRaster(int i_width, int i_height, int i_raster_type):base(i_width, i_height, i_raster_type)
         {
-            if (!initInstance(this._size, i_raster_type, true))
-            {
-                throw new NyARException();
-            }
+            initInstance(this._size, i_raster_type, true);
         }
         /**
          * コンストラクタです。
@@ -105,10 +99,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARRgbRaster(int i_width, int i_height): base(i_width, i_height, NyARBufferType.INT1D_X8R8G8B8_32)
         {
-            if (!initInstance(this._size, NyARBufferType.INT1D_X8R8G8B8_32, true))
-            {
-                throw new NyARException();
-            }
+            initInstance(this._size, NyARBufferType.INT1D_X8R8G8B8_32, true);
         }
         /**
          * Readerとbufferを初期化する関数です。コンストラクタから呼び出します。
@@ -123,7 +114,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 初期化が成功すると、trueです。
          * @ 
          */
-        protected virtual bool initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
+        protected virtual void initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
         {
             //バッファの構築
             switch (i_raster_type)
@@ -143,12 +134,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     this._buf = i_is_alloc ? new short[i_size.w * i_size.h] : null;
                     break;
                 default:
-                    return false;
+                    throw new NyARException();
             }
             //readerの構築
             this._rgb_pixel_driver = NyARRgbPixelDriverFactory.createDriver(this);
             this._is_attached_buffer = i_is_alloc;
-            return true;
+            return;
         }
         /**
          * この関数は、画素形式によらない画素アクセスを行うオブジェクトへの参照値を返します。
