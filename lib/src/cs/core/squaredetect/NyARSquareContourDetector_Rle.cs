@@ -213,11 +213,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
             NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
 
-            // ラベル数が0ならここまで
             flagment.clear();
-            this._labeling.labeling(i_raster, i_th);
+            //ラベルの生成エラーならここまで
+            if (!this._labeling.labeling(i_raster, i_th))
+            {
+                return;
+            }
             int label_num = flagment.getLength();
-            if (label_num < 1)
+            // ラベル数が0ならここまで            if (label_num < 1)
             {
                 return;
             }
