@@ -3,7 +3,7 @@ NyARToolkitCS
  version 4.0.3
 ======================================================================
 
-Copyright (C)2008-2010 Ryo Iizuka
+Copyright (C)2008-2012 Ryo Iizuka
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
