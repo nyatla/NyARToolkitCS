@@ -34,25 +34,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
 
 
-
-
-
-
-
-
-    class TSinCosValue
-    {
-        public static TSinCosValue[] createArray(int i_size)
-        {
-            TSinCosValue[] result = new TSinCosValue[i_size];
-            for (int i = 0; i < i_size; i++)
-            {
-                result[i] = new TSinCosValue();
-            }
-            return result;
-        }
-    }
-
     /**
      * このクラスは、NyARToolkit方式の姿勢行列Optimizerです。
      * <p>アルゴリズム -
@@ -324,6 +305,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         private double getMinimumErrorAngleFromParam(double iL, double iJ, double iK, double iM, double iN, double iO, double i_hint_angle)
         {
+            //iLが0の時は誤差修正しない。
+            if (iL == 0)
+            {
+                return 0;
+            }
+
             double[] sin_table = this.__sin_table;
 
             double M = (iN - iM) / iL;

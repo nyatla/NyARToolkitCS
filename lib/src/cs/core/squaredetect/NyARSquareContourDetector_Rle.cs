@@ -43,7 +43,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * 検出した矩形を、自己コールバック関数{@link #onSquareDetect}へ通知します。
      * 継承クラスで自己コールバック関数{@link #onSquareDetect}を実装する必要があります。
      */
-    public abstract class NyARSquareContourDetector_Rle : NyARSquareContourDetector
+    public class NyARSquareContourDetector_Rle : NyARSquareContourDetector
     {
         /** label_stackにソート後の結果を蓄積するクラス*/
         protected class Labeling : NyARLabeling_Rle
@@ -61,23 +61,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 this._right = i_width - 1;
                 return;
             }
-            public override void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
+            public override bool labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
             {
                 //配列初期化
                 this.label_stack.clear();
                 //ラベルの検出
-                base.labeling(i_raster, i_area, i_th);
+                bool ret = base.labeling(i_raster, i_area, i_th);
                 //ソート
                 this.label_stack.sortByArea();
+                return ret;
             }
-            public override void labeling(INyARGrayscaleRaster i_raster, int i_th)
+            public override bool labeling(INyARGrayscaleRaster i_raster, int i_th)
             {
                 //配列初期化
                 this.label_stack.clear();
                 //ラベルの検出
-                base.labeling(i_raster, i_th);
+                bool ret = base.labeling(i_raster, i_th);
                 //ソート
                 this.label_stack.sortByArea();
+                return ret;
             }
 
             protected override void onLabelFound(NyARRleLabelFragmentInfo i_label)
@@ -138,15 +140,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラベルと判定する敷居値
          * @
          */
-        public void detectMarker(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
+        public void detectMarker(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th, NyARSquareContourDetector.CbHandler i_cb)
         {
             Debug.Assert(i_area.w * i_area.h > 0);
 
             NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
             NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
-
+            //ラベルの生成エラーならここまで
+            if (!this._labeling.labeling(i_raster, i_area, i_th))
+            {
+                return;
+            }
             // ラベル数が0ならここまで
-            this._labeling.labeling(i_raster, i_area, i_th);
             int label_num = flagment.getLength();
             if (label_num < 1)
             {
@@ -186,7 +191,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     continue;
                 }
                 //矩形を発見したことをコールバック関数で通知
-                this.onSquareDetect(coord, mkvertex);
+                i_cb.detectMarkerCallback(coord, mkvertex);
 
                 // 検出済の矩形の属したラベルを重なりチェックに追加する。
                 overlap.push(label_pt);
@@ -203,7 +208,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_th
          * 画素の二値判定敷居値です。この値は、ラベリングと、輪郭線追跡時に使われます。
          */
-        public void detectMarker(INyARGrayscaleRaster i_raster, int i_th)
+        public void detectMarker(INyARGrayscaleRaster i_raster, int i_th, NyARSquareContourDetector.CbHandler i_cb)
         {
             NyARRleLabelFragmentInfoPtrStack flagment = this._labeling.label_stack;
             NyARLabelOverlapChecker<NyARRleLabelFragmentInfo> overlap = this._overlap_checker;
@@ -251,7 +256,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     continue;
                 }
                 //矩形を発見したことをコールバック関数で通知
-                this.onSquareDetect(coord, mkvertex);
+                i_cb.detectMarkerCallback(coord, mkvertex);
 
                 // 検出済の矩形の属したラベルを重なりチェックに追加する。
                 overlap.push(label_pt);

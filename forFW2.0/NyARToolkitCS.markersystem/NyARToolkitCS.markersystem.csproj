@@ -48,6 +48,9 @@
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\INyARMarkerSystemConfig.cs">
       <Link>cs\markersystem\INyARMarkerSystemConfig.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\INyARMarkerSystemSquareDetect.cs">
+      <Link>cs\markersystem\INyARMarkerSystemSquareDetect.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\NyARMarkerSystem.cs">
       <Link>cs\markersystem\NyARMarkerSystem.cs</Link>
     </Compile>

@@ -95,6 +95,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**　RGB形式。byte[2]で、RGB565の16ビット(big endian)の画素形式。
          */
         public const int BYTE1D_R5G6B5_16BE = T_BYTE1D | 0x0202;
+
+        /**　byte[]のYUV420形式
+         */
+        public const int BYTE1D_YUV420SP = T_BYTE1D | 0x0301;
+
         /**　RGB形式。short[1]で、RGB565の16ビット(little endian)の画素形式。
          */
         public const int WORD1D_R5G6B5_16LE = T_SHORT1D | 0x0201;
@@ -159,6 +164,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * RGB形式。バッファは、JavaのBufferedImage型オブジェクト
          */
         public const int OBJECT_Java_BufferedImage = OBJECT_Java | 0x01;
+        /**
+         * AndroidのBitmap型オブジェクト
+         */
+        public const int OBJECT_And_Bitmap= OBJECT_Java|0x11;
 
 
         /**

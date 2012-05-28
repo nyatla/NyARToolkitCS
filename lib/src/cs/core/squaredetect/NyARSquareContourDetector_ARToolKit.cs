@@ -81,7 +81,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 検出元のラスタ画像
          * @
          */
-        public void detectMarker(NyARBinRaster i_raster)
+        public void detectMarker(NyARBinRaster i_raster, NyARSquareContourDetector.CbHandler i_cb)
         {
             NyARLabelingImage limage = this._limage;
 
@@ -153,7 +153,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     continue;
                 }
                 //矩形を発見したことをコールバック関数で通知
-                this.onSquareDetect(coord, mkvertex);
+                i_cb.detectMarkerCallback(coord, mkvertex);
 
                 // 検出済の矩形の属したラベルを重なりチェックに追加する。
                 overlap.push(label_pt);

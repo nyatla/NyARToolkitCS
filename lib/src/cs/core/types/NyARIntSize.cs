@@ -152,18 +152,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return (i_size.w <= this.w && i_size.h <= this.h);
         }
         /**
-         * この関数は、座標がサイズの範囲内(0,0基点)よりも小さいかを返します。
-         * @param i_point
-         * 調査する座標点
-         * @return
-         * 引数値が範囲内ならば、trueを返します。
-         * @
-         */
-        public bool isInnerSize(NyARDoublePoint2d i_point)
-        {
-            return (i_point.x < this.w && i_point.y < this.h && 0 <= i_point.x && 0 <= i_point.y);
-        }
-        /**
          * この関数は、座標がサイズの範囲内(0,0-w,hの矩形)にあるかを返します。
          * @param i_x
          * 調査する座標点

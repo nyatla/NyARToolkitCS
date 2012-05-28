@@ -148,7 +148,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected void initInstance(int i_width, int i_height)
         {
             this._raster_size.setValue(i_width, i_height);
-            long t = (long)i_width * i_height * 2048 / (320 * 240) + 32;//full HD support
+            //120KB/QVGA +4K
+            long t = (long)i_width * i_height * 3000 / (320 * 240) + 100;//full HD support
             this._rlestack = new RleInfoStack((int)t);
             this._rle1 = RleElement.createArray(i_width / 2 + 1);
             this._rle2 = RleElement.createArray(i_width / 2 + 1);
@@ -189,7 +190,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARRleLabelFragmentInfo v = o_stack.prePush();
             if (v == null)
             {
-                System.Console.Error.WriteLine("addFragment force recover!");
                 return false;
             }
             v.entry_x = l;
@@ -212,10 +212,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 敷居値を指定します。2値画像の場合は、0を指定してください。
          * @
          */
-        public virtual void labeling(INyARGrayscaleRaster i_raster, int i_th)
+        public virtual bool labeling(INyARGrayscaleRaster i_raster, int i_th)
         {
             NyARIntSize size = i_raster.getSize();
-            this.imple_labeling(i_raster, i_th, 0, 0, size.w, size.h);
+            return this.imple_labeling(i_raster, i_th, 0, 0, size.w, size.h);
         }
         /**
          * この関数は、ラスタを敷居値i_thで2値化して、ラベリングします。
@@ -228,15 +228,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 敷居値
          * @
          */
-        public virtual void labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
+        public virtual bool labeling(INyARGrayscaleRaster i_raster, NyARIntRect i_area, int i_th)
         {
-            this.imple_labeling(i_raster, 0, i_area.x, i_area.y, i_area.w, i_area.h);
+            return this.imple_labeling(i_raster, 0, i_area.x, i_area.y, i_area.w, i_area.h);
         }
         private INyARRaster _last_input_raster = null;
         private IRasterDriver _image_driver;
 
-        private void imple_labeling(INyARRaster i_raster, int i_th, int i_left, int i_top, int i_width, int i_height)
-	{
+ 	    /**
+	     * 
+	     * ラベリングの実体。
+	     * @return
+	     * ラベル数が上限に達したときはfalse
+	     */
+	    private bool imple_labeling(INyARRaster i_raster,int i_th,int i_left,int i_top,int i_width, int i_height)
+	    {
 		//ラスタのサイズを確認
 		Debug.Assert(i_raster.getSize().isEqualSize(this._raster_size));
 		//ラスタドライバのチェック
@@ -255,17 +261,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		int len_current = 0;
 		int bottom=i_top+i_height;
 		int id_max = 0;
-		int label_count=0;
 		int ypos=i_top;
 		// 初段登録
 		len_prev = pixdrv.xLineToRle(i_left,ypos,i_width,i_th,rle_prev);
 		for (int i = 0; i < len_prev; i++) {
 			// フラグメントID=フラグメント初期値、POS=Y値、RELインデクス=行
-			if(addFragment(rle_prev[i], id_max, ypos,rlestack)){
-				id_max++;
-				// nofの最大値チェック
-				label_count++;
-			}
+            if (addFragment(rle_prev[i], id_max, ypos, rlestack))
+            {
+                id_max++;
+			}else{
+				return false;
+            }
 		}
 		NyARRleLabelFragmentInfo[] f_array = rlestack.getArray();
 		// 次段結合
@@ -289,8 +295,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						// prevがcur右方にある→独立フラグメント
 						if(addFragment(rle_current[i], id_max, y,rlestack)){
 							id_max++;
-							label_count++;
-						}
+                        }else{
+                            return false;
+                        }
 						// 次のindexをしらべる
 						goto SCAN_CUR;
 					}
@@ -327,7 +334,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						 int prev_id =rle_prev[index_prev].fid;
 						NyARRleLabelFragmentInfo prev_ptr = f_array[prev_id];
 						if (id != prev_id){
-							label_count--;
 							//prevとcurrentのフラグメントidを書き換える。
 							for(int i2=index_prev;i2<len_prev;i2++){
 								//prevは現在のidから最後まで
@@ -388,8 +394,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				if (id < 0){
 					if(addFragment(rle_current[i], id_max, y,rlestack)){
 						id_max++;
-						label_count++;
-					}
+                    }else{
+                        return false;
+                    }
 				}
             SCAN_CUR: ;
             }
@@ -417,6 +424,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 			//コールバック関数コール
 			this.onLabelFound(src_info);
 		}
+        return true;
 	}
         /**
          * この仮想関数は自己コールバック関数です。

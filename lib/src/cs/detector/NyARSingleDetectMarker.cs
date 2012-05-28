@@ -306,14 +306,14 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         /**
          * ARTKラべリングを使った矩形検出機へのブリッジ
          */
-        public class ARTKDetector : NyARSquareContourDetector_ARToolKit
+	    public class ARTKDetector : NyARSquareContourDetector_ARToolKit , NyARSquareContourDetector.CbHandler
         {
             private NyARSingleDetectMarker _parent;
             public ARTKDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size):base(i_size)
             {
                 this._parent = i_parent;
             }
-            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
+            public void detectMarkerCallback(NyARIntCoordinates i_coord, int[] i_vertex_index)
             {
                 this._parent.updateSquareInfo(i_coord, i_vertex_index);
             }
@@ -327,7 +327,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
-            this._square_detect.detectMarker(this._bin_raster);
+            this._square_detect.detectMarker(this._bin_raster, this._square_detect);
 
         }
     }
@@ -344,7 +344,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
-            this._square_detect.detectMarker(this._bin_raster);
+            this._square_detect.detectMarker(this._bin_raster, this._square_detect);
         }
     }
     /**
@@ -358,17 +358,18 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         /**
          * RleLabelingを使った矩形検出機
          */
-        private class RleDetector : NyARSquareContourDetector_Rle
+        private class RleDetector : NyARSquareContourDetector_Rle, NyARSquareContourDetector.CbHandler
         {
             NyARSingleDetectMarker _parent;
             public RleDetector(NyARSingleDetectMarker i_parent, NyARIntSize i_size):base(i_size)
             {
                 this._parent = i_parent;
             }
-            protected override void onSquareDetect(NyARIntCoordinates i_coord, int[] i_vertex_index)
-            {
-                this._parent.updateSquareInfo(i_coord, i_vertex_index);
-            }
+		    public void detectMarkerCallback(NyARIntCoordinates i_coord,int[] i_vertex_index)
+		    {
+			    this._parent.updateSquareInfo(i_coord, i_vertex_index);
+    			
+		    }
         }
 
         public NyARSingleDetectMarker_NyARTK(NyARParam i_ref_param, NyARCode i_ref_code, double i_marker_width):base(i_ref_param, i_ref_code, i_marker_width)
@@ -381,7 +382,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         protected override void execDetectMarker()
         {
             //矩形を探す(戻り値はコールバック関数で受け取る。)
-            this._square_detect.detectMarker(this._bin_raster, 0);
+            this._square_detect.detectMarker(this._bin_raster, 0, this._square_detect);
 
         }
     }

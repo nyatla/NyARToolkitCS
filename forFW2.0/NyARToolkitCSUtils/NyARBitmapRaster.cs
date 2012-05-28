@@ -74,7 +74,7 @@ namespace NyARToolkitCSUtils
          * 初期化が成功すると、trueです。
          * @ 
          */
-        protected override bool initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
+        protected override void initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
         {
             //バッファの構築
             switch (i_raster_type)
@@ -93,10 +93,11 @@ namespace NyARToolkitCSUtils
                     this._is_attached_buffer = i_is_alloc;
                     break;
                 default:
-                    return base.initInstance(i_size,i_raster_type,i_is_alloc);
+                    base.initInstance(i_size,i_raster_type,i_is_alloc);
+                    break;
             }
             //readerの構築
-            return true;
+            return;
         }
         public void Dispose()
         {
