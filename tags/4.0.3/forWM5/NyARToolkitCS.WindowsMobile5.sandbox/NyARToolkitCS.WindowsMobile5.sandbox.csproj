@@ -1,0 +1,81 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB375AEC-0E88-40C3-B8C0-FDE9323BC22D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NyARToolkitCS.sandbox</RootNamespace>
+    <AssemblyName>NyARToolkitCS.sandbox</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>NyARToolkitCS.sandbox</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+<Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\matrix\NyARFixedFloat16Matrix33.cs"><Link>cs\core\types\matrix\NyARFixedFloat16Matrix33.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\matrix\NyARFixedFloat24Matrix33.cs"><Link>cs\core\types\matrix\NyARFixedFloat24Matrix33.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\matrix\NyARI64Matrix22.cs"><Link>cs\core\types\matrix\NyARI64Matrix22.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\matrix\NyARI64Matrix33.cs"><Link>cs\core\types\matrix\NyARI64Matrix33.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\NyARFixedFloat16Point2d.cs"><Link>cs\core\types\NyARFixedFloat16Point2d.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\NyARFixedFloat16Point3d.cs"><Link>cs\core\types\NyARFixedFloat16Point3d.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\NyARI64Linear.cs"><Link>cs\core\types\NyARI64Linear.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\NyARI64Point2d.cs"><Link>cs\core\types\NyARI64Point2d.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\core\types\NyARI64Point3d.cs"><Link>cs\core\types\NyARI64Point3d.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\quadx2\NyARRasterFilter_ARTTh_Quad.cs"><Link>cs\quadx2\NyARRasterFilter_ARTTh_Quad.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloat16Mat.cs"><Link>cs\x2\NyARFixedFloat16Mat.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatObserv2IdealMap.cs"><Link>cs\x2\NyARFixedFloatObserv2IdealMap.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatIdeal2Observ.cs"><Link>cs\x2\NyARFixedFloatIdeal2Observ.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatTransOffset.cs"><Link>cs\x2\NyARFixedFloatTransOffset.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyARFixedFloatVertexCounter.cs"><Link>cs\x2\NyARFixedFloatVertexCounter.cs</Link></Compile><Compile Include="..\..\forFW2.0\NyARToolkitCS.sandbox\cs\x2\NyMath.cs"><Link>cs\x2\NyMath.cs</Link></Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NyARToolkitCS.WindowsMobile5\NyARToolkitCS.WindowsMobile5.csproj">
+      <Project>{EF09E3D5-B9D3-417B-9A94-C35B87FE5634}</Project>
+      <Name>NyARToolkitCS.WindowsMobile5</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
