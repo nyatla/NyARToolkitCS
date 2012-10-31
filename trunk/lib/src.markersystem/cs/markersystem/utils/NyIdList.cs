@@ -29,8 +29,32 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 {
 
 
-    public class NyIdList : List<MarkerInfoNyId>
+    public class NyIdList : List<NyIdList.Item>
     {
+	    public class Item : TMarkerData
+	    {
+		    /** MK_NyIdの情報。 反応するidの開始レンジ*/
+		    public long nyid_range_s;
+		    /** MK_NyIdの情報。 反応するidの終了レンジ*/
+		    public long nyid_range_e;
+		    /** MK_NyIdの情報。 実際のid値*/
+		    public long nyid;
+		    public int dir;
+		    /**
+		     * コンストラクタです。初期値から、Idマーカのインスタンスを生成します。
+		     * @param i_range_s
+		     * @param i_range_e
+		     * @param i_patt_size
+		     * @throws NyARException
+		     */
+		    public Item(long i_nyid_range_s,long i_nyid_range_e,double i_patt_size):base()
+		    {
+			    this.marker_offset.setSquare(i_patt_size);
+			    this.nyid_range_s=i_nyid_range_s;
+			    this.nyid_range_e=i_nyid_range_e;
+			    return;
+		    }		
+	    }
         /**輪郭推定器*/
         private NyIdMarkerPickup _id_pickup;
         private readonly NyIdMarkerPattern _id_patt = new NyIdMarkerPattern();
@@ -45,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         {
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoNyId target = this[i];
+                Item target = this[i];
                 if (target.life > 0)
                 {
                     target.lost_count++;
@@ -67,7 +91,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             long s = this._id_data.marker_id;
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoNyId target = this[i];
+                Item target = this[i];
                 if (target.nyid_range_s > s || s > target.nyid_range_e)
                 {
                     continue;
@@ -89,7 +113,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         {
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoNyId target = this[i];
+                Item target = this[i];
                 if (target.sq == null)
                 {
                     continue;

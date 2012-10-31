@@ -51,6 +51,9 @@
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\INyARMarkerSystemSquareDetect.cs">
       <Link>cs\markersystem\INyARMarkerSystemSquareDetect.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\INyARSingleCameraSystemObserver.cs">
+      <Link>cs\markersystem\INyARSingleCameraSystemObserver.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\NyARMarkerSystem.cs">
       <Link>cs\markersystem\NyARMarkerSystem.cs</Link>
     </Compile>
@@ -60,17 +63,17 @@
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\NyARSensor.cs">
       <Link>cs\markersystem\NyARSensor.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\NyARSingleCameraSystem.cs">
+      <Link>cs\markersystem\NyARSingleCameraSystem.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\ARMarkerList.cs">
       <Link>cs\markersystem\utils\ARMarkerList.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\ARMarkerSortList.cs">
       <Link>cs\markersystem\utils\ARMarkerSortList.cs</Link>
     </Compile>
-    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\MarkerInfoARMarker.cs">
-      <Link>cs\markersystem\utils\MarkerInfoARMarker.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\MarkerInfoNyId.cs">
-      <Link>cs\markersystem\utils\MarkerInfoNyId.cs</Link>
+    <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\ARPlayCardList.cs">
+      <Link>cs\markersystem\utils\ARPlayCardList.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src.markersystem\cs\markersystem\utils\MultiResolutionPattProvider.cs">
       <Link>cs\markersystem\utils\MultiResolutionPattProvider.cs</Link>

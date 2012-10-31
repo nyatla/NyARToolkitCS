@@ -170,9 +170,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 //要素をシフト
                 base.remove(i_index);
                 //外したオブジェクトを末端に取り付ける
-                this._items[i_index] = item;
+                this._items[this._length] = item;
             }
-            this._length--;
         }
         //override
         public override void removeIgnoreOrder(int i_index)

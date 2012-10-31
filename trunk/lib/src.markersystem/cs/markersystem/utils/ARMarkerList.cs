@@ -28,8 +28,33 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 {
 
 
-    public class ARMarkerList : System.Collections.Generic.List<MarkerInfoARMarker>
+    public class ARMarkerList : System.Collections.Generic.List<ARMarkerList.Item>
     {
+	    /**
+	     * このクラスは、ARマーカの検出結果を保存するデータクラスです。
+	     */
+	    public class Item : TMarkerData
+	    {
+		    /** MK_ARの情報。比較のための、ARToolKitマーカを格納します。*/
+		    public NyARMatchPatt_Color_WITHOUT_PCA matchpatt;
+		    /** MK_ARの情報。検出した矩形の格納変数。マーカの一致度を格納します。*/
+		    public double cf;
+		    public int patt_w;
+		    public int patt_h;
+		    /** MK_ARの情報。パターンのエッジ割合。*/
+		    public int patt_edge_percentage;
+		    /** */
+		    public Item(NyARCode i_patt,int i_patt_edge_percentage,double i_patt_size)
+		    {
+			    //base();
+			    this.matchpatt=new NyARMatchPatt_Color_WITHOUT_PCA(i_patt);
+			    this.patt_edge_percentage=i_patt_edge_percentage;
+			    this.marker_offset.setSquare(i_patt_size);
+			    this.patt_w=i_patt.getWidth();
+			    this.patt_h=i_patt.getHeight();
+			    return;
+		    }		
+	    }	
         /**
          * 
          */
@@ -45,7 +70,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         /**
          * このAdd以外使わないでね。
          */
-        public void add(MarkerInfoARMarker i_e)
+        public void add(ARMarkerList.Item i_e)
         {
             //マッチテーブルのサイズを調整
             int s = this.Count + 1;
@@ -76,7 +101,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             bool is_ganalated_sq = false;
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoARMarker target = this[i];
+                ARMarkerList.Item target = this[i];
                 //解像度に一致する画像を取得
                 NyARMatchPattDeviationColorData diff = this._mpickup.getDeviationColorData(target, i_pix_drv, i_sq.ob_vertex);
                 //マーカのパターン解像度に一致したサンプリング画像と比較する。
@@ -117,7 +142,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             //検出のために初期値設定
             for (int i = this.Count - 1; i >= 0; i--)
             {
-                MarkerInfoARMarker target = this[i];
+                ARMarkerList.Item target = this[i];
                 if (target.life > 0)
                 {
                     target.lost_count++;
@@ -132,7 +157,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             while (top_item != null)
             {
                 //検出したアイテムのARmarkerIndexのデータをセット
-                MarkerInfoARMarker target = top_item.marker;
+                ARMarkerList.Item target = top_item.marker;
                 if (target.lost_count > 0)
                 {
                     //未割当のマーカのみ検出操作を実行。

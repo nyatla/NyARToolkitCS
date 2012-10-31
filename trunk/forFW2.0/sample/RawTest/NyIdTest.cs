@@ -101,8 +101,7 @@ namespace ConsoleApplication1
         public void Test()
         {
             //AR用カメラパラメタファイルをロード
-            NyARParam ap = new NyARParam();
-            ap.loadARParam(new StreamReader(camera_file));
+            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(camera_file));
             ap.changeScreenSize(320, 240);
 
             //試験イメージの読み出し(320x240 RGBのRAWデータ)

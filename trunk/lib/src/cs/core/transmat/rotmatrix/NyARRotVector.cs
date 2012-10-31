@@ -61,7 +61,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 詳細は不明です。(2つのベクトルの関係を調整？)
          * @
          */
-        public static void checkRotation(NyARRotVector io_vec1, NyARRotVector io_vec2)
+        public static bool checkRotation(NyARRotVector io_vec1, NyARRotVector io_vec2)
         {
             double w;
             int f;
@@ -79,7 +79,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             w = Math.Sqrt(vec30 * vec30 + vec31 * vec31 + vec32 * vec32);
             if (w == 0.0)
             {
-                throw new NyARException();
+                return false;
             }
             vec30 /= w;
             vec31 /= w;
@@ -113,7 +113,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             if (vec31 * vec10 - vec11 * vec30 == 0.0)
             {
-                throw new NyARException();
+                return false;
             }
 
             double k1, k2, k3, k4;
@@ -136,7 +136,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             d = b * b - a * c;
             if (d < 0)
             {
-                throw new NyARException();
+                return false;
             }
             r1 = (-b + Math.Sqrt(d)) / a;
             p1 = k1 * r1 + k2;
@@ -182,7 +182,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             if (vec31 * vec20 - vec21 * vec30 == 0.0)
             {
-                throw new NyARException();
+                return false;
             }
             k1 = (vec21 * vec32 - vec31 * vec22) / (vec31 * vec20 - vec21 * vec30);
             k2 = (vec31 * ca) / (vec31 * vec20 - vec21 * vec30);
@@ -196,7 +196,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             d = b * b - a * c;
             if (d < 0)
             {
-                throw new NyARException();
+                return false;
             }
             r3 = (-b + Math.Sqrt(d)) / a;
             p3 = k1 * r3 + k2;
@@ -331,7 +331,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     }
                 }
             }
-            return;
+            return true;
         }
     }
 }

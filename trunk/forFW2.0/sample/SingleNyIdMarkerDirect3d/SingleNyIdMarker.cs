@@ -199,8 +199,7 @@ namespace SingleNyIdMarkerDirect3d
             this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = new NyARParam();
-            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
+            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 

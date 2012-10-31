@@ -58,12 +58,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected NyARDoublePoint3d _angle;
 
         //override
-        public sealed override void initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
+        public sealed override bool initRotBySquare(NyARLinear[] i_linear, NyARDoublePoint2d[] i_sqvertex)
         {
-            base.initRotBySquare(i_linear, i_sqvertex);
-            //Matrixからangleをロード
-            this.updateAngleFromMatrix();
-            return;
+            bool ret = base.initRotBySquare(i_linear, i_sqvertex);
+            if (ret)
+            {
+                //Matrixからangleをロード
+                this.updateAngleFromMatrix();
+            }
+            return ret;
         }
         /**
          * ARToolKitスタイルの角度値の参照値を返します。

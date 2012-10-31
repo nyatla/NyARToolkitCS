@@ -27,13 +27,11 @@ namespace CaptureTest
             InitializeComponent();
             //ARの設定
             //AR用カメラパラメタファイルをロード
-            NyARParam ap = new NyARParam();
-            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
+            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(320, 240);
 
             //AR用のパターンコードを読み出し	
-            NyARCode code = new NyARCode(16, 16);
-            code.loadARPatt(new StreamReader(AR_CODE_FILE));
+            NyARCode code = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE),16, 16);
 
             NyARTransMatResult result_mat = new NyARTransMatResult();
             //計算モードの設定

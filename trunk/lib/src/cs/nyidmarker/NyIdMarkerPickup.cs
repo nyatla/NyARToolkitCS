@@ -930,8 +930,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     ref_y[pt] = yy = (int)((cpx3_0 + cpy0_45) / d);
                     if (xx < 0 || xx >= raster_width || yy < 0 || yy >= raster_height)
                     {
-                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : raster_width);
-                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : raster_height);
+                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : xx);
+                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : yy);
                     }
                     pt++;
 
@@ -940,8 +940,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     ref_y[pt] = yy = (int)((cpx3_0 + cpy1_45) / d);
                     if (xx < 0 || xx >= raster_width || yy < 0 || yy >= raster_height)
                     {
-                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : raster_width);
-                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : raster_height);
+                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : xx);
+                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : yy);
                     }
                     pt++;
 
@@ -950,8 +950,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     ref_y[pt] = yy = (int)((cpx3_1 + cpy0_45) / d);
                     if (xx < 0 || xx >= raster_width || yy < 0 || yy >= raster_height)
                     {
-                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : raster_width);
-                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : raster_height);
+                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : xx);
+                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : yy);
                     }
                     pt++;
 
@@ -960,8 +960,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     ref_y[pt] = yy = (int)((cpx3_1 + cpy1_45) / d);
                     if (xx < 0 || xx >= raster_width || yy < 0 || yy >= raster_height)
                     {
-                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : raster_width);
-                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : raster_height);
+                        ref_x[pt] = xx < 0 ? 0 : (xx >= raster_width ? raster_width - 1 : xx);
+                        ref_y[pt] = yy < 0 ? 0 : (yy >= raster_height ? raster_height - 1 : yy);
                     }
                     pt++;
                 }

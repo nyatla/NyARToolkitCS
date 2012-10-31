@@ -61,7 +61,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
          * [readonly]マーカにマッチした{@link NyARMatchPattDeviationColorData}インスタンスを得る。
          * @ 
          */
-        public NyARMatchPattDeviationColorData getDeviationColorData(MarkerInfoARMarker i_marker, INyARPerspectiveCopy i_pix_drv, NyARIntPoint2d[] i_vertex)
+        public NyARMatchPattDeviationColorData getDeviationColorData(ARMarkerList.Item i_marker, INyARPerspectiveCopy i_pix_drv, NyARIntPoint2d[] i_vertex)
         {
             int mk_edge = i_marker.patt_edge_percentage;
             for (int i = this.items.Count - 1; i >= 0; i--)
