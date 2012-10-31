@@ -154,13 +154,11 @@ namespace SimpleLiteDirect3d
             this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = new NyARParam();
-            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
+            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //AR用のパターンコードを読み出し	
-            NyARCode code = new NyARCode(16, 16);
-            code.loadARPatt(new StreamReader(AR_CODE_FILE));
+            NyARCode code = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE),16, 16);
 
             //１パターンのみを追跡するクラスを作成
             this._ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0, NyARSingleDetectMarker.PF_NYARTOOLKIT);

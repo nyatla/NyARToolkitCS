@@ -168,7 +168,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
         private NyARMatchPattDeviationBlackWhiteData[] _bw_pat = new NyARMatchPattDeviationBlackWhiteData[4];
         private int _width;
         private int _height;
-
+	    /**
+	     * inputStreamからARToolKit形式のパターンデータを指定サイズで読み出して、格納したインスタンスを生成します。
+	     * ロードするパターンデータの縦横解像度は、このインスタンスの値と同じである必要があります。
+	     * @param i_stream
+	     * 読出し元のStreamオブジェクト
+	     * @param i_width
+	     * パターンの幅pixel数。データの内容と一致している必要があります。
+	     * @param i_height
+	     * パターンの幅pixel数。データの内容と一致している必要があります。
+	     * @throws NyARException
+	     */	
+	    public static NyARCode createFromARPattFile(StreamReader i_stream,int i_width,int i_height)
+	    {
+		    //ラスタにパターンをロードする。
+		    NyARCode ret=new NyARCode(i_width,i_height);
+		    NyARCodeFileReader.loadFromARToolKitFormFile(i_stream,ret);
+		    return ret;
+    		
+	    }
         /**
          * 指定したdirection(方位)の{@link NyARMatchPattDeviationColorData}オブジェクトの参照値を返します。
          * @param i_index
@@ -233,19 +251,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 this._color_pat[i] = new NyARMatchPattDeviationColorData(i_width, i_height);
                 this._bw_pat[i] = new NyARMatchPattDeviationBlackWhiteData(i_width, i_height);
             }
-            return;
-        }
-        /**
-         * inputStreamから、ARToolKit形式のパターンデータをロードします。
-         * ロードするパターンデータの縦横解像度は、このインスタンスの値と同じである必要があります。
-         * @param i_stream
-         * 読出し元のStreamオブジェクト
-         * @
-         */
-        public void loadARPatt(StreamReader i_stream)
-        {
-            //ラスタにパターンをロードする。
-            NyARCodeFileReader.loadFromARToolKitFormFile(i_stream, this);
             return;
         }
         /**

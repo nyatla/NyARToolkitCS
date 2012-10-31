@@ -126,19 +126,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
         {
-            double x = (i_in.x - this._f0) * this._f3;
-            double y = (i_in.y - this._f1) * this._f3;
-            if (x == 0.0 && y == 0.0)
-            {
-                o_out.x = this._f0;
-                o_out.y = this._f1;
-            }
-            else
-            {
-                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
-                o_out.x = x * d + this._f0;
-                o_out.y = y * d + this._f1;
-            }
+            this.ideal2Observ(i_in.x, i_in.y, o_out);
             return;
         }
 
@@ -154,7 +142,27 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.ideal2Observ(i_in.x, i_in.y, o_out);
             return;
         }
-
+	    /**
+	     * この関数は、座標点を理想座標系から観察座標系へ変換します。
+	     * @param i_in
+	     * 変換元の座標
+	     * @param o_out
+	     * 変換後の座標を受け取るオブジェクト
+	     */
+	    public void ideal2Observ(double i_x,double i_y, NyARDoublePoint2d o_out)
+	    {
+		    double x = (i_x - this._f0) * this._f3;
+		    double y = (i_y - this._f1) * this._f3;
+		    if (x == 0.0 && y == 0.0) {
+			    o_out.x = this._f0;
+			    o_out.y = this._f1;
+		    } else {
+			    double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+			    o_out.x = x * d + this._f0;
+			    o_out.y = y * d + this._f1;
+		    }
+		    return;
+	    }
         /**
          * この関数は、座標点を理想座標系から観察座標系へ変換します。
          * @param i_x
@@ -285,8 +293,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
                 else
                 {
-                    px = 0.0;
-                    py = 0.0;
+                    px = py = 0.0;
                     break;
                 }
                 if (i == PD_LOOP)
@@ -300,9 +307,32 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_point.y = py / this._f3 + d1;
             return;
         }
-
+	    /**
+	     * {@link #observ2Ideal(double, double, NyARDoublePoint2d)}のラッパーです。
+	     * i_inとo_pointには、同じオブジェクトを指定できます。
+	     * @param i_in
+	     * @param o_point
+	     */	
+	    public void observ2Ideal(NyARDoublePoint2d i_in, NyARDoublePoint2d o_point)
+	    {
+		    this.observ2Ideal(i_in.x,i_in.y,o_point);
+	    }
+	    /**
+	     * 座標配列全てに対して、{@link #observ2Ideal(double, double, NyARDoublePoint2d)}を適応します。
+	     * @param i_in
+	     * @param o_out
+	     * @param i_size
+	     */
+	    public void observ2IdealBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+	    {
+		    for(int i=i_size-1;i>=0;i--){
+			    this.observ2Ideal(i_in[i].x,i_in[i].y,o_out[i]);
+		    }
+		    return;
+	    }
         /**
          * この関数は、座標を観察座標系から理想座標系へ変換します。
+         * この関数は使用しないでください。
          * @param ix
          * 変換元の座標
          * @param iy

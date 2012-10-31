@@ -154,8 +154,7 @@ namespace Test_NyARRealityGl_IdMarker
             this._cap = i_cap_device;
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = new NyARParam();
-            ap.loadARParam(new StreamReader(AR_CAMERA_FILE));
+            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
             ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //マーカライブラリ(NyId)の構築

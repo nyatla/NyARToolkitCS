@@ -218,5 +218,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             this._length = 0;
         }
+        /**
+         * 配列の長さを変更します。
+         * @param i_length
+         */
+        public void setLength(int i_length)
+        {
+            this._length = i_length;
+        }
     }
 }

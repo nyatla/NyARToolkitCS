@@ -32,6 +32,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARMath
     {
+    	public const double DBL_EPSILON=2.2204460492503131e-016;
+
         /** 定数値。40^2*/
         public const int SQ_40 = 40 * 40;
         /** 定数値。20^2*/

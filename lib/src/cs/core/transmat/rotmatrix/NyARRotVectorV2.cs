@@ -89,7 +89,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 終了位置？
          * @throws NyARException
          */
-        public void checkVectorByVertex(NyARDoublePoint2d i_start_vertex, NyARDoublePoint2d i_end_vertex)
+        public bool checkVectorByVertex(NyARDoublePoint2d i_start_vertex, NyARDoublePoint2d i_end_vertex)
         {
             double h;
             NyARDoubleMatrix44 inv_cpara = this._inv_cpara;
@@ -106,7 +106,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             h = cmat.m20 * world0 + cmat.m21 * world1 + cmat.m22 * world2;
             if (h == 0.0)
             {
-                throw new NyARException();
+                return false;
             }
             double camera0 = (cmat.m00 * world0 + cmat.m01 * world1 + cmat.m02 * world2) / h;
             double camera1 = (cmat.m10 * world0 + cmat.m11 * world1 + cmat.m12 * world2) / h;
@@ -115,7 +115,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             h = cmat.m20 * world3 + cmat.m21 * world4 + cmat.m22 * world5;
             if (h == 0.0)
             {
-                throw new NyARException();
+                return false;
             }
             double camera2 = (cmat.m00 * world3 + cmat.m01 * world4 + cmat.m02 * world5) / h;
             double camera3 = (cmat.m10 * world3 + cmat.m11 * world4 + cmat.m12 * world5) / h;
@@ -127,6 +127,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 this.v2 = -this.v2;
                 this.v3 = -this.v3;
             }
+            return true;
         }
     }
 }

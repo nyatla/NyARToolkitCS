@@ -30,7 +30,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
     {
         public new class Item : NyARLinkList<ARMarkerSortList.Item>.Item
         {
-            public MarkerInfoARMarker marker;
+            public ARMarkerList.Item marker;
             public double cf;
             public int dir;
             public SquareStack.Item ref_sq;
@@ -107,15 +107,23 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
          */
         public void disableMatchItem(Item i_item)
         {
+            //削除対象のオブジェクトのポインタ保存
+            ARMarkerList.Item match_mk = i_item.marker;
+            SquareStack.Item match_sq = i_item.ref_sq;
+            //リストを走査して該当アイテムを削除
             Item ptr = this._head_item;
             for (int i = this._num_of_item - 1; i >= 0; i--)
             {
-                if ((ptr.marker == i_item.marker) || (ptr.ref_sq == i_item.ref_sq))
+                if (ptr.marker != null)
                 {
-                    ptr.marker = null;
+                    if ((ptr.marker == match_mk) || (ptr.ref_sq == match_sq))
+                    {
+                        ptr.marker = null;
+                    }
                 }
                 ptr = (Item)ptr.next;
             }
+
         }
         public int getLength()
         {
