@@ -44,7 +44,7 @@ namespace ConsoleApplication1
     {
         public class MarkerProcessor : SingleNyIdMarkerProcesser
         {
-            public NyARTransMatResult transmat = null;
+            public NyARDoubleMatrix44 transmat = null;
             public int current_id = -1;
 
             public MarkerProcessor(NyARParam i_cparam, int i_raster_format)
@@ -88,7 +88,7 @@ namespace ConsoleApplication1
             /**
              * アプリケーションフレームワークのハンドラ（マーカ更新）
              */
-            protected override void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result)
+            protected override void onUpdateHandler(NyARSquare i_square, NyARDoubleMatrix44 result)
             {
                 this.transmat = result;
             }

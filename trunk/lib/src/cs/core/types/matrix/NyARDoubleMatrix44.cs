@@ -274,6 +274,34 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             return true;
         }
+	    /**
+	     * この関数は、平行移動量と回転行列をセットして、インスタンスのパラメータを更新します。
+	     * 拡大率は1倍にセットします。
+	     * @param i_rot
+	     * 設定する回転行列
+	     * @param i_trans
+	     * 設定する平行移動量
+	     */
+	    public void setValue(NyARDoubleMatrix33 i_rot, NyARDoublePoint3d i_trans)
+	    {
+		    this.m00=i_rot.m00;
+		    this.m01=i_rot.m01;
+		    this.m02=i_rot.m02;
+		    this.m03=i_trans.x;
+
+		    this.m10 =i_rot.m10;
+		    this.m11 =i_rot.m11;
+		    this.m12 =i_rot.m12;
+		    this.m13 =i_trans.y;
+
+		    this.m20 = i_rot.m20;
+		    this.m21 = i_rot.m21;
+		    this.m22 = i_rot.m22;
+		    this.m23 = i_trans.z;
+		    this.m30=this.m31=this.m32=0;
+		    this.m33=1.0;
+		    return;
+	    }	
         /**
          * この関数は、3次元座標を座標変換します。
          * 4列目は1と仮定します。

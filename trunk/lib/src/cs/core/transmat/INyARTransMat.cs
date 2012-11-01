@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 結果を格納するオブジェクトです。
          * @
          */
-        bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult o_result);
+	    bool transMat(NyARSquare i_square,NyARRectOffset i_offset, NyARDoubleMatrix44 o_result,NyARTransMatResultParam o_param);
         /**
          * この関数は、理想座標系の四角系を元に、位置姿勢変換行列を求めます。
          * 位置姿勢変換行列は、オフセット位置を基準とした変換行列です。
@@ -73,6 +73,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 結果を格納するオブジェクトです。
          * @
          */
-        bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result);
+        bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARDoubleMatrix44 i_prev_result, double i_prev_err, NyARDoubleMatrix44 o_result, NyARTransMatResultParam o_param);
     }
 }

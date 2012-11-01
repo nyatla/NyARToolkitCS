@@ -103,6 +103,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 		    //歪み補正どうするの？
 	    }
     */
+        private NyARDoublePoint2d __tmp = new NyARDoublePoint2d();
+
 	    /**
 	     * RECT範囲内の画素ベクトルの合計値と、ベクトルのエッジ中心を取得します。 320*240の場合、
 	     * RECTの範囲は(x>=0 && x<319 x+w>=0 && x+w<319),(y>=0 && y<239 x+w>=0 && x+w<319)となります。
@@ -174,7 +176,9 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 		    }
 		    //必要なら歪みを解除
 		    if(this._factor!=null){
-			    this._factor.observ2Ideal(xx, yy, o_posvec);
+                this._factor.observ2Ideal(xx, yy, this.__tmp);
+                o_posvec.x = this.__tmp.x;
+                o_posvec.y = this.__tmp.y;
 		    }else{
 			    o_posvec.x=xx;
 			    o_posvec.y=yy;
@@ -238,8 +242,12 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 		    }
 		    //必要なら歪みを解除
 		    if(this._factor!=null){
-			    this._factor.observ2Ideal(xx, yy, o_posvec);
-		    }else{
+                this._factor.observ2Ideal(xx, yy, this.__tmp);
+                o_posvec.x = this.__tmp.x;
+                o_posvec.y = this.__tmp.y;
+            }
+            else
+            {
 			    o_posvec.x=xx;
 			    o_posvec.y=yy;
 		    }

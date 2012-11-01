@@ -29,6 +29,7 @@
  * 
  */
 using jp.nyatla.nyartoolkit.cs.core;
+using System.Diagnostics;
 
 namespace jp.nyatla.nyartoolkit.cs.detector
 {
@@ -275,20 +276,24 @@ namespace jp.nyatla.nyartoolkit.cs.detector
          * 結果値を受け取るオブジェクト
          * @
          */
-        public void getTransmationMatrix(int i_index, NyARTransMatResult o_result)
-        {
-            NyARDetectMarkerResult result = this._square_detect.result_stack.getItem(i_index);
-            // 一番一致したマーカーの位置とかその辺を計算
-            if (_is_continue)
-            {
-                _transmat.transMatContinue(result.square, this._offset[result.arcode_id], o_result, o_result);
-            }
-            else
-            {
-                _transmat.transMat(result.square, this._offset[result.arcode_id], o_result);
-            }
-            return;
-        }
+	    public void getTransmationMatrix(int i_index, NyARDoubleMatrix44 o_result)
+	    {
+		    Debug.Assert(o_result!=null);
+		    NyARDetectMarkerResult result = this._square_detect.result_stack.getItem(i_index);
+		    // 一番一致したマーカーの位置とかその辺を計算
+		    if (this._is_continue){
+			    //履歴が使えそうか判定
+			    if(result.ref_last_input_matrix==o_result){
+				    if(this._transmat.transMatContinue(result.square, this._offset[result.arcode_id],o_result, result.last_result_param.last_error,o_result, result.last_result_param)){
+					    return;
+				    }
+			    }
+		    }
+		    //履歴使えないor継続認識失敗
+		    this._transmat.transMat(result.square, this._offset[result.arcode_id],o_result,result.last_result_param);
+		    result.ref_last_input_matrix=o_result;
+		    return;
+	    }
 
         /**
          * この関数は、i_index番目に検出したマーカの、一致度を返します。
@@ -340,6 +345,8 @@ namespace jp.nyatla.nyartoolkit.cs.detector
     {
         public int arcode_id;
         public double confidence;
+        public NyARDoubleMatrix44 ref_last_input_matrix;
+        public NyARTransMatResultParam last_result_param = new NyARTransMatResultParam();
 
         public NyARSquare square = new NyARSquare();
     }

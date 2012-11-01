@@ -61,7 +61,7 @@ namespace SimpleLite_ImageSource
         private Device _device = null;
         private ColorCube _cube;
 
-        private NyARTransMatResult __OnBuffer_nyar_transmat = new NyARTransMatResult();
+        private NyARDoubleMatrix44 __OnBuffer_nyar_transmat = new NyARDoubleMatrix44();
         private bool _is_marker_enable;
         private Matrix _trans_mat;
 
@@ -146,7 +146,7 @@ namespace SimpleLite_ImageSource
             //背景サーフェイスを作成
             this._surface = new NyARD3dSurface(this._device, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-            NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
+            NyARDoubleMatrix44 nyar_transmat = this.__OnBuffer_nyar_transmat;
             //マーカの認識
             bool is_marker_enable = this._ar.detectMarkerLite(this._raster, 110);
             if (is_marker_enable)

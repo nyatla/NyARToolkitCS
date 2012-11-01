@@ -93,7 +93,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	    /** 内部向けの公開メンバ変数です。{@link #getSerialId}を使ってください。 */
 	    public long _serial;
 	    /** 内部向けの公開メンバ変数です。{@link #refTransformMatrix}を使ってください。 */
-	    public NyARTransMatResult _transform_matrix=new NyARTransMatResult();
+        public readonly NyARDoubleMatrix44 _transform_matrix = new NyARDoubleMatrix44();
+        public readonly NyARTransMatResultParam _result_param = new NyARTransMatResultParam();
 
 	    /** ターゲットの種類。未知のターゲット。 */
 	    public const int RT_UNKNOWN   =0;
@@ -121,8 +122,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * この値は変更しないでください。（編集するときは、コピーを作ってください。）
 	     * @return
 	     */
-	    public NyARTransMatResult refTransformMatrix()
-	    {
+        public NyARDoubleMatrix44 refTransformMatrix()
+		    {
             Debug.Assert(this._target_type == RT_KNOWN);
 		    return this._transform_matrix;
 	    }

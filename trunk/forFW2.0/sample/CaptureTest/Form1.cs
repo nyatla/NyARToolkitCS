@@ -33,7 +33,7 @@ namespace CaptureTest
             //AR用のパターンコードを読み出し	
             NyARCode code = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE),16, 16);
 
-            NyARTransMatResult result_mat = new NyARTransMatResult();
+            NyARDoubleMatrix44 result_mat = new NyARDoubleMatrix44();
             //計算モードの設定
             //キャプチャを作る
 			/**************************************************
@@ -72,7 +72,7 @@ namespace CaptureTest
             this.m_raster.setBuffer(i_buffer,i_buffer_len,i_sender.video_vertical_flip);
             if (this.m_ar.detectMarkerLite(this.m_raster, 100))
             {
-                NyARTransMatResult result_mat = new NyARTransMatResult();
+                NyARDoubleMatrix44 result_mat = new NyARDoubleMatrix44();
                 this.m_ar.getTransmationMatrix(result_mat);
                 this.Invoke(
                     (MethodInvoker)delegate()

@@ -293,8 +293,8 @@
     <Compile Include="..\..\lib\src\cs\core\transmat\NyARTransMat.cs">
       <Link>cs\core\transmat\NyARTransMat.cs</Link>
     </Compile>
-    <Compile Include="..\..\lib\src\cs\core\transmat\NyARTransMatResult.cs">
-      <Link>cs\core\transmat\NyARTransMatResult.cs</Link>
+    <Compile Include="..\..\lib\src\cs\core\transmat\NyARTransMatResultParam.cs">
+      <Link>cs\core\transmat\NyARTransMatResultParam.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\transmat\NyARTransMat_ARToolKit.cs">
       <Link>cs\core\transmat\NyARTransMat_ARToolKit.cs</Link>
