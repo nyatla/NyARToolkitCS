@@ -307,14 +307,14 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         }
 
 
-        private NyARTransMatResult __NyARSquare_result = new NyARTransMatResult();
+        private NyARDoubleMatrix44 _transmat_result = new NyARDoubleMatrix44();
+        private NyARTransMatResultParam _last_result_param = new NyARTransMatResultParam();
 
         /**オブジェクトのステータスを更新し、必要に応じて自己コールバック関数を駆動します。
          */
         private bool updateStatus(NyARSquare i_square, INyIdMarkerData i_marker_data)
         {
             bool is_id_found = false;
-            NyARTransMatResult result = this.__NyARSquare_result;
             if (!this._is_active)
             {// 未認識中
                 if (i_marker_data == null)
@@ -329,9 +329,9 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     // OnEnter
                     this.onEnterHandler(this._data_current);
                     // 変換行列を作成
-                    this._transmat.transMat(i_square, this._offset, result);
+                    this._transmat.transMat(i_square, this._offset, this._transmat_result, this._last_result_param);
                     // OnUpdate
-                    this.onUpdateHandler(i_square, result);
+                    this.onUpdateHandler(i_square, this._transmat_result);
                     this._lost_delay_count = 0;
                     this._is_active = true;
                     is_id_found = true;
@@ -353,9 +353,12 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 else if (this._data_current.isEqual(i_marker_data))
                 {
                     //同じidの再認識
-                    this._transmat.transMatContinue(i_square, this._offset, result, result);
+                    if (!this._transmat.transMatContinue(i_square, this._offset, this._transmat_result, this._last_result_param.last_error, this._transmat_result, this._last_result_param))
+                    {
+                        this._transmat.transMat(i_square, this._offset, this._transmat_result, this._last_result_param);
+                    }
                     // OnUpdate
-                    this.onUpdateHandler(i_square, result);
+                    this.onUpdateHandler(i_square, this._transmat_result);
                     this._lost_delay_count = 0;
                     is_id_found = true;
                 }
@@ -386,9 +389,9 @@ namespace jp.nyatla.nyartoolkit.cs.processor
          * 引数の値の有効期間は、関数が終了するまでです。
          * @param i_square
          * 現在のマーカ検出位置です。
-         * @param result
+         * @param o_result
          * 現在の姿勢変換行列です。
          */
-        protected abstract void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result);
+        protected abstract void onUpdateHandler(NyARSquare i_square, NyARDoubleMatrix44 o_result);
     }
 }

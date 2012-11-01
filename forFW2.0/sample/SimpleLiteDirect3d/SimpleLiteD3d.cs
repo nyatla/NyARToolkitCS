@@ -60,7 +60,7 @@ namespace SimpleLiteDirect3d
         private Device _device = null;
         private ColorCube _cube;
 
-        private NyARTransMatResult __OnBuffer_nyar_transmat = new NyARTransMatResult();
+        private NyARDoubleMatrix44 __OnBuffer_nyar_transmat = new NyARDoubleMatrix44();
         private bool _is_marker_enable;
         private Matrix _trans_mat;
         /* 非同期イベントハンドラ
@@ -71,7 +71,7 @@ namespace SimpleLiteDirect3d
             int w = i_sender.video_width;
             int h = i_sender.video_height;
             int s = w * (i_sender.video_bit_count / 8);
-            NyARTransMatResult nyar_transmat = this.__OnBuffer_nyar_transmat;
+            NyARDoubleMatrix44 nyar_transmat = this.__OnBuffer_nyar_transmat;
             
             //テクスチャにRGBを取り込み()
             lock (this)

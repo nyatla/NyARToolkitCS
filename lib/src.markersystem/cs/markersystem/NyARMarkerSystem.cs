@@ -596,30 +596,56 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 			TMarkerData item=this._tracking_list[i];
 			if(item.lost_count>this.lost_th){
 				item.life=0;//活性off
-			}
+            }
+            else if (item.life > 1)
+            {
+                //トラッキング中
+                if (!this._transmat.transMatContinue(item.sq, item.marker_offset, item.tmat, item.last_param.last_error, item.tmat, item.last_param))
+                {
+                    if (!this._transmat.transMat(item.sq, item.marker_offset, item.tmat, item.last_param))
+                    {
+                        item.life = 0;//活性off
+                    }
+                }
+            }
 		}
 		//各ターゲットの更新
 		for(int i=this._armk_list.Count-1;i>=0;i--){
 			TMarkerData target=this._armk_list[i];
 			if(target.lost_count==0){
 				target.time_stamp=time_stamp;
-				this._transmat.transMatContinue(target.sq,target.marker_offset,target.tmat,target.tmat);
+                //lifeが1(開始時検出のときのみ)
+                if (target.life != 1)
+                {
+                    continue;
+                }
+                this._transmat.transMat(target.sq, target.marker_offset, target.tmat, target.last_param);
 			}
 		}
 		for(int i=this._idmk_list.Count-1;i>=0;i--){
 			TMarkerData target=this._idmk_list[i];
 			if(target.lost_count==0){
 				target.time_stamp=time_stamp;
-				this._transmat.transMatContinue(target.sq,target.marker_offset,target.tmat,target.tmat);
-			}
+                //lifeが1(開始時検出のときのみ)
+                if (target.life != 1)
+                {
+                    continue;
+                }
+                this._transmat.transMat(target.sq, target.marker_offset, target.tmat, target.last_param);
+            }
 		}
         for (int i = this._psmk_list.Count - 1; i >= 0; i--)
         {
 			TMarkerData target=this._psmk_list[i];
 			if(target.lost_count==0){
 				target.time_stamp=time_stamp;
-				this._transmat.transMatContinue(target.sq,target.marker_offset,target.tmat,target.tmat);
-			}
+                //lifeが1(開始時検出のときのみ)
+                if (target.life != 1)
+                {
+                    continue;
+                }
+                this._transmat.transMat(target.sq, target.marker_offset, target.tmat, target.last_param);
+            }
 		}
 		//解析/
 		//タイムスタンプを更新

@@ -105,7 +105,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ARToolKitのarGetTransMatに該当します。
          * @see INyARTransMat#transMatContinue
          */
-        public bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult o_result_conv)
+        public bool transMat(NyARSquare i_square, NyARRectOffset i_offset, NyARDoubleMatrix44 o_result, NyARTransMatResultParam o_param)
         {
             NyARDoublePoint3d trans = this.__transMat_trans;
 
@@ -138,7 +138,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double err = this.optimize(this._rotmatrix, trans, this._transsolver, i_offset.vertex, vertex_2d);
 
             // マトリクスの保存
-            o_result_conv.setValue(this._rotmatrix, trans, err);
+            o_result.setValue(this._rotmatrix, trans);
+            if (o_param != null)
+            {
+                o_param.last_error = err;
+            }
             return true;
         }
         /**
@@ -146,16 +150,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 計算に過去の履歴を使う点が、{@link #transMat}と異なります。
          * @see INyARTransMat#transMatContinue
          */
-        public bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARTransMatResult i_prev_result, NyARTransMatResult o_result)
+        public bool transMatContinue(NyARSquare i_square, NyARRectOffset i_offset, NyARDoubleMatrix44 i_prev_result, double i_prev_err, NyARDoubleMatrix44 o_result, NyARTransMatResultParam o_param)
         {
             NyARDoublePoint3d trans = this.__transMat_trans;
-
-            // i_prev_resultが初期値なら、transMatで計算する。
-            if (!i_prev_result.has_value)
-            {
-                this.transMat(i_square, i_offset, o_result);
-                return true;
-            }
 
             //平行移動量計算機に、2D座標系をセット
             NyARDoublePoint2d[] vertex_2d;
@@ -184,30 +181,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double err = this.optimize(this._rotmatrix, trans, this._transsolver, i_offset.vertex, vertex_2d);
 
             // マトリクスの保存
-            o_result.setValue(this._rotmatrix, trans, err);
+            o_result.setValue(this._rotmatrix, trans);
 
             // エラー値が許容範囲でなければTransMatをやり直し
             if (err > AR_GET_TRANS_CONT_MAT_MAX_FIT_ERROR)
             {
-                // rotationを矩形情報で初期化
-                if (!this._rotmatrix.initRotBySquare(i_square.line, i_square.sqvertex))
-                {
-                    return false;
-                }
-                //回転行列の平行移動量の計算
-                this._rotmatrix.getPoint3dBatch(i_offset.vertex, vertex_3d, 4);
-                this._transsolver.solveTransportVector(vertex_3d, trans);
-                //計算結果の最適化(this._rotmatrix,trans)
-                double err2 = this.optimize(this._rotmatrix, trans, this._transsolver, i_offset.vertex, vertex_2d);
-                //エラー値が低かったら値を差換え
-                if (err2 < err)
-                {
-                    // 良い値が取れたら、差換え
-                    o_result.setValue(this._rotmatrix, trans, err2);
-                }
-                err = err2;
+                return false;
             }
+            // マトリクスの保存
+            o_result.setValue(this._rotmatrix, trans);
             //エラー値保存
+            if (o_param != null)
+            {
+                o_param.last_error = err;
+            }
             return true;
         }
         private double optimize(NyARRotMatrix_ARToolKit io_rotmat, NyARDoublePoint3d io_transvec, INyARTransportVectorSolver i_solver, NyARDoublePoint3d[] i_offset_3d, NyARDoublePoint2d[] i_2d_vertex)

@@ -58,7 +58,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_prev_result
          * セットする姿勢変換行列。
          */
-        public virtual void initRotByPrevResult(NyARTransMatResult i_prev_result)
+        public virtual void initRotByPrevResult(NyARDoubleMatrix44 i_prev_result)
         {
 
             this.m00 = i_prev_result.m00;

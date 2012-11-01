@@ -28,7 +28,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
 
     /**
-     * このクラスは、通過点とX,Yの変化量で、直線を定義します。
+     * このクラスは、通過点X,Yと変化量から、直線を定義します。
      */
     public class NyARVecLinear2d
     {

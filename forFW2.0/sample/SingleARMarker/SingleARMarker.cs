@@ -51,7 +51,7 @@ namespace SingleARMarker
         /**
          * アプリケーションフレームワークのハンドラ（マーカ更新）
          */
-        protected override void onUpdateHandler(NyARSquare i_square, NyARTransMatResult result)
+        protected override void onUpdateHandler(NyARSquare i_square, NyARDoubleMatrix44 result)
         {
             NyARD3dUtil.toD3dCameraView(result,1f, ref this.transmat);
         }
@@ -76,7 +76,7 @@ namespace SingleARMarker
         //表示オブジェクト
         private TextPanel _text;
 
-        private NyARTransMatResult __OnBuffer_nyar_transmat = new NyARTransMatResult();
+        private NyARDoubleMatrix44 __OnBuffer_nyar_transmat = new NyARDoubleMatrix44();
         /* 非同期イベントハンドラ
          * CaptureDeviceからのイベントをハンドリングして、バッファとテクスチャを更新する。
          */
