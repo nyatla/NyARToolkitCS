@@ -72,7 +72,7 @@ namespace ConsoleApplication1
 
             //１パターンのみを追跡するクラスを作成
             NyARSingleDetectMarker ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0,NyARSingleDetectMarker.PF_NYARTOOLKIT);
-            NyARTransMatResult result_mat = new NyARTransMatResult();
+            NyARDoubleMatrix44 result_mat = new NyARDoubleMatrix44();
             ar.setContinueMode(false);
             ar.detectMarkerLite(ra, 100);
             ar.getTransmationMatrix(result_mat);
