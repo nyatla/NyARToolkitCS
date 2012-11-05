@@ -392,11 +392,17 @@
     <Compile Include="..\..\lib\src\cs\core\types\stack\NyARPointerStack.cs">
       <Link>cs\core\types\stack\NyARPointerStack.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src\cs\core\utils\ByteBufferedInputStream.cs">
+      <Link>cs\core\utils\ByteBufferedInputStream.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src\cs\core\utils\NyARDistMap.cs">
       <Link>cs\core\utils\NyARDistMap.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\utils\NyAREquationSolver.cs">
       <Link>cs\core\utils\NyAREquationSolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\utils\NyARLCGsRandomizer.cs">
+      <Link>cs\core\utils\NyARLCGsRandomizer.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\utils\NyARLinkList.cs">
       <Link>cs\core\utils\NyARLinkList.cs</Link>
