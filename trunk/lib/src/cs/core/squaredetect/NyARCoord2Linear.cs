@@ -56,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 樽型歪みを補正する場合に、オブジェクトを指定します。
          * nullの場合、補正を行いません。
          */
-        public NyARCoord2Linear(NyARIntSize i_size, NyARCameraDistortionFactor i_distfactor)
+        public NyARCoord2Linear(NyARIntSize i_size, INyARCameraDistortionFactor i_distfactor)
         {
             if (i_distfactor != null)
             {

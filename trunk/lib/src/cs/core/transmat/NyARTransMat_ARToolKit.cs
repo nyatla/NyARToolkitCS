@@ -47,7 +47,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected INyARTransportVectorSolver _transsolver;
         /** 姿勢行列最適化オブジェクト*/
         protected INyARRotMatrixOptimize _mat_optimize;
-        private NyARCameraDistortionFactor _ref_dist_factor;
+        private INyARCameraDistortionFactor _ref_dist_factor;
 
         /**
          * コンストラクタです。
@@ -68,7 +68,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 射影変換オブジェクトの参照値です。
          * @
          */
-        public NyARTransMat_ARToolKit(NyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
+        public NyARTransMat_ARToolKit(INyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
         {
             initInstance(i_ref_distfactor, i_ref_projmat);
             return;
@@ -85,9 +85,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             initInstance(i_param.getDistortionFactor(), i_param.getPerspectiveProjectionMatrix());
         }
-        private void initInstance(NyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
+        private void initInstance(INyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
         {
-            NyARCameraDistortionFactor dist = i_ref_distfactor;
+            INyARCameraDistortionFactor dist = i_ref_distfactor;
             NyARPerspectiveProjectionMatrix pmat = i_ref_projmat;
             this._transsolver = new NyARTransportVectorSolver_ARToolKit(pmat);
             //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。

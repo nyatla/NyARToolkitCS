@@ -43,7 +43,7 @@ namespace ConsoleApplication1
     {
         private const String code_file = "../../../../../data/patt.hiro";
         private const String data_file = "../../../../../data/320x240ABGR.raw";
-        private const String camera_file = "../../../../../data/camera_para.dat";
+        private const String camera_file = "../../../../../data/camera_para4.dat";
         public RawFileTest()
         {
 //            NyMath.initialize();
@@ -84,7 +84,7 @@ namespace ConsoleApplication1
             {
                 //変換行列を取得
                 ar.detectMarkerLite(ra, 100);
-//                ar.getTransmationMatrix(result_mat);
+                ar.getTransmationMatrix(result_mat);
             }
             Console.WriteLine(result_mat.m00 + "," + result_mat.m01 + ","+result_mat.m02+","+result_mat.m03);
             Console.WriteLine(result_mat.m10 + "," + result_mat.m11 + ","+result_mat.m12+","+result_mat.m13);

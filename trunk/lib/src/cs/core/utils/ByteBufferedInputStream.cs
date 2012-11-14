@@ -38,7 +38,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public const int ENDIAN_BIG = 2;
         private byte[] _buf;
         private BinaryReader _stream;
-        private bool _is_little_endian;
+        private bool _is_byte_swap;
         private int _read_len;
         public ByteBufferedInputStream(StreamReader i_stream, int i_buf_size)
         {
@@ -52,7 +52,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public void order(int i_order)
         {
-            this._is_little_endian = i_order == ENDIAN_LITTLE ? true : false;
+            switch (i_order)
+            {
+                case ENDIAN_LITTLE:
+                    this._is_byte_swap = BitConverter.IsLittleEndian?false:true;
+                    break;
+                case ENDIAN_BIG:
+                    this._is_byte_swap = BitConverter.IsLittleEndian ? true : false;
+                    break;
+                default:
+                    throw new NyARException();
+            }
         }
         /**
          * Streamからバッファへi_sizeだけ読み出す。
@@ -91,7 +101,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(this._read_len < this._buf.Length);
             int ret = BitConverter.ToInt32(this._buf, this._read_len);
             this._read_len += 4;
-            if (BitConverter.IsLittleEndian)
+            if (!this._is_byte_swap)
             {
                 return ret;
             }
@@ -113,7 +123,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             Debug.Assert(this._read_len < this._buf.Length);
             float ret = BitConverter.ToSingle(this._buf,this._read_len);
             this._read_len += 4;
-            if (BitConverter.IsLittleEndian)
+            if (!this._is_byte_swap)
             {
                 return ret;
             }
@@ -121,6 +131,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
             byte[] ba = BitConverter.GetBytes(ret);
             Array.Reverse(ba);
             return BitConverter.ToSingle(ba, 0);
+        }
+        public double getDouble()
+        {
+            Debug.Assert(this._read_len < this._buf.Length);
+            double ret = BitConverter.ToDouble(this._buf, this._read_len);
+            this._read_len += 8;
+            if (!this._is_byte_swap)
+            {
+                return ret;
+            }
+            //big endian
+            byte[] ba = BitConverter.GetBytes(ret);
+            Array.Reverse(ba);
+            return BitConverter.ToDouble(ba, 0);
+
         }
     }
 }

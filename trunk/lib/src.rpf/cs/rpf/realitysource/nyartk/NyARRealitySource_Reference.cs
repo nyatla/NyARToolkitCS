@@ -55,7 +55,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * ラスタタイプ
 	     * @throws NyARException
 	     */
-	    public NyARRealitySource_Reference(int i_width,int i_height,NyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample,int i_raster_type)
+	    public NyARRealitySource_Reference(int i_width,int i_height,INyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample,int i_raster_type)
 	    {
 		    this._rgb_source=new NyARRgbRaster(i_width,i_height,i_raster_type);
 		    this._filter=(INyARRgb2GsFilter) this._rgb_source.createInterface(typeof(INyARRgb2GsFilter));

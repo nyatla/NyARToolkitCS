@@ -59,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * trueの場合、バッファは内部に確保され、{@link #wrapBuffer}関数が使用できなくなります。
 	     * @throws NyARException
 	     */
-        public NyARTrackerSource_Reference(int i_number_of_sample, NyARCameraDistortionFactor i_ref_raster_distortion, int i_width, int i_height, int i_depth, bool i_is_alloc)
+        public NyARTrackerSource_Reference(int i_number_of_sample, INyARCameraDistortionFactor i_ref_raster_distortion, int i_width, int i_height, int i_depth, bool i_is_alloc)
             : base((int)Math.Pow(2, i_depth))
 	    {
 		    Debug.Assert(i_depth>0);

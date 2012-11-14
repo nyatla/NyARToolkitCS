@@ -133,7 +133,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * {@link #NyARReality(NyARParam i_param,double i_near,double i_far,int i_max_known_target,int i_max_unknown_target)}を参照
 	     * @throws NyARException
 	     */
-	    public NyARReality(NyARIntSize i_screen,double i_near,double i_far,NyARPerspectiveProjectionMatrix i_prjmat,NyARCameraDistortionFactor i_dist_factor,int i_max_known_target,int i_max_unknown_target)
+	    public NyARReality(NyARIntSize i_screen,double i_near,double i_far,NyARPerspectiveProjectionMatrix i_prjmat,INyARCameraDistortionFactor i_dist_factor,int i_max_known_target,int i_max_unknown_target)
 	    {
 		    this.MAX_LIMIT_KNOWN=i_max_known_target;
 		    this.MAX_LIMIT_UNKNOWN=i_max_unknown_target;
@@ -145,7 +145,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * @param i_prjmat
 	     * @throws NyARException
 	     */
-	    protected void initInstance(NyARIntSize i_screen,double i_near,double i_far,NyARPerspectiveProjectionMatrix i_prjmat,NyARCameraDistortionFactor i_dist_factor)
+	    protected void initInstance(NyARIntSize i_screen,double i_near,double i_far,NyARPerspectiveProjectionMatrix i_prjmat,INyARCameraDistortionFactor i_dist_factor)
 	    {
 		    int number_of_reality_target=this.MAX_LIMIT_KNOWN+this.MAX_LIMIT_UNKNOWN;
 		    //演算インスタンス

@@ -113,8 +113,14 @@
     <Compile Include="..\..\lib\src\cs\core\NyARVersion.cs">
       <Link>cs\core\NyARVersion.cs</Link>
     </Compile>
-    <Compile Include="..\..\lib\src\cs\core\param\NyARCameraDistortionFactor.cs">
-      <Link>cs\core\param\NyARCameraDistortionFactor.cs</Link>
+    <Compile Include="..\..\lib\src\cs\core\param\INyARCameraDistortionFactor.cs">
+      <Link>cs\core\param\INyARCameraDistortionFactor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\param\NyARCameraDistortionFactorV2.cs">
+      <Link>cs\core\param\NyARCameraDistortionFactorV2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\param\NyARCameraDistortionFactorV4.cs">
+      <Link>cs\core\param\NyARCameraDistortionFactorV4.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\param\NyARFrustum.cs">
       <Link>cs\core\param\NyARFrustum.cs</Link>
