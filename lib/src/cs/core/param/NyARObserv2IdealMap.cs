@@ -57,7 +57,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_screen_size
          * スクリーンサイズ
          */
-        public NyARObserv2IdealMap(NyARCameraDistortionFactor i_distfactor, NyARIntSize i_screen_size)
+        public NyARObserv2IdealMap(INyARCameraDistortionFactor i_distfactor, NyARIntSize i_screen_size)
         {
             NyARDoublePoint2d opoint = new NyARDoublePoint2d();
             this._mapx = new double[i_screen_size.w * i_screen_size.h];

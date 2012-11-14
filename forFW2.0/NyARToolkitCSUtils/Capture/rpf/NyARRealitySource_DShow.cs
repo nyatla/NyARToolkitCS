@@ -32,7 +32,7 @@ namespace NyARToolkitCSUtils.Capture
          * サンプリングするターゲット数を指定します。大体100以上をしておけばOKです。具体的な計算式は、{@link NyARTrackerSource_Reference#NyARTrackerSource_Reference}を参考にして下さい。
          * @throws NyARException
          */
-        public NyARRealitySource_DShow(int i_fmt_width,int i_fmt_height,NyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample)
+        public NyARRealitySource_DShow(int i_fmt_width,int i_fmt_height,INyARCameraDistortionFactor i_ref_raster_distortion,int i_depth,int i_number_of_sample)
 	    {
             this._rgb_source = new DsRgbRaster(i_fmt_width, i_fmt_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
             this._filter = (INyARRgb2GsFilter)this._rgb_source.createInterface(typeof(INyARRgb2GsFilter));

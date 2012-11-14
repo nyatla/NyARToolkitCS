@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	    private int _rob_resolution;
 	    protected NyARGrayscaleRaster _ref_base_raster;
 	    private NyARGrayscaleRaster _ref_rob_raster;
-	    protected NyARCameraDistortionFactor _factor;
+	    protected INyARCameraDistortionFactor _factor;
 	    /**
 	     * 継承を必須とするため、コンストラクタを隠蔽。
 	     */
@@ -60,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * 輪郭線取得クラス
 	     * @param 
 	     */
-	    public void initInstance(NyARGrayscaleRaster i_ref_raster,NyARCameraDistortionFactor i_ref_raster_distortion,NyARGrayscaleRaster i_ref_rob_raster,NyARContourPickup i_contour_pickup)
+	    public void initInstance(NyARGrayscaleRaster i_ref_raster,INyARCameraDistortionFactor i_ref_raster_distortion,NyARGrayscaleRaster i_ref_rob_raster,NyARContourPickup i_contour_pickup)
 	    {
 		    this._rob_resolution=i_ref_raster.getWidth()/i_ref_rob_raster.getWidth();
 		    this._ref_rob_raster=i_ref_rob_raster;

@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 	     * エッジ探索用のROB画像
 	     * @param 
 	     */
-	    public NyARVectorReader_INT1D_GRAY_8(NyARGrayscaleRaster i_ref_raster,NyARCameraDistortionFactor i_ref_raster_distortion,NyARGrayscaleRaster i_ref_rob_raster)
+	    public NyARVectorReader_INT1D_GRAY_8(NyARGrayscaleRaster i_ref_raster,INyARCameraDistortionFactor i_ref_raster_distortion,NyARGrayscaleRaster i_ref_rob_raster)
             :base()
 
 	    {
