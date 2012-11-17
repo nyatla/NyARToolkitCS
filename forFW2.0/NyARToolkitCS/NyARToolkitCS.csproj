@@ -479,10 +479,12 @@
     <Compile Include="..\..\lib\src\cs\processor\SingleNyIdMarkerProcesser.cs">
       <Link>cs\processor\SingleNyIdMarkerProcesser.cs</Link>
     </Compile>
+    <Compile Include="..\..\lib\src\cs\psarplaycard\PsARPlayCardPickup.cs">
+      <Link>cs\psarplaycard\PsARPlayCardPickup.cs</Link>
+    </Compile>
     <Compile Include="..\..\lib\src\cs\utils.cs\ArrayUtils.cs">
       <Link>cs\utils.cs\ArrayUtils.cs</Link>
     </Compile>
-    <Compile Include="cs\psarplaycard\PsARPlayCardPickup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -43,7 +43,7 @@ namespace ConsoleApplication1
     {
         private const String code_file = "../../../../../data/patt.hiro";
         private const String data_file = "../../../../../data/320x240ABGR.raw";
-        private const String camera_file = "../../../../../data/camera_para4.dat";
+        private const String camera_file = "../../../../../data/camera_para.dat";
         public RawFileTest()
         {
 //            NyMath.initialize();
