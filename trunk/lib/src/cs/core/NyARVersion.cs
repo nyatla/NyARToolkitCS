@@ -37,7 +37,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARVersion
     {
         /**モジュール名*/
-        public const string MODULE_NAME = "NyARToolkit-pre";
+        public const string MODULE_NAME = "NyARToolkit";
         /**メジャーバージョン*/
         public const int VERSION_MAJOR = 4;
         /**マイナバージョン*/
