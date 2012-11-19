@@ -73,7 +73,8 @@ namespace ImagePickup
         }
         static void Main(string[] args)
         {
-            new Sketch();
+            new Sketch().run();
+
         }
     }
 }
