@@ -84,7 +84,10 @@ namespace SimpleLiteForm
             this._d3d.Transform.View = NyARD3dUtil.getARView();
             this._d3d.Viewport = NyARD3dUtil.getARViewPort(SCREEN_WIDTH,SCREEN_HEIGHT);
             //Projectionの設定
-            this._d3d.Transform.Projection = this._ms.getD3dProjectionMatrix();
+            this._ms.setProjectionMatrixClipping(10, 10000);
+            Matrix pm = new Matrix();
+            NyARD3dUtil.toCameraFrustumRH(this._ms.getARParam(),10,10000, ref pm);
+            this._d3d.Transform.Projection = pm;
 
             //カラーキューブの描画インスタンス
             this._cube = new ColorCube(this._d3d, 40);

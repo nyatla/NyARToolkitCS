@@ -22,24 +22,6 @@ namespace NyARToolkitCSUtils.Direct3d
             base.initInstance(i_config);
         }
 
-        private Matrix _projection_mat = new Matrix();
-
-        /**
-         * OpenGLスタイルのProjectionMatrixを返します。
-         * @param i_gl
-         * @return
-         * [readonly]
-         */
-        public Matrix getD3dProjectionMatrix()
-        {
-            return this._projection_mat;
-        }
-
-        public override void setProjectionMatrixClipping(double i_near, double i_far)
-        {
-            base.setProjectionMatrixClipping(i_near, i_far);
-            NyARD3dUtil.toCameraFrustumRH(this._ref_param, i_near, i_far, ref this._projection_mat);
-        }
         /**
          * この関数は、i_bufに指定idのOpenGL形式の姿勢変換行列を設定して返します。
          * @param i_id

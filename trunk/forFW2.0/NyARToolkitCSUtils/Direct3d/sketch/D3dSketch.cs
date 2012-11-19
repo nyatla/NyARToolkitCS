@@ -25,6 +25,11 @@ namespace NyARToolkitCSUtils.Direct3d
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+        }
+        public void run()
+        {
             //キャプチャデバイスリストを取得
             CaptureDeviceList capture_device_list = new CaptureDeviceList();
             if (capture_device_list.count < 1)
