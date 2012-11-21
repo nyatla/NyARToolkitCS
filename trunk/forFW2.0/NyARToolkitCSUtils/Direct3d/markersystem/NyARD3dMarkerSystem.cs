@@ -40,17 +40,28 @@ namespace NyARToolkitCSUtils.Direct3d
             this.getMarkerMatrix(i_id,ref p);
             return p;
         }
+        private NyARDoublePoint3d __wk_3dpos = new NyARDoublePoint3d();
+        private NyARDoublePoint2d __wk_2dpos = new NyARDoublePoint2d();
 
         public void getMarkerPlanePos(int i_id, int i_x, int i_y, ref Vector3 i_buf)
         {
-            NyARDoublePoint3d p = new NyARDoublePoint3d();
+            NyARDoublePoint3d p = this.__wk_3dpos;
             base.getMarkerPlanePos(i_id, i_x, i_y, p);
             i_buf.X = (float)p.x;
             i_buf.Y = (float)p.y;
             i_buf.Z = (float)p.z;
             return;
         }
-
+        public void getScreenPos(int i_id, double i_x, double i_y, double i_z,ref Vector2 i_out)
+        {
+            NyARDoublePoint2d wk_2dpos = this.__wk_2dpos;
+            NyARDoublePoint3d wk_3dpos = this.__wk_3dpos;
+            this.getMarkerMatrix(i_id).transform3d(i_x, i_y, i_z, wk_3dpos);
+            this._frustum.project(wk_3dpos, wk_2dpos);
+            i_out.X = (float)wk_2dpos.x;
+            i_out.Y = (float)wk_2dpos.y;
+            return;
+        }
         //
         // This reogion may be moved to NyARJ2seMarkerSystem.
         //
