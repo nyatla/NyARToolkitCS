@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int xe = out_size.w * i_edge_x / 50;
             int ye = out_size.h * i_edge_y / 50;
 
-            //ƒTƒ“ƒvƒŠƒ“ƒO‰ğ‘œ“x‚Å•ªŠò
+            //ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°è§£åƒåº¦ã§åˆ†å²
             if (i_resolution == 1)
             {
                 if (!this._perspective_gen.getParam((xe * 2 + out_size.w), (ye * 2 + out_size.h), i_x1, i_y1, i_x2, i_y2, i_x3, i_y3, i_x4, i_y4, this.__pickFromRaster_cpara))
