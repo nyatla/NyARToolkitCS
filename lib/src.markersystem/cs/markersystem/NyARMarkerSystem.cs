@@ -61,7 +61,6 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	private int lost_th=5;
 	private INyARTransMat _transmat;
 	private const int INITIAL_MARKER_STACK_SIZE=10;
-	private SquareStack _sq_stack;	
 	
 	
 	/**
@@ -81,8 +80,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		this._tracking_list=new TrackingList();
 		this._transmat=i_config.createTransmatAlgorism();
 		//同時に判定待ちにできる矩形の数
-		this._sq_stack=new SquareStack(INITIAL_MARKER_STACK_SIZE);
-        this._on_sq_handler = new OnSquareDetect(i_config, this._armk_list, this._idmk_list, this._psmk_list, this._tracking_list, this._sq_stack);
+        this._on_sq_handler = new OnSquareDetect(i_config, this._armk_list, this._idmk_list, this._psmk_list, this._tracking_list, INITIAL_MARKER_STACK_SIZE);
     }
 	protected virtual void initInstance(INyARMarkerSystemConfig i_ref_config)
 	{
@@ -124,6 +122,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
         NyIdList.Item target = new NyIdList.Item(i_id_s, i_id_e, i_marker_size);
 		this._idmk_list.Add(target);
 		this._tracking_list.add(target);
+        this._on_sq_handler.setMaxDetectMarkerCapacity(this._tracking_list.Count);
 		return (this._idmk_list.Count-1)|IDTYPE_NYID;
 	}
 	/**
@@ -148,6 +147,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		ARPlayCardList.Item target=new ARPlayCardList.Item(i_id_s,i_id_e,i_marker_size);
 		this._psmk_list.Add(target);
 		this._tracking_list.add(target);
+        this._on_sq_handler.setMaxDetectMarkerCapacity(this._tracking_list.Count);
         return (this._psmk_list.Count - 1) | IDTYPE_PSID;
 	}
 	/**
@@ -182,7 +182,8 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		ARMarkerList.Item target=new ARMarkerList.Item(i_code,i_patt_edge_percentage,i_marker_size);
 		this._armk_list.add(target);
 		this._tracking_list.add(target);
-		return (this._armk_list.Count-1)| IDTYPE_ARTK;
+        this._on_sq_handler.setMaxDetectMarkerCapacity(this._tracking_list.Count);
+        return (this._armk_list.Count - 1) | IDTYPE_ARTK;
 	}
 	/**
 	 * この関数は、ARToolKitスタイルのマーカーをストリームから読みだして、登録します。
@@ -572,18 +573,14 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 			return;
 		}
 		int th=this._bin_threshold==THLESHOLD_AUTO?this._hist_th.getThreshold(i_sensor.getGsHistogram()):this._bin_threshold;
-		this._sq_stack.clear();//矩形情報の保持スタック初期化		
 		//解析
 		this._tracking_list.prepare();
 		this._idmk_list.prepare();
 		this._armk_list.prepare();
         this._psmk_list.prepare();
-		//検出処理
-		this._on_sq_handler._ref_input_rfb=i_sensor.getPerspectiveCopy();
-		this._on_sq_handler._ref_input_gs=i_sensor.getGsImage();
-        this._on_sq_handler._ref_th=th;
 		//検出
-		this._sqdetect.detectMarkerCb(i_sensor,th,this._on_sq_handler);
+        this._on_sq_handler.prepare(i_sensor.getPerspectiveCopy(), i_sensor.getGsImage(), th);
+        this._sqdetect.detectMarkerCb(i_sensor, th, this._on_sq_handler);
 
 		//検出結果の反映処理
 		this._tracking_list.finish();
@@ -666,8 +663,8 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
 	private NyIdList _ref_idmk_list;
 	private ARPlayCardList _ref_psmk_list;
 
-	private SquareStack _ref_sq_stack;
-	public INyARPerspectiveCopy _ref_input_rfb;
+    public SquareStack _sq_stack;
+    public INyARPerspectiveCopy _ref_input_rfb;
 	public INyARGrayscaleRaster _ref_input_gs;
 	public int _ref_th;
 	
@@ -676,7 +673,7 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
     public OnSquareDetect(
         INyARMarkerSystemConfig i_config,
         ARMarkerList i_armk_list, NyIdList i_idmk_list, ARPlayCardList i_psmk_list,
-        TrackingList i_tracking_list, SquareStack i_ref_sq_stack)
+		TrackingList i_tracking_list,int i_initial_stack_size)
     {
 		this._coordline=new NyARCoord2Linear(i_config.getNyARParam().getScreenSize(),i_config.getNyARParam().getDistortionFactor());
 		this._ref_armk_list=i_armk_list;
@@ -684,12 +681,46 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
 		this._ref_psmk_list=i_psmk_list;
 		this._ref_tracking_list=i_tracking_list;
 		//同時に判定待ちにできる矩形の数
-		this._ref_sq_stack=i_ref_sq_stack;
+        this._sq_stack = new SquareStack(i_initial_stack_size);
+    }
+	/**
+	 * 同時に検出するマーカの最大数を設定します。
+	 * 関数は、少なくともi_max_number_of_marker以上のマーカを同時に検出できるようにインスタンスを設定します。
+	 * @throws NyARException 
+	 */
+	public void setMaxDetectMarkerCapacity(int i_max_number_of_marker)
+	{
+		//prepare enough stack size.
+		if(this._sq_stack.getArraySize()<i_max_number_of_marker){
+			this._sq_stack=new SquareStack(i_max_number_of_marker+5);
+		}
+		return;
+	}
+	/**
+	 * {@link #detectMarkerCallback}コール前に1度だけ呼び出してください。
+	 * @param i_max_detect_marker
+	 * @param i_pcopy
+	 * @param i_gs
+	 * @param th
+	 * @throws NyARException
+	 */
+	public void prepare(INyARPerspectiveCopy i_pcopy, INyARGrayscaleRaster i_gs, int th)
+	{
+		this._ref_input_rfb=i_pcopy;
+		this._ref_input_gs=i_gs;
+		this._ref_th=th;
+		// initialize square stack
+		this._sq_stack.clear();		
 	}
 	public void detectMarkerCallback(NyARIntCoordinates i_coord,int[] i_vertex_index)
 	{
 		//とりあえずSquareスタックを予約
-		SquareStack.Item sq_tmp=this._ref_sq_stack.prePush();
+		SquareStack.Item sq_tmp=this._sq_stack.prePush();
+		//確保できない(1つのdetectorが複数の候補を得る場合(同じARマーカが多くある場合など)に発生することがある。)
+		if(sq_tmp==null){
+			return;
+		}
+
 		//観測座標点の記録
 		for(int i2=0;i2<4;i2++){
 			sq_tmp.ob_vertex[i2].setValue(i_coord.items[i_vertex_index[i2]]);
@@ -750,7 +781,7 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
 			}
 		}else{
 			//この矩形は検出対象にマークされなかったので、解除
-			this._ref_sq_stack.pop();
+			this._sq_stack.pop();
 		}
 	}
 }
