@@ -66,13 +66,9 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 	    }
 	    public void prepare()
 	    {
-		    for(int i=this.Count-1;i>=0;i--){
-			    Item target=this[i];
-			    if(target.life>0){
-				    target.lost_count++;
-			    }
-			    target.sq=null;
-		    }
+            //nothing to do
+            //sqはtrackingでnull初期化済み
+		
 	    }
 	    public bool update(INyARGrayscaleRaster i_raster,SquareStack.Item i_sq)
 	    {

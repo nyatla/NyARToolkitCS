@@ -33,8 +33,9 @@ namespace SimpleLite
             this._ms = new NyARD3dMarkerSystem(cf);
             this._ss = new NyARDirectShowCamera(i_cap);
             this._rs = new NyARD3dRender(d3d, this._ms);
-//            this.mid = this._ms.addARMarker(AR_CODE_FILE, 16, 25, 80);
-            this.mid = this._ms.addARMarker(new Bitmap("../../../../../data/hiro.png"), 16, 25, 80); // you can use PNG style marker too.
+            this.mid = this._ms.addARMarker(AR_CODE_FILE, 16, 25, 80);
+//            this.mid = this._ms.addPsARPlayCard(1,80);
+//            this.mid = this._ms.addARMarker(new Bitmap("../../../../../data/hiro.png"), 16, 25, 80); // you can use PNG style marker too.
             //this.mid = this._ms.addNyIdMarker(0, 80);// For Id  marker #0
 
             //set View mmatrix

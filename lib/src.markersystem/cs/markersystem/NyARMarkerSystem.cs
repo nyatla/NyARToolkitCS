@@ -592,11 +592,12 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
         {
 			TMarkerData item=this._tracking_list[i];
 			if(item.lost_count>this.lost_th){
-				item.life=0;//活性off
+                //連続で検出できなかった場合
+                item.life = 0;//活性off
             }
-            else if (item.life > 1)
+            else if (item.sq != null)
             {
-                //トラッキング中
+                //直前のsqを検出できた場合
                 if (!this._transmat.transMatContinue(item.sq, item.marker_offset, item.tmat, item.last_param.last_error, item.tmat, item.last_param))
                 {
                     if (!this._transmat.transMat(item.sq, item.marker_offset, item.tmat, item.last_param))

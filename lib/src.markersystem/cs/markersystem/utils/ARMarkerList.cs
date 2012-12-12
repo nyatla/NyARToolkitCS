@@ -65,6 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         public ARMarkerList()
         {
             this._mkmap = new ARMarkerSortList();//初期値1マーカ
+            //sqはtrackingでnull初期化済み
             return;
         }
         /**
@@ -138,16 +139,6 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         {
             //マッチングテーブルをリセット
             this._mkmap.reset();
-
-            //検出のために初期値設定
-            for (int i = this.Count - 1; i >= 0; i--)
-            {
-                ARMarkerList.Item target = this[i];
-                if (target.life > 0)
-                {
-                    target.lost_count++;
-                }
-            }
         }
         public void finish()
         {

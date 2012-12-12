@@ -37,6 +37,18 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
         {
             //トラッキングリストをリセット
             this._tracking_list.reset();
+            //検出のために初期値設定
+            for (int i = this.Count - 1; i >= 0; i--)
+            {
+                TMarkerData target = this[i];
+                //直前のsqのリセット
+                target.sq = null;
+                //消失カウンタのインクリメント
+                if (target.life > 0)
+                {
+                    target.lost_count++;
+                }
+            }
         }
         private int[] __ret = new int[2];
         public bool update(SquareStack.Item i_new_sq)
