@@ -28,6 +28,39 @@ namespace NyARToolkitCSUtils.Direct3d
 
 
         }
+        /**
+         * This function start sketch system without camera device.
+         * An Argument i_cap of setup will be NULL.
+         */
+        public void runWithoutCamera()
+        {
+            // フォームとメインサンプルクラスを作成
+            using (D3dSketchForm mwin = new D3dSketchForm())
+            {
+                this.form = mwin;
+                mwin.Show();
+                //setup
+                this.setup(null);
+                if (this._d3d == null)
+                {
+                    this._d3d = prepareD3dDevice(this.form, this._dpp);
+                }
+                //loop
+                while (mwin.Created)
+                {
+                    this.loop(this._d3d);
+                    //スレッドスイッチ
+                    Thread.Sleep(1);
+                    // イベントがある場合はその処理する
+                    Application.DoEvents();
+                }
+                this.cleanup();
+                this._d3d.Dispose();
+            }
+        }
+        /**
+         * This function start sketch system with camera device.
+         */
         public void run()
         {
             //キャプチャデバイスリストを取得
