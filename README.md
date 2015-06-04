@@ -1,6 +1,5 @@
 # NyARToolkitCS
 
-version 4.1.2
 
 Copyright (C)2008-2012 Ryo Iizuka
 
@@ -11,7 +10,7 @@ wm(at)nyatla.jp
 
 ## NyARToolkit
 
-* NyARToolkitCSは、NyARToolKit 4.1.1のAPIを基盤としたARアプリケーション向けのクラスライブラリです。
+* NyARToolkitCSは、NyARToolKit for JavaのAPIを基盤としたARアプリケーション向けのクラスライブラリです。
 * .Net Framework 2.0以上に対応しています。
 * ライブラリの構成は、ARToolKitの基本機能と、NyARToolKitオリジナルの拡張機能、アプリケーション向けのフレームワークです。
 * ライブラリは、NyARTookitを純粋に移植したNyARToolkitCS、NyARToolkitのRPF(Reality Platform)クラスのあるNyARToolkitCS.rpf,C#向けの拡張クラスのある、NyARToolkitCSUtils,サンプルで構成されています。
