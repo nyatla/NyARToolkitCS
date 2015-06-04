@@ -71,7 +71,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARTransMat_ARToolKit(INyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
         {
-            initInstance(i_ref_distfactor, i_ref_projmat);
+            INyARCameraDistortionFactor dist = i_ref_distfactor;
+            NyARPerspectiveProjectionMatrix pmat = i_ref_projmat;
+            this._transsolver = new NyARTransportVectorSolver_ARToolKit(pmat);
+            //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
+            //理屈はNyARRotMatrix_NyARToolKitもNyARRotMatrix_ARToolKitも同じだけど、少しだけ値がずれる。
+            this._rotmatrix = new NyARRotMatrix_ARToolKit_O2(pmat);
+            this._mat_optimize = new NyARRotMatrixOptimize_O2(pmat);
+            this._ref_dist_factor = dist;
             return;
         }
         /**
@@ -83,20 +90,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @
          */
         public NyARTransMat_ARToolKit(NyARParam i_param)
+            : this(i_param.getDistortionFactor(), i_param.getPerspectiveProjectionMatrix())
         {
-            initInstance(i_param.getDistortionFactor(), i_param.getPerspectiveProjectionMatrix());
         }
-        private void initInstance(INyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
-        {
-            INyARCameraDistortionFactor dist = i_ref_distfactor;
-            NyARPerspectiveProjectionMatrix pmat = i_ref_projmat;
-            this._transsolver = new NyARTransportVectorSolver_ARToolKit(pmat);
-            //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
-            //理屈はNyARRotMatrix_NyARToolKitもNyARRotMatrix_ARToolKitも同じだけど、少しだけ値がずれる。
-            this._rotmatrix = new NyARRotMatrix_ARToolKit_O2(pmat);
-            this._mat_optimize = new NyARRotMatrixOptimize_O2(pmat);
-            this._ref_dist_factor = dist;
-        }
+
 
         private readonly NyARDoublePoint2d[] __transMat_vertex_2d = NyARDoublePoint2d.createArray(4);
         private readonly NyARDoublePoint3d[] __transMat_vertex_3d = NyARDoublePoint3d.createArray(4);

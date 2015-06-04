@@ -90,10 +90,10 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 	    //
 	    protected class ObserverList : NyARPointerStack<INyARSingleCameraSystemObserver>
 	    {
-		    public ObserverList(int i_length)
+            public ObserverList(int i_length)
+                : base(i_length)
             {
-			    base.initInstance(i_length);
-		    }
+            }
 		    public void notifyOnUpdateCameraParametor(NyARParam i_param,double i_near,double i_far)
 		    {
 			    for(int i=0;i<this._length;i++){

@@ -38,9 +38,9 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     public class NyARRealityTargetList : NyARPointerStack<NyARRealityTarget>
     {
-	    public NyARRealityTargetList(int i_max_target)
+        public NyARRealityTargetList(int i_max_target)
+            : base(i_max_target)
 	    {
-		    base.initInstance(i_max_target);
 	    }
 	    /**
 	     * RealityTargetのシリアル番号をキーに、ターゲットを探索します。

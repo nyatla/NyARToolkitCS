@@ -50,9 +50,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大サイズ。
          * @
          */
-        public NyARLabelingLabelStack(int i_max_array_size):base()
+        public NyARLabelingLabelStack(int i_max_array_size)
+            : base(i_max_array_size)
         {
-            base.initInstance(i_max_array_size);
         }
         /** {@link NyARLabelingLabel}要素を返します。*/
         protected override NyARLabelingLabel createElement()

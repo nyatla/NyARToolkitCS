@@ -85,9 +85,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 				    this.name=i_name;
 			    }
 		    }		
-		    public SerialTable(int i_length)
+		    public SerialTable(int i_length):base(i_length)
 		    {
-			    base.initInstance(i_length);
 		    }
 		    protected override SerialTableRow createElement()
 		    {

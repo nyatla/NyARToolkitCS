@@ -47,9 +47,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大長さ
          * @
          */
-        public NyARSquareStack(int i_length)
+        public NyARSquareStack(int i_length):base(i_length)
         {
-            base.initInstance(i_length);
 
         }
         /**

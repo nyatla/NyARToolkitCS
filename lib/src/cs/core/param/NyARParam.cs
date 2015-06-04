@@ -243,60 +243,56 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		     */
             public ParamLoader(StreamReader i_stream)
 		    {
-			    try {
-				    //読み出し
-				    ByteBufferedInputStream bis=new ByteBufferedInputStream(i_stream,512);
-				    int s=bis.readToBuffer(512);
-				    bis.order(ByteBufferedInputStream.ENDIAN_BIG);
-				    //読み出したサイズでバージョンを決定
-				    int[] version_table={136,144,152,176};
-				    int version=-1;
-				    for(int i=0;i<version_table.Length;i++){
-					    if(s%version_table[i]==0){
-						    version=i+1;
-						    break;
-					    }
-				    }
-				    //一致しなければ無し
-				    if(version==-1){
-					    throw new NyARException();
-				    }
-				    //size
-				    this.size=new NyARIntSize();
-				    this.size.setValue(bis.getInt(),bis.getInt());
+				//読み出し
+				ByteBufferedInputStream bis=new ByteBufferedInputStream(i_stream,512);
+				int s=bis.readToBuffer(512);
+				bis.order(ByteBufferedInputStream.ENDIAN_BIG);
+				//読み出したサイズでバージョンを決定
+				int[] version_table={136,144,152,176};
+				int version=-1;
+				for(int i=0;i<version_table.Length;i++){
+					if(s%version_table[i]==0){
+						version=i+1;
+						break;
+					}
+				}
+				//一致しなければ無し
+				if(version==-1){
+					throw new NyARException();
+				}
+				//size
+				this.size=new NyARIntSize();
+				this.size.setValue(bis.getInt(),bis.getInt());
 
-				    //projection matrix
-				    this.pmat=new NyARPerspectiveProjectionMatrix();
-				    double[] pjv=new double[16];
-				    for(int i=0;i<12;i++){
-					    pjv[i]=bis.getDouble();
-				    }			
-				    pjv[12]=pjv[13]=pjv[14]=0;
-				    pjv[15]=1;
-				    this.pmat.setValue(pjv);
+				//projection matrix
+				this.pmat=new NyARPerspectiveProjectionMatrix();
+				double[] pjv=new double[16];
+				for(int i=0;i<12;i++){
+					pjv[i]=bis.getDouble();
+				}			
+				pjv[12]=pjv[13]=pjv[14]=0;
+				pjv[15]=1;
+				this.pmat.setValue(pjv);
     				
-				    //dist factor
-				    double[] df;
-				    switch(version)
-				    {
-				    case 1://Version1
-					    df=new double[NyARCameraDistortionFactorV2.NUM_OF_FACTOR];
-					    this.dist_factor=new NyARCameraDistortionFactorV2();
-					    break;
-				    case 4://Version4
-					    df=new double[NyARCameraDistortionFactorV4.NUM_OF_FACTOR];
-					    this.dist_factor=new NyARCameraDistortionFactorV4();
-					    break;
-				    default:
-					    throw new NyARException();
-				    }
-				    for(int i=0;i<df.Length;i++){
-					    df[i]=bis.getDouble();
-				    }
-				    this.dist_factor.setValue(df);
-			    } catch (Exception e) {
-				    throw new NyARException(e);
-			    }			
+				//dist factor
+				double[] df;
+				switch(version)
+				{
+				case 1://Version1
+					df=new double[NyARCameraDistortionFactorV2.NUM_OF_FACTOR];
+					this.dist_factor=new NyARCameraDistortionFactorV2();
+					break;
+				case 4://Version4
+					df=new double[NyARCameraDistortionFactorV4.NUM_OF_FACTOR];
+					this.dist_factor=new NyARCameraDistortionFactorV4();
+					break;
+				default:
+					throw new NyARException();
+				}
+				for(int i=0;i<df.Length;i++){
+					df[i]=bis.getDouble();
+				}
+				this.dist_factor.setValue(df);
 		    }
 	    }
         /**

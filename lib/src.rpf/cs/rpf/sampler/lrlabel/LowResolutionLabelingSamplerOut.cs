@@ -95,9 +95,9 @@ public class LowResolutionLabelingSamplerOut
 	 */
 	private class AreaStack : NyARPointerStack<Item>
 	{
-		public AreaStack(int i_length)
+        public AreaStack(int i_length)
+            : base(i_length)
 		{
-			base.initInstance(i_length);
 		}
 	}
 	/**

@@ -51,16 +51,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARObjectStack<T> : NyARPointerStack<T>
     {
         /**
-         * コンストラクタです。
-         * クラスの実体化を禁止するために宣言しています。
-         * 継承クラスから呼び出してください。
-         * @
-         */
-        protected NyARObjectStack()
-        {
-            return;
-        }
-        /**
          * この関数は、インスタンスを初期化します。
          * 継承クラスのコンストラクタから呼び出します。
          * {@link #initInstance(int, Class, Object)}との違いは、オブジェクトの生成に引数を渡すかどうかです。
@@ -69,10 +59,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大長さ
          * @
          */
-        protected override void initInstance(int i_length)
+        protected NyARObjectStack(int i_length):base(i_length)
         {
             //領域確保
-            base.initInstance(i_length);
             for (int i = 0; i < i_length; i++)
             {
                 this._items[i] = createElement();
@@ -92,10 +81,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列要素を生成するときに渡すパラメータ
          * @
          */
-        protected void initInstance(int i_length, object i_param)
+        protected NyARObjectStack(int i_length, object i_param):base(i_length)
         {
             //領域確保
-            base.initInstance(i_length);
             for (int i = 0; i < i_length; i++)
             {
                 this._items[i] = createElement(i_param);

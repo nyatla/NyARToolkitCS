@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>jp.nyatla.nyartoolkit</RootNamespace>
     <AssemblyName>NyARToolkitCS</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +54,30 @@
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\analyzer\histogram\NyARHistogramAnalyzer_SlidePTile.cs">
       <Link>cs\core\analyzer\histogram\NyARHistogramAnalyzer_SlidePTile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcp.cs">
+      <Link>cs\core\icp\NyARIcp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpPlane.cs">
+      <Link>cs\core\icp\NyARIcpPlane.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpPoint.cs">
+      <Link>cs\core\icp\NyARIcpPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpPointRobust.cs">
+      <Link>cs\core\icp\NyARIcpPointRobust.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpStereo.cs">
+      <Link>cs\core\icp\NyARIcpStereo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpStereoPoint.cs">
+      <Link>cs\core\icp\NyARIcpStereoPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpTransMat.cs">
+      <Link>cs\core\icp\NyARIcpTransMat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\lib\src\cs\core\icp\NyARIcpUtils.cs">
+      <Link>cs\core\icp\NyARIcpUtils.cs</Link>
     </Compile>
     <Compile Include="..\..\lib\src\cs\core\INyARDisposable.cs">
       <Link>cs\core\INyARDisposable.cs</Link>

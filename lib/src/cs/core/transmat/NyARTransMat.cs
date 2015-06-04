@@ -55,25 +55,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         private INyARCameraDistortionFactor _ref_dist_factor;
 
-        /**
-         * コンストラクタです。
-         * 派生クラスで自分でメンバオブジェクトを指定したい場合はこちらを使います。
-         */
-        protected NyARTransMat()
-        {
-            //_calculator,_rotmatrix,_mat_optimizeをコンストラクタの終了後に
-            //作成して割り当ててください。
-            return;
-        }
 
         /**
-         * この関数は、コンストラクタから呼び出してください。
-         * @param i_distfactor
-         * 歪みの逆矯正に使うオブジェクト。
-         * @param i_projmat
+         * コンストラクタです。
+         * 座標計算に必要なオブジェクトの参照値を元に、インスタンスを生成します。
+         * @param i_ref_distfactor
+         * 樽型歪み矯正オブジェクトの参照値です。歪み矯正が不要な時は、nullを指定します。
+         * @param i_ref_projmat
+         * 射影変換オブジェクトの参照値です。
          * @
          */
-        private void initInstance(INyARCameraDistortionFactor i_distfactor, NyARPerspectiveProjectionMatrix i_projmat)
+        public NyARTransMat(INyARCameraDistortionFactor i_distfactor, NyARPerspectiveProjectionMatrix i_projmat)
         {
             this._transsolver = new NyARTransportVectorSolver(i_projmat, 4);
             //互換性が重要な時は、NyARRotMatrix_ARToolKitを使うこと。
@@ -84,20 +76,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._ref_projection_mat = i_projmat;
             return;
         }
-        /**
-         * コンストラクタです。
-         * 座標計算に必要なオブジェクトの参照値を元に、インスタンスを生成します。
-         * @param i_ref_distfactor
-         * 樽型歪み矯正オブジェクトの参照値です。歪み矯正が不要な時は、nullを指定します。
-         * @param i_ref_projmat
-         * 射影変換オブジェクトの参照値です。
-         * @
-         */
-        public NyARTransMat(INyARCameraDistortionFactor i_ref_distfactor, NyARPerspectiveProjectionMatrix i_ref_projmat)
-        {
-            initInstance(i_ref_distfactor, i_ref_projmat);
-            return;
-        }
+
         /**
          * コンストラクタです。
          * 座標計算に必要なカメラパラメータの参照値を元に、インスタンスを生成します。
@@ -107,8 +86,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @
          */
         public NyARTransMat(NyARParam i_param)
+            : this(i_param.getDistortionFactor(), i_param.getPerspectiveProjectionMatrix())
         {
-            initInstance(i_param.getDistortionFactor(), i_param.getPerspectiveProjectionMatrix());
             return;
         }
 

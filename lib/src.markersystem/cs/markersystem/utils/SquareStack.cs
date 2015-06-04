@@ -47,8 +47,8 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
             public int rect_area;
         }
         public SquareStack(int i_length)
+            : base(i_length)
         {
-            base.initInstance(i_length);
         }
         protected override SquareStack.Item createElement()
         {

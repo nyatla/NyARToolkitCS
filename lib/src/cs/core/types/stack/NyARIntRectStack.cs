@@ -47,9 +47,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大長さ
          * @
          */
-        public NyARIntRectStack(int i_length)
+        public NyARIntRectStack(int i_length):base(i_length)
         {
-            base.initInstance(i_length);
         }
         /**
          * この関数は、配列要素を作成します。

@@ -37,9 +37,9 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 {
     public class NyARTargetList : NyARPointerStack<NyARTarget>
     {
-	    public NyARTargetList(int i_max_target)
+        public NyARTargetList(int i_max_target)
+            : base(i_max_target)
 	    {
-		    base.initInstance(i_max_target);
 	    }
 	    /**
 	     * Sampleの位置キーに一致する可能性の高い要素のインデクスを１つ返します。

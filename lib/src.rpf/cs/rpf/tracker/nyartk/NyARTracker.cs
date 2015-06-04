@@ -707,9 +707,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
     class SampleStack : NyARPointerStack<LowResolutionLabelingSamplerOut.Item>
     {
         public SampleStack(int i_size)
-            : base()
+            : base(i_size)
 	    {
-		    this.initInstance(i_size);
 	    }
     }
 

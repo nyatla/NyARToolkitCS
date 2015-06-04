@@ -52,16 +52,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected int _length;
 
         /**
-         * コンストラクタです。
-         * クラスの実体化を禁止するために宣言しています。
-         * 継承クラスから呼び出してください。
-         * @
-         */
-        protected NyARPointerStack()
-        {
-        }
-
-        /**
          * この関数は、インスタンスを初期化します。
          * この関数は、このクラスを継承したクラスのコンストラクタから呼び出します。
          * @param i_length
@@ -70,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列型を示すクラスタイプ
          * @
          */
-        protected virtual void initInstance(int i_length)
+        protected NyARPointerStack(int i_length)
         {
             //領域確保
             this._items = new T[i_length];

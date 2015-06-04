@@ -30,37 +30,61 @@
  * 
  */
 using jp.nyatla.nyartoolkit.cs.core;
+using System.Diagnostics;
 using System.IO;
 namespace jp.nyatla.nyartoolkit.cs.markersystem
 {
-
-
     public class NyARMarkerSystemConfig : INyARMarkerSystemConfig
     {
+	    /** ARToolkit v2互換のニュートン法を使った変換行列計算アルゴリズムを選択します。*/
+	    public const int TM_ARTKV2=1;
+	    /** NyARToolKitの偏微分を使った変換行列アルゴリズムです。*/
+	    public const int TM_NYARTK=2;
+	    /** ARToolkit v4に搭載されているICPを使った変換行列計算アルゴリズムを選択します。*/
+    	public const int TM_ARTKICP=3;
+        //
         protected NyARParam _param;
-        public NyARMarkerSystemConfig(NyARParam i_param)
-        {
-            this._param = i_param;
-        }
-        public NyARMarkerSystemConfig(StreamReader i_ar_param_stream, int i_width, int i_height)
-        {
-            this._param = NyARParam.createFromARParamFile(i_ar_param_stream); 
-            this._param.changeScreenSize(i_width, i_height);
-        }
+    	private int _transmat_algo_type;
         /**
          * コンストラクタです。カメラパラメータにサンプル値(../Data/camera_para.dat)をロードして、コンフィギュレーションを生成します。
          * @param i_width
          * @param i_height
          * @
          */
-        public NyARMarkerSystemConfig(int i_width, int i_height)
+        public NyARMarkerSystemConfig(NyARParam i_param, int i_transmat_algo_type)
         {
-            this._param = NyARParam.createDefaultParameter();
+            Debug.Assert(1 <= i_transmat_algo_type && i_transmat_algo_type <= 3);
+            this._param = i_param;
+            this._transmat_algo_type = i_transmat_algo_type;
+            return;
+        }
+        public NyARMarkerSystemConfig(NyARParam i_param)
+            : this(i_param, TM_ARTKICP)
+        {
+        }
+        public NyARMarkerSystemConfig(StreamReader i_ar_param_stream, int i_width, int i_height)
+            : this(NyARParam.createFromARParamFile(i_ar_param_stream))
+        {
+            this._param.changeScreenSize(i_width, i_height);
+        }
+
+        public NyARMarkerSystemConfig(int i_width, int i_height)
+            : this(NyARParam.createDefaultParameter())
+        {
             this._param.changeScreenSize(i_width, i_height);
         }
         public virtual INyARTransMat createTransmatAlgorism()
         {
-            return new NyARTransMat(this._param);
+            switch (this._transmat_algo_type)
+            {
+                case TM_ARTKV2:
+                    return new NyARTransMat_ARToolKit(this._param);
+                case TM_NYARTK:
+                    return new NyARTransMat(this._param);
+                case TM_ARTKICP:
+                    return new NyARIcpTransMat(this._param, NyARIcpTransMat.AL_POINT_ROBUST);
+            }
+            throw new NyARException();
         }
         public virtual INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism()
         {

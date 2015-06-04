@@ -357,8 +357,8 @@ namespace jp.nyatla.nyartoolkit.cs.detector
     class NyARDetectMarkerResultStack : NyARObjectStack<NyARDetectMarkerResult>
     {
         public NyARDetectMarkerResultStack(int i_length)
+            : base(i_length)
         {
-            this.initInstance(i_length);
             return;
         }
         protected override NyARDetectMarkerResult createElement()

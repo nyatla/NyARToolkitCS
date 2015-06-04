@@ -457,9 +457,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     class RleInfoStack : NyARObjectStack<NyARRleLabelFragmentInfo>
     {
-        public RleInfoStack(int i_length):base()
+        public RleInfoStack(int i_length)
+            : base(i_length)
         {
-            base.initInstance(i_length);
             return;
         }
 

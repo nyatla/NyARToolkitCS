@@ -48,9 +48,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 配列の最大長さ
          * @
          */
-        public NyARIntPointStack(int i_length)
+        public NyARIntPointStack(int i_length):base(i_length)
         {
-            base.initInstance(i_length);
             return;
         }
         /**

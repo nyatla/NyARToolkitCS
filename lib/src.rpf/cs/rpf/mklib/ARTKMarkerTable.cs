@@ -82,9 +82,8 @@ namespace jp.nyatla.nyartoolkit.cs.rpf
 				    this.idtag=i_idtag;
 			    }
 		    }		
-		    public MarkerTable(int i_length)
+		    public MarkerTable(int i_length):base(i_length)
 		    {
-			    base.initInstance(i_length);
 		    }
 		    protected override SerialTableRow createElement()
 		    {
