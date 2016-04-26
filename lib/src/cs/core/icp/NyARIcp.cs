@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit Professional Addon
  * --------------------------------------------------------------------------------
  * The NyARToolkit is Java edition ARToolKit class library.
