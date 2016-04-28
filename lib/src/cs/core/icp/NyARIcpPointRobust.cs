@@ -41,7 +41,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             NyARDoublePoint3d[] worldCoord, int num,
             NyARDoubleMatrix44 initMatXw2Xc, NyARDoubleMatrix44 o_matxw2xc, NyARTransMatResultParam o_result_param)
         {
-            Debug.Assert(num >= 4);
+            if (num < 4)
+            {
+                return false;
+            }
             double err0 = 0, err1;
 
             NyARIcpUtils.U u = this.__u;
