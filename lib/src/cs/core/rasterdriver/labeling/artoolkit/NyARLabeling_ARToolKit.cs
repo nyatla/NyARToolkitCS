@@ -60,7 +60,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラべリング画像の出力先オブジェクトです。i_rasterと同じサイズである必要があります。
          * @
          */
-        public int labeling(NyARBinRaster i_raster, NyARLabelingImage o_destination)
+        public int labeling(INyARBinRaster i_raster, NyARLabelingImage o_destination)
         {
             Debug.Assert(i_raster.getBufferType() == NyARBufferType.INT1D_BIN_8);
             int label_img_ptr1, label_pixel;

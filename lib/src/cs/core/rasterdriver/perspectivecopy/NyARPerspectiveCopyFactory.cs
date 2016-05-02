@@ -117,7 +117,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double cp1_cy_cp2 = cp1 * pk_t + cpara[2] + cp0 * pk_l;
             double cp4_cy_cp5 = cp4 * pk_t + cpara[5] + cp3 * pk_l;
 
-            INyARRgbPixelDriver i_in_reader = this._ref_raster.getRgbPixelDriver();
+            INyARRgbRaster i_in_reader = this._ref_raster;
             switch (o_out.getBufferType())
             {
                 case NyARBufferType.INT1D_X8R8G8B8_32:
@@ -156,7 +156,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //ANY to RGBx
                     if (o_out is INyARRgbRaster)
                     {
-                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                         for (int iy = 0; iy < out_h; iy++)
                         {
                             //解像度分の点を取る。
@@ -196,7 +196,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int[] rgb_tmp = this.__pickFromRaster_rgb_tmp;
             int in_w = this._ref_raster.getWidth();
             int in_h = this._ref_raster.getHeight();
-            INyARRgbPixelDriver i_in_reader = this._ref_raster.getRgbPixelDriver();
+            INyARRgbRaster i_in_reader = this._ref_raster;
 
             //ピクセルリーダーを取得
             double cp0 = cpara[0];
@@ -265,7 +265,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //ANY to RGBx
                     if (o_out is INyARRgbRaster)
                     {
-                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                         for (int iy = out_h - 1; iy >= 0; iy--)
                         {
                             //解像度分の点を取る。
@@ -382,7 +382,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //ANY to RGBx
                     if (o_out is INyARRgbRaster)
                     {
-                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                         for (int iy = 0; iy < out_h; iy++)
                         {
                             //解像度分の点を取る。
@@ -439,7 +439,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int out_h = o_out.getHeight();
             if (o_out is INyARRgbRaster)
             {
-                INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                 for (int iy = out_h - 1; iy >= 0; iy--)
                 {
                     //解像度分の点を取る。
@@ -550,7 +550,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		default:
 			if(o_out is INyARRgbRaster)
 			{
-				INyARRgbPixelDriver out_reader=((INyARRgbRaster)o_out).getRgbPixelDriver();	
+                INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);	
 				for(int iy=0;iy<out_h;iy++){
 					//解像度分の点を取る。
 					double cp7_cy_1_cp6_cx  =cp7_cy_1;
@@ -606,7 +606,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int out_h = o_out.getHeight();
             if (o_out is INyARRgbRaster)
             {
-                INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                 for (int iy = out_h - 1; iy >= 0; iy--)
                 {
                     //解像度分の点を取る。
@@ -719,7 +719,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 default:
                     if (o_out is INyARRgbRaster)
                     {
-                        INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                        INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                         for (int iy = 0; iy < out_h; iy++)
                         {
                             //解像度分の点を取る。
@@ -778,7 +778,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int out_h = o_out.getHeight();
             if (o_out is INyARRgbRaster)
             {
-                INyARRgbPixelDriver out_reader = ((INyARRgbRaster)o_out).getRgbPixelDriver();
+                INyARRgbRaster out_reader = ((INyARRgbRaster)o_out);
                 for (int iy = out_h - 1; iy >= 0; iy--)
                 {
                     //解像度分の点を取る。

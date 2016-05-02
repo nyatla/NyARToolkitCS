@@ -72,13 +72,13 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
          * @return
          * @throws NyARException
          */
-        public bool getARPlayCardId(INyARGsPixelDriver i_pix_drv, NyARIntPoint2d[] i_vertex, PsArIdParam i_result)
+        public bool getARPlayCardId(INyARGrayscaleRaster i_raster, NyARIntPoint2d[] i_vertex, PsArIdParam i_result)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
                 return false;
             }
-            return this._pickFromRaster(i_pix_drv, i_result);
+            return this._pickFromRaster(i_raster, i_result);
         }
         /**
          * この関数は、ラスタドライバから画像を読み出します。
@@ -90,13 +90,13 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
          * @return
          * @throws NyARException
          */
-        public bool getARPlayCardId(INyARGsPixelDriver i_pix_drv, NyARDoublePoint2d[] i_vertex, PsArIdParam i_result)
+        public bool getARPlayCardId(INyARGrayscaleRaster i_raster, NyARDoublePoint2d[] i_vertex, PsArIdParam i_result)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
                 return false;
             }
-            return this._pickFromRaster(i_pix_drv, i_result);
+            return this._pickFromRaster(i_raster, i_result);
         }
         /**
          * i_imageから、idマーカを読みだします。
@@ -198,7 +198,7 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
          * 成功するとtrue
          * @throws NyARException
          */
-        public bool readDataBits(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, MarkerPattDecoder o_bitbuffer)
+        public bool readDataBits(INyARGrayscaleRaster i_raster, MarkerPattDecoder o_bitbuffer)
         {
             int raster_width = i_raster_size.w;
             int raster_height = i_raster_size.h;
@@ -292,7 +292,7 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
                     pt++;
                 }
                 //1行分のピクセルを取得(場合によっては専用アクセサを書いた方がいい)
-                i_reader.getPixelSet(ref_x, ref_y, resolution * 4, pixcel_temp, 0);
+                i_raster.getPixelSet(ref_x, ref_y, resolution * 4, pixcel_temp, 0);
                 //グレースケールにしながら、line→mapへの転写
                 for (int i2 = 0; i2 < resolution; i2++)
                 {

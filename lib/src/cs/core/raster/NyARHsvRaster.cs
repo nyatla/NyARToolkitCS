@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -29,12 +23,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-
-
 
     /**
      * このクラスは、HSV画像を格納するラスタクラスです。
@@ -51,17 +41,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_height
          * ラスタのサイズです。
          */
-        public NyARHsvRaster(int i_width, int i_height):base(i_width, i_height, NyARBufferType.INT1D_X7H9S8V8_32)
+        public NyARHsvRaster(int i_width, int i_height)
         {
             //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
-            
+            base(i_width, i_height, NyARBufferType.INT1D_X7H9S8V8_32);
             this._ref_buf = new int[i_height * i_width];
         }
         /**
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式{@link NyARBufferType#INT1D_X7H9S8V8_32}です。
          */
-        public override object getBuffer()
+        public Object getBuffer()
         {
             return this._ref_buf;
         }
@@ -69,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、インスタンスがバッファを所有するかを返します。
          * このクラスでは内部参照バッファのみをサポートするため、常にtrueです。
          */
-        public override bool hasBuffer()
+        public boolean hasBuffer()
         {
             return true;
         }
@@ -78,13 +68,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
-        public override void wrapBuffer(object i_ref_buf)
+        public void wrapBuffer(Object i_ref_buf)
         {
-            NyARException.notImplement();
+            NyARRuntimeException.notImplement();
         }
-        public override object createInterface(Type iIid)
+
+        public Object createInterface(TypeId iIid)
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
     }
 }

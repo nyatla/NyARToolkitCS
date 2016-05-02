@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -29,8 +23,6 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -46,35 +38,35 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * ラスタの幅
          */
-        int getWidth();
+        public int getWidth();
         /**
          * この関数は、ラスタの高さを返します。
          * 実装クラスでは、ラスタの幅を返す処理を実装してください。
          * @return
          * ラスタの高さ
          */
-        int getHeight();
+        public int getHeight();
         /**
          * この関数は、ラスタのサイズを格納したオブジェクトの参照値を返します。
          * 実装クラスでは、サイズオブジェクトの参照値を返す処理を実装してください。
          * @return
          * [read only]ラスタサイズの参照値
          */
-        NyARIntSize getSize();
+        public NyARIntSize getSize();
         /**
          * この関数は、バッファオブジェクトを返します。
          * 実装クラスでは、バッファを格納したオブジェクトを返してください。
          * @return
          * バッファを格納したオブジェクト。
          */
-        object getBuffer();
+        public Object getBuffer();
         /**
          * この関数は、バッファの画素形式を返します。
          * 実装クラスでは、{@link #getBuffer}の返すバッファの形式を返してください。
          * @return
          * バッファの形式。{@link NyARBufferType}の定義値です。
          */
-        int getBufferType();
+        public int getBufferType();
         /**
          * この関数は、画素形式がi_type_valueであるか、チェックします。
          * 実装クラスでは、格納しているバッファの画素形式がi_type_valueと等しいかを確認してください。
@@ -83,7 +75,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 真偽値。画素形式が一致していればtrue。
          */
-        bool isEqualBufferType(int i_type_value);
+        public boolean isEqualBufferType(int i_type_value);
         /**
          * この関数は、{@link #getBuffer}がオブジェクトを返せるかを真偽値返します。
          * 外部参照バッファを使用できるクラスで使います。
@@ -91,20 +83,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 真偽値。{@link #getBuffer}が利用可能ならtrue。
          */
-        bool hasBuffer();
+        public boolean hasBuffer();
         /**
          * この関数は、外部参照バッファをラップして、ラスタのバッファにします。
          * 実装クラスでは、できる限り整合性チェックをしたうえで、バッファを切り替える処理を実装してください。
-         * この関数は、実装しなくともかまいません。その場合は、{@link NyARException}例外を発生させてください。
+         * この関数は、実装しなくともかまいません。その場合は、{@link NyARRuntimeException}例外を発生させてください。
          * @param i_ref_buf
          * 切り替える外部参照バッファオブジェクト。
          */
-        void wrapBuffer(object i_ref_buf);
+        public void wrapBuffer(Object i_ref_buf);
         /**
-         * ARTKに必要なラスタドライバインタフェイスを返す。
+         * ARTKに必要なラスタオペレーションインタフェイスを返す。
+         * ラスタオペレーションインタフェイスは、ラスタに対するバッチ処理を実装します。
+         * 生成には時間がかかるのでキャッシュしてください。
          * @return
          */
-        object createInterface(Type i_iid);
+        public Object createInterface(TypeId i_iid);
 
     }
 }

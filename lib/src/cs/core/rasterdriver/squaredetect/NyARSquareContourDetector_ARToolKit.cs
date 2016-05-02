@@ -82,7 +82,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 検出元のラスタ画像
          * @
          */
-        public void detectMarker(NyARBinRaster i_raster, NyARSquareContourDetector.CbHandler i_cb)
+        public void detectMarker(INyARBinRaster i_raster, NyARSquareContourDetector.CbHandler i_cb)
         {
             NyARLabelingImage limage = this._limage;
 

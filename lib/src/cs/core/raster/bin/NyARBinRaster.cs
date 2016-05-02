@@ -35,53 +35,129 @@ namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
-     * このクラスは、0/ 255 の二値GrayscaleRasterです。
+     * このクラスは、0/1 の二値GrayscaleRasterです。
      */
-    public class NyARBinRaster : NyARGrayscaleRaster
+    public abstract class NyARBinRaster : INyARBinRaster
     {
+        protected readonly NyARIntSize _size;
+        /** バッファオブジェクトがアタッチされていればtrue*/
+        protected readonly bool _is_attached_buffer;
         /**
          * コンストラクタです。
-         * 画像のサイズパラメータを指定して、{@link NyARBufferType#INT2D_BIN_8}形式のバッファを持つインスタンスを生成します。
-         * このラスタは、内部参照バッファを持ちます。
+         * 画像のサイズパラメータとバッファ形式を指定して、インスタンスを生成します。
          * @param i_width
          * ラスタのサイズ
          * @param i_height
          * ラスタのサイズ
-         * @
-         */
-        public NyARBinRaster(int i_width, int i_height)
-            : base(i_width, i_height, NyARBufferType.INT1D_BIN_8, true)
-        {
-        }
-        /*
-         * この関数は、インスタンスの初期化シーケンスを実装します。
-         * コンストラクタから呼び出します。
-         * @param i_size
-         * ラスタのサイズ
-         * @param i_buf_type
-         * バッファ形式定数
+         * @param i_raster_type
+         * ラスタのバッファ形式。
+         * {@link NyARBufferType}に定義された定数値を指定してください。指定できる値は、以下の通りです。
+         * <ul>
+         * <li>{@link NyARBufferType#INT1D_GRAY_8}
+         * <ul>
          * @param i_is_alloc
-         * 内部バッファ/外部バッファのフラグ
-         * @return
-         * 初期化に成功するとtrue
-         * @ 
+         * バッファを外部参照にするかのフラグ値。
+         * trueなら内部バッファ、falseなら外部バッファを使用します。
+         * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
+         * @throws NyARRuntimeException
          */
-        protected override void initInstance(NyARIntSize i_size, int i_buf_type, bool i_is_alloc)
+        public static INyARBinRaster createInstance(int i_width, int i_height, int i_raster_type, boolean i_is_alloc)
         {
-            switch (i_buf_type)
+            switch (i_raster_type)
             {
-                case NyARBufferType.INT1D_BIN_8:
-                    this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
-                    break;
-                default:
-                    base.initInstance(i_size, i_buf_type, i_is_alloc);
-                    return;
+                case NyARBufferType.INT1D_GRAY_8:
+                    return new NyARBinRaster_INT1D_BIN_8(i_width, i_height, i_is_alloc);
             }
-            this._pixdrv = NyARGsPixelDriverFactory.createDriver(this);
-            this._is_attached_buffer = i_is_alloc;
-            return;
+            throw new NyARRuntimeException();
         }
-        public override object createInterface(Type i_iid)
+        /**
+         * 内部参照のバッファ（{@link NyARBufferType#INT1D_GRAY_8}形式）を持つインスタンスを生成します。
+         * @param i_width
+         * ラスタのサイズ
+         * @param i_height
+         * ラスタのサイズ
+         * @throws NyARRuntimeException
+         */
+        public static INyARBinRaster createInstance(int i_width, int i_height)
+        {
+            return NyARBinRaster.createInstance(i_width, i_height, true);
+        }
+        /**
+         * 画像のサイズパラメータとバッファ参照方式を指定して、インスタンスを生成します。
+         * バッファの形式は、{@link NyARBufferType#INT1D_GRAY_8}です。
+         * @param i_width
+         * ラスタのサイズ
+         * @param i_height
+         * ラスタのサイズ
+         * @param i_is_alloc
+         * バッファを外部参照にするかのフラグ値。
+         * trueなら内部バッファ、falseなら外部バッファを使用します。
+         * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
+         * @throws NyARRuntimeException
+         */
+        public static INyARBinRaster createInstance(int i_width, int i_height, boolean i_is_alloc)
+        {
+            return NyARBinRaster.createInstance(i_width, i_height, NyARBufferType.INT1D_GRAY_8, i_is_alloc);
+        }
+
+
+        /**
+         * この関数は、ラスタの幅を返します。
+         */
+        sealed public int getWidth()
+        {
+            return this._size.w;
+        }
+        /**
+         * この関数は、ラスタの高さを返します。
+         */
+        sealed public int getHeight()
+        {
+            return this._size.h;
+        }
+        /**
+         * この関数は、ラスタのサイズを格納したオブジェクトを返します。
+         */
+        sealed public NyARIntSize getSize()
+        {
+            return this._size;
+        }
+        /**
+         * この関数は、ラスタのバッファへの参照値を返します。
+         * バッファの形式は、コンストラクタに指定した形式と同じです。
+         */
+
+        /**
+         * この関数は、ラスタの幅を返します。
+         */
+        sealed public boolean isEqualBufferType(int i_type_value)
+        {
+            return i_type_value == this.getBufferType();
+        }
+        /**
+         * この関数は、インスタンスがバッファを所有するかを返します。
+         * 内部参照バッファの場合は、常にtrueです。
+         * 外部参照バッファの場合は、バッファにアクセスする前に、このパラメタを確認してください。
+         */
+        sealed public boolean hasBuffer()
+        {
+            return this.getBuffer() != null;
+        }
+
+
+        /**
+         * 継承クラスから使うコンストラクタです。
+         * 引数に有効な値を設定してください。
+         * @param i_size
+         * @param i_is_alloc
+         */
+        protected NyARBinRaster(int i_width, int i_height, boolean i_is_alloc)
+        {
+            this._size = new NyARIntSize(i_width, i_height);
+            this._is_attached_buffer = i_is_alloc;
+        }
+
+        public Object createInterface(Type i_iid)
         {
             if (i_iid == typeof(NyARLabeling_Rle.IRasterDriver))
             {
@@ -91,7 +167,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return NyARContourPickup.ImageDriverFactory.createDriver(this);
             }
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
     }
+
 }

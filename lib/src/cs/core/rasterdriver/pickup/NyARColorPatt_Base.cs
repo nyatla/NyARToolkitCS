@@ -39,16 +39,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * ARToolKit由来のアルゴリズムで画像からパターン取得する機能を提供します。
      * この関数は可読性を重視しているため低速です。高速な{@link NyARColorPatt_O3}を使ってください。
      */
-    public class NyARColorPatt_Base : INyARColorPatt
+    protected class NyARColorPatt_Base : NyARRgbRaster_INT1D_X8R8G8B8_32, INyARColorPatt
     {
         protected const int AR_PATT_SAMPLE_NUM = 64;
-        protected const int BUFFER_FORMAT = NyARBufferType.INT1D_X8R8G8B8_32;
+
         protected readonly double[][] CPARAM_WORLD = { new double[] { 100.0, 100.0 }, new double[] { 100.0 + 10.0, 100.0 }, new double[] { 100.0 + 10.0, 100.0 + 10.0 }, new double[] { 100.0, 100.0 + 10.0 } };
 
-        protected NyARIntSize _size;
-        protected int[] _patdata;
-
-        protected INyARRgbPixelDriver _pixelreader;
         /**
          * コンストラクタです。
          * 解像度を指定して、インスタンスを生成します。
@@ -58,79 +54,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラスタのサイズ
          * @ 
          */
-        public NyARColorPatt_Base(int i_width, int i_height)
+        public NyARColorPatt_Base(int i_width, int i_height):base(i_width,i_height,true)
         {
-            //入力制限
             Debug.Assert(i_width <= 64 && i_height <= 64);
-            this._size = new NyARIntSize(i_width, i_height);
-            this._patdata = new int[i_height * i_width];
-            this._pixelreader = NyARRgbPixelDriverFactory.createDriver(this);
             return;
         }
-        /**
-         * この関数はラスタの幅を返します。
-         */
-        public int getWidth()
-        {
-            return this._size.w;
-        }
-        /**
-         * この関数はラスタの高さを返します。
-         */
-        public int getHeight()
-        {
-            return this._size.h;
-        }
-        /**
-         * この関数はラスタのサイズの参照値を返します。
-         */
-        public NyARIntSize getSize()
-        {
-            return this._size;
-        }
-        /**
-         * この関数は、ラスタの画素読み取りオブジェクトの参照値を返します。
-         */
-        public INyARRgbPixelDriver getRgbPixelDriver()
-        {
-            return this._pixelreader;
-        }
-        /**
-         * この関数は、ラスタ画像のバッファを返します。
-         * バッファ形式は、{@link NyARBufferType#INT1D_X8R8G8B8_32}(int[])です。
-         */
-        public object getBuffer()
-        {
-            return this._patdata;
-        }
-        /**
-         * この関数は、インスタンスがバッファを所有しているかを返します。基本的にtrueです。
-         */
-        public bool hasBuffer()
-        {
-            return this._patdata != null;
-        }
-        /**
-         * この関数は使用不可能です。
-         */
-        public void wrapBuffer(object i_ref_buf)
-        {
-            NyARException.notImplement();
-        }
-        /**
-         * この関数は、バッファタイプの定数を返します。
-         */
-        public int getBufferType()
-        {
-            return BUFFER_FORMAT;
-        }
-        /**
-         * この関数は、インスタンスのバッファタイプが引数のものと一致しているか判定します。
-         */
-        public bool isEqualBufferType(int i_type_value)
-        {
-            return BUFFER_FORMAT == i_type_value;
-        }
+
+
         /**
          * この関数は、射影変換パラメータを計算します。
          * @param i_vertex
@@ -251,8 +181,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int r, g, b;
             int[] rgb_tmp = new int[3];
 
-            //ピクセルリーダーを取得
-            INyARRgbPixelDriver reader = image.getRgbPixelDriver();
+
             int xdiv_x_ydiv = xdiv * ydiv;
 
             for (int iy = 0; iy < this._size.h; iy++)
@@ -277,7 +206,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
                             if (xc >= 0 && xc < img_x && yc >= 0 && yc < img_y)
                             {
-                                reader.getPixel(xc, yc, rgb_tmp);
+                                image.getPixel(xc, yc, rgb_tmp);
                                 r += rgb_tmp[0];// R
                                 g += rgb_tmp[1];// G
                                 b += rgb_tmp[2];// B
@@ -285,7 +214,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             }
                         }
                     }
-                    this._patdata[iy * this._size.w + ix] = (((r / xdiv_x_ydiv) & 0xff) << 16) | (((g / xdiv_x_ydiv) & 0xff) << 8) | (((b / xdiv_x_ydiv) & 0xff));
+                    this._buf[iy * this._size.w + ix] = (((r / xdiv_x_ydiv) & 0xff) << 16) | (((g / xdiv_x_ydiv) & 0xff) << 8) | (((b / xdiv_x_ydiv) & 0xff));
                 }
             }
             return true;
@@ -296,7 +225,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return NyARPerspectiveCopyFactory.createDriver(this);
             }
-            throw new NyARException();
+            return base.createInterface(iIid);
         }
 
     }

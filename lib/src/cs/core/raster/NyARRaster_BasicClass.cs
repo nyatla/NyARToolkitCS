@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -29,19 +23,16 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
-
 
     /**
      * このクラスは、ラスタクラスの基本処理を実装します。
      */
     public abstract class NyARRaster_BasicClass : INyARRaster
     {
-        protected readonly NyARIntSize _size;
-        protected int _buffer_type;
+        protected sealed NyARIntSize _size;
+        protected sealed int _buffer_type;
         /**
          * コンストラクタです。
          * メンバ変数を初期化して、インスタンスを生成します。
@@ -60,21 +51,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタの幅を返します。
          */
-        public int getWidth()
+        public sealed int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数は、ラスタの高さを返します。
          */
-        public int getHeight()
+        sealed public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数は、ラスタのサイズを格納したオブジェクトを返します。
          */
-        public NyARIntSize getSize()
+
+        sealed public NyARIntSize getSize()
         {
             return this._size;
         }
@@ -82,20 +74,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        public int getBufferType()
+        sealed public int getBufferType()
         {
             return _buffer_type;
         }
         /**
          * この関数は、ラスタの幅を返します。
          */
-        public bool isEqualBufferType(int i_type_value)
+        sealed public boolean isEqualBufferType(int i_type_value)
         {
             return this._buffer_type == i_type_value;
         }
-        public abstract object getBuffer();
+        public abstract Object getBuffer();
         public abstract bool hasBuffer();
-        public abstract void wrapBuffer(object i_ref_buf);
-        public abstract object createInterface(Type i_iid);
+        public abstract void wrapBuffer(Object i_ref_buf);
+        public abstract Object createInterface(TypeId i_iid);
     }
 }

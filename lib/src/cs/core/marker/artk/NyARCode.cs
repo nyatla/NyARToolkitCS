@@ -108,6 +108,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
             tmp_raster = null;//ポイ
             return;
         }
+        [System.Obsolete("use loadFromARToolKitFormFile")]
+        public static NyARCode createFromARPattFile(InputStream i_stream, int i_width, int i_height)
+        {
+            return loadFromARPattFile(i_stream, i_width, i_height);
+        }
         /**
          * ストリームi_stから、1ブロック(1方位分)のXRGBデータをからo_bufへ読みだします。
          * @param i_data

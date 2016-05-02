@@ -33,11 +33,6 @@ using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
-
-
-
-
-
     /**
      * このクラスは、視錐台と、これを使った演算関数を定義します。
      * クラスのメンバには、視錐台行列、その逆行列があります。

@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             o_histogram.reset();
             int[] data_ptr = o_histogram.data;
-            INyARGsPixelDriver drv = this._gsr.getGsPixelDriver();
+            INyARGrayscaleRaster drv = this._gsr;
             int pix_count = i_w;
             int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
@@ -125,7 +125,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             o_histogram.reset();
             int[] data_ptr = o_histogram.data;
-            INyARRgbPixelDriver drv = this._gsr.getRgbPixelDriver();
+            INyARGrayscaleRaster drv = this._gsr;
             int pix_count = i_w;
             int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく

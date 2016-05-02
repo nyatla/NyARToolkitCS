@@ -337,7 +337,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public override void doFilter(int i_l, int i_t, int i_w, int i_h, int i_th, INyARGrayscaleRaster i_gsraster)
         {
             Debug.Assert(i_gsraster.isEqualBufferType(NyARBufferType.INT1D_BIN_8));
-            INyARRgbPixelDriver input = this._raster.getRgbPixelDriver();
+            INyARRgbRaster input = this._raster;
             int[] output = (int[])i_gsraster.getBuffer();
             int th = i_th * 3;
             NyARIntSize s = i_gsraster.getSize();

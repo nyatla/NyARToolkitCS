@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -29,14 +23,12 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
-using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     /**
      * このクラスは、指定形式のバッファを持つRGBラスタです。
      * 外部参照バッファ、内部バッファの両方に対応します。
+     * コンストラクタは無効です。{@link #createInstance}を使ってください。
      * <p>
      * 対応しているバッファタイプ-
      * <ul>{@link NyARBufferType#INT1D_X8R8G8B8_32}
@@ -48,15 +40,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * </ul>
      * </p>
      */
-    public class NyARRgbRaster : NyARRgbRaster_BasicClass
+    public abstract class NyARRgbRaster : INyARRgbRaster
     {
-        /** バッファオブジェクト*/
-        protected object _buf;
-        /** ピクセルリーダ*/
-        protected INyARRgbPixelDriver _rgb_pixel_driver;
         /** バッファオブジェクトがアタッチされていればtrue*/
-        protected bool _is_attached_buffer;
-
+        readonly protected boolean _is_attached_buffer;
+        readonly protected NyARIntSize _size;
         /**
          * コンストラクタです。
          * 画像のサイズパラメータとバッファ形式を指定して、インスタンスを生成します。
@@ -72,11 +60,29 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * バッファを外部参照にするかのフラグ値。
          * trueなら内部バッファ、falseなら外部バッファを使用します。
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
-         * @
+         * @throws NyARRuntimeException
          */
-        public NyARRgbRaster(int i_width, int i_height, int i_raster_type, bool i_is_alloc):base(i_width, i_height, i_raster_type)
+        public static INyARRgbRaster createInstance(int i_width, int i_height, int i_buffer_type, boolean i_is_alloc)
         {
-            initInstance(this._size, i_raster_type, i_is_alloc);
+            switch (i_buffer_type)
+            {
+                case NyARBufferType.INT1D_X8R8G8B8_32:
+                    return new NyARRgbRaster_INT1D_X8R8G8B8_32(i_width, i_height, i_is_alloc);
+                case NyARBufferType.BYTE1D_B8G8R8X8_32:
+                    return new NyARRgbRaster_BYTE1D_B8G8R8X8_32(i_width, i_height, i_is_alloc);
+                case NyARBufferType.BYTE1D_X8R8G8B8_32:
+                    return new NyARRgbRaster_BYTE1D_X8R8G8B8_32(i_width, i_height, i_is_alloc);
+                case NyARBufferType.BYTE1D_X8B8G8R8_32:
+                    return new NyARRgbRaster_BYTE1D_X8B8G8R8_32(i_width, i_height, i_is_alloc);
+                case NyARBufferType.BYTE1D_R8G8B8_24:
+                    return new NyARRgbRaster_BYTE1D_R8G8B8_24(i_width, i_height, i_is_alloc);
+                case NyARBufferType.BYTE1D_B8G8R8_24:
+                    return new NyARRgbRaster_BYTE1D_B8G8R8_24(i_width, i_height, i_is_alloc);
+                case NyARBufferType.WORD1D_R5G6B5_16LE:
+                    return new NyARRgbRaster_WORD1D_R5G6B5_16LE(i_width, i_height, i_is_alloc);
+                default:
+                    throw new NyARRuntimeException();
+            }
         }
         /**
          * コンストラクタです。
@@ -89,11 +95,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラスタのバッファ形式。
          * {@link NyARBufferType}に定義された定数値を指定してください。
          * 指定できる値は、クラスの説明を見てください。
-         * @
+         * @throws NyARRuntimeException
          */
-        public NyARRgbRaster(int i_width, int i_height, int i_raster_type):base(i_width, i_height, i_raster_type)
+        public static INyARRgbRaster createInstance(int i_width, int i_height, int i_raster_type)
         {
-            initInstance(this._size, i_raster_type, true);
+            return createInstance(i_width, i_height, i_raster_type, true);
         }
         /**
          * コンストラクタです。
@@ -102,70 +108,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラスタのサイズ
          * @param i_height
          * ラスタのサイズ
-         * @
+         * @throws NyARRuntimeException
          */
-        public NyARRgbRaster(int i_width, int i_height): base(i_width, i_height, NyARBufferType.INT1D_X8R8G8B8_32)
+        public static INyARRgbRaster createInstance(int i_width, int i_height)
         {
-            initInstance(this._size, NyARBufferType.INT1D_X8R8G8B8_32, true);
+            return createInstance(i_width, i_height, NyARBufferType.INT1D_X8R8G8B8_32);
         }
+
         /**
-         * Readerとbufferを初期化する関数です。コンストラクタから呼び出します。
-         * 継承クラスでこの関数を拡張することで、対応するバッファタイプの種類を増やせます。
-         * @param i_size
-         * ラスタのサイズ
-         * @param i_raster_type
-         * バッファタイプ
-         * @param i_is_alloc
-         * 外部参照/内部バッファのフラグ
-         * @return
-         * 初期化が成功すると、trueです。
-         * @ 
+         * 継承クラス呼び出すコンストラクタです。
          */
-        protected virtual void initInstance(NyARIntSize i_size, int i_raster_type, bool i_is_alloc)
+        protected NyARRgbRaster(int i_width, int i_height, boolean i_is_alloc)
         {
-            //バッファの構築
-            switch (i_raster_type)
-            {
-                case NyARBufferType.INT1D_X8R8G8B8_32:
-                    this._buf = i_is_alloc ? new int[i_size.w * i_size.h] : null;
-                    break;
-                case NyARBufferType.BYTE1D_B8G8R8X8_32:
-                case NyARBufferType.BYTE1D_X8R8G8B8_32:
-                    this._buf = i_is_alloc ? new byte[i_size.w * i_size.h * 4] : null;
-                    break;
-                case NyARBufferType.BYTE1D_R8G8B8_24:
-                case NyARBufferType.BYTE1D_B8G8R8_24:
-                    this._buf = i_is_alloc ? new byte[i_size.w * i_size.h * 3] : null;
-                    break;
-                case NyARBufferType.WORD1D_R5G6B5_16LE:
-                    this._buf = i_is_alloc ? new short[i_size.w * i_size.h] : null;
-                    break;
-                default:
-                    throw new NyARException();
-            }
-            //readerの構築
-            this._rgb_pixel_driver = NyARRgbPixelDriverFactory.createDriver(this);
             this._is_attached_buffer = i_is_alloc;
-            return;
+            this._size = new NyARIntSize(i_width, i_height);
         }
-        /**
-         * この関数は、画素形式によらない画素アクセスを行うオブジェクトへの参照値を返します。
-         * @return
-         * オブジェクトの参照値
-         * @
-         */
-        public override INyARRgbPixelDriver getRgbPixelDriver()
-        {
-            return this._rgb_pixel_driver;
-        }
-        /**
-         * この関数は、ラスタのバッファへの参照値を返します。
-         * バッファの形式は、コンストラクタに指定した形式と同じです。
-         */
-        public override object getBuffer()
-        {
-            return this._buf;
-        }
+
+
         /**
          * インスタンスがバッファを所有するかを返します。
          * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
@@ -173,22 +132,53 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * インスタンスがバッファを所有すれば、trueです。
          */
-        public override bool hasBuffer()
+        sealed public boolean hasBuffer()
         {
-            return this._buf != null;
+            return this.getBuffer() != null;
         }
         /**
-         * この関数は、ラスタに外部参照バッファをセットします。
-         * 外部参照バッファの時にだけ使えます。
+         * この関数は、ラスタの幅を返します。
          */
-        public override void wrapBuffer(object i_ref_buf)
+        sealed public int getWidth()
         {
-            Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
-            this._buf = i_ref_buf;
-            //ピクセルリーダーの参照バッファを切り替える。
-            this._rgb_pixel_driver.switchRaster(this);
+            return this._size.w;
         }
-        public override object createInterface(Type iIid)
+        /**
+         * この関数は、ラスタの高さを返します。
+         */
+        sealed public int getHeight()
+        {
+            return this._size.h;
+        }
+        /**
+         * この関数は、ラスタのサイズを格納したオブジェクトを返します。
+         */
+        sealed public NyARIntSize getSize()
+        {
+            return this._size;
+        }
+        /**
+         * この関数は、ラスタの幅を返します。
+         */
+        sealed public boolean isEqualBufferType(int i_type_value)
+        {
+            return this.getBufferType() == i_type_value;
+        }
+        /**
+         * サポートしているインタフェイスは以下の通りです。
+         * <ul>
+         * <li>{@link INyARRgbPixelDriver}
+         * <li>{@link INyARPerspectiveCopy}
+         * <li>{@link INyARPerspectiveCopy}
+         * <li>{@link NyARMatchPattDeviationColorData.IRasterDriver}
+         * <li>{@link INyARRgb2GsFilter}
+         * <li>{@link INyARRgb2GsFilterRgbAve}
+         * <li>{@link INyARRgb2GsFilterRgbCube}
+         * <li>{@link INyARRgb2GsFilterYCbCr}
+         * <li>{@link INyARRgb2GsFilterArtkTh}
+         * </ul>
+         */
+        public Object createInterface(TypeId iIid)
         {
             if (iIid == typeof(INyARPerspectiveCopy))
             {
@@ -198,9 +188,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return NyARMatchPattDeviationColorData.RasterDriverFactory.createDriver(this);
             }
+            //継承を考慮してる。
             if (iIid == typeof(INyARRgb2GsFilter))
             {
-                //デフォルトのインタフェイス
                 return NyARRgb2GsFilterFactory.createRgbAveDriver(this);
             }
             else if (iIid == typeof(INyARRgb2GsFilterRgbAve))
@@ -219,7 +209,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return NyARRgb2GsFilterArtkThFactory.createDriver(this);
             }
-            throw new NyARException();
+            //クラスが見つからない
+            throw new NyARRuntimeException("Interface not found!");
+            //		return null;
         }
+        public static void main(String[] args)
+        {
+            INyARRgbRaster n = NyARRgbRaster.createInstance(640, 480);
+            long s = System.currentTimeMillis();
+            for (int i = 0; i < 100000; i++)
+            {
+                n.createInterface(null);
+            }
+            //		System.out.println(System.currentTimeMillis()-s);
+        }
+
     }
 }

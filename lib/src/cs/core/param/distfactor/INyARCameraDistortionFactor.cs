@@ -37,36 +37,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public interface INyARCameraDistortionFactor
     {
-        /**
-         * この関数は、参照元から歪みパラメータ値をコピーします。
-         * @param i_ref
-         * コピー元のオブジェクト。
-         */
-        void copyFrom(INyARCameraDistortionFactor i_ref);
-
-        /**
-         * この関数は、配列の値を歪みパラメータ値として、このインスタンスにセットします。
-         * @param i_factor
-         * 歪みパラメータ値を格納した配列。
-         */
-        void setValue(double[] i_factor);
-
-        /**
-         * この関数は、パラメータ値を配列へ返します。
-         * @param o_factor
-         * 歪みパラメータ値の出力先配列。
-         */
-        void getValue(double[] o_factor);
-
-        /**
-         * この関数は、歪みパラメータをスケール倍します。
-         * パラメータ値は、スケール値の大きさだけ、拡大、又は縮小します。
-         * @param i_x_scale
-         * x方向のパラメータ倍率
-         * @param i_y_scale
-         * y方向のパラメータ倍率
-         */
-        void changeScale(double i_x_scale, double i_y_scale);
 
         /**
          * この関数は、座標点を理想座標系から観察座標系へ変換します。
@@ -148,6 +118,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_point
          */
         void observ2Ideal(NyARDoublePoint2d i_in, NyARDoublePoint2d o_point);
+        /**
+         * この関数は、観察座標を理想座標へ変換します。
+         * 入力できる値範囲は、コンストラクタに設定したスクリーンサイズの範囲内です。
+         * @param ix
+         * 観察座標の値
+         * @param iy
+         * 観察座標の値
+         * @param o_point
+         * 理想座標を受け取るオブジェクト。
+         */
+        void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point);
 
         /**
          * 座標配列全てに対して、{@link #observ2Ideal(double, double, NyARDoublePoint2d)}を適応します。
@@ -156,6 +137,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          */
         void observ2IdealBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size);
+
+        void observ2IdealBatch(NyARIntPoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size);
+
     }
 
 }

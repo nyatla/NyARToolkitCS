@@ -219,7 +219,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             double para20 = para[2 * 3 + 0][0];
             double para21 = para[2 * 3 + 1][0];
 
-            INyARRgbPixelDriver reader = image.getRgbPixelDriver();
+
             int img_width = image.getWidth();
             int img_height = image.getHeight();
 
@@ -274,7 +274,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         }
                     }
                     //1ピクセル分の配列を取得
-                    reader.getPixelSet(xc, yc, number_of_pix, rgb_set);
+                    image.getPixelSet(xc, yc, number_of_pix, rgb_set);
                     r = g = b = 0;
                     for (i = number_of_pix * 3 - 1; i >= 0; i -= 3)
                     {

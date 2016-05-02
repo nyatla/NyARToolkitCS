@@ -65,13 +65,13 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * @return
          * @
          */
-        public bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARIntPoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
+        public bool pickFromRaster(INyARGrayscaleRaster i_raster, NyARIntPoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
                 return false;
             }
-            return this._pickFromRaster(i_pix_drv, o_data, o_param);
+            return this._pickFromRaster(i_raster, o_data, o_param);
         }
         /**
          * この関数は、ラスタドライバから画像を読み出します。
@@ -83,13 +83,13 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * @return
          * @
          */
-        public bool pickFromRaster(INyARGsPixelDriver i_pix_drv, NyARDoublePoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
+        public bool pickFromRaster(INyARGrayscaleRaster i_raster, NyARDoublePoint2d[] i_vertex, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
             if (!this._perspective_reader.setSourceSquare(i_vertex))
             {
                 return false;
             }
-            return this._pickFromRaster(i_pix_drv, o_data, o_param);
+            return this._pickFromRaster(i_raster, o_data, o_param);
         }
         /**
          * i_imageから、idマーカを読みだします。
@@ -101,14 +101,14 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * @return
          * @
          */
-        private bool _pickFromRaster(INyARGsPixelDriver i_pix_drv, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
+        private bool _pickFromRaster(INyARGrayscaleRaster i_raster, NyIdMarkerPattern o_data, NyIdMarkerParam o_param)
         {
             PerspectivePixelReader.TThreshold th = this.__pickFromRaster_th;
             MarkerPattEncoder encoder = this.__pickFromRaster_encoder;
             //マーカパラメータを取得
             this._perspective_reader.detectThresholdValue(i_pix_drv, th);
 
-            if (!this._perspective_reader.readDataBits(i_pix_drv, i_pix_drv.getSize(), th, encoder))
+            if (!this._perspective_reader.readDataBits(i_raster, i_raster.getSize(), th, encoder))
             {
                 return false;
             }
@@ -184,13 +184,13 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * グレースケールのピクセルを格納するバッファ
          * @
          */
-        private bool rectPixels(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, int i_lt_x, int i_lt_y, int i_step_x, int i_step_y, int i_width, int i_height, int i_out_st, int[] o_pixel)
+        private bool rectPixels(INyARGrayscaleRaster i_raster, int i_lt_x, int i_lt_y, int i_step_x, int i_step_y, int i_width, int i_height, int i_out_st, int[] o_pixel)
         {
             double[] cpara = this._cparam;
             int[] ref_x = this._ref_x;
             int[] ref_y = this._ref_y;
-            int raster_width = i_raster_size.w;
-            int raster_height = i_raster_size.h;
+            int raster_width = i_raster.getWidth(); ;
+            int raster_height = i_raster.getHeight();
 
             int out_index = i_out_st;
             double cpara_6 = cpara[6];
@@ -220,7 +220,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     pt++;
                 }
                 //GS値を配列に取得
-                i_reader.getPixelSet(ref_x, ref_y, i_width, o_pixel, out_index);
+                i_raster.getPixelSet(ref_x, ref_y, i_width, o_pixel, out_index);
                 out_index += i_width;
             }
             return true;
@@ -320,7 +320,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * 周波数の値。失敗すると-1
          * @
          */
-        public int getRowFrequency(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, int i_y1, int i_th_h, int i_th_l, int[] o_edge_index)
+        public int getRowFrequency(INyARGrayscaleRaster i_raster, int i_y1, int i_th_h, int i_th_l, int[] o_edge_index)
         {
             //3,4,5,6,7,8,9,10
             int[] freq_count_table = this._freq_count_table;
@@ -339,6 +339,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             {
                 freq_table[i] = 0;
             }
+    		const NyARIntSize raster_size=i_raster.getSize();
             int raster_width = i_raster_size.w;
             int raster_height = i_raster_size.h;
 
@@ -372,7 +373,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 }
 
                 //ピクセルを取得(入力画像を多様化するならここから先を調整すること)
-                i_reader.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
+                i_raster.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
 
                 //o_edge_indexを一時的に破壊して調査する
                 int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
@@ -414,7 +415,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * 周波数の値。失敗すると-1
          * @
          */
-        public int getColFrequency(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, int i_x1, int i_th_h, int i_th_l, int[] o_edge_index)
+        public int getColFrequency(INyARGrayscaleRaster i_raster, int i_x1, int i_th_h, int i_th_l, int[] o_edge_index)
         {
             double[] cpara = this._cparam;
             int[] ref_x = this._ref_x;
@@ -466,7 +467,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                 }
 
                 //ピクセルを取得(入力画像を多様化するならここを調整すること)
-                i_reader.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
+                i_raster.getPixelSet(ref_x, ref_y, FRQ_POINTS, pixcel_temp, 0);
 
                 int freq_t = getFreqInfo(pixcel_temp, i_th_h, i_th_l, o_edge_index);
                 //周期は3-10であること
@@ -663,21 +664,21 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * 敷居値を受け取るオブジェクト
          * @
          */
-        public void detectThresholdValue(INyARGsPixelDriver i_reader, TThreshold o_threshold)
+        public void detectThresholdValue(INyARGrayscaleRaster i_raster, TThreshold o_threshold)
         {
             int[] th_pixels = this._th_pixels;
             NyARIntSize size = i_reader.getSize();
             //左上のピックアップ領域からピクセルを得る(00-24)
-            rectPixels(i_reader, size, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, 0, th_pixels);
+            rectPixels(i_raster, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, 0, th_pixels);
 
             //左下のピックアップ領域からピクセルを得る(25-49)
-            rectPixels(i_reader, size, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_RB, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE, th_pixels);
+            rectPixels(i_raster, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_RB, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE, th_pixels);
 
             //右上のピックアップ領域からピクセルを得る(50-74)
-            rectPixels(i_reader, size, THRESHOLD_SAMPLE_RB, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE * 2, th_pixels);
+            rectPixels(i_raster, THRESHOLD_SAMPLE_RB, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE * 2, th_pixels);
 
             //右下のピックアップ領域からピクセルを得る(75-99)
-            rectPixels(i_reader, size, THRESHOLD_SAMPLE_RB, THRESHOLD_SAMPLE_RB, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE * 3, th_pixels);
+            rectPixels(i_raster, THRESHOLD_SAMPLE_RB, THRESHOLD_SAMPLE_RB, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, THRESHOLD_SAMPLE * 3, th_pixels);
 
             THighAndLow hl = this.__detectThresholdValue_hl;
             //Ptailで求めたピクセル平均
@@ -782,14 +783,14 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
         }
         private int[] __detectDataBitsIndex_freq_index1 = new int[FRQ_POINTS];
         private int[] __detectDataBitsIndex_freq_index2 = new int[FRQ_POINTS];
-        private int detectDataBitsIndex(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, PerspectivePixelReader.TThreshold i_th, double[] o_index_row, double[] o_index_col)
+        private int detectDataBitsIndex(INyARGrayscaleRaster i_raster, PerspectivePixelReader.TThreshold i_th, double[] o_index_row, double[] o_index_col)
         {
             //周波数を測定
             int[] freq_index1 = this.__detectDataBitsIndex_freq_index1;
             int[] freq_index2 = this.__detectDataBitsIndex_freq_index2;
 
-            int frq_t = getRowFrequency(i_reader, i_raster_size, i_th.lt_y, i_th.th_h, i_th.th_l, freq_index1);
-            int frq_b = getRowFrequency(i_reader, i_raster_size, i_th.rb_y, i_th.th_h, i_th.th_l, freq_index2);
+            int frq_t = getRowFrequency(i_raster, i_th.lt_y, i_th.th_h, i_th.th_l, freq_index1);
+            int frq_b = getRowFrequency(i_raster, i_th.rb_y, i_th.th_h, i_th.th_l, freq_index2);
             //周波数はまとも？
             if ((frq_t < 0 && frq_b < 0) || frq_t == frq_b)
             {
@@ -815,8 +816,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             }
 
 
-            int frq_l = getColFrequency(i_reader, i_raster_size, i_th.lt_x, i_th.th_h, i_th.th_l, freq_index1);
-            int frq_r = getColFrequency(i_reader, i_raster_size, i_th.rb_x, i_th.th_h, i_th.th_l, freq_index2);
+            int frq_l = getColFrequency(i_raster, i_th.lt_x, i_th.th_h, i_th.th_l, freq_index1);
+            int frq_r = getColFrequency(i_raster, i_th.rb_x, i_th.th_h, i_th.th_l, freq_index2);
             //周波数はまとも？
             if ((frq_l < 0 && frq_r < 0) || frq_l == frq_r)
             {
@@ -870,17 +871,17 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
          * 成功するとtrue
          * @
          */
-        public bool readDataBits(INyARGsPixelDriver i_reader, NyARIntSize i_raster_size, PerspectivePixelReader.TThreshold i_th, MarkerPattEncoder o_bitbuffer)
+        public bool readDataBits(INyARGrayscaleRaster i_raster, PerspectivePixelReader.TThreshold i_th, MarkerPattEncoder o_bitbuffer)
         {
-            int raster_width = i_raster_size.w;
-            int raster_height = i_raster_size.h;
+            int raster_width = i_raster.getWidth();
+            int raster_height = i_raster.getHeight();
 
             double[] index_x = this.__readDataBits_index_bit_x;
             double[] index_y = this.__readDataBits_index_bit_y;
 
 
             //読み出し位置を取得
-            int size = detectDataBitsIndex(i_reader, i_raster_size, i_th, index_x, index_y);
+            int size = detectDataBitsIndex(i_raster, i_th, index_x, index_y);
             int resolution = size + size - 1;
             if (size < 0)
             {
@@ -973,7 +974,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
                     pt++;
                 }
                 //1行分のピクセルを取得(場合によっては専用アクセサを書いた方がいい)
-                i_reader.getPixelSet(ref_x, ref_y, resolution * 4, pixcel_temp, 0);
+                i_raster.getPixelSet(ref_x, ref_y, resolution * 4, pixcel_temp, 0);
                 //グレースケールにしながら、line→mapへの転写
                 for (int i2 = 0; i2 < resolution; i2++)
                 {

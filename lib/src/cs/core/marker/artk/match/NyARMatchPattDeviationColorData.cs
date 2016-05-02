@@ -154,7 +154,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int width = this._size.w;
             int height = this._size.h;
             int i_number_of_pix = width * height;
-            INyARRgbPixelDriver reader = i_raster.getRgbPixelDriver();
+
             int[] rgb = new int[3];
             int[] dout = this._data;
             int ave;//<PV/>
@@ -164,7 +164,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 for (int x = width - 1; x >= 0; x--)
                 {
-                    reader.getPixel(x, y, rgb);
+                    i_raster.getPixel(x, y, rgb);
                     ave += rgb[0] + rgb[1] + rgb[2];
                 }
             }
@@ -181,7 +181,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     {
                         for (int x = width - 1; x >= 0; x--)
                         {
-                            reader.getPixel(x, y, rgb);
+                            i_raster.getPixel(x, y, rgb);
                             w_sum = (ave - rgb[2]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//B
                             w_sum = (ave - rgb[1]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//G
                             w_sum = (ave - rgb[0]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//R
@@ -193,7 +193,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     {
                         for (int y = height - 1; y >= 0; y--)
                         {
-                            reader.getPixel(x, y, rgb);
+                            i_raster.getPixel(x, y, rgb);
                             w_sum = (ave - rgb[2]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//B
                             w_sum = (ave - rgb[1]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//G
                             w_sum = (ave - rgb[0]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//R
@@ -205,7 +205,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     {
                         for (int x = 0; x < width; x++)
                         {
-                            reader.getPixel(x, y, rgb);
+                            i_raster.getPixel(x, y, rgb);
                             w_sum = (ave - rgb[2]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//B
                             w_sum = (ave - rgb[1]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//G
                             w_sum = (ave - rgb[0]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//R
@@ -217,7 +217,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     {
                         for (int y = 0; y < height; y++)
                         {
-                            reader.getPixel(x, y, rgb);
+                            i_raster.getPixel(x, y, rgb);
                             w_sum = (ave - rgb[2]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//B
                             w_sum = (ave - rgb[1]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//G
                             w_sum = (ave - rgb[0]); dout[input_ptr--] = w_sum; sum += w_sum * w_sum;//R

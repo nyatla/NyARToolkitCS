@@ -307,7 +307,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public override bool getContour(int i_l, int i_t, int i_r, int i_b, int i_entry_x, int i_entry_y, int i_th, NyARIntCoordinates o_coord)
         {
             Debug.Assert(i_t <= i_entry_x);
-            INyARGsPixelDriver reader = this._ref_raster.getGsPixelDriver();
+            INyARGrayscaleRaster raster = this._ref_raster;
             int[] xdir = _getContour_xdir;// static int xdir[8] = { 0, 1, 1, 1, 0,-1,-1,-1};
             int[] ydir = _getContour_ydir;// static int ydir[8] = {-1,-1, 0, 1, 1, 1, 0,-1};
             //クリップ領域の上端に接しているポイントを得る。
@@ -369,7 +369,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         //境界チェック
                         if (x >= i_l && x <= i_r && y >= i_t && y <= i_b)
                         {
-                            if (reader.getPixel(x, y) <= i_th)
+                            if (raster.getPixel(x, y) <= i_th)
                             {
                                 break;
                             }

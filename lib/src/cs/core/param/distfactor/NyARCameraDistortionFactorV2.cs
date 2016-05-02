@@ -1,15 +1,14 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
- *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
- * Copyright (C)2008-2012 Ryo Iizuka
- *
  * This work is based on the ARToolKit developed by
  *   Hirokazu Kato
  *   Mark Billinghurst
  *   HITLab, University of Washington, Seattle
  * http://www.hitl.washington.edu/artoolkit/
+ *
+ * The NyARToolkit is Java edition ARToolKit class library.
+ * Copyright (C)2008-2012 Ryo Iizuka
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -29,10 +28,8 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
-using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
-
     /**
      * ARToolKit Version2の樽型歪みを使った歪み補正クラスです。
      * <p>アルゴリズム - 
@@ -47,199 +44,84 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * </pre>
      * </p>
      */
-    public class NyARCameraDistortionFactorV2 : INyARCameraDistortionFactor
+    public class NyARCameraDistortionFactorV2 : NyARCameraDistortionFactorImpl
     {
-        public const int NUM_OF_FACTOR = 4;
-        private const int PD_LOOP = 3;
-        private double _f0;//x0
-        private double _f1;//y0
-        private double _f2;//100000000.0*f
-        private double _f3;//s
+        readonly public static int NUM_OF_FACTOR = 4;
+        readonly private static int PD_LOOP = 3;
+        readonly private double _f0;//x0
+        readonly private double _f1;//y0
+        readonly private double _f2;//100000000.0*f
+        readonly private double _f3;//s
 
-
-        /**
-         *  コピー元のオブジェクト。{@link NyARCameraDistortionFactorV2}クラスである必要があります。
-         */
-        public void copyFrom(INyARCameraDistortionFactor i_ref)
+        public NyARCameraDistortionFactorV2(NyARCameraDistortionFactorV2 i_copyfrom, double i_x_scale, double i_y_scale)
         {
-            NyARCameraDistortionFactorV2 inst = (NyARCameraDistortionFactorV2)i_ref;
-            this._f0 = inst._f0;
-            this._f1 = inst._f1;
-            this._f2 = inst._f2;
-            this._f3 = inst._f3;
-            return;
+            this(new double[] { i_copyfrom._f0, i_copyfrom._f1, i_copyfrom._f2, i_copyfrom._f3 }, i_x_scale, i_y_scale);
         }
-
-        /**
-         * 歪みパラメータ値を格納した配列。4要素である必要があります。
-         */
-        public void setValue(double[] i_factor)
+        public NyARCameraDistortionFactorV2(double[] i_factor, double i_x_scale, double i_y_scale)
         {
-            this._f0 = i_factor[0];
-            this._f1 = i_factor[1];
-            this._f2 = i_factor[2];
+            this._f0 = i_factor[0] * i_x_scale;
+            this._f1 = i_factor[1] * i_y_scale;
+            this._f2 = i_factor[2] / (i_x_scale * i_y_scale);
             this._f3 = i_factor[3];
-            return;
         }
 
-        /**
-         * 歪みパラメータ値の出力先配列。4要素である必要があります。
-         */
-        public void getValue(double[] o_factor)
-        {
-            o_factor[0] = this._f0;
-            o_factor[1] = this._f1;
-            o_factor[2] = this._f2;
-            o_factor[3] = this._f3;
-            return;
-        }
-
-
-        public void changeScale(double i_x_scale, double i_y_scale)
-        {
-            this._f0 = this._f0 * i_x_scale;//X
-            this._f1 = this._f1 * i_y_scale;//Y
-            this._f2 = this._f2 / (i_x_scale * i_y_scale);
-            return;
-        }
-        /**
-         * この関数は、座標点を理想座標系から観察座標系へ変換します。
-         * @param i_in
-         * 変換元の座標
-         * @param o_out
-         * 変換後の座標を受け取るオブジェクト
-         */
-        public void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
-        {
-            this.ideal2Observ(i_in.x, i_in.y, o_out);
-            return;
-        }
 
         /**
          * この関数は、座標点を理想座標系から観察座標系へ変換します。
          */
-        public void ideal2Observ(NyARDoublePoint2d i_in, NyARIntPoint2d o_out)
-        {
-            this.ideal2Observ(i_in.x, i_in.y, o_out);
-            return;
-        }
+        public sealed void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
+	{
+		const double x = (i_x - this._f0) * this._f3;
+		const double y = (i_y - this._f1) * this._f3;
+		if (x == 0.0 && y == 0.0) {
+			o_out.x = this._f0;
+			o_out.y = this._f1;
+		} else {
+			final double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+			o_out.x = x * d + this._f0;
+			o_out.y = y * d + this._f1;
+		}
+		return;
+	}
 
         /**
          * この関数は、座標点を理想座標系から観察座標系へ変換します。
          */
-        public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
+        public sealed void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
+	{
+		const double x = (i_x - this._f0) * this._f3;
+		const double y = (i_y - this._f1) * this._f3;
+		if (x == 0.0 && y == 0.0) {
+			o_out.x = (int)(this._f0);
+			o_out.y = (int)(this._f1);
+		} else {
+			final double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
+			o_out.x = (int)(x * d + this._f0);
+			o_out.y = (int)(y * d + this._f1);
+		}
+		return;
+	}
+
+
+        public sealed void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
         {
-            double x = (i_x - this._f0) * this._f3;
-            double y = (i_y - this._f1) * this._f3;
-            if (x == 0.0 && y == 0.0)
-            {
-                o_out.x = this._f0;
-                o_out.y = this._f1;
-            }
-            else
-            {
-                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
-                o_out.x = x * d + this._f0;
-                o_out.y = y * d + this._f1;
-            }
+            this.observ2Ideal((double)ix, (double)iy, o_point);
             return;
         }
-
-        /**
-         * この関数は、座標点を理想座標系から観察座標系へ変換します。
-         */
-        public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
-        {
-            double x = (i_x - this._f0) * this._f3;
-            double y = (i_y - this._f1) * this._f3;
-            if (x == 0.0 && y == 0.0)
-            {
-                o_out.x = (int)(this._f0);
-                o_out.y = (int)(this._f1);
-            }
-            else
-            {
-                double d = 1.0 - this._f2 / 100000000.0 * (x * x + y * y);
-                o_out.x = (int)(x * d + this._f0);
-                o_out.y = (int)(y * d + this._f1);
-            }
-            return;
-        }
-
-        /**
-         * この関数は、複数の座標点を、一括して理想座標系から観察座標系へ変換します。
-         * i_inとo_outには、同じインスタンスを指定できます。
-         */
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
-        {
-            double x, y;
-            double d0 = this._f0;
-            double d1 = this._f1;
-            double d3 = this._f3;
-            double d2_w = this._f2 / 100000000.0;
-            for (int i = 0; i < i_size; i++)
-            {
-                x = (i_in[i].x - d0) * d3;
-                y = (i_in[i].y - d1) * d3;
-                if (x == 0.0 && y == 0.0)
-                {
-                    o_out[i].x = d0;
-                    o_out[i].y = d1;
-                }
-                else
-                {
-                    double d = 1.0 - d2_w * (x * x + y * y);
-                    o_out[i].x = x * d + d0;
-                    o_out[i].y = y * d + d1;
-                }
-            }
-            return;
-        }
-
-        /**
-         * この関数は、複数の座標点を、一括して理想座標系から観察座標系へ変換します。
-         * i_inとo_outには、同じインスタンスを指定できます。
-         */
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
-        {
-            double x, y;
-            double d0 = this._f0;
-            double d1 = this._f1;
-            double d3 = this._f3;
-            double d2_w = this._f2 / 100000000.0;
-            for (int i = 0; i < i_size; i++)
-            {
-                x = (i_in[i].x - d0) * d3;
-                y = (i_in[i].y - d1) * d3;
-                if (x == 0.0 && y == 0.0)
-                {
-                    o_out[i].x = (int)d0;
-                    o_out[i].y = (int)d1;
-                }
-                else
-                {
-                    double d = 1.0 - d2_w * (x * x + y * y);
-                    o_out[i].x = (int)(x * d + d0);
-                    o_out[i].y = (int)(y * d + d1);
-                }
-            }
-            return;
-        }
-
         /**
          * この関数は、座標を観察座標系から理想座標系へ変換します。
          */
-        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
+        public sealed void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             double z02, z0, p, q, z, px, py, opttmp_1;
-            double d0 = this._f0;
-            double d1 = this._f1;
+            const double d0 = this._f0;
+            const double d1 = this._f1;
 
             px = ix - d0;
             py = iy - d1;
             p = this._f2 / 100000000.0;
             z02 = px * px + py * py;
-            q = z0 = Math.Sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
+            q = z0 = Math.sqrt(z02);// Optimize//q = z0 = Math.sqrt(px*px+ py*py);
             for (int i = 1; ; i++)
             {
                 if (z0 != 0.0)
@@ -260,29 +142,68 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     break;
                 }
                 z02 = px * px + py * py;
-                z0 = Math.Sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
+                z0 = Math.sqrt(z02);// Optimize//z0 = Math.sqrt(px*px+ py*py);
             }
             o_point.x = px / this._f3 + d0;
             o_point.y = py / this._f3 + d1;
             return;
         }
+
         /**
-         * {@link #observ2Ideal(double, double, NyARDoublePoint2d)}のラッパーです。
+         * この関数は、複数の座標点を、一括して理想座標系から観察座標系へ変換します。
+         * i_inとo_outには、同じインスタンスを指定できます。
          */
-        public void observ2Ideal(NyARDoublePoint2d i_in, NyARDoublePoint2d o_point)
-        {
-            this.observ2Ideal(i_in.x, i_in.y, o_point);
-        }
+        sealed public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+	{
+		double x, y;
+		const double d0 = this._f0;
+		const double d1 = this._f1;
+		const double d3 = this._f3;
+		const double d2_w = this._f2 / 100000000.0;
+		for (int i = 0; i < i_size; i++) {
+			x = (i_in[i].x - d0) * d3;
+			y = (i_in[i].y - d1) * d3;
+			if (x == 0.0 && y == 0.0) {
+				o_out[i].x = d0;
+				o_out[i].y = d1;
+			} else {
+				final double d = 1.0 - d2_w * (x * x + y * y);
+				o_out[i].x = x * d + d0;
+				o_out[i].y = y * d + d1;
+			}
+		}
+		return;
+	}
+
         /**
-         * 座標配列全てに対して、{@link #observ2Ideal(double, double, NyARDoublePoint2d)}を適応します。
+         * この関数は、複数の座標点を、一括して理想座標系から観察座標系へ変換します。
+         * i_inとo_outには、同じインスタンスを指定できます。
          */
-        public void observ2IdealBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        sealed public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
         {
-            for (int i = i_size - 1; i >= 0; i--)
+            double x, y;
+            const double d0 = this._f0;
+            const double d1 = this._f1;
+            const double d3 = this._f3;
+            const double d2_w = this._f2 / 100000000.0;
+            for (int i = 0; i < i_size; i++)
             {
-                this.observ2Ideal(i_in[i].x, i_in[i].y, o_out[i]);
+                x = (i_in[i].x - d0) * d3;
+                y = (i_in[i].y - d1) * d3;
+                if (x == 0.0 && y == 0.0)
+                {
+                    o_out[i].x = (int)d0;
+                    o_out[i].y = (int)d1;
+                }
+                else
+                {
+                    const double d = 1.0 - d2_w * (x * x + y * y);
+                    o_out[i].x = (int)(x * d + d0);
+                    o_out[i].y = (int)(y * d + d1);
+                }
             }
             return;
         }
+
     }
 }

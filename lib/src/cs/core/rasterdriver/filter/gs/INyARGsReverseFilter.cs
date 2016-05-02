@@ -53,8 +53,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public void doFilter(INyARGrayscaleRaster i_output)
         {
-            INyARGsPixelDriver ind = this._raster.getGsPixelDriver();
-            INyARGsPixelDriver outd = i_output.getGsPixelDriver();
+            INyARGrayscaleRaster ind = this._raster;
+            INyARGrayscaleRaster outd = i_output;
             NyARIntSize s = this._raster.getSize();
             for (int y = s.h - 1; y >= 0; y--)
             {

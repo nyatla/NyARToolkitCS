@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -39,9 +33,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * @author nyatla
      *
      */
-    public interface INyARGrayscaleRaster : INyARRaster
+    public interface INyARGrayscaleRaster : INyARRaster, INyARGrayscalePixelInterface
     {
-        INyARGsPixelDriver getGsPixelDriver();
     }
-
 }

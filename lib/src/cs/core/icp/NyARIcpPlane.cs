@@ -203,8 +203,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             initMatXw2Xc.m23 = t2;
             initMatXw2Xc.m30 = initMatXw2Xc.m31 = initMatXw2Xc.m32 = 0;
             initMatXw2Xc.m33 = 1;
-
-            icpGetInitXw2XcSub(initMatXw2Xc, screenCoord, worldCoord, i_num, initMatXw2Xc);
+//            //icpGetInitXw2XcSub is disabled in ARToolkit5 
+//            icpGetInitXw2XcSub(initMatXw2Xc, screenCoord, worldCoord, i_num, initMatXw2Xc);
             return true;
         }
         //There is work variables.
