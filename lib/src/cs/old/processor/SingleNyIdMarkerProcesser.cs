@@ -125,7 +125,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 NyIdMarkerParam param = this._marker_param;
                 NyIdMarkerPattern patt_data = this._marker_data;
                 // 評価基準になるパターンをイメージから切り出す
-                if (!this._id_pickup.pickFromRaster(this._ref_raster.getGsPixelDriver(), vertex, patt_data, param))
+                if (!this._id_pickup.pickFromRaster(this._ref_raster, vertex, patt_data, param))
                 {
                     return;
                 }
@@ -163,7 +163,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     //直線同士の交点計算
                     if (!sq.line[i].crossPos(sq.line[(i + 3) % 4], sq.sqvertex[i]))
                     {
-                        throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                        throw new NyARRuntimeException();//ここのエラー復帰するならダブルバッファにすればOK
                     }
                 }
                 this.threshold = param.threshold;
@@ -187,7 +187,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
         private bool _is_active;
         private int _current_threshold = 110;
         // [AR]検出結果の保存用
-        private NyARGrayscaleRaster _gs_raster;
+        private INyARGrayscaleRaster _gs_raster;
         private INyIdMarkerData _data_current;
         private NyARHistogramAnalyzer_SlidePTile _threshold_detect;
         private NyARHistogram _hist = new NyARHistogram(256);
@@ -226,7 +226,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._transmat = new NyARTransMat(i_param);
 
             // ２値画像バッファを作る
-            this._gs_raster = new NyARGrayscaleRaster(scr_size.w, scr_size.h);
+            this._gs_raster = NyARGrayscaleRaster.createInstance(scr_size.w, scr_size.h);
             this._histmaker = (INyARHistogramFromRaster)this._gs_raster.createInterface(typeof(INyARHistogramFromRaster));
             //ワーク用のデータオブジェクトを２個作る
             this._data_current = i_encoder.createDataInstance();
@@ -280,7 +280,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             // サイズチェック
             if (!this._gs_raster.getSize().isEqualSize(i_raster.getSize().w, i_raster.getSize().h))
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             // ラスタをGSへ変換する。
             if (this._last_input_raster != i_raster)
@@ -371,7 +371,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 }
                 else
                 {// 異なるコードの認識→今はサポートしない。
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
                 }
             }
             return is_id_found;

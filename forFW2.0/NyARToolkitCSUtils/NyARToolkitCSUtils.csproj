@@ -61,10 +61,6 @@
       <Project>{AEE9408B-7E03-42AD-A0D9-A5B7F2D20B3C}</Project>
       <Name>NyARToolkitCS.markersystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NyARToolkitCS.rpf\NyARToolkitCS.rpf.csproj">
-      <Project>{D6CAB4C1-55C7-4314-B224-6645800B0D74}</Project>
-      <Name>NyARToolkitCS.rpf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NyARToolkitCS\NyARToolkitCS.csproj">
       <Project>{80391577-476D-4DAD-A4F8-F03C726ACBD8}</Project>
       <Name>NyARToolkitCS</Name>

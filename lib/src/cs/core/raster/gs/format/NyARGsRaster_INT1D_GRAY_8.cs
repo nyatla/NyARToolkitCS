@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -23,23 +23,24 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARGsRaster_INT1D_GRAY_8 : NyARGrayscaleRaster
     {
         protected int[] _buf;
-        public NyARGsRaster_INT1D_GRAY_8(int i_width, int i_height, boolean i_is_alloc)
+        public NyARGsRaster_INT1D_GRAY_8(int i_width, int i_height, bool i_is_alloc):base(i_width, i_height, i_is_alloc)
         {
-            super(i_width, i_height, i_is_alloc);
             this._buf = i_is_alloc ? new int[i_width * i_height] : null;
         }
 
 
-        sealed public Object getBuffer()
+        sealed override public Object getBuffer()
         {
             return this._buf;
         }
-        sealed public int getBufferType()
+        sealed override public int getBufferType()
         {
             return NyARBufferType.INT1D_GRAY_8;
         }
@@ -47,17 +48,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
-        sealed public void wrapBuffer(Object i_buf)
+        sealed override public void wrapBuffer(Object i_buf)
         {
-            assert(!this._is_attached_buffer);// バッファがアタッチされていたら機能しない。
+            Debug.Assert(!this._is_attached_buffer);// バッファがアタッチされていたら機能しない。
             //ラスタの形式は省略。
             this._buf = (int[])i_buf;
         }
-        sealed public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf)
+        sealed override public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf)
         {
             int bp;
-            const int w = this._size.w;
-            const int[] b = this._buf;
+            int w = this._size.w;
+            int[] b = this._buf;
             for (int i = i_n - 1; i >= 0; i--)
             {
                 bp = (i_x[i] + i_y[i] * w);
@@ -65,16 +66,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return o_buf;
         }
-        sealed public int getPixel(int i_x, int i_y)
+        sealed override public int getPixel(int i_x, int i_y)
         {
-            const int[] buf = (int[])this._buf;
+            int[] buf = (int[])this._buf;
             return buf[(i_x + i_y * this._size.w)];
         }
-        sealed public void setPixel(int i_x, int i_y, int i_gs)
+        sealed override public void setPixel(int i_x, int i_y, int i_gs)
         {
             this._buf[(i_x + i_y * this._size.w)] = i_gs;
         }
-        sealed public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs)
+        sealed override public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs)
         {
             int w = this._size.w;
             int[] r = this._buf;
@@ -87,7 +88,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 全ピクセルの値の合計を得る
          * @return
          */
-        sealed public long allPixels()
+        public long allPixels()
         {
             long r = 0;
             for (int i = 0; i < 640 * 480; i++)

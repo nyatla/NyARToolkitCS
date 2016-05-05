@@ -61,7 +61,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 			}
             break;
 		}
-		throw new NyARException();
+		throw new NyARRuntimeException();
 	}
         public static INyARHistogramFromRaster createInstance(INyARRgbRaster i_raster) 
 	{
@@ -69,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
 			return new NyARHistogramFromRaster_AnyRgb((INyARRgbRaster)i_raster);
 		}
-		throw new NyARException();
+        throw new NyARRuntimeException();
 	}
 
     }
@@ -125,7 +125,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             o_histogram.reset();
             int[] data_ptr = o_histogram.data;
-            INyARGrayscaleRaster drv = this._gsr;
+            INyARRgbRaster drv = this._gsr;
             int pix_count = i_w;
             int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく

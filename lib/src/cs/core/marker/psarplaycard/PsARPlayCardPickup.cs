@@ -108,9 +108,9 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
          * @return
          * @throws NyARException
          */
-        private bool _pickFromRaster(INyARGsPixelDriver i_pix_drv, PsArIdParam i_result)
+        private bool _pickFromRaster(INyARGrayscaleRaster i_raster, PsArIdParam i_result)
         {
-            if (!this._perspective_reader.readDataBits(i_pix_drv, i_pix_drv.getSize(), this._decoder))
+            if (!this._perspective_reader.readDataBits(i_raster, this._decoder))
             {
                 return false;
             }
@@ -200,8 +200,8 @@ namespace jp.nyatla.nyartoolkit.cs.psarplaycard
          */
         public bool readDataBits(INyARGrayscaleRaster i_raster, MarkerPattDecoder o_bitbuffer)
         {
-            int raster_width = i_raster_size.w;
-            int raster_height = i_raster_size.h;
+            int raster_width = i_raster.getWidth();
+            int raster_height = i_raster.getHeight();
 
             double[] index_x = this.__readDataBits_index_bit_x;
             double[] index_y = this.__readDataBits_index_bit_y;

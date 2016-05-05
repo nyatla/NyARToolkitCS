@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -23,6 +23,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
@@ -56,9 +57,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 指定できる値は、クラスの説明を見てください。
          * @throws NyARRuntimeException
          */
-        public NyARRaster(int i_width, int i_height, int i_buffer_type)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type):this(i_width, i_height, i_buffer_type, true)
         {
-            this(i_width, i_height, i_buffer_type, true);
+            
             return;
         }
         /**
@@ -78,9 +79,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @throws NyARRuntimeException
          */
-        public NyARRaster(int i_width, int i_height, int i_buffer_type, boolean i_is_alloc)
+        public NyARRaster(int i_width, int i_height, int i_buffer_type, bool i_is_alloc)
+            : base(i_width, i_height, i_buffer_type)
         {
-            super(i_width, i_height, i_buffer_type);
             if (!initInstance(this._size, i_buffer_type, i_is_alloc))
             {
                 throw new NyARRuntimeException();
@@ -98,7 +99,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 初期化に成功するとtrueを返します。
          */
-        protected bool initInstance(NyARIntSize i_size, int i_buf_type, boolean i_is_alloc)
+        private bool initInstance(NyARIntSize i_size, int i_buf_type, bool i_is_alloc)
         {
             switch (i_buf_type)
             {
@@ -117,7 +118,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        public Object getBuffer()
+        override public Object getBuffer()
         {
             return this._buf;
         }
@@ -126,7 +127,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * コンストラクタでi_is_allocをfalseにしてラスタを作成した場合、
          * バッファにアクセスするまえに、バッファの有無をこの関数でチェックしてください。
          */
-        public bool hasBuffer()
+        override public bool hasBuffer()
         {
             return this._buf != null;
         }
@@ -134,12 +135,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
-        public void wrapBuffer(Object i_ref_buf)
+        override public void wrapBuffer(Object i_ref_buf)
         {
             Debug.Assert(!this._is_attached_buffer);//バッファがアタッチされていたら機能しない。
             this._buf = i_ref_buf;
         }
-        public Object createInterface(TypeId iIid)
+        override public Object createInterface(Type iIid)
         {
             // TODO Auto-generated method stub
             return null;

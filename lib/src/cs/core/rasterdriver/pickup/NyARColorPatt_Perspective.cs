@@ -42,7 +42,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
 	    readonly private NyARIntPoint2d _edge=new NyARIntPoint2d();
 	    /** サンプリング解像度*/
-	    readonly protected int _sample_per_pixel;
+	    protected int _sample_per_pixel;
 
         /**
          * コンストラクタです。
@@ -56,7 +56,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 1ピクセルあたりの縦横サンプリング数。2なら2x2=4ポイントをサンプリングする。
          * @ 
          */
-        public NyARColorPatt_Perspective(int i_width, int i_height, int i_point_per_pix):base(i_width,i_height,i_point_per_pix,0)
+        public NyARColorPatt_Perspective(int i_width, int i_height, int i_point_per_pix):this(i_width,i_height,i_point_per_pix,0)
         {
             return;
         }
@@ -115,7 +115,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return this._raster_driver.copyPatt(i_vertexs, this._edge.x, this._edge.y, this._sample_per_pixel, this);
         }
 
-        public object createInterface(Type iIid)
+        override public object createInterface(Type iIid)
         {
             if (iIid == typeof(INyARPerspectiveCopy))
             {
@@ -125,7 +125,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return NyARMatchPattDeviationColorData.RasterDriverFactory.createDriver(this);
             }
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
     }
 }

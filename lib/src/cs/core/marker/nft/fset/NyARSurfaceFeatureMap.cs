@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,7 +35,7 @@
  * statement from your version.
  * 
  */
-
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARSurfaceFeatureMap
@@ -86,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             + refraster.getPixel(i, j + 1) - refraster.getPixel(i, j - 1)
                             + refraster.getPixel(i - 1, j + 1) - refraster.getPixel(i - 1, j - 1)) / (double)(3 * 256);
 
-                    tmp_fimg2[fp2++] = (double)Math.sqrt((dx * dx + dy * dy) / (double)2.0f);
+                    tmp_fimg2[fp2++] = (double)Math.Sqrt((dx * dx + dy * dy) / (double)2.0f);
                 }
                 tmp_fimg2[fp2++] = -1.0f;
             }
@@ -95,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 tmp_fimg2[fp2++] = -1.0f;
             }
             int[] hist = new int[1000];
-            for (int i = 0; i < hist.length; i++)
+            for (int i = 0; i < hist.Length; i++)
             {
                 hist[i] = 0;
             }
@@ -144,10 +144,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             for (int j = 1; j < h - 1; j++)
             {
                 //長時間かかるループなので割り込み監視はブレーク可能。
-                if (Thread.interrupted())
-                {
-                    throw new InterruptedException();
-                }
+//                if (Thread.interrupted())
+//                {
+//                    throw new InterruptedException();
+//                }
                 fimg[fp++] = 1.0f;
                 fp2++;
                 for (int i = 1; i < w - 1; i++)
@@ -231,7 +231,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int xsize = this._refimage.getWidth();
             int ysize = this._refimage.getHeight();
             double[] fimage2 = new double[xsize * ysize];
-            System.arraycopy(this.fimage, 0, fimage2, 0, fimage2.length);
+            System.Array.Copy(this.fimage, fimage2, fimage2.Length);
+//            System.arraycopy(this.fimage, 0, fimage2, 0, fimage2.length);
             TemplateImage_O1 ti = this._tmpimg;
 
             int div_size = (ti._ts1 + ti._ts2 + 1) * 3;
@@ -245,10 +246,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             for (; ; )
             {
                 //長時間かかるループなので割り込み監視はブレーク可能。
-                if (Thread.interrupted())
-                {
-                    throw new InterruptedException();
-                }
+//                if (Thread.interrupted())
+//                {
+//                    throw new InterruptedException();
+//                }
                 double min_sim = max_sim_thresh;
                 int fp2 = 0;
                 int cx = -1;
@@ -354,7 +355,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             //Resize
             NyARNftFsetFile.NyAR2FeatureCoord[] resize_ret = new NyARNftFsetFile.NyAR2FeatureCoord[num_of_ret];
-            System.arraycopy(ret, 0, resize_ret, 0, num_of_ret);
+            System.Array.Copy(ret, resize_ret, num_of_ret);
+//            System.arraycopy(ret, 0, resize_ret, 0, num_of_ret);
             return resize_ret;
         }
     }
@@ -373,7 +375,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.img = new double[(i_ts1 + 1 + i_ts2) * (i_ts1 + 1 + i_ts2)];
         }
 
-        public boolean make_template(INyARGrayscaleRaster imageBW, int cx, int cy, double sd_thresh)
+        public bool make_template(INyARGrayscaleRaster imageBW, int cx, int cy, double sd_thresh)
         {
 
             int ts1 = this._ts1;
@@ -416,7 +418,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             {
                 return false;
             }
-            this.vlen = Math.sqrt(vlen1);
+            this.vlen = Math.Sqrt(vlen1);
             return true;
         }
 
@@ -447,7 +449,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             double ave = p_sum / ((ts1 + ts2 + 1) * (ts1 + ts2 + 1));
             double w1 = img_p_sum - img_sum * ave;
-            double vlen2 = Math.sqrt((pxp_sum - 2 * p_sum * ave) + (ave * ave * (ts1 + ts2 + 1) * (ts1 + ts2 + 1)));
+            double vlen2 = Math.Sqrt((pxp_sum - 2 * p_sum * ave) + (ave * ave * (ts1 + ts2 + 1) * (ts1 + ts2 + 1)));
             return w1 / (this.vlen * vlen2);
         }
     }

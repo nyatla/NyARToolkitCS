@@ -209,7 +209,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                     //直線同士の交点計算
                     if (!sq.line[i].crossPos(sq.line[(i + 3) % 4], sq.sqvertex[i]))
                     {
-                        throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                        throw new NyARRuntimeException();//ここのエラー復帰するならダブルバッファにすればOK
                     }
                 }
             }
@@ -224,7 +224,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
 
         private NyARRectOffset _offset;
         // [AR]検出結果の保存用
-        private NyARGrayscaleRaster _gs_raster;
+        private INyARGrayscaleRaster _gs_raster;
 
 
         protected int _current_arcode_index = -1;
@@ -258,7 +258,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
             this._thdetect = new NyARHistogramAnalyzer_SlidePTile(15);
 
             // ２値画像バッファを作る
-            this._gs_raster = new NyARGrayscaleRaster(scr_size.w, scr_size.h);
+            this._gs_raster = NyARGrayscaleRaster.createInstance(scr_size.w, scr_size.h);
             this._initialized = true;
             //コールバックハンドラ
             this._detectmarker = new DetectSquare(i_param);
@@ -420,7 +420,7 @@ namespace jp.nyatla.nyartoolkit.cs.processor
                 }
                 else
                 {// 異なるコードの認識→今はサポートしない。
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
                 }
             }
         }

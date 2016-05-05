@@ -23,8 +23,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 最大頂点数
          * @throws NyARException
          */
-        public NyARIcpPointRobust(NyARParam i_param)
-            : base(i_param)
+        public NyARIcpPointRobust(NyARDoubleMatrix44 i_projection_matrix)
+            : base(i_projection_matrix)
         {
         }
 

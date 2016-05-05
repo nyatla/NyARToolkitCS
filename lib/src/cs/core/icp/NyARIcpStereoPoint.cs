@@ -20,7 +20,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 NyARDoubleMatrix44 i_matC2_l, NyARDoubleMatrix44 i_matC2_r)
             : base(i_param_l, i_param_r, i_matC2_l, i_matC2_r)
         {
-            throw new NyARException("This function is not checked.");
+            throw new NyARRuntimeException("This function is not checked.");
         }
         private NyARIcpUtils.JusStack __jus = new NyARIcpUtils.JusStack(16);
         private NyARDoublePoint2d[] __du = NyARDoublePoint2d.createArray(16);

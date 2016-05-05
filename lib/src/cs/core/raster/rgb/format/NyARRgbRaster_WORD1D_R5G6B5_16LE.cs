@@ -1,3 +1,5 @@
+﻿using System;
+using System.Diagnostics;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -5,27 +7,26 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARRgbRaster_WORD1D_R5G6B5_16LE : NyARRgbRaster
     {
         protected short[] _buf;
-        public NyARRgbRaster_WORD1D_R5G6B5_16LE(int i_width, int i_height, boolean i_is_alloc)
+        public NyARRgbRaster_WORD1D_R5G6B5_16LE(int i_width, int i_height, bool i_is_alloc):base(i_width, i_height, i_is_alloc)
         {
-            super(i_width, i_height, i_is_alloc);
             this._buf = i_is_alloc ? new short[i_width * i_height] : null;
         }
-        sealed public Object getBuffer()
+        sealed override public Object getBuffer()
         {
             return this._buf;
         }
-        sealed public int getBufferType()
+        sealed override public int getBufferType()
         {
             return NyARBufferType.WORD1D_R5G6B5_16LE;
         }
-        sealed public void wrapBuffer(Object i_buf)
+        sealed override public void wrapBuffer(Object i_buf)
         {
-            assert(!this._is_attached_buffer);// バッファがアタッチされていたら機能しない。
+            Debug.Assert(!this._is_attached_buffer);// バッファがアタッチされていたら機能しない。
             //ラスタの形式は省略。
             this._buf = (short[])i_buf;
 
         }
-        sealed public int[] getPixel(int i_x, int i_y, int[] o_rgb)
+        sealed override public int[] getPixel(int i_x, int i_y, int[] o_rgb)
         {
             short[] buf = this._buf;
             int y = i_y;
@@ -37,7 +38,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_rgb[2] = (int)((pixcel & 0x001f) << 3);// B
             return o_rgb;
         }
-        sealed public int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
+        sealed override public int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] o_rgb)
         {
             int stride = this._size.w;
             short[] buf = this._buf;
@@ -53,15 +54,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return o_rgb;
         }
-        sealed public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
+        sealed override public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
         {
             NyARRuntimeException.notImplement();
         }
-        sealed public void setPixel(int i_x, int i_y, int[] i_rgb)
+        sealed override public void setPixel(int i_x, int i_y, int[] i_rgb)
         {
             NyARRuntimeException.notImplement();
         }
-        sealed public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+        sealed override public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
         {
             NyARRuntimeException.notImplement();
         }

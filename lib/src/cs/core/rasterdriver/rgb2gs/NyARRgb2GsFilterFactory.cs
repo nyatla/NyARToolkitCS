@@ -422,7 +422,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             switch (o_raster.getBufferType())
             {
                 default:
-                    INyARRgbRaster in_drv = this._ref_raster.getRgbPixelDriver();
+                    INyARRgbRaster in_drv = this._ref_raster;
                     for (int y = t; y < b; y++)
                     {
                         for (int x = pix_count - 1; x >= 0; x--)

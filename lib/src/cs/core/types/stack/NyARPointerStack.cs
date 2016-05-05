@@ -161,6 +161,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return this._length;
         }
         /**
+         * この関数は、データ長が0であるかを返します。
+         * @return
+         */
+        public bool isEmpty()
+        {
+            return this._length == 0;
+        }
+        public void swap(int i_idx1, int i_idx_2)
+        {
+            if (i_idx1 != i_idx_2)
+            {
+                T[] list = this._items;
+                T tmp = list[i_idx1];
+                list[i_idx1] = list[i_idx_2];
+                list[i_idx_2] = tmp;
+            }
+        }
+
+        /**
          * この関数は、配列の最大サイズを返します。
          * @return
          */
@@ -180,10 +199,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             if (i_index != this._length - 1)
             {
-                int i;
                 int len = this._length - 1;
                 T[] items = this._items;
-                for (i = i_index; i < len; i++)
+                for (int i = i_index; i < len; i++)
                 {
                     items[i] = items[i + 1];
                 }

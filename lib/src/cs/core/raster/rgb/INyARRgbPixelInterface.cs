@@ -1,4 +1,4 @@
-namespace jp.nyatla.nyartoolkit.cs.core
+﻿namespace jp.nyatla.nyartoolkit.cs.core
 {
 
     /**
@@ -19,7 +19,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          *            ピクセル値を返却する配列を指定します。3要素以上の配列が必要です。 値は、[R][G][B]の順に格納します。
          * @throws NyARRuntimeException
          */
-        public int[] getPixel(int i_x, int i_y, int[] i_rgb);
+        int[] getPixel(int i_x, int i_y, int[] i_rgb);
 
         /**
          * この関数は、座標群から、ピクセルごとのRGBデータを、配列に格納して返します。
@@ -36,7 +36,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          *            値は、[R1][G1][B1][R2][G2][B2]の順に格納します。
          * @throws NyARRuntimeException
          */
-        public int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+        int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
 
         /**
          * この関数は、RGBデータを指定した座標のピクセルにセットします。 実装クラスでは、バッファにRGB値を書込む処理を実装してください。
@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          *            B成分のピクセル値。
          * @throws NyARRuntimeException
          */
-        public void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b);
+        void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b);
         /**
          * この関数は、RGBデータを指定した座標のピクセルにセットします。 実装クラスでは、バッファにRGB値を書込む処理を実装してください。
          * 
@@ -65,7 +65,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          *            設定するピクセル値。3要素以上の配列が必要です。 値は、[R][G][B]の順に格納します。
          * @throws NyARRuntimeException
          */
-        public void setPixel(int i_x, int i_y, int[] i_rgb);
+        void setPixel(int i_x, int i_y, int[] i_rgb);
 
         /**
          * この関数は、座標群にピクセルごとのRGBデータをセットします。 実装クラスでは、バッファにRGB値を書込む処理を実装してください。
@@ -81,6 +81,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
          *            値は、[R1][G1][B1][R2][G2][B2]の順に格納します。
          * @throws NyARRuntimeException
          */
-        public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+        void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
     }
 }

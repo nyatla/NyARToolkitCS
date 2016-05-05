@@ -80,7 +80,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                     //解像度チェック
                     if (cw != i_ref_code[i].getWidth() || ch != i_ref_code[i].getHeight())
                     {
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                     }
                     this._match_patt[i] = new NyARMatchPatt_Color_WITHOUT_PCA(i_ref_code[i]);
                 }
@@ -149,7 +149,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                     //直線同士の交点計算
                     if (!sq.line[i].crossPos(sq.line[(i + 3) % 4], sq.sqvertex[i]))
                     {
-                        throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                        throw new NyARRuntimeException();//ここのエラー復帰するならダブルバッファにすればOK
                     }
                 }
             }
@@ -226,11 +226,11 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 this._offset[i].setSquare(i_marker_width[i]);
             }
             //２値画像バッファを作る
-            this._bin_raster = new NyARBinRaster(scr_size.w, scr_size.h);
+            this._bin_raster = NyARBinRaster.createInstance(scr_size.w, scr_size.h);
             return;
         }
 
-        private NyARBinRaster _bin_raster;
+        private INyARBinRaster _bin_raster;
 
         private INyARRgb2GsFilterArtkTh _tobin_filter;
         private INyARRgbRaster _last_input_raster = null;
@@ -251,7 +251,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             // サイズチェック
             if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize()))
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             if (this._last_input_raster != i_raster)
             {

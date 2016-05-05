@@ -90,7 +90,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public override void wrapBuffer(object i_ref_buf)
         {
-            NyARException.notImplement();
+            NyARRuntimeException.notImplement();
         }
         /**
          * この関数は、矩形エッジ（画像を囲む枠）を書きます。
@@ -180,11 +180,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 }
             }
             //あれ？見つからないよ？
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
         public override object createInterface(Type iIid)
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
 
     }

@@ -101,6 +101,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public const int BYTE1D_YUV420SP = T_BYTE1D | 0x0301;
 
+        /** byte[]のGrayscale8bit*/
+        public const int BYTE1D_GRAY_8 = T_BYTE1D | 0x0401;
+
         /**　RGB形式。short[1]で、RGB565の16ビット(little endian)の画素形式。
          */
         public const int WORD1D_R5G6B5_16LE = T_SHORT1D | 0x0201;

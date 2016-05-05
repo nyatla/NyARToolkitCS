@@ -36,14 +36,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public NyARIcpTransMat(NyARParam i_param, int i_al_mode)
         {
-            this._icpc = new NyARIcpPlane(i_param);
+            this._icpc = new NyARIcpPlane(i_param.getPerspectiveProjectionMatrix());
             switch (i_al_mode)
             {
                 case AL_POINT:
-                    this._icpp = new NyARIcpPoint(i_param);
+                    this._icpp = new NyARIcpPoint(i_param.getPerspectiveProjectionMatrix());
                     break;
                 case AL_POINT_ROBUST:
-                    this._icpp = new NyARIcpPointRobust(i_param);
+                    this._icpp = new NyARIcpPointRobust(i_param.getPerspectiveProjectionMatrix());
                     break;
                 default:
                     throw new System.ArgumentException();

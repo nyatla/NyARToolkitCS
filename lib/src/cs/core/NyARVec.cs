@@ -113,18 +113,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public double vecInnerproduct(NyARVec y, int i_start)
         {
-            NyARException.trap("この関数は動作確認できていません。");
+            NyARRuntimeException.trap("この関数は動作確認できていません。");
             double result = 0.0;
             // double[] x_array=x.v;.getArray();
             // double[] y_array=y.getArray();
 
             if (this.clm != y.clm)
             {
-                throw new NyARException();// exit();
+                throw new NyARRuntimeException();// exit();
             }
             for (int i = i_start; i < this.clm; i++)
             {
-                NyARException.trap("未チェックのパス");
+                NyARRuntimeException.trap("未チェックのパス");
                 result += this.v[i] * y.v[i];// result += x->v[i] * y->v[i];
             }
             return result;
@@ -141,25 +141,25 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public double vecHousehold(int i_start)
         {
-            NyARException.trap("この関数は動作確認できていません。");
+            NyARRuntimeException.trap("この関数は動作確認できていません。");
             double s, t;
             s = Math.Sqrt(this.vecInnerproduct(this, i_start));
             // double[] x_array=x.getArray();
             if (s != 0.0)
             {
-                NyARException.trap("未チェックのパス");
+                NyARRuntimeException.trap("未チェックのパス");
                 if (this.v[i_start] < 0)
                 {
                     s = -s;
                 }
-                NyARException.trap("未チェックのパス");
+                NyARRuntimeException.trap("未チェックのパス");
                 {
                     this.v[i_start] += s;// x->v[0] += s;
                     t = 1 / Math.Sqrt(this.v[i_start] * s);// t = 1 / sqrt(x->v[0] * s);
                 }
                 for (int i = i_start; i < this.clm; i++)
                 {
-                    NyARException.trap("未チェックのパス");
+                    NyARRuntimeException.trap("未チェックのパス");
                     this.v[i] *= t;// x->v[i] *= t;
                 }
             }

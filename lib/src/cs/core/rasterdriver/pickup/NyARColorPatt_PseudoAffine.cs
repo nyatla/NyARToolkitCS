@@ -145,7 +145,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return true;
         }
-        public object createInterface(Type iIid)
+        override public object createInterface(Type iIid)
         {
             // TODO Auto-generated method stub
             return null;

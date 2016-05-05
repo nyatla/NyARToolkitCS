@@ -1,12 +1,14 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
- *  Copyright 2013-2015 Daqri, LLC.
- *  Author(s): Chris Broaddus
+ *  Copyright 2015 Daqri, LLC.
+ *  Copyright 2006-2015 ARToolworks, Inc.
+ *
+ *  Author(s): Hirokazu Kato, Philip Lamb
  *
  * The NyARToolkit is Java edition ARToolKit class library.
- *  Copyright (C)2016 Ryo Iizuka
+ * Copyright (C)2008-2016 Ryo Iizuka
  * 
  * NyARToolkit is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -33,21 +35,34 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
 
-import jp.nyatla.nyartoolkit.core.types.NyARDoublePoint2d;
 
-/*!
- @typedef    KpmInputDataSet
- @abstract   Data describing the number and location of keypoints in an input image to be matched against a loaded data set.
- @discussion
- Key point matching occurs between a loaded data set and a set of keypoints extracted from an input image. This structure
- holds the number and pixel location of keypoints in the input image. The keypoints themselves are an array of 'num'
- KpmRefData structures.
- @field		coord Array of pixel locations of the keypoints in an input image.
- @field		num Number of coords in the array.
- */
-public class KpmInputDataSet {
-	public NyARDoublePoint2d[] coord;
-	public int num;
+    /**
+     * INyARGrayscaleRasterのテンプレート検索ドライバ
+     * @author nyatla
+     *
+     */
+    public interface INyARTemplateMatchingDriver
+    {
+        /**
+         * N個の基準点から、最もテンプレートに一致した座標を返却する。
+         * 検索範囲は、{@link #setSearchArea}で与えたpx,pyを元に定義した矩形。
+         * i_pointsそれぞれについて検索する。
+         * @param i_template
+         * 検索するテンプレート
+         * @param ry
+         * @param i_points
+         * 検索する座標セット。(近い場所の場合に、同一条件の探索をキャンセルできる？)
+         * @param o_obs_point
+         * 観察座標系での一致点。returnが0の場合は無効。
+         * @return
+         * 一致率(値範囲調査中)
+         * 0の場合は一致せず。
+         * @throws NyARException
+         */
+        double ar2GetBestMatching(NyARTemplatePatchImage i_template, NyARIntPoint2d[] i_points, int i_number_of_point,
+                NyARDoublePoint2d o_obs_point);
+    }
 }

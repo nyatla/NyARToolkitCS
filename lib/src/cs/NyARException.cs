@@ -37,7 +37,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * NyARToolkitライブラリが生成するExceptionのクラスです。
      * このクラスは、NyARToolkitライブラリでのみ使用します。
      */
-    public class NyARException : Exception
+    public class NyARRuntimeException : Exception
     {
         private const long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * コンストラクタです。
          * 例外オブジェクトを生成します。
          */
-        public NyARException()
+        public NyARRuntimeException()
             : base()
         {
         }
@@ -55,7 +55,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param e
          * 継承する例外オブジェクト
          */
-        public NyARException(Exception e):base(e.ToString())
+        public NyARRuntimeException(Exception e):base(e.ToString())
         {
         }
         /**
@@ -63,7 +63,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * メッセージを指定して、例外を生成します。
          * @param m
          */
-        public NyARException(String m):base(m)
+        public NyARRuntimeException(String m)
+            : base(m)
         {
         }
         /**
@@ -75,7 +76,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static void trap(String m)
         {
-            throw new NyARException("トラップ:" + m);
+            throw new NyARRuntimeException("トラップ:" + m);
         }
         /**
          * ライブラリ開発者向けの関数です。
@@ -85,7 +86,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static void notImplement()
         {
-            throw new NyARException("Not Implement!");
+            throw new NyARRuntimeException("Not Implement!");
         }
         /**
          * ライブラリ開発者向けの関数です。
@@ -94,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static void unavailability()
         {
-            throw new NyARException("unavailability!");
+            throw new NyARRuntimeException("unavailability!");
         }
     }
 }

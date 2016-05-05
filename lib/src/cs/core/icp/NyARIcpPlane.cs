@@ -17,9 +17,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         protected NyARDoubleMatrix44 _cparam;
 
-        public NyARIcpPlane(NyARParam i_param)
+        public NyARIcpPlane(NyARDoubleMatrix44 i_projection_matrix)
         {
-            this._cparam = i_param.getPerspectiveProjectionMatrix();
+            this._cparam = i_projection_matrix;
         }
         private NyARRotVector __vec0 = new NyARRotVector();
         private NyARRotVector __vec1 = new NyARRotVector();
@@ -119,7 +119,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             if (i_num < 4)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             // nを元に配列の準備
 

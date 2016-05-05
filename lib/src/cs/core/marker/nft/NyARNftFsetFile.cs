@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,11 +35,14 @@
  * statement from your version.
  * 
  */
+using System;
+using System.IO;
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     public class NyARNftFsetFile
     {
-        public static class NyAR2FeatureCoord
+        public class NyAR2FeatureCoord
         {
             public int x;
             public int y;
@@ -64,12 +67,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 this.maxSim = i_val.maxSim;
             }
         };
-        public static class NyAR2FeaturePoints
+        public class NyAR2FeaturePoints
         {
-            public static const int AR2_DEFAULT_GEN_FEATURE_MAP_SEARCH_SIZE1 = 10;
-            public static const int AR2_DEFAULT_GEN_FEATURE_MAP_SEARCH_SIZE2 = 2;
-            public static const double AR2_DEFAULT_MAX_SIM_THRESH2 = 0.95;
-            public static const double AR2_DEFAULT_SD_THRESH2 = 0.5;
+            public const int AR2_DEFAULT_GEN_FEATURE_MAP_SEARCH_SIZE1 = 10;
+            public const int AR2_DEFAULT_GEN_FEATURE_MAP_SEARCH_SIZE2 = 2;
+            public const double AR2_DEFAULT_MAX_SIM_THRESH2 = 0.95;
+            public const double AR2_DEFAULT_SD_THRESH2 = 0.5;
             public NyAR2FeatureCoord[] coord;
             public int scale;
             public double maxdpi;
@@ -100,14 +103,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
         };
         readonly public NyAR2FeaturePoints[] list;
 
-        public static NyARNftFsetFile loadFromFsetFile(File i_src)
+        public static NyARNftFsetFile loadFromFsetFile(StreamReader i_src)
         {
-            return loadFromFsetFile(BinaryReader.toArray(i_src));
+            return loadFromFsetFile(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_src));
         }
-        public static NyARNftFsetFile loadFromFsetFile(InputStream i_src)
-        {
-            return loadFromFsetFile(BinaryReader.toArray(i_src));
-        }
+
         public static NyARNftFsetFile loadFromFsetFile(byte[] i_src)
         {
             FsetFileDataParserV4 fsr = new FsetFileDataParserV4(i_src);
@@ -130,14 +130,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public static NyARNftFsetFile genFeatureSet(NyARNftIsetFile i_iset_file, int i_occupancy_size, double i_max_sim_th, double i_min_sim_th, double i_sd_th)
         {
             NyARNftIsetFile.ReferenceImage[] items = i_iset_file.items;
-            NyARNftFsetFile.NyAR2FeaturePoints[] points = new NyARNftFsetFile.NyAR2FeaturePoints[items.length];
-            for (int i = 0; i < items.length; i++)
+            NyARNftFsetFile.NyAR2FeaturePoints[] points = new NyARNftFsetFile.NyAR2FeaturePoints[items.Length];
+            for (int i = 0; i < items.Length; i++)
             {
                 NyARNftIsetFile.ReferenceImage rimg = items[i];
                 //MAX-dpiとMIN-dpiを計算
-                double max_dpi = Double.MAX_VALUE;
+                double max_dpi = Double.MaxValue;
                 double min_dpi = rimg.dpi * 0.5;
-                for (int j = 0; j < items.length; j++)
+                for (int j = 0; j < items.Length; j++)
                 {
                     if (rimg.dpi < items[j].dpi && max_dpi > items[j].dpi)
                     {
@@ -148,7 +148,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         min_dpi = items[j].dpi;
                     }
                 }
-                if (max_dpi == Double.MAX_VALUE)
+                if (max_dpi == Double.MaxValue)
                 {
                     max_dpi = rimg.dpi * 2;
                 }
@@ -163,18 +163,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public static NyARNftFsetFile genFeatureSet(NyARNftIsetFile i_iset_file, int i_level)
         {
-            const int[] occs ={
+            int[] occs ={
 			AR2_DEFAULT_OCCUPANCY_SIZE,
 			AR2_DEFAULT_OCCUPANCY_SIZE,
 			AR2_DEFAULT_OCCUPANCY_SIZE*2/3,
 			AR2_DEFAULT_OCCUPANCY_SIZE*2/3,
 			AR2_DEFAULT_OCCUPANCY_SIZE*1/2};
             double[][] data ={
-				{AR2_DEFAULT_SD_THRESH_L0,AR2_DEFAULT_MIN_SIM_THRESH_L0,AR2_DEFAULT_MAX_SIM_THRESH_L0},
-				{AR2_DEFAULT_SD_THRESH_L1,AR2_DEFAULT_MIN_SIM_THRESH_L1,AR2_DEFAULT_MAX_SIM_THRESH_L1},
-				{AR2_DEFAULT_SD_THRESH_L2,AR2_DEFAULT_MIN_SIM_THRESH_L2,AR2_DEFAULT_MAX_SIM_THRESH_L2},
-				{AR2_DEFAULT_SD_THRESH_L3,AR2_DEFAULT_MIN_SIM_THRESH_L3,AR2_DEFAULT_MAX_SIM_THRESH_L3},
-				{AR2_DEFAULT_SD_THRESH_L3,AR2_DEFAULT_MIN_SIM_THRESH_L3,AR2_DEFAULT_MAX_SIM_THRESH_L3}
+				new double[]{AR2_DEFAULT_SD_THRESH_L0,AR2_DEFAULT_MIN_SIM_THRESH_L0,AR2_DEFAULT_MAX_SIM_THRESH_L0},
+				new double[]{AR2_DEFAULT_SD_THRESH_L1,AR2_DEFAULT_MIN_SIM_THRESH_L1,AR2_DEFAULT_MAX_SIM_THRESH_L1},
+				new double[]{AR2_DEFAULT_SD_THRESH_L2,AR2_DEFAULT_MIN_SIM_THRESH_L2,AR2_DEFAULT_MAX_SIM_THRESH_L2},
+				new double[]{AR2_DEFAULT_SD_THRESH_L3,AR2_DEFAULT_MIN_SIM_THRESH_L3,AR2_DEFAULT_MAX_SIM_THRESH_L3},
+				new double[]{AR2_DEFAULT_SD_THRESH_L3,AR2_DEFAULT_MIN_SIM_THRESH_L3,AR2_DEFAULT_MAX_SIM_THRESH_L3}
 		};
             return genFeatureSet(i_iset_file, occs[i_level], data[i_level][2], data[i_level][1], data[i_level][0]);
         }

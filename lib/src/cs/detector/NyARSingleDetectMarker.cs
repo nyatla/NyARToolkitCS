@@ -139,7 +139,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             //サイズチェック
             if (!this._bin_raster.getSize().isEqualSize(i_raster.getSize()))
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             //最終入力ラスタを更新
             if (this._last_input_raster != i_raster)
@@ -172,7 +172,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
         private NyARMatchPattDeviationColorData _deviation_data;
         private NyARMatchPatt_Color_WITHOUT_PCA _match_patt;
         private NyARCoord2Linear _coordline;
-        protected NyARBinRaster _bin_raster;
+        protected INyARBinRaster _bin_raster;
         /** 一致率*/
         private double _confidence = 0;
         /** 認識矩形の記録用*/
@@ -234,7 +234,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 //直線同士の交点計算
                 if (!sq.line[i].crossPos(sq.line[(i + 3) % 4], sq.sqvertex[i]))
                 {
-                    throw new NyARException();//ここのエラー復帰するならダブルバッファにすればOK
+                    throw new NyARRuntimeException();//ここのエラー復帰するならダブルバッファにすればOK
                 }
             }
         }
@@ -247,7 +247,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
             this._coordline = new NyARCoord2Linear(i_ref_param.getScreenSize(), i_ref_param.getDistortionFactor());
             //２値画像バッファを作る		
             NyARIntSize s = i_ref_param.getScreenSize();
-            this._bin_raster = new NyARBinRaster(s.w, s.h);
+            this._bin_raster = NyARBinRaster.createInstance(s.w, s.h);
         }
         protected abstract void execDetectMarker();
 
@@ -291,7 +291,7 @@ namespace jp.nyatla.nyartoolkit.cs.detector
                 case PF_NYARTOOLKIT://default
                     return new NyARSingleDetectMarker_NyARTK(i_param, i_code, i_marker_width);
                 default:
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
             }
         }
         public static NyARSingleDetectMarker createInstance(NyARParam i_param, NyARCode i_code, double i_marker_width)

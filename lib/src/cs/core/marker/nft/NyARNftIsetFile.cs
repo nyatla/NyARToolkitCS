@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,6 +35,9 @@
  * statement from your version.
  * 
  */
+using System;
+using System.IO;
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -46,22 +49,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         public const int FILE_FORMAT_ARTK_V5 = 1;
         public const int FILE_FORMAT_ARTK_V4 = 2;
-        public static NyARNftIsetFile loadFromIsetFile(InputStream i_stream, int i_file_format)
+        public static NyARNftIsetFile loadFromIsetFile(StreamReader i_stream, int i_file_format)
         {
-            return loadFromIsetFile(BinaryReader.toArray(i_stream), i_file_format);
+            return loadFromIsetFile(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream), i_file_format);
         }
-        public static NyARNftIsetFile loadFromIsetFile(InputStream i_stream)
+        public static NyARNftIsetFile loadFromIsetFile(StreamReader i_stream)
         {
             return loadFromIsetFile(i_stream, FILE_FORMAT_ARTK_V5);
         }
-        public static NyARNftIsetFile loadFromIsetFile(File i_file, int i_file_format)
-        {
-            return loadFromIsetFile(BinaryReader.toArray(i_file), i_file_format);
-        }
-        public static NyARNftIsetFile loadFromIsetFile(File i_file)
-        {
-            return loadFromIsetFile(BinaryReader.toArray(i_file), FILE_FORMAT_ARTK_V5);
-        }
+
 
         public static NyARNftIsetFile loadFromIsetFile(byte[] i_src, int i_file_format)
         {
@@ -85,8 +81,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 case FILE_FORMAT_ARTK_V4:
                     {
                         IsetFileDataParserV4 iset = new IsetFileDataParserV4(i_src);
-                        ReferenceImage[] items = new ReferenceImage[iset.ar2image.length];
-                        for (int i = 0; i < items.length; i++)
+                        ReferenceImage[] items = new ReferenceImage[iset.ar2image.Length];
+                        for (int i = 0; i < items.Length; i++)
                         {
                             IsetFileDataParserV4.AR2ImageT tmp = iset.ar2image[i];
                             items[i] = new ReferenceImage(tmp.width, tmp.height, tmp.dpi, ArrayUtils.toIntArray_impl(tmp.img));
@@ -106,9 +102,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public static NyARNftIsetFile genImageSet(INyARGrayscaleRaster i_raster, double srcdpi, double[] dpis)
         {
-            NyARNftIsetFile.ReferenceImage[] rlist = new NyARNftIsetFile.ReferenceImage[dpis.length];
+            NyARNftIsetFile.ReferenceImage[] rlist = new NyARNftIsetFile.ReferenceImage[dpis.Length];
             rlist[0] = new NyARNftIsetFile.ReferenceImage(i_raster, srcdpi, srcdpi);
-            for (int i = 1; i < dpis.length; i++)
+            for (int i = 1; i < dpis.Length; i++)
             {
                 rlist[i] = new NyARNftIsetFile.ReferenceImage(i_raster, srcdpi, dpis[i]);
             }
@@ -135,7 +131,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 int i;
                 for (i = 1; ; i++)
                 {
-                    dpiWork *= Math.pow(2.0f, 1.0f / 3.0f); // *= 1.25992104989487
+                    dpiWork *= Math.Pow(2.0f, 1.0f / 3.0f); // *= 1.25992104989487
                     if (dpiWork >= dpiMax * 0.95f)
                     {
                         break;
@@ -145,20 +141,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             double[] dpi_list = new double[dpi_num];
             // Determine the DPI values of each level.
-            double dpiWork = dpiMin;
-            for (int i = 0; i < dpi_num; i++)
             {
-                dpi_list[dpi_num - i - 1] = dpiWork; // Lowest value goes at tail of array, highest at head.
-                dpiWork *= Math.pow(2.0f, 1.0f / 3.0f);
-                if (dpiWork >= dpiMax * 0.95f)
-                    dpiWork = dpiMax;
+                double dpiWork = dpiMin;
+                for (int i = 0; i < dpi_num; i++)
+                {
+                    dpi_list[dpi_num - i - 1] = dpiWork; // Lowest value goes at tail of array, highest at head.
+                    dpiWork *= Math.Pow(2.0f, 1.0f / 3.0f);
+                    if (dpiWork >= dpiMax * 0.95f)
+                        dpiWork = dpiMax;
+                }
             }
             return dpi_list;
         }
         private static double[] makeDpiList(int xsize, int ysize, double dpi)
         {
             // Determine minimum allowable DPI, truncated to 3 decimal places.
-            double dpiMinAllowable = Math.floor(((double)KPM_MINIMUM_IMAGE_SIZE / Math.min(xsize, ysize)) * dpi * 1000.0) / 1000.0f;
+            double dpiMinAllowable = Math.Floor(((double)KPM_MINIMUM_IMAGE_SIZE / Math.Min(xsize, ysize)) * dpi * 1000.0) / 1000.0f;
             return makeDpiList(dpiMinAllowable, dpi);
         }
 
@@ -176,8 +174,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public byte[] makeIsetBinary()
         {
-            float[] dpis = new float[this.items.length - 1];
-            for (int i = 0; i < dpis.length; i++)
+            float[] dpis = new float[this.items.Length - 1];
+            for (int i = 0; i < dpis.Length; i++)
             {
                 dpis[i] = (float)this.items[i + 1].dpi;
             }
@@ -194,7 +192,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             return (int)((x) >= 0.0f ? (long)((x) + 0.5f) : (long)((x) - 0.5f));
         }
-        public static class ReferenceImage
+        public class ReferenceImage
         {
             public double dpi;
             public int width;
@@ -208,8 +206,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 this.img = i_ref_buf;
             }
             public ReferenceImage(int i_w, int i_h, double i_dpi)
+                : this(i_w, i_h, i_dpi, new int[i_w * i_h])
             {
-                this(i_w, i_h, i_dpi, new int[i_w * i_h]);
             }
 
             /**
@@ -218,10 +216,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
              * @param i_idx
              * @return
              */
-            public ReferenceImage(int i_w, int i_h, int[] i_src, double i_src_dpi, double i_dest_dpi)
+            public ReferenceImage(int i_w, int i_h, int[] i_src, double i_src_dpi, double i_dest_dpi):this(NyARGrayscaleRaster.createInstance(i_w, i_h, NyARBufferType.INT1D_GRAY_8, i_src), i_src_dpi, i_dest_dpi)
             {
                 //int1Dラスタのラッパーを通して実行する。
-                this(NyARGrayscaleRaster.createInstance(i_w, i_h, NyARBufferType.INT1D_GRAY_8, i_src), i_src_dpi, i_dest_dpi);
                 return;
             }
             /**
@@ -231,11 +228,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
              * @param i_dest_dpi
              */
             public ReferenceImage(INyARGrayscaleRaster i_src, double i_src_dpi, double i_dest_dpi)
-            {
+            :
                 this(
                     (int)lroundf(i_src.getWidth() * i_dest_dpi / i_src_dpi),
                     (int)lroundf(i_src.getHeight() * i_dest_dpi / i_src_dpi),
-                    i_dest_dpi);
+                    i_dest_dpi){
+
 
                 int p2 = 0;//dst->imgBW;
                 int wx = this.width;
@@ -279,24 +277,24 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         public static void main(String[] args)
         {
-            NyARNftIsetFile f = NyARNftIsetFile.loadFromIsetFile(new File("../Data/pinball.iset5"));
-            for (int i = 0; i < f.items.length; i++)
-            {
-                int s = f.items[i].width * f.items[i].height;
-                long sum = 0;
-                for (int i2 = 0; i2 < s; i2++)
-                {
-                    sum += (f.items[i].img[i2] & 0xff);
-                }
-                //System.out.println(f.items[i].dpi+","+f.items[i].width+","+f.items[i].height+","+Long.toString(sum));
-            }
-            NyARNftIsetFile f1 = loadFromIsetFile(new File("../Data/pinball.iset5"));
-            //		NyARNftIsetFile f2=loadFromIsetFile(f1.makeFileImage(),FILE_FORMAT_ARTK_V5);
-            //
-            //		byte[] d=iset.makeFileImage(new float[]{20,40});
-            //		IsetFileDataParserV5 iset2= new IsetFileDataParserV5(d);
+            //NyARNftIsetFile f = NyARNftIsetFile.loadFromIsetFile(new File("../Data/pinball.iset5"));
+            //for (int i = 0; i < f.items.length; i++)
+            //{
+            //    int s = f.items[i].width * f.items[i].height;
+            //    long sum = 0;
+            //    for (int i2 = 0; i2 < s; i2++)
+            //    {
+            //        sum += (f.items[i].img[i2] & 0xff);
+            //    }
+            //    //System.out.println(f.items[i].dpi+","+f.items[i].width+","+f.items[i].height+","+Long.toString(sum));
+            //}
+            //NyARNftIsetFile f1 = loadFromIsetFile(new File("../Data/pinball.iset5"));
+            ////		NyARNftIsetFile f2=loadFromIsetFile(f1.makeFileImage(),FILE_FORMAT_ARTK_V5);
+            ////
+            ////		byte[] d=iset.makeFileImage(new float[]{20,40});
+            ////		IsetFileDataParserV5 iset2= new IsetFileDataParserV5(d);
 
-            return;
+            //return;
         }
     }
 }

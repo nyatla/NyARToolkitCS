@@ -61,7 +61,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @throws NyARRuntimeException
          */
-        public static INyARBinRaster createInstance(int i_width, int i_height, int i_raster_type, boolean i_is_alloc)
+        public static INyARBinRaster createInstance(int i_width, int i_height, int i_raster_type, bool i_is_alloc)
         {
             switch (i_raster_type)
             {
@@ -95,7 +95,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @throws NyARRuntimeException
          */
-        public static INyARBinRaster createInstance(int i_width, int i_height, boolean i_is_alloc)
+        public static INyARBinRaster createInstance(int i_width, int i_height, bool i_is_alloc)
         {
             return NyARBinRaster.createInstance(i_width, i_height, NyARBufferType.INT1D_GRAY_8, i_is_alloc);
         }
@@ -104,21 +104,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数は、ラスタの高さを返します。
          */
-        sealed public int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数は、ラスタのサイズを格納したオブジェクトを返します。
          */
-        sealed public NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
@@ -130,7 +130,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public boolean isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return i_type_value == this.getBufferType();
         }
@@ -139,7 +139,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 内部参照バッファの場合は、常にtrueです。
          * 外部参照バッファの場合は、バッファにアクセスする前に、このパラメタを確認してください。
          */
-        sealed public boolean hasBuffer()
+        public bool hasBuffer()
         {
             return this.getBuffer() != null;
         }
@@ -151,7 +151,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          * @param i_is_alloc
          */
-        protected NyARBinRaster(int i_width, int i_height, boolean i_is_alloc)
+        protected NyARBinRaster(int i_width, int i_height, bool i_is_alloc)
         {
             this._size = new NyARIntSize(i_width, i_height);
             this._is_attached_buffer = i_is_alloc;
@@ -169,6 +169,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             throw new NyARRuntimeException();
         }
+        abstract public Object getBuffer();
+        abstract public int getBufferType();
+        abstract public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf);
+        abstract public int getPixel(int i_x, int i_y);
+        abstract public void setPixel(int i_x, int i_y, int i_gs);
+        abstract public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs);
+        abstract public void wrapBuffer(Object i_ref_buf);
     }
 
 }

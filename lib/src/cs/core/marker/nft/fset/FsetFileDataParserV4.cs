@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,7 +35,7 @@
  * statement from your version.
  * 
  */
-
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -52,7 +52,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             int num_of_data = br.getInt();
             NyARNftFsetFile.NyAR2FeaturePoints[] l = new NyARNftFsetFile.NyAR2FeaturePoints[num_of_data];
 
-            for (int i = 0; i < l.length; i++)
+            for (int i = 0; i < l.Length; i++)
             {
                 int scale = br.getInt();
                 double maxdpi = br.getFloat();
@@ -85,15 +85,15 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             //初期メモリは2MB
             BinaryWriter bw = new BinaryWriter(BinaryReader.ENDIAN_LITTLE, 2 * 1024 * 1024);
-            bw.putInt(this.points.length);
-            for (int i = 0; i < this.points.length; i++)
+            bw.putInt(this.points.Length);
+            for (int i = 0; i < this.points.Length; i++)
             {
                 NyARNftFsetFile.NyAR2FeaturePoints p = this.points[i];
                 bw.putInt(p.scale);
                 bw.putFloat((float)p.maxdpi);
                 bw.putFloat((float)p.mindpi);
-                bw.putInt(p.coord.length);
-                for (int j = 0; j < p.coord.length; j++)
+                bw.putInt(p.coord.Length);
+                for (int j = 0; j < p.coord.Length; j++)
                 {
                     bw.putInt(p.coord[j].x);
                     bw.putInt(p.coord[j].y);

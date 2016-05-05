@@ -16,8 +16,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class NyARIcpPoint : NyARIcp
     {
 
-        public NyARIcpPoint(NyARParam i_param)
-            : base(i_param)
+        public NyARIcpPoint(NyARDoubleMatrix44 i_projection_matrix)
+            : base(i_projection_matrix)
         {
         }
         private NyARIcpUtils.JusStack __jus = new NyARIcpUtils.JusStack(16);

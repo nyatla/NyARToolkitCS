@@ -127,7 +127,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected virtual T createElement()
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
 
     }

@@ -69,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             catch (Exception e)
             {
-                throw new NyARException(e);
+                throw new NyARRuntimeException(e);
             }
             return;
         }
@@ -85,7 +85,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             int width = o_code.getWidth();
             int height = o_code.getHeight();
-            NyARRgbRaster tmp_raster = new NyARRgbRaster(width, height, NyARBufferType.INT1D_X8R8G8B8_32);
+            INyARRgbRaster tmp_raster = NyARRgbRaster.createInstance(width, height, NyARBufferType.INT1D_X8R8G8B8_32);
             //4個の要素をラスタにセットする。
             try
             {
@@ -103,15 +103,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             catch (Exception e)
             {
-                throw new NyARException(e);
+                throw new NyARRuntimeException(e);
             }
             tmp_raster = null;//ポイ
             return;
-        }
-        [System.Obsolete("use loadFromARToolKitFormFile")]
-        public static NyARCode createFromARPattFile(InputStream i_stream, int i_width, int i_height)
-        {
-            return loadFromARPattFile(i_stream, i_width, i_height);
         }
         /**
          * ストリームi_stから、1ブロック(1方位分)のXRGBデータをからo_bufへ読みだします。
@@ -157,7 +152,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             catch (Exception e)
             {
-                throw new NyARException(e);
+                throw new NyARRuntimeException(e);
             }
             return idx;
         }
@@ -183,14 +178,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * @param i_height
 	     * パターンの幅pixel数。データの内容と一致している必要があります。
 	     * @throws NyARException
-	     */	
+	     */
+        public static NyARCode loadFromARPattFile(StreamReader i_stream, int i_width, int i_height)
+        {
+            //ラスタにパターンをロードする。
+            NyARCode ret = new NyARCode(i_width, i_height);
+            NyARCodeFileReader.loadFromARToolKitFormFile(i_stream, ret);
+            return ret;
+        }
+       [System.Obsolete("use loadFromARToolKitFormFile")]
 	    public static NyARCode createFromARPattFile(StreamReader i_stream,int i_width,int i_height)
 	    {
-		    //ラスタにパターンをロードする。
-		    NyARCode ret=new NyARCode(i_width,i_height);
-		    NyARCodeFileReader.loadFromARToolKitFormFile(i_stream,ret);
-		    return ret;
-    		
+            return loadFromARPattFile(i_stream, i_width, i_height);    		
 	    }
         /**
          * 指定したdirection(方位)の{@link NyARMatchPattDeviationColorData}オブジェクトの参照値を返します。

@@ -106,9 +106,9 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             PerspectivePixelReader.TThreshold th = this.__pickFromRaster_th;
             MarkerPattEncoder encoder = this.__pickFromRaster_encoder;
             //マーカパラメータを取得
-            this._perspective_reader.detectThresholdValue(i_pix_drv, th);
+            this._perspective_reader.detectThresholdValue(i_raster, th);
 
-            if (!this._perspective_reader.readDataBits(i_raster, i_raster.getSize(), th, encoder))
+            if (!this._perspective_reader.readDataBits(i_raster, th, encoder))
             {
                 return false;
             }
@@ -339,9 +339,9 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             {
                 freq_table[i] = 0;
             }
-    		const NyARIntSize raster_size=i_raster.getSize();
-            int raster_width = i_raster_size.w;
-            int raster_height = i_raster_size.h;
+    		NyARIntSize raster_size=i_raster.getSize();
+            int raster_width = raster_size.w;
+            int raster_height = raster_size.h;
 
             double cpara_0 = cpara[0];
             double cpara_3 = cpara[3];
@@ -433,8 +433,8 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
             {
                 freq_table[i] = 0;
             }
-            int raster_width = i_raster_size.w;
-            int raster_height = i_raster_size.h;
+            int raster_width = i_raster.getWidth();
+            int raster_height = i_raster.getHeight();
 
 
             double cpara7 = cpara[7];
@@ -667,7 +667,7 @@ namespace jp.nyatla.nyartoolkit.cs.nyidmarker
         public void detectThresholdValue(INyARGrayscaleRaster i_raster, TThreshold o_threshold)
         {
             int[] th_pixels = this._th_pixels;
-            NyARIntSize size = i_reader.getSize();
+            NyARIntSize size = i_raster.getSize();
             //左上のピックアップ領域からピクセルを得る(00-24)
             rectPixels(i_raster, THRESHOLD_SAMPLE_LT, THRESHOLD_SAMPLE_LT, THRESHOLD_STEP, THRESHOLD_STEP, THRESHOLD_PIXEL, THRESHOLD_PIXEL, 0, th_pixels);
 

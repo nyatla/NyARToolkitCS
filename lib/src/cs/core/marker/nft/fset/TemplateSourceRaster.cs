@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,6 +35,7 @@
  * statement from your version.
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -44,19 +45,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public class TemplateSourceRaster : NyARGrayscaleRaster
     {
         readonly protected int[] _buf;
-        public TemplateSourceRaster(int i_width, int i_height, int[] i_buf)
+        public TemplateSourceRaster(int i_width, int i_height, int[] i_buf):base(i_width, i_height, false)
         {
-            super(i_width, i_height, false);
             this._buf = i_buf;
         }
 
 
-        public Object getBuffer()
+        public override Object getBuffer()
         {
             return this._buf;
         }
 
-        public int getBufferType()
+        public override int getBufferType()
         {
             return NyARBufferType.BYTE1D_GRAY_8;
         }
@@ -65,30 +65,30 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
 
-        sealed public void wrapBuffer(Object i_buf)
+        sealed override public void wrapBuffer(Object i_buf)
         {
-            throw new UnsupportedOperationException();
+            throw new NyARRuntimeException();
         }
 
-        sealed public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf)
+        sealed override public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf)
         {
-            throw new UnsupportedOperationException();
+            throw new NyARRuntimeException();
         }
 
-        sealed public int getPixel(int i_x, int i_y)
+        sealed override public int getPixel(int i_x, int i_y)
         {
             int[] buf = (int[])this._buf;
             return buf[(i_x + i_y * this._size.w)] & 0xff;
         }
 
-        sealed public void setPixel(int i_x, int i_y, int i_gs)
+        sealed override public void setPixel(int i_x, int i_y, int i_gs)
         {
-            throw new UnsupportedOperationException();
+            throw new NyARRuntimeException();
         }
 
-        sealed public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs)
+        sealed override public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs)
         {
-            throw new UnsupportedOperationException();
+            throw new NyARRuntimeException();
         }
     }
 }

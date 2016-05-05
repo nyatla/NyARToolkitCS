@@ -106,7 +106,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         {
                             return new NyARRlePixelDriver_GSReader((INyARGrayscaleRaster)i_raster);
                         }
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                 }
             }
         }
@@ -556,7 +556,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     class NyARRlePixelDriver_GSReader : NyARLabeling_Rle.IRasterDriver
     {
-        sealed private INyARGrayscaleRaster _ref_raster;
+        readonly private INyARGrayscaleRaster _ref_raster;
         public NyARRlePixelDriver_GSReader(INyARGrayscaleRaster i_raster)
         {
             this._ref_raster = i_raster;

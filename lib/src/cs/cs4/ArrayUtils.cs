@@ -33,22 +33,37 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace jp.nyatla.nyartoolkit.cs.core
-{/*
-    public class Array2<T> where T : new()
-    {
-        public T[] createArray(int i_length)
-        {
-            T[] ret = new T[i_length];
-            for (int i = 0; i < i_length; i++)
-            {
-                ret[i]=new T();
-            }
-            return ret;
-        }
-    }*/
+namespace jp.nyatla.nyartoolkit.cs.cs4
+{
     public class ArrayUtils
     {
+	    public static int[] toIntArray_impl(List<int> i_list,int i_offset,int i_size,int[] i_dest){
+		    for(int i=0;i<i_size;i++){
+			    i_dest[i]=i_list[i_offset+i];
+		    }
+		    return i_dest;
+	    }
+	    public static int[] toIntArray_impl(List<int> i_list,int i_offset,int i_size){
+		    return toIntArray_impl(i_list,i_offset,i_size,new int[i_size]);
+	    }
+	    public static int[] toIntArray_impl(byte[] i_byte)
+	    {
+		    int[] a=new int[i_byte.Length];
+		    for(int i=0;i<a.Length;i++){
+			    a[i]=i_byte[i] &0xff;
+		    }
+		    return a;
+	    }
+	    public static byte[] toByteArray_impl(int[] i_int)
+	    {
+		    byte[] a=new byte[i_int.Length];
+		    for(int i=0;i<a.Length;i++){
+			    a[i]=(byte)(i_int[i] &0xff);
+		    }
+		    return a;
+	    }
+
+
         public static double[][] newDouble2dArray(int i_r, int i_c)
         {
             double[][] d = new double[i_r][];

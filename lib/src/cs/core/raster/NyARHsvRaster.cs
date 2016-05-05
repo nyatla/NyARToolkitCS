@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -23,6 +23,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -41,17 +42,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_height
          * ラスタのサイズです。
          */
-        public NyARHsvRaster(int i_width, int i_height)
+        public NyARHsvRaster(int i_width, int i_height):base(i_width, i_height, NyARBufferType.INT1D_X7H9S8V8_32)
         {
             //このクラスは外部参照バッファ/形式多重化が使えない簡易実装です。
-            base(i_width, i_height, NyARBufferType.INT1D_X7H9S8V8_32);
             this._ref_buf = new int[i_height * i_width];
         }
         /**
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式{@link NyARBufferType#INT1D_X7H9S8V8_32}です。
          */
-        public Object getBuffer()
+        override public Object getBuffer()
         {
             return this._ref_buf;
         }
@@ -59,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、インスタンスがバッファを所有するかを返します。
          * このクラスでは内部参照バッファのみをサポートするため、常にtrueです。
          */
-        public boolean hasBuffer()
+        override public bool hasBuffer()
         {
             return true;
         }
@@ -68,12 +68,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタに外部参照バッファをセットします。
          * 外部参照バッファを持つインスタンスでのみ使用できます。内部参照バッファを持つインスタンスでは使用できません。
          */
-        public void wrapBuffer(Object i_ref_buf)
+        override public void wrapBuffer(Object i_ref_buf)
         {
             NyARRuntimeException.notImplement();
         }
 
-        public Object createInterface(TypeId iIid)
+        override public Object createInterface(Type iIid)
         {
             throw new NyARRuntimeException();
         }

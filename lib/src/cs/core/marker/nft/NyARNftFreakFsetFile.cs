@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -33,6 +33,11 @@
  * statement from your version.
  * 
  */
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -40,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARNftFreakFsetFile
     {
-        public static class ImageInfo
+        public class ImageInfo
         {
             public ImageInfo(int i_w, int i_h, int i_image_no)
             {
@@ -54,7 +59,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             public int image_no;
         }
 
-        public static class PageInfo
+        public class PageInfo
         {
             public PageInfo(int i_page_no, ImageInfo[] i_image_info)
             {
@@ -66,16 +71,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
             readonly public ImageInfo[] image_info;
         }
 
-        public static class FreakFeature
+        public class FreakFeature
         {
-            readonly public static int FREAK_SUB_DIMENSION = 96;
+            public const int FREAK_SUB_DIMENSION = 96;
             readonly public byte[] v = new byte[FREAK_SUB_DIMENSION];
             public double angle;
             public double scale;
             public int maxima;
         }
 
-        public static class RefDataSet
+        public class RefDataSet
         {
             readonly public NyARDoublePoint2d coord2D = new NyARDoublePoint2d();
             /** in millimeters*/
@@ -95,26 +100,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        public static NyARNftFreakFsetFile loadFromfset3File(InputStream i_stream)
+        public static NyARNftFreakFsetFile loadFromfset3File(StreamReader i_stream)
         {
-            return loadFromfset3File(BinaryReader.toArray(i_stream));
-        }
-
-        public static NyARNftFreakFsetFile loadFromfset3File(File i_file)
-        {
-            try
-            {
-                return loadFromfset3File(new FileInputStream(i_file));
-            }
-            catch (FileNotFoundException e)
-            {
-                throw new NyARRuntimeException(e);
-            }
+            return loadFromfset3File(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream));
         }
 
         public static NyARNftFreakFsetFile loadFromfset3File(byte[] i_source)
         {
-            BinaryReader br = new BinaryReader(i_source, BinaryReader.ENDIAN_LITTLE);
+            jp.nyatla.nyartoolkit.cs.cs4.BinaryReader br = new jp.nyatla.nyartoolkit.cs.cs4.BinaryReader(i_source, jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.ENDIAN_LITTLE);
             int num = br.getInt();
 
             RefDataSet[] rds = new RefDataSet[num];
@@ -157,9 +150,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             DogFeaturePointStack _dog_feature_points = new DogFeaturePointStack(max_features);
             FreakFeaturePointStack query_keypoint = new FreakFeaturePointStack(max_features);
             //
-            List<NyARNftFreakFsetFile.RefDataSet> refdataset = new ArrayList<NyARNftFreakFsetFile.RefDataSet>();
-            List<NyARNftFreakFsetFile.ImageInfo> imageinfo = new ArrayList<NyARNftFreakFsetFile.ImageInfo>();
-            for (int ii = 0; ii < i_iset_file.items.length; ii++)
+            List<NyARNftFreakFsetFile.RefDataSet> refdataset = new List<NyARNftFreakFsetFile.RefDataSet>();
+            List<NyARNftFreakFsetFile.ImageInfo> imageinfo = new List<NyARNftFreakFsetFile.ImageInfo>();
+            for (int ii = 0; ii < i_iset_file.items.Length; ii++)
             {
                 NyARNftIsetFile.ReferenceImage rimg = i_iset_file.items[ii];
                 FREAKExtractor mFeatureExtractor = new FREAKExtractor();
@@ -189,13 +182,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     rds.featureVec.maxima = ffp.maxima ? 1 : 0;
                     rds.featureVec.scale = ffp.scale;
                     ffp.descripter.getValueLe(rds.featureVec.v);
-                    refdataset.add(rds);
+                    refdataset.Add(rds);
                 }
-                imageinfo.add(new NyARNftFreakFsetFile.ImageInfo(rimg.width, rimg.height, ii));
+                imageinfo.Add(new NyARNftFreakFsetFile.ImageInfo(rimg.width, rimg.height, ii));
             }
             NyARNftFreakFsetFile.PageInfo[] pi = new NyARNftFreakFsetFile.PageInfo[1];
-            pi[0] = new NyARNftFreakFsetFile.PageInfo(1, imageinfo.toArray(new NyARNftFreakFsetFile.ImageInfo[0]));
-            return new NyARNftFreakFsetFile(refdataset.toArray(new NyARNftFreakFsetFile.RefDataSet[0]), pi);
+            pi[0] = new NyARNftFreakFsetFile.PageInfo(1, imageinfo.ToArray());
+            return new NyARNftFreakFsetFile(refdataset.ToArray(), pi);
         }
 
         /**
@@ -204,9 +197,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public byte[] makeFset3Binary()
         {
-            BinaryWriter bw = new BinaryWriter(BinaryWriter.ENDIAN_LITTLE, 2 * 1024 * 1024);
-            bw.putInt(this.ref_point.length);
-            for (int i = 0; i < this.ref_point.length; i++)
+            jp.nyatla.nyartoolkit.cs.cs4.BinaryWriter bw = new jp.nyatla.nyartoolkit.cs.cs4.BinaryWriter(jp.nyatla.nyartoolkit.cs.cs4.BinaryWriter.ENDIAN_LITTLE, 2 * 1024 * 1024);
+            bw.putInt(this.ref_point.Length);
+            for (int i = 0; i < this.ref_point.Length; i++)
             {
                 RefDataSet rd = this.ref_point[i];
                 bw.putFloat((float)rd.coord2D.x);
@@ -220,13 +213,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 bw.putInt(rd.pageNo);
                 bw.putInt(rd.refImageNo);
             }
-            bw.putInt(this.page_info.length);
-            for (int i = 0; i < this.page_info.length; i++)
+            bw.putInt(this.page_info.Length);
+            for (int i = 0; i < this.page_info.Length; i++)
             {
                 PageInfo pi = this.page_info[i];
                 bw.putInt(pi.page_no);
-                bw.putInt(pi.image_info.length);
-                for (int j = 0; j < pi.image_info.length; j++)
+                bw.putInt(pi.image_info.Length);
+                for (int j = 0; j < pi.image_info.Length; j++)
                 {
                     bw.putInt(pi.image_info[j].w);
                     bw.putInt(pi.image_info[j].h);
@@ -237,16 +230,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
 
         public static void main(String[] args) {
-		try {
-			NyARNftFreakFsetFile f = NyARNftFreakFsetFile.loadFromfset3File(new FileInputStream(new File("../Data/pinball.fset3")));
-			NyARNftFreakFsetFile f2 = NyARNftFreakFsetFile.loadFromfset3File(f.makeFset3Binary());
-			//System.out.println(f);
-			return;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            //try {
+            //    NyARNftFreakFsetFile f = NyARNftFreakFsetFile.loadFromfset3File(new FileInputStream(new File("../Data/pinball.fset3")));
+            //    NyARNftFreakFsetFile f2 = NyARNftFreakFsetFile.loadFromfset3File(f.makeFset3Binary());
+            //    //System.out.println(f);
+            //    return;
+            //} catch (FileNotFoundException e) {
+            //    // TODO Auto-generated catch block
+            //    e.printStackTrace();
+            //}
+	    }
 
     }
 }

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -23,6 +23,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -43,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
     public abstract class NyARRgbRaster : INyARRgbRaster
     {
         /** バッファオブジェクトがアタッチされていればtrue*/
-        readonly protected boolean _is_attached_buffer;
+        readonly protected bool _is_attached_buffer;
         readonly protected NyARIntSize _size;
         /**
          * コンストラクタです。
@@ -62,7 +63,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * falseの場合、初期のバッファはnullになります。インスタンスを生成したのちに、{@link #wrapBuffer}を使って割り当ててください。
          * @throws NyARRuntimeException
          */
-        public static INyARRgbRaster createInstance(int i_width, int i_height, int i_buffer_type, boolean i_is_alloc)
+        public static INyARRgbRaster createInstance(int i_width, int i_height, int i_buffer_type, bool i_is_alloc)
         {
             switch (i_buffer_type)
             {
@@ -118,7 +119,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * 継承クラス呼び出すコンストラクタです。
          */
-        protected NyARRgbRaster(int i_width, int i_height, boolean i_is_alloc)
+        protected NyARRgbRaster(int i_width, int i_height, bool i_is_alloc)
         {
             this._is_attached_buffer = i_is_alloc;
             this._size = new NyARIntSize(i_width, i_height);
@@ -132,35 +133,35 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * インスタンスがバッファを所有すれば、trueです。
          */
-        sealed public boolean hasBuffer()
+        public bool hasBuffer()
         {
             return this.getBuffer() != null;
         }
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数は、ラスタの高さを返します。
          */
-        sealed public int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
         /**
          * この関数は、ラスタのサイズを格納したオブジェクトを返します。
          */
-        sealed public NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public boolean isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return this.getBufferType() == i_type_value;
         }
@@ -178,7 +179,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * <li>{@link INyARRgb2GsFilterArtkTh}
          * </ul>
          */
-        public Object createInterface(TypeId iIid)
+        virtual public Object createInterface(Type iIid)
         {
             if (iIid == typeof(INyARPerspectiveCopy))
             {
@@ -215,14 +216,21 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public static void main(String[] args)
         {
-            INyARRgbRaster n = NyARRgbRaster.createInstance(640, 480);
-            long s = System.currentTimeMillis();
-            for (int i = 0; i < 100000; i++)
-            {
-                n.createInterface(null);
-            }
-            //		System.out.println(System.currentTimeMillis()-s);
+            //INyARRgbRaster n = NyARRgbRaster.createInstance(640, 480);
+            //long s = System.currentTimeMillis();
+            //for (int i = 0; i < 100000; i++)
+            //{
+            //    n.createInterface(null);
+            //}
+            ////		System.out.println(System.currentTimeMillis()-s);
         }
-
+        public abstract Object getBuffer();
+        public abstract int getBufferType();
+        public abstract void wrapBuffer(Object i_ref_buf);
+        public abstract int[] getPixel(int i_x, int i_y, int[] i_rgb);
+        public abstract int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
+        public abstract void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b);
+        public abstract void setPixel(int i_x, int i_y, int[] i_rgb);
+        public abstract void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb);
     }
 }

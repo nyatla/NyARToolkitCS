@@ -100,7 +100,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected virtual T createElement()
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
         /**
          * この関数は、配列要素のオブジェクトを(引数付きで)１個作ります。
@@ -112,7 +112,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected virtual T createElement(object i_param)
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
 
         /**
@@ -152,21 +152,30 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // 必要に応じてアロケート
             if (i_reserv_length >= this._items.Length)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             this._length = i_reserv_length;
         }
         //override
         public override void remove(int i_index)
         {
-            if (i_index != this._length - 1)
-            {
-                T item = this._items[i_index];
-                //要素をシフト
-                base.remove(i_index);
-                //外したオブジェクトを末端に取り付ける
-                this._items[this._length] = item;
-            }
+		    int len=this._length-1;
+		    if(i_index!=len){
+		    //末端以外の場合は前方詰めと差し替え
+			
+			    //削除対象のオブジェクトを保存
+			    T item=this._items[i_index];
+			    //前方詰め
+			    T[] items=this._items;
+			    for(int i=i_index;i<len;i++)
+			    {
+				    items[i]=items[i+1];
+			    }
+			    //外したオブジェクトを末端に取り付ける
+			    this._items[len]=item;
+		    }
+		    //要素数を1減らす
+		    this._length--;
         }
         //override
         public override void removeIgnoreOrder(int i_index)

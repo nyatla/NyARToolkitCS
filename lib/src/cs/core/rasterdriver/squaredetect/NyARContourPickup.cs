@@ -69,7 +69,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         }
                         break;
                 }
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
         }
         /** 最後に処理したラスタ*/
@@ -216,7 +216,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						break;
 					}
 					//8方向全て調べたけどラベルが無いよ？
-					throw new NyARException();			
+                    throw new NyARRuntimeException();			
 				}
 			}else{
 				//境界に接しているとき
@@ -234,7 +234,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				}
 				if (i == 8) {
 					//8方向全て調べたけどラベルが無いよ？
-					throw new NyARException();// return(-1);
+                    throw new NyARRuntimeException();// return(-1);
 				}				
 			}
 			// xcoordとycoordをc,rにも保存
@@ -267,7 +267,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 				}
 				if (i == 8) {
 					//8方向全て調べたけどラベルが無いよ？
-					throw new NyARException();
+					throw new NyARRuntimeException();
 				}
 				//得たピクセルが、[1]と同じならば、末端である。
 				c = c + xdir[dir];
@@ -332,7 +332,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     //境界チェック
                     if (x >= i_l && x <= i_r && y >= i_t && y <= i_b)
                     {
-                        if (reader.getPixel(x, y) <= i_th)
+                        if (raster.getPixel(x, y) <= i_th)
                         {
                             break;
                         }
@@ -342,7 +342,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 if (i == 8)
                 {
                     //8方向全て調べたけどラベルが無いよ？
-                    throw new NyARException();// return(-1);
+                    throw new NyARRuntimeException();// return(-1);
                 }
                 // xcoordとycoordをc,rにも保存
                 c = c + xdir[dir];
@@ -379,7 +379,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     if (i == 8)
                     {
                         //8方向全て調べたけどラベルが無いよ？
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                     }
                     //得たピクセルが、[1]と同じならば、末端である。
                     c = c + xdir[dir];

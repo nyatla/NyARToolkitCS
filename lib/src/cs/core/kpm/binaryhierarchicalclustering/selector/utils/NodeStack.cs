@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -33,22 +33,24 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm.binaryhierarchicalclustering.selector.utils;
-
-import jp.nyatla.nyartoolkit.core.kpm.binaryhierarchicalclustering.BinaryHierarchicalNode;
-import jp.nyatla.nyartoolkit.core.types.stack.NyARObjectStack;
-
-public class NodeStack extends NyARObjectStack<NodeStack.Item>
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-	static public class Item{
-		public int distance;
-		public BinaryHierarchicalNode node;			
-	}
-	public NodeStack(int i_length) {
-		super(i_length,Item.class);
-	}
-	protected Item createElement()
-	{
-		return new Item();
-	}
+
+
+    public class NodeStack : NyARObjectStack<NodeStack.Item>
+    {
+        public class Item
+        {
+            public int distance;
+            public BinaryHierarchicalNode node;
+        }
+        public NodeStack(int i_length)
+            : base(i_length)
+        {
+        }
+        override protected Item createElement()
+        {
+            return new Item();
+        }
+    }
 }

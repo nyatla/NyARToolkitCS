@@ -39,7 +39,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
      * ARToolKit由来のアルゴリズムで画像からパターン取得する機能を提供します。
      * この関数は可読性を重視しているため低速です。高速な{@link NyARColorPatt_O3}を使ってください。
      */
-    protected class NyARColorPatt_Base : NyARRgbRaster_INT1D_X8R8G8B8_32, INyARColorPatt
+    public class NyARColorPatt_Base : NyARRgbRaster_INT1D_X8R8G8B8_32, INyARColorPatt
     {
         protected const int AR_PATT_SAMPLE_NUM = 64;
 
@@ -54,7 +54,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * ラスタのサイズ
          * @ 
          */
-        public NyARColorPatt_Base(int i_width, int i_height):base(i_width,i_height,true)
+        public NyARColorPatt_Base(int i_width, int i_height)
+            : base(i_width, i_height, true)
         {
             Debug.Assert(i_width <= 64 && i_height <= 64);
             return;
@@ -199,7 +200,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             double d = para20 * xw + para21 * yw + para22;
                             if (d == 0)
                             {
-                                throw new NyARException();
+                                throw new NyARRuntimeException();
                             }
                             int xc = (int)((para00 * xw + para01 * yw + para02) / d);
                             int yc = (int)((para10 * xw + para11 * yw + para12) / d);
@@ -219,7 +220,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return true;
         }
-        public object createInterface(Type iIid)
+        override public Object createInterface(Type iIid)
         {
             if (iIid == typeof(INyARPerspectiveCopy))
             {

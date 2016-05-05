@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by
@@ -28,6 +28,9 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
+using System.IO;
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -42,9 +45,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public class NyARParam
     {
-        readonly public static int DISTFACTOR_RAW = 0;
-        readonly public static int DISTFACTOR_LT_ARTK2 = 1;
-        readonly public static int DISTFACTOR_LT_ARTK5 = 2;
+        public const int DISTFACTOR_RAW = 0;
+        public const int DISTFACTOR_LT_ARTK2 = 1;
+        public const int DISTFACTOR_LT_ARTK5 = 2;
         /** スクリーンサイズです。*/
         readonly protected NyARIntSize _screen_size;
         readonly private INyARCameraDistortionFactor _dist;
@@ -105,14 +108,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * @throws NyARRuntimeException
          */
-        public static NyARParam loadFromARParamFile(InputStream i_stream, int i_screen_width, int i_screen_height, int i_dist_map_type)
+        public static NyARParam loadFromARParamFile(StreamReader i_stream, int i_screen_width, int i_screen_height, int i_dist_map_type)
         {
             ParamLoader pm = new ParamLoader(i_stream, i_screen_width, i_screen_height);
             return new NyARParam(
                 pm.size, pm.pmat,
                 makeDistFactor(pm.size, pm.dist_factor, i_dist_map_type));
         }
-        public static NyARParam loadFromARParamFile(InputStream i_stream, int i_screen_width, int i_screen_height)
+        public static NyARParam loadFromARParamFile(StreamReader i_stream, int i_screen_width, int i_screen_height)
         {
             return loadFromARParamFile(i_stream, i_screen_width, i_screen_height, DISTFACTOR_LT_ARTK5);
         }
@@ -214,7 +217,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 未定義
          * @throws Exception
          */
-        public void saveARParam(OutputStream i_stream)
+        public void saveARParam(StreamWriter i_stream)
         {
             NyARRuntimeException.trap("未チェックの関数");
         }
@@ -229,16 +232,16 @@ namespace jp.nyatla.nyartoolkit.cs.core
         [System.Obsolete("use loadDefaultParams")]
         public static NyARParam createDefaultParameter()
         {
-            throw new NyARMethodDeplecatedException("#loadDefaultParams");
+            throw new NyARRuntimeException("#loadDefaultParams");
         }
         /**
          * @see #loadFromARParamFile
          * @deprecated 
          */
         [System.Obsolete("use loadFromARParamFile")]
-        public static NyARParam createFromARParamFile(InputStream i_stream)
+        public static NyARParam createFromARParamFile(StreamReader i_stream)
         {
-            throw new NyARMethodDeplecatedException("#loadFromARParamFile");
+            throw new NyARRuntimeException("#loadFromARParamFile");
         }
         /**
          * @see loadFromCvCalibrateCamera2Result
@@ -247,29 +250,29 @@ namespace jp.nyatla.nyartoolkit.cs.core
         [System.Obsolete("use loadFromCvCalibrateCamera2Result")]
         public static NyARParam createFromCvCalibrateCamera2Result(int i_w, int i_h, double[] i_intrinsic_matrix, double[] i_distortion_coeffs)
         {
-            throw new NyARMethodDeplecatedException("#loadFromCvCalibrateCamera2Result");
+            throw new NyARRuntimeException("#loadFromCvCalibrateCamera2Result");
         }
 
 
 
         public static void main(String[] args)
         {
-            try
-            {
-                String cparam = "../Data/testcase/camera_para5.dat";
-                NyARParam param = NyARParam.loadFromARParamFile(new FileInputStream(new File(cparam)), 640, 480);
-                //DistfactorV4のテスト。dfとdf2の_sパラメータの値が同じか確認する。
-                NyARCameraDistortionFactorV4 df = (NyARCameraDistortionFactorV4)param.getDistortionFactor();
-                double[] t = new double[16];
-                df.getValue(t);
-                //			NyARCameraDistortionFactorV4 df2=new NyARCameraDistortionFactorV4(param._screen_size.w,param._screen_size.h,new double[]{t[4],0,t[6], 0,t[5],t[7]},new double[]{t[0],t[1],t[2],t[3]},1,1);
-                return;
-            }
-            catch (FileNotFoundException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            //try
+            //{
+            //    String cparam = "../Data/testcase/camera_para5.dat";
+            //    NyARParam param = NyARParam.loadFromARParamFile(new FileInputStream(new File(cparam)), 640, 480);
+            //    //DistfactorV4のテスト。dfとdf2の_sパラメータの値が同じか確認する。
+            //    NyARCameraDistortionFactorV4 df = (NyARCameraDistortionFactorV4)param.getDistortionFactor();
+            //    double[] t = new double[16];
+            //    df.getValue(t);
+            //    //			NyARCameraDistortionFactorV4 df2=new NyARCameraDistortionFactorV4(param._screen_size.w,param._screen_size.h,new double[]{t[4],0,t[6], 0,t[5],t[7]},new double[]{t[0],t[1],t[2],t[3]},1,1);
+            //    return;
+            //}
+            //catch (FileNotFoundException e)
+            //{
+            //    // TODO Auto-generated catch block
+            //    e.printStackTrace();
+            //}
 
         }
 
@@ -301,8 +304,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public ParamLoader(int i_camera_width, int i_camera_height, double[] i_intrinsic_matrix, double[] i_distortion_coeffs, int i_screen_width, int i_screen_height)
         {
-            const double x_scale = (double)i_screen_width / (double)(i_camera_width);// scale = (double)xsize / (double)(source->xsize);
-            const double y_scale = (double)i_screen_height / (double)(i_camera_height);// scale = (double)ysize / (double)(source->ysize);
+            double x_scale = (double)i_screen_width / (double)(i_camera_width);// scale = (double)xsize / (double)(source->xsize);
+            double y_scale = (double)i_screen_height / (double)(i_camera_height);// scale = (double)ysize / (double)(source->ysize);
 
             this.size = new NyARIntSize(i_camera_width, i_camera_height);
             //dist factor(倍率1倍の基準点)
@@ -332,8 +335,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						0,726.0941816535367,241.5,0.0,
 						0.0,0.0,1.0,0.0,
 						0.0,0.0,0.0,1.0};
-		const double x_scale = (double) i_screen_width / (double) (640);// scale = (double)xsize / (double)(source->xsize);
-        const double y_scale = (double)i_screen_height / (double)(480);// scale = (double)ysize / (double)(source->ysize);
+		double x_scale = (double) i_screen_width / (double) (640);// scale = (double)xsize / (double)(source->xsize);
+        double y_scale = (double)i_screen_height / (double)(480);// scale = (double)ysize / (double)(source->ysize);
 		
 		this.size=new NyARIntSize(640,480);
 		this.pmat=new NyARPerspectiveProjectionMatrix();
@@ -346,17 +349,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_stream
          * @throws NyARRuntimeException
          */
-        public ParamLoader(InputStream i_stream, int i_screen_width, int i_screen_height)
+        public ParamLoader(StreamReader i_stream, int i_screen_width, int i_screen_height)
         {
             //読み出し
-            byte[] data = BinaryReader.toArray(i_stream);
-            BinaryReader bis = new BinaryReader(data, BinaryReader.ENDIAN_BIG);
+            byte[] data = jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream);
+            jp.nyatla.nyartoolkit.cs.cs4.BinaryReader bis = new jp.nyatla.nyartoolkit.cs.cs4.BinaryReader(data, jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.ENDIAN_BIG);
             //読み出したサイズでバージョンを決定
             int[] version_table = { 136, 144, 152, 176 };
             int version = -1;
-            for (int i = 0; i < version_table.length; i++)
+            for (int i = 0; i < version_table.Length; i++)
             {
-                if (data.length % version_table[i] == 0)
+                if (data.Length % version_table[i] == 0)
                 {
                     version = i + 1;
                     break;
@@ -372,8 +375,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
             //size
             this.size = new NyARIntSize(i_screen_width, i_screen_height);
-            const double x_scale = (double)i_screen_width / (double)(camera_width);// scale = (double)xsize / (double)(source->xsize);
-            const double y_scale = (double)i_screen_height / (double)(camera_height);// scale = (double)ysize / (double)(source->ysize);
+            double x_scale = (double)i_screen_width / (double)(camera_width);// scale = (double)xsize / (double)(source->xsize);
+            double y_scale = (double)i_screen_height / (double)(camera_height);// scale = (double)ysize / (double)(source->ysize);
 
             //projection matrix
             this.pmat = new NyARPerspectiveProjectionMatrix();

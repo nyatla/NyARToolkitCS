@@ -1,12 +1,14 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
- *  Copyright 2013-2015 Daqri, LLC.
- *  Author(s): Chris Broaddus
+ *  Copyright 2015 Daqri, LLC.
+ *  Copyright 2006-2015 ARToolworks, Inc.
+ *
+ *  Author(s): Hirokazu Kato, Philip Lamb
  *
  * The NyARToolkit is Java edition ARToolKit class library.
- *  Copyright (C)2016 Ryo Iizuka
+ * Copyright (C)2008-2016 Ryo Iizuka
  * 
  * NyARToolkit is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -33,15 +35,14 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
 
-import jp.nyatla.nyartoolkit.core.kpm.vision.FreakFeature;
-import jp.nyatla.nyartoolkit.core.types.NyARDoublePoint2d;
-
-public class KpmRefData {
-	final public NyARDoublePoint2d coord2D = new NyARDoublePoint2d();
-	final public NyARDoublePoint2d coord3D = new NyARDoublePoint2d(); // millimetres.
-	final public FreakFeature featureVec = new FreakFeature();
-	public int pageNo;
-	public int refImageNo;
+    public class NyARFeatureCoordPtrList : NyARPointerStack<NyARNftFsetFile.NyAR2FeatureCoord>
+    {
+        public NyARFeatureCoordPtrList(int i_max_num)
+            : base(i_max_num)
+        {
+        }
+    }
 }

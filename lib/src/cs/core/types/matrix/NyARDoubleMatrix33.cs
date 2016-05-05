@@ -73,6 +73,38 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return ret;
         }
+	    /**
+	     * インスタンスの値とi_matの値が同一かを返します。
+	     */	
+	    override public bool Equals(Object i_mat)
+	    {
+		    if(i_mat is NyARDoubleMatrix33)
+            {
+			    NyARDoubleMatrix33 m=(NyARDoubleMatrix33)i_mat;
+			    if(	m.m00==this.m00 && m.m01==this.m01 && m.m02==this.m02 &&
+				    m.m10==this.m10 && m.m11==this.m11 && m.m12==this.m12 &&
+				    m.m20==this.m20 && m.m21==this.m21 && m.m22==this.m22)
+			    {
+				    return true;
+			    }
+		    }
+		    return false;
+	    }
+        public override int GetHashCode()
+        {
+            //XOR
+            return
+                this.m00.GetHashCode() ^ this.m01.GetHashCode() ^ this.m02.GetHashCode() ^
+                this.m10.GetHashCode() ^ this.m11.GetHashCode() ^ this.m12.GetHashCode() ^
+                this.m20.GetHashCode() ^ this.m21.GetHashCode() ^ this.m22.GetHashCode();
+        }
+	    public NyARDoubleMatrix33()
+	    {
+	    }
+	    public NyARDoubleMatrix33(double[] i_value)
+	    {
+		    this.setValue(i_value);
+	    }
         /**
          * この関数は、要素数9の配列を、行列にセットします。
          */
@@ -302,6 +334,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.m22 = i_mat_l.m20 * i_mat_r.m02 + i_mat_l.m21 * i_mat_r.m12 + i_mat_l.m22 * i_mat_r.m22;
 
             return;
+        }
+        public double determinant()
+        {
+            double a12, a13, a22, a23, a32, a33;
+            a12 = this.m01; a13 = this.m02;
+            a22 = this.m11; a23 = this.m12;
+            a32 = this.m21; a33 = this.m22;
+            return this.m00 * (a22 * a33 - a23 * a32) + this.m10 * (a32 * a13 - a33 * a12) + this.m20 * (a12 * a23 - a13 * a22);
         }
     }
 }

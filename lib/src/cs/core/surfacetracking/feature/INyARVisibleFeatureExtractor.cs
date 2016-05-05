@@ -1,12 +1,14 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
- *  Copyright 2013-2015 Daqri, LLC.
- *  Author(s): Chris Broaddus
+ *  Copyright 2015 Daqri, LLC.
+ *  Copyright 2006-2015 ARToolworks, Inc.
+ *
+ *  Author(s): Hirokazu Kato, Philip Lamb
  *
  * The NyARToolkit is Java edition ARToolKit class library.
- *  Copyright (C)2016 Ryo Iizuka
+ * Copyright (C)2008-2016 Ryo Iizuka
  * 
  * NyARToolkit is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -33,31 +35,30 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm.vision;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
 
-public class FreakFeature {
-	final public static int FREAK_SUB_DIMENSION = 96;
-	final public byte[] v = new byte[FREAK_SUB_DIMENSION];
-	public double angle;
-	public double scale;
-	public int maxima;
 
-	public FreakFeature() {
-	}
+    public interface INyARVisibleFeatureExtractor
+    {
+        /**
+         * 有効なテンプレートデータを抽出し、展開して返します。
+         * @param i_fset
+         * 展開元のテンプレート
+         * @param i_trans
+         * 座標変換行列のセット
+         * @param i_trans
+         * テンプレートの抽出条件-回転行列
+         * @param candidate
+         * 高精度なテンプレート候補
+         * @param candidate2
+         * 低精度なテンプレート候補
+         * @return
+         */
+        void extractVisibleFeatures(NyARNftFsetFile i_fset,
+            NyARSurfaceTransMatrixSet i_trans,
+            NyARSurfaceFeatures candidate,
+            NyARSurfaceFeatures candidate2);
 
-	public FreakFeature(byte[] i_bytes) {
-		System.arraycopy(i_bytes, 0, this.v, 0, i_bytes.length);
-	}
-
-	public static FreakFeature[] createArray(int i_len) {
-		FreakFeature[] a = new FreakFeature[i_len];
-		for (int i = 0; i < a.length; i++) {
-			a[i] = new FreakFeature();
-		}
-		return a;
-	}
-
-	public void setFeaturevec(byte[] bytes) {
-		System.arraycopy(bytes, 0, this.v, 0, bytes.length);
-	}
+    }
 }

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by
@@ -45,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public sealed void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
+        public void ideal2Observ(NyARDoublePoint2d i_in, NyARDoublePoint2d o_out)
         {
             this.ideal2Observ(i_in.x, i_in.y, o_out);
             return;
@@ -53,7 +53,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、座標点を理想座標系から観察座標系へ変換します。
          */
-        public sealed void ideal2Observ(NyARDoublePoint2d i_in, NyARIntPoint2d o_out)
+        public void ideal2Observ(NyARDoublePoint2d i_in, NyARIntPoint2d o_out)
         {
             this.ideal2Observ(i_in.x, i_in.y, o_out);
             return;
@@ -61,13 +61,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * {@link #observ2Ideal(double, double, NyARDoublePoint2d)}のラッパーです。
          */
-        public sealed void observ2Ideal(NyARDoublePoint2d i_in, NyARDoublePoint2d o_point)
+        public void observ2Ideal(NyARDoublePoint2d i_in, NyARDoublePoint2d o_point)
         {
             this.observ2Ideal(i_in.x, i_in.y, o_point);
         }
 
 
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        virtual public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             for (int i = i_size - 1; i >= 0; i--)
             {
@@ -75,7 +75,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             }
             return;
         }
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
+        virtual public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
         {
             for (int i = i_size - 1; i >= 0; i--)
             {
@@ -89,7 +89,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 座標配列全てに対して、{@link #observ2Ideal(double, double, NyARIntPoint2d)}を適応します。
          * 必要に応じて継承先で高速化してください。
          */
-        public void observ2IdealBatch(NyARIntPoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        virtual public void observ2IdealBatch(NyARIntPoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             for (int i = i_size - 1; i >= 0; i--)
             {
@@ -101,7 +101,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 座標配列全てに対して、{@link #observ2Ideal(double, double, NyARDoublePoint2d)}を適応します。
          * 必要に応じて継承先で高速化してください。
          */
-        public void observ2IdealBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        virtual public void observ2IdealBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             for (int i = i_size - 1; i >= 0; i--)
             {
@@ -110,7 +110,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-
-
+        public abstract void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out);
+        public abstract void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out);
+        public abstract void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point);
+        public abstract void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point);
     }
 }

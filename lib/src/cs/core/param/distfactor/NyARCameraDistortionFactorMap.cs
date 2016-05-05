@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by
@@ -78,7 +78,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
+        override public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
         {
             this._base_factor.ideal2Observ(i_x, i_y, o_out);
         }
@@ -92,7 +92,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
+        override public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
         {
             this._base_factor.ideal2Observ(i_x, i_y, o_out);
         }
@@ -106,14 +106,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_point
          * 変換後の座標を受け取るオブジェクト
          */
-        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
+        override public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             int idx = (int)ix + (int)iy * this._stride;
             o_point.x = this._mapx[idx];
             o_point.y = this._mapy[idx];
             return;
         }
-        public void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
+        override public void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
         {
             int idx = ix + iy * this._stride;
             o_point.x = this._mapx[idx];
@@ -131,7 +131,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          * 変換する座標の個数。
          */
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        override public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             this._base_factor.ideal2ObservBatch(i_in, o_out, i_size);
         }
@@ -146,7 +146,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_size
          * 変換する座標の個数。
          */
-        public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
+        override public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
         {
             this._base_factor.ideal2ObservBatch(i_in, o_out, i_size);
         }

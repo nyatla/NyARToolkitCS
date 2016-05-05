@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -33,98 +33,100 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm.dogscalepyramid;
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
+    public class OrientationAssignment
+    {
 
+        readonly private int mNumScalesPerOctave;
 
-import jp.nyatla.nyartoolkit.core.kpm.dogscalepyramid.gradientimage.GradientsImage_ARTK;
-import jp.nyatla.nyartoolkit.core.kpm.dogscalepyramid.gradientimage.GradientsImage_O1;
-import jp.nyatla.nyartoolkit.core.kpm.dogscalepyramid.utils.BilinearHistogram;
-import jp.nyatla.nyartoolkit.core.kpm.pyramid.GaussianScaleSpacePyramid;
+        // Factor to expand the Gaussian weighting function. The Gaussian sigma is computed
+        // by expanding the feature point scale. The feature point scale represents the isometric
+        // size of the feature.
+        readonly private double mGaussianExpansionFactor;
 
+        // Factor to expand the support region. This factor is multipled by the expanded
+        // Gaussian sigma. It essentially acts at the "window" to collect gradients in.
+        readonly private double mSupportRegionExpansionFactor;
 
-public class OrientationAssignment {
+        // Number of binomial smoothing iterations of the orientation histogram. The histogram
+        // is smoothed before find the peaks.
+        readonly private int mNumSmoothingIterations;
 
-	final private int mNumScalesPerOctave;
+        // All the supporting peaks which are X percent of the absolute peak are considered
+        // dominant orientations.
+        readonly private double mPeakThreshold;
 
-	// Factor to expand the Gaussian weighting function. The Gaussian sigma is computed
-	// by expanding the feature point scale. The feature point scale represents the isometric
-	// size of the feature.
-	final private double mGaussianExpansionFactor;
+        // Orientation histogram
+        readonly private BilinearHistogram mHistogram;
 
-	// Factor to expand the support region. This factor is multipled by the expanded
-	// Gaussian sigma. It essentially acts at the "window" to collect gradients in.
-	final private double mSupportRegionExpansionFactor;
+        // Vector of gradient images
+        readonly private GradientsImage_ARTK[] mGradients;
 
-	// Number of binomial smoothing iterations of the orientation histogram. The histogram
-	// is smoothed before find the peaks.
-	final private int mNumSmoothingIterations;
+        public OrientationAssignment(int fine_width, int fine_height, int num_octaves, int num_scales_per_octave,
+                int num_bins, double gaussian_expansion_factor, double support_region_expansion_factor,
+                int num_smoothing_iterations, double peak_threshold)
+        {
+            this.mNumScalesPerOctave = num_scales_per_octave;
+            this.mGaussianExpansionFactor = gaussian_expansion_factor;
+            this.mSupportRegionExpansionFactor = support_region_expansion_factor;
+            this.mNumSmoothingIterations = num_smoothing_iterations;
+            this.mPeakThreshold = peak_threshold;
 
-	// All the supporting peaks which are X percent of the absolute peak are considered
-	// dominant orientations.
-	final private double mPeakThreshold;
+            this.mHistogram = new BilinearHistogram(num_bins);
 
-	// Orientation histogram
-	final private BilinearHistogram mHistogram;
+            // Allocate gradient images
+            this.mGradients = new GradientsImage_ARTK[num_octaves * this.mNumScalesPerOctave];
+            for (int i = 0; i < num_octaves; i++)
+            {
+                for (int j = 0; j < num_scales_per_octave; j++)
+                {
+                    this.mGradients[i * num_scales_per_octave + j] = new GradientsImage_O1(fine_width >> i, fine_height >> i);
 
-	// Vector of gradient images
-	final private GradientsImage_ARTK[] mGradients;
+                }
+            }
+        }
 
-	public OrientationAssignment(int fine_width, int fine_height, int num_octaves, int num_scales_per_octave,
-			int num_bins, double gaussian_expansion_factor, double support_region_expansion_factor,
-			int num_smoothing_iterations, double peak_threshold) {
-		this.mNumScalesPerOctave = num_scales_per_octave;
-		this.mGaussianExpansionFactor = gaussian_expansion_factor;
-		this.mSupportRegionExpansionFactor = support_region_expansion_factor;
-		this.mNumSmoothingIterations = num_smoothing_iterations;
-		this.mPeakThreshold = peak_threshold;
+        /**
+         * Compute the gradients given a pyramid.
+         */
+        public void computeGradients(GaussianScaleSpacePyramid pyramid)
+        {
+            // Loop over each pyramid image and compute the gradients
+            for (int i = 0; i < pyramid.images().Length; i++)
+            {
+                this.mGradients[i].computePolarGradients(pyramid.images()[i]);
+            }
+        }
 
-		this.mHistogram = new BilinearHistogram(num_bins);
+        /**
+         * Compute orientations for a keypoint.
+         */
+        public int compute(int octave, int scale, double x, double y, double sigma, double[] i_angles)
+        {
+            //gw_sigma = math_utils.max2(1.f, this.mGaussianExpansionFactor * sigma);
+            double gw_sigma = this.mGaussianExpansionFactor * sigma;
+            if (gw_sigma < 1.0)
+            {
+                gw_sigma = 1.0;
+            }
 
-		// Allocate gradient images
-		this.mGradients = new GradientsImage_ARTK[num_octaves * this.mNumScalesPerOctave];
-		for (int i = 0; i < num_octaves; i++) {
-			for (int j = 0; j < num_scales_per_octave; j++) {
-				this.mGradients[i * num_scales_per_octave + j] = new GradientsImage_O1(fine_width >> i, fine_height >> i);
+            // Radius of the support region
+            double radius = this.mSupportRegionExpansionFactor * gw_sigma;
+            double gw_scale = -1.0f / (2 * (gw_sigma * gw_sigma));
 
-			}
-		}
-	}
+            // Zero out the orientation histogram
+            this.mHistogram.reset();
+            int level = octave * mNumScalesPerOctave + scale;
+            this.mGradients[level].buildOrientationHistogram(x, y, radius, gw_scale, this.mHistogram);
 
-	/**
-	 * Compute the gradients given a pyramid.
-	 */
-	public void computeGradients(GaussianScaleSpacePyramid pyramid) {
-		// Loop over each pyramid image and compute the gradients
-		for (int i = 0; i < pyramid.images().length; i++) {
-			this.mGradients[i].computePolarGradients(pyramid.images()[i]);
-		}
-	}
+            // The orientation histogram is smoothed with a Gaussian
+            this.mHistogram.smoothOrientationHistogram(mNumSmoothingIterations);
 
-	/**
-	 * Compute orientations for a keypoint.
-	 */
-	public int compute(int octave, int scale, double x, double y, double sigma,double[] i_angles)
-	{
-		//gw_sigma = math_utils.max2(1.f, this.mGaussianExpansionFactor * sigma);
-		double gw_sigma = this.mGaussianExpansionFactor * sigma;
-		if(gw_sigma<1.0){
-			gw_sigma=1.0;
-		}
+            // Find all the peaks.
+            return this.mHistogram.findPeak(mPeakThreshold, i_angles);
+        }
 
-		// Radius of the support region
-		double radius = this.mSupportRegionExpansionFactor * gw_sigma;
-		double gw_scale = -1.f / (2 * (gw_sigma*gw_sigma));
-
-		// Zero out the orientation histogram
-		this.mHistogram.reset();
-		int level = octave * mNumScalesPerOctave + scale;
-		this.mGradients[level].buildOrientationHistogram(x, y, radius, gw_scale, this.mHistogram);
-
-		// The orientation histogram is smoothed with a Gaussian
-		this.mHistogram.smoothOrientationHistogram(mNumSmoothingIterations);
-		
-		// Find all the peaks.
-		return this.mHistogram.findPeak(mPeakThreshold,i_angles);
-	}
-	
+    }
 }

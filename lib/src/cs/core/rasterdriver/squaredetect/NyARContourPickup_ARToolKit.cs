@@ -141,7 +141,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             break;
                         }
                         //8方向全て調べたけどラベルが無いよ？
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                     }
                 }
                 else
@@ -165,7 +165,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     if (i == 8)
                     {
                         //8方向全て調べたけどラベルが無いよ？
-                        throw new NyARException();// return(-1);
+                        throw new NyARRuntimeException();// return(-1);
                     }
                 }
 

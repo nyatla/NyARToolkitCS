@@ -337,7 +337,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public double makeColorData(int[] o_out)
         {
             NyARIntSize size = this._ref_raster.getSize();
-            INyARRgbPixelDriver pixdev = this._ref_raster.getRgbPixelDriver();
+            INyARRgbRaster pixdev = this._ref_raster;
             int[] rgb = this.__rgb;
             int width = size.w;
             //<平均値計算>

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -32,8 +32,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public interface INyARGrayscalePixelInterface
     {
-        public int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf);
-        public int getPixel(int i_x, int i_y);
+        int[] getPixelSet(int[] i_x, int[] i_y, int i_n, int[] o_buf, int i_st_buf);
+        int getPixel(int i_x, int i_y);
         /**
          * この関数は、RGBデータを指定した座標のピクセルにセットします。 実装クラスでは、バッファにRGB値を書込む処理を実装してください。
          * 
@@ -45,7 +45,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 設定するピクセル値。
          * @throws NyARRuntimeException
          */
-        public void setPixel(int i_x, int i_y, int i_gs);
+        void setPixel(int i_x, int i_y, int i_gs);
         /**
          * この関数は、座標群にピクセルごとのRGBデータをセットします。 実装クラスでは、バッファにRGB値を書込む処理を実装してください。
          * 
@@ -57,6 +57,6 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 設定するピクセル値の数
          * @throws NyARRuntimeException
          */
-        public void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs);
+        void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intgs);
     }
 }

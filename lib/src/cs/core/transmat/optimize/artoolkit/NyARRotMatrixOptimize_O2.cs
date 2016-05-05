@@ -30,6 +30,7 @@
  * 
  */
 using System;
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 

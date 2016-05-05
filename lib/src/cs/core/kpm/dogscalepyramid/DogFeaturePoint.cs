@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -33,21 +33,24 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm.dogscalepyramid;
+using System;
+namespace jp.nyatla.nyartoolkit.cs.core
+{
+    public class DogFeaturePoint
+    {
+        public double x, y;
+        public double angle;
+        public int octave;
+        public int scale;
+        public double sp_scale;
+        public double score;
+        public double sigma;
+        public double edge_score;
+
+        public DogFeaturePoint()
+        {
+        }
 
 
-public class DogFeaturePoint {
-	public double x, y;
-	public double angle;
-	public int octave;
-	public int scale;
-	public double sp_scale;
-	public double score;
-	public double sigma;
-	public double edge_score;
-
-	public DogFeaturePoint() {
-	}
-
-
-}; // FeaturePoint
+    }; // FeaturePoint
+}

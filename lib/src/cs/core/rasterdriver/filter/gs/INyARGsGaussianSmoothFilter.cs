@@ -123,7 +123,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     bptr++;
                     return;
                 default:
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
             }
         }
     }

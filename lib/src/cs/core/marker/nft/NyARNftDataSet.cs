@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,6 +35,8 @@
  * statement from your version.
  * 
  */
+using System.IO;
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -52,21 +54,22 @@ namespace jp.nyatla.nyartoolkit.cs.core
 		double new_dpi=(i_iset.items[0].width/i_width_in_msec)*25.4;
 		double dpi_rate=(new_dpi/i_iset.items[0].dpi);
 		//isetの更新(dpiを)
-		for(int i=0;i<i_iset.items.length;i++){
+		for(int i=0;i<i_iset.items.Length;i++){
 			i_iset.items[i].dpi*=dpi_rate;
 		}
 		//fsetの更新
-		for(int i=0;i<i_fset.list.length;i++){
+		for(int i=0;i<i_fset.list.Length;i++){
 			i_fset.list[i].maxdpi*=dpi_rate;
 			i_fset.list[i].mindpi*=dpi_rate;
 			//ピクセル値に戻す係数		
-			foreach(NyAR2FeatureCoord j in i_fset.list[i].coord){
+            foreach (NyARNftFsetFile.NyAR2FeatureCoord j in i_fset.list[i].coord)
+            {
 				j.mx=j.mx/dpi_rate;
 				j.my=j.my/dpi_rate;
 			}
 		}
 		//fset3の更新
-		for(int i=0;i<i_freak_fset.ref_point.length;i++){
+		for(int i=0;i<i_freak_fset.ref_point.Length;i++){
 			i_freak_fset.ref_point[i].coord3D.x/=dpi_rate;
 			i_freak_fset.ref_point[i].coord3D.y/=dpi_rate;
 		}
@@ -96,12 +99,12 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * NFTターゲット画像の横幅をmmで指定します。スケーリングが不要な場合はNaNを指定します。
          * @return
          */
-        public static NyARNftDataSet loadFromNftFiles(InputStream i_iset_stream, InputStream i_fset_stream, InputStream i_fset3_stream, int i_freak_fset_page_id, double i_width_in_msec)
+        public static NyARNftDataSet loadFromNftFiles(StreamReader i_iset_stream, StreamReader i_fset_stream, StreamReader i_fset3_stream, int i_freak_fset_page_id, double i_width_in_msec)
         {
             NyARNftIsetFile iset = NyARNftIsetFile.loadFromIsetFile(i_iset_stream);
             NyARNftFsetFile fset = NyARNftFsetFile.loadFromFsetFile(i_fset_stream);
             NyARNftFreakFsetFile fset3 = NyARNftFreakFsetFile.loadFromfset3File(i_fset3_stream);
-            if (!Double.isNaN(i_width_in_msec))
+            if (!double.IsNaN(i_width_in_msec))
             {
                 scaling(iset, fset, fset3, i_freak_fset_page_id, i_width_in_msec);
             }
@@ -120,9 +123,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             try
             {
                 return loadFromNftFiles(
-                    new FileInputStream(new File(i_fname_prefix + ".iset")),
-                    new FileInputStream(new File(i_fname_prefix + ".fset")),
-                    new FileInputStream(new File(i_fname_prefix + ".fset3")), i_freak_fset_page_id, i_width_in_msec);
+                    new StreamReader(i_fname_prefix + ".iset"),
+                    new StreamReader(i_fname_prefix + ".fset"),
+                    new StreamReader(i_fname_prefix + ".fset3"), i_freak_fset_page_id, i_width_in_msec);
             }
             catch (FileNotFoundException e)
             {

@@ -50,10 +50,10 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * 新しい配列。
          */
-        public static NyARDoublePoint2d[] createArray(int i_number)
+        public static NyARDoublePoint2d[] createArray(int i_length)
         {
-            NyARDoublePoint2d[] ret = new NyARDoublePoint2d[i_number];
-            for (int i = 0; i < i_number; i++)
+            NyARDoublePoint2d[] ret = new NyARDoublePoint2d[i_length];
+            for (int i = 0; i < i_length; i++)
             {
                 ret[i] = new NyARDoublePoint2d();
             }

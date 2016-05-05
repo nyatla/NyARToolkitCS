@@ -357,7 +357,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // 要求されたインデクスは範囲外
             if (i_index >= this.work2.Length)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             // 追加アロケート範囲を計算
             int range = i_index + ARRAY_APPEND_STEP;

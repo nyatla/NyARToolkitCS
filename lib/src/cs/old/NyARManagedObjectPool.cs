@@ -179,7 +179,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected virtual T createElement()
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
         /**
          * この関数は、配列要素のオブジェクトを(引数付きで)１個作ります。
@@ -191,7 +191,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected virtual T createElement(object i_param)
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
     }
 }

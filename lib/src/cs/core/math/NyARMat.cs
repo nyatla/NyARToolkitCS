@@ -31,6 +31,8 @@
  */
 using System.Diagnostics;
 using System;
+using jp.nyatla.nyartoolkit.cs.cs4;
+
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -68,7 +70,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         protected NyARMat()
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
         /**
          * 配列i_mをラップしてインスタンスを生成します。
@@ -198,7 +200,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             switch (dimen)
             {
                 case 0:
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
                 case 1:
                     ap[0][0] = 1.0 / ap[0][0];// *ap = 1.0 / (*ap);
                     return true;/* 1 dimension */
@@ -294,7 +296,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             // サイズ確認
             if (this.row != i_copy_from.row || this.clm != i_copy_from.clm)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             // 値コピー
             for (int r = this.row - 1; r >= 0; r--)
@@ -342,7 +344,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             if (this.row != i_src.clm || this.clm != i_src.row)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
             for (int r = 0; r < this.row; r++)
             {
@@ -363,9 +365,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         {
             if (unit.row != unit.clm)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
-            NyARException.trap("未チェックのパス");
+            NyARRuntimeException.trap("未チェックのパス");
             // For順変更禁止
             for (int r = 0; r < unit.getRow(); r++)
             {

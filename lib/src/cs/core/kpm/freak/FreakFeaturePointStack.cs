@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -33,28 +33,22 @@
  * statement from your version.
  * 
  */
-package jp.nyatla.nyartoolkit.core.kpm.freak;
-
-
-import jp.nyatla.nyartoolkit.core.types.stack.NyARObjectStack;
-
-public class FreakFeaturePointStack extends NyARObjectStack<FreakFeaturePoint>
+namespace jp.nyatla.nyartoolkit.cs.core
 {
-	public FreakFeaturePointStack(int i_length)
-	{
-		super(i_length,FreakFeaturePoint.class);
-	}
-	public FreakFeaturePointStack()
-	{
-		super(9999,FreakFeaturePoint.class);
-		System.out.println("force set BinaryFeatureStore size to 9999");
-	}
-	
-	@Override
-	final protected FreakFeaturePoint createElement()
-	{
-		return new FreakFeaturePoint();
-	}
-
-
+    public class FreakFeaturePointStack : NyARObjectStack<FreakFeaturePoint>
+    {
+        public FreakFeaturePointStack(int i_length)
+            : base(i_length)
+        {
+        }
+        public FreakFeaturePointStack()
+            : base(9999)
+        {
+            System.Console.WriteLine("force set BinaryFeatureStore size to 9999");
+        }
+        sealed override protected FreakFeaturePoint createElement()
+        {
+            return new FreakFeaturePoint();
+        }
+    }
 }

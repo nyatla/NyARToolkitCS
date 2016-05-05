@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
@@ -23,6 +23,7 @@
  *	<airmail(at)ebony.plala.or.jp> or <nyatla(at)nyatla.jp>
  * 
  */
+using System;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
 
@@ -31,8 +32,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
      */
     public abstract class NyARRaster_BasicClass : INyARRaster
     {
-        protected sealed NyARIntSize _size;
-        protected sealed int _buffer_type;
+        readonly protected NyARIntSize _size;
+        readonly protected int _buffer_type;
         /**
          * コンストラクタです。
          * メンバ変数を初期化して、インスタンスを生成します。
@@ -51,14 +52,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**
          * この関数は、ラスタの幅を返します。
          */
-        public sealed int getWidth()
+        public int getWidth()
         {
             return this._size.w;
         }
         /**
          * この関数は、ラスタの高さを返します。
          */
-        sealed public int getHeight()
+        public int getHeight()
         {
             return this._size.h;
         }
@@ -66,7 +67,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのサイズを格納したオブジェクトを返します。
          */
 
-        sealed public NyARIntSize getSize()
+        public NyARIntSize getSize()
         {
             return this._size;
         }
@@ -74,20 +75,20 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * この関数は、ラスタのバッファへの参照値を返します。
          * バッファの形式は、コンストラクタに指定した形式と同じです。
          */
-        sealed public int getBufferType()
+        public int getBufferType()
         {
             return _buffer_type;
         }
         /**
          * この関数は、ラスタの幅を返します。
          */
-        sealed public boolean isEqualBufferType(int i_type_value)
+        public bool isEqualBufferType(int i_type_value)
         {
             return this._buffer_type == i_type_value;
         }
         public abstract Object getBuffer();
         public abstract bool hasBuffer();
         public abstract void wrapBuffer(Object i_ref_buf);
-        public abstract Object createInterface(TypeId i_iid);
+        public abstract Object createInterface(Type i_iid);
     }
 }

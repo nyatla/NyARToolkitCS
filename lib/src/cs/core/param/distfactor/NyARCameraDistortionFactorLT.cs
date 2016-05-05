@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by
@@ -83,7 +83,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
+        public override void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
         {
             int px = (int)(i_x + 0.5) + this._xOff;
             int py = (int)(i_y + 0.5) + this._yOff;
@@ -108,7 +108,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
+        public override void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
         {
             int px = (int)(i_x + 0.5) + this._xOff;
             int py = (int)(i_y + 0.5) + this._yOff;
@@ -132,7 +132,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_point
          * 変換後の座標を受け取るオブジェクト
          */
-        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
+        override public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             int px = (int)(ix + 0.5) + this._xOff;
             int py = (int)(iy + 0.5) + this._yOff;
@@ -145,7 +145,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             o_point.x = this._o2i[lt + 0];
             o_point.y = this._o2i[lt + 1];
         }
-        public void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
+        override public void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
         {
             int px = (int)(ix + 0.5) + this._xOff;
             int py = (int)(iy + 0.5) + this._yOff;

@@ -80,7 +80,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         break;
                 }
             }
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
         /**
          * 入力ラスタをHSV形式に変換して、出力ラスタへ書込みます。
@@ -109,7 +109,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
         public void doFilter(INyARRaster i_input, INyARRaster i_output, NyARIntSize i_size)
         {
-            throw new NyARException();
+            throw new NyARRuntimeException();
         }
 
     }

@@ -260,7 +260,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                             double d = para20 * xw[j] + para12_x_yw_para22;
                             if (d == 0)
                             {
-                                throw new NyARException();
+                                throw new NyARRuntimeException();
                             }
                             int xcw = (int)((para00 * xw[j] + para01_x_yw_para02) / d);
                             int ycw = (int)((para10 * xw[j] + para11_x_yw_para12) / d);
@@ -283,7 +283,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         b += rgb_set[i];// B
                     }
                     //1ピクセル確定
-                    this._patdata[iy * pat_size_w + ix] = (((r / xdiv_x_ydiv) & 0xff) << 16) | (((g / xdiv_x_ydiv) & 0xff) << 8) | (((b / xdiv_x_ydiv) & 0xff));
+                    this._buf[iy * pat_size_w + ix] = (((r / xdiv_x_ydiv) & 0xff) << 16) | (((g / xdiv_x_ydiv) & 0xff) << 8) | (((b / xdiv_x_ydiv) & 0xff));
                 }
             }
             return;

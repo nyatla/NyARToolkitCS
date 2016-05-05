@@ -266,7 +266,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         }
                         return number_of_result;
                     default:
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                 }
             }
             else
@@ -297,7 +297,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         o_result[1] = o_result[1] - B3;
                         break;
                     default:
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                 }
                 result_2nd = solve2Equation(ru, (p + u) / 2 - ru * q / (2 * u), o_result, result_1st);
                 //0,1番目に格納
@@ -313,7 +313,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                         o_result[result_1st + 1] = o_result[result_1st + 1] - B3;
                         break;
                     default:
-                        throw new NyARException();
+                        throw new NyARRuntimeException();
                 }
                 return result_1st + result_2nd;
             }

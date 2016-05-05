@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by
@@ -63,9 +63,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this._y0 = i_factor[7] * i_y_scale;   /*  y0  */
             this._s = i_factor[8];
         }
-        public NyARCameraDistortionFactorV4(NyARCameraDistortionFactorV4 i_copyfrom, double i_x_scale, double i_y_scale)
+        public NyARCameraDistortionFactorV4(NyARCameraDistortionFactorV4 i_copyfrom, double i_x_scale, double i_y_scale):this(new double[] { i_copyfrom._k1, i_copyfrom._k2, i_copyfrom._p1, i_copyfrom._p2, i_copyfrom._fx, i_copyfrom._fy, i_copyfrom._x0, i_copyfrom._y0, i_copyfrom._s }, i_x_scale, i_y_scale)
         {
-            this(new double[] { i_copyfrom._k1, i_copyfrom._k2, i_copyfrom._p1, i_copyfrom._p2, i_copyfrom._fx, i_copyfrom._fy, i_copyfrom._x0, i_copyfrom._y0, i_copyfrom._s }, i_x_scale, i_y_scale);
             return;
         }
 
@@ -110,7 +109,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_factor
          * 歪みパラメータ値の出力先配列。
          */
-        sealed public void getValue(double[] o_factor)
+        public void getValue(double[] o_factor)
         {
             o_factor[0] = this._k1;
             o_factor[1] = this._k2;
@@ -280,7 +279,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param o_out
          * 変換後の座標を受け取るオブジェクト
          */
-        public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
+        override public void ideal2Observ(double i_x, double i_y, NyARDoublePoint2d o_out)
         {
             double k1 = this._k1;
             double k2 = this._k2;
@@ -301,7 +300,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
 
 
-        public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
+        override public void ideal2Observ(double i_x, double i_y, NyARIntPoint2d o_out)
         {
             double k1 = this._k1;
             double k2 = this._k2;
@@ -322,9 +321,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         }
 
 
-        private constint PD_LOOP2 = 4;
+        private const int PD_LOOP2 = 4;
 
-        public sealed void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
+        public override sealed void observ2Ideal(int ix, int iy, NyARDoublePoint2d o_point)
         {
             this.observ2Ideal((double)ix, (double)iy, o_point);
             return;
@@ -340,7 +339,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @todo should optimize!
          */
 
-        public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
+        override public void observ2Ideal(double ix, double iy, NyARDoublePoint2d o_point)
         {
             // OpenCV distortion model, with addition of a scale factor so that
             // entire image fits onscreen.
@@ -400,7 +399,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @todo should optimize!
          */
 
-        sealed public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
+        sealed override public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARDoublePoint2d[] o_out, int i_size)
         {
             double k1 = this._k1;
             double k2 = this._k2;
@@ -436,7 +435,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @todo should optimize!
          */
 
-        sealed public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
+        sealed override public void ideal2ObservBatch(NyARDoublePoint2d[] i_in, NyARIntPoint2d[] o_out, int i_size)
         {
             double k1 = this._k1;
             double k2 = this._k2;

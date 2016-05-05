@@ -29,9 +29,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
         protected double breakLoopErrorThresh2;
         protected double inlierProb;
 
-        public NyARIcp(NyARParam i_param)
+        public NyARIcp(NyARDoubleMatrix44 i_projection_matrix)
         {
-            this._ref_matXc2U = i_param.getPerspectiveProjectionMatrix();
+            this._ref_matXc2U = i_projection_matrix;
             this._maxLoop = ICP_MAX_LOOP;
             this.breakLoopErrorThresh = ICP_BREAK_LOOP_ERROR_THRESH;
             this.breakLoopErrorRatioThresh = ICP_BREAK_LOOP_ERROR_RATIO_THRESH;

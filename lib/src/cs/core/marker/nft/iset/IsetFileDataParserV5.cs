@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the original ARToolKit developed by
@@ -35,6 +35,7 @@
  * statement from your version.
  * 
  */
+using jp.nyatla.nyartoolkit.cs.cs4;
 namespace jp.nyatla.nyartoolkit.cs.core
 {
     /**
@@ -65,7 +66,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.image_size = new NyARIntSize(i_src_img.width, i_src_img.height);
             this.image_unit = 1;
             this.sub_dpis = i_sub_dpis;
-            this.num_of_iset = i_sub_dpis.length + 1;
+            this.num_of_iset = i_sub_dpis.Length + 1;
             return;
         }
         /**
@@ -83,15 +84,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
             float[] ldpi = br.getFloatArray(noi - 1);
 
             JpegIO.DecodeResult d;
-            try
-            {
-                d = JpegIO.decode(jpeg);
-            }
-            catch (IOException e)
-            {
-                //この例外はファイルアクセスを伴わないから握りつぶしてOK
-                throw new NyARRuntimeException(e);
-            }
+            d = JpegIO.decode(jpeg);
+
             this.image = d.img;
             this.image_dpi_x = d.x_density;
             this.image_dpi_y = d.y_density;
@@ -108,22 +102,17 @@ namespace jp.nyatla.nyartoolkit.cs.core
          */
         public byte[] makeBinary()
         {
-            try
-            {
-                //初期メモリは2MB
-                BinaryWriter bw = new BinaryWriter(BinaryReader.ENDIAN_LITTLE, 2 * 1024 * 1024);
-                //dpiセット+1
-                bw.putInt(this.sub_dpis.length + 1);
-                //jpgイメージ
-                bw.putByteArray(JpegIO.encode(this.image_size.w, this.image_size.h, (int)this.image_dpi_x, (int)this.image_dpi_y, this.image_unit, this.image, 0.8f));
-                //サブdpi
-                bw.putFloatArray(this.sub_dpis);
-                return bw.getBinary();
-            }
-            catch (IOException e)
-            {
-                throw new NyARRuntimeException(e);
-            }
+
+        //初期メモリは2MB
+            BinaryWriter bw = new BinaryWriter(BinaryReader.ENDIAN_LITTLE, 2 * 1024 * 1024);
+            //dpiセット+1
+            bw.putInt(this.sub_dpis.Length + 1);
+            //jpgイメージ
+            bw.putByteArray(JpegIO.encode(this.image_size.w, this.image_size.h, (int)this.image_dpi_x, (int)this.image_dpi_y, this.image_unit, this.image, 0.8f));
+            //サブdpi
+            bw.putFloatArray(this.sub_dpis);
+            return bw.getBinary();
+
         }
 
         public double getImageDpi()

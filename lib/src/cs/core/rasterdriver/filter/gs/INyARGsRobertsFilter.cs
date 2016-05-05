@@ -125,7 +125,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                     return;
                 default:
                     //ANY未対応
-                    throw new NyARException();
+                    throw new NyARRuntimeException();
             }
         }
     }
