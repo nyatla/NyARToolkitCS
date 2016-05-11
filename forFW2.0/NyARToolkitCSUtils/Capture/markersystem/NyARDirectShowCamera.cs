@@ -24,7 +24,7 @@ namespace NyARToolkitCSUtils.Capture
             : base(new NyARIntSize(i_cdev.video_width, i_cdev.video_height))
         {
             //RGBラスタの生成
-            this.initInstance(i_cdev, i_raster_type);
+            this.initInstance(i_cdev);
         }
         /// <summary>
         /// This function as is NyARDirectShowCamera(i_cdev,NyARBufferType.OBJECT_CS_Bitmap)
@@ -34,11 +34,11 @@ namespace NyARToolkitCSUtils.Capture
             : base(new NyARIntSize(i_cdev.video_width, i_cdev.video_height))
         {
             //RGBラスタの生成
-            this.initInstance(i_cdev, NyARBufferType.OBJECT_CS_Bitmap);
+            this.initInstance(i_cdev);
         }
-        private void initInstance(CaptureDevice i_cdev, int i_raster_type)
+        private void initInstance(CaptureDevice i_cdev)
         {
-            this._raster = new DsRgbRaster(i_cdev.video_width, i_cdev.video_height,i_raster_type);
+            this._raster = new DsRgbRaster(i_cdev.video_width, i_cdev.video_height);
             //ラスタのセット
             this.update(this._raster);
             this._cdev = i_cdev;

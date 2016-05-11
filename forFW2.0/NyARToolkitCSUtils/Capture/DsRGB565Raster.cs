@@ -39,13 +39,15 @@ namespace NyARToolkitCSUtils.Capture
 {
     public class DsRGB565Raster : NyARRgbRaster
     {
+        private short[] _buf;
         public DsRGB565Raster(int i_width, int i_height)
-            : base(i_width, i_height,NyARBufferType.WORD1D_R5G6B5_16LE)
+            : base(i_width, i_height,false)
         {
             if (i_width % 4 != 0)
             {
-                throw new NyARException();
+                throw new NyARRuntimeException();
             }
+            this._buf=new short[i_width*i_height];
         }
         public void setBuffer(IntPtr i_buf, bool i_flip_vertical)
         {
@@ -70,6 +72,37 @@ namespace NyARToolkitCSUtils.Capture
             }
             return;
         }
-
+        public override Object getBuffer()
+        {
+            return this._buf;
+        }
+        public override int getBufferType()
+        {
+            return NyARBufferType.WORD1D_R5G6B5_16LE;
+        }
+        public override void wrapBuffer(Object i_ref_buf)
+        {
+            throw new NyARRuntimeException();
+        }
+        public override int[] getPixel(int i_x, int i_y, int[] i_rgb)
+        {
+            throw new NyARRuntimeException();
+        }
+        public override int[] getPixelSet(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+        {
+            throw new NyARRuntimeException();
+        }
+        public override void setPixel(int i_x, int i_y, int i_r, int i_g, int i_b)
+        {
+            throw new NyARRuntimeException();
+        }
+        public override void setPixel(int i_x, int i_y, int[] i_rgb)
+        {
+            throw new NyARRuntimeException();
+        }
+        public override void setPixels(int[] i_x, int[] i_y, int i_num, int[] i_intrgb)
+        {
+            throw new NyARRuntimeException();
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace NyARToolkitCSUtils.Direct3d
 	    {
             this._scs = i_scs;
             this._screen_size = _scs.getARParam().getScreenSize();
-            i_scs.addObserver(this);
+            i_scs.getSingleView().addObserver(this);
         }
 
         private Matrix _projection_mat = new Matrix();

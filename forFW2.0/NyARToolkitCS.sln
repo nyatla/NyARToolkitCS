@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLiteM", "sample\Simpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLite_ImageSource2", "sample\SimpleLite_ImageSource2\SimpleLite_ImageSource2.csproj", "{B90A8360-A7E0-4A66-AEAD-55B53C6EA96D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_Kpmbenchmark", "sample\Test_Kpmbenchmark\Test_Kpmbenchmark.csproj", "{5E3AE024-DB58-4933-9285-891D4FEB9383}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -258,6 +260,16 @@ Global
 		{B90A8360-A7E0-4A66-AEAD-55B53C6EA96D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B90A8360-A7E0-4A66-AEAD-55B53C6EA96D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B90A8360-A7E0-4A66-AEAD-55B53C6EA96D}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5E3AE024-DB58-4933-9285-891D4FEB9383}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -282,5 +294,6 @@ Global
 		{30925E67-3B3B-4360-8202-AD537CB75E94} = {81BC8268-B798-4863-BD7A-32B6BC4AF7E4}
 		{09EBFAAF-00E8-48AE-B9B6-6973504DDAD6} = {ADBA2F98-B563-4258-85D1-5A965675C043}
 		{B90A8360-A7E0-4A66-AEAD-55B53C6EA96D} = {ADBA2F98-B563-4258-85D1-5A965675C043}
+		{5E3AE024-DB58-4933-9285-891D4FEB9383} = {119000A6-3783-4276-805B-DC59B96EA51B}
 	EndGlobalSection
 EndGlobal

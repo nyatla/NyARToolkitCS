@@ -1,5 +1,6 @@
 ﻿using System;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.cs4;
 using jp.nyatla.nyartoolkit.cs.markersystem;
 using System.Drawing;
 #if NyartoolkitCS_FRAMEWORK_CFW
@@ -57,7 +58,7 @@ namespace NyARToolkitCSUtils.Direct3d
             NyARDoublePoint2d wk_2dpos = this.__wk_2dpos;
             NyARDoublePoint3d wk_3dpos = this.__wk_3dpos;
             this.getMarkerMatrix(i_id).transform3d(i_x, i_y, i_z, wk_3dpos);
-            this._frustum.project(wk_3dpos, wk_2dpos);
+            this._view.getFrustum().project(wk_3dpos, wk_2dpos);
             i_out.X = (float)wk_2dpos.x;
             i_out.Y = (float)wk_2dpos.y;
             return;
@@ -86,7 +87,7 @@ namespace NyARToolkitCSUtils.Direct3d
                 NyARCode c = new NyARCode(i_patt_resolution, i_patt_resolution);
                 //ラスタからマーカパターンを切り出す。
                 INyARPerspectiveCopy pc = (INyARPerspectiveCopy)bmr.createInterface(typeof(INyARPerspectiveCopy));
-                NyARRgbRaster tr = new NyARRgbRaster(i_patt_resolution, i_patt_resolution);
+                INyARRgbRaster tr = NyARRgbRaster.createInstance(i_patt_resolution, i_patt_resolution);
                 pc.copyPatt(0, 0, w, 0, w, h, 0, h, i_patt_edge_percentage, i_patt_edge_percentage, 4, tr);
                 //切り出したパターンをセット
                 c.setRaster(tr);

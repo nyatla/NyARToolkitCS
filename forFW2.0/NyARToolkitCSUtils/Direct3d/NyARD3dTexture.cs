@@ -35,6 +35,7 @@ using System.Drawing;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using jp.nyatla.nyartoolkit.cs.cs4;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -166,7 +167,7 @@ namespace NyARToolkitCSUtils.Direct3d
                             }
                             break;
                         default:
-                            throw new NyARException();
+                            throw new NyARRuntimeException();
                     }
                 }
                 finally

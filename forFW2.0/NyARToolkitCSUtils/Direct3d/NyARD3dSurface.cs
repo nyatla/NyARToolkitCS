@@ -33,6 +33,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.cs4;
 
 namespace NyARToolkitCSUtils.Direct3d
 {
@@ -123,7 +124,7 @@ namespace NyARToolkitCSUtils.Direct3d
                             }
                             break;
                         default:
-                            throw new NyARException();
+                            throw new NyARRuntimeException();
                     }
                 }finally{
                     this._surface.UnlockRectangle();

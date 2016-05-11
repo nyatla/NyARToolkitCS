@@ -53,7 +53,6 @@
     <Compile Include="Capture\CaptureDevice.cs" />
     <Compile Include="Capture\CaptureDeviceList.cs" />
     <Compile Include="Capture\CaptureListener.cs" />
-    <Compile Include="NyARBitmapRaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +66,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Capture\rpf\NyARRealitySource_DShow.cs" />
     <Compile Include="Capture\VideoFormat.cs" />
     <Compile Include="Capture\VideoFormatList.cs" />
   </ItemGroup>
@@ -89,7 +87,6 @@
     <Compile Include="Direct3d\NyARD3dTexture.cs" />
     <Compile Include="Direct3d\sketch\D3dSketch.cs" />
     <Compile Include="Direct3d\NyARD3dUtil.cs" />
-    <Compile Include="Direct3d\rpf\NyARRealityD3d.cs" />
     <Compile Include="Capture\markersystem\NyARDirectShowCamera.cs" />
     <Compile Include="Direct3d\sketch\D3dSketchForm.cs">
       <SubType>Form</SubType>
