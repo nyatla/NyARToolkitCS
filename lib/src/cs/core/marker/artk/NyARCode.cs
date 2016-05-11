@@ -51,20 +51,23 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * バッファ形式は形式はINT1D_X8R8G8B8_32であり、4要素、かつ全て同一なサイズである必要があります。
          * @
          */
-        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARRaster[] o_raster)
+        public static void loadFromARToolKitFormFile(Stream i_stream, NyARRaster[] o_raster)
         {
             Debug.Assert(o_raster.Length == 4);
             //4個の要素をラスタにセットする。
             try
             {
-                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
-                //GBRAで一度読みだす。
-                int idx = 0;
-                for (int h = 0; h < 4; h++)
+                using (StreamReader sr = new StreamReader(i_stream))
                 {
-                    Debug.Assert(o_raster[h].isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
-                    NyARRaster ra = o_raster[h];
-                    idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBuffer());
+                    string[] data = sr.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
+                    //GBRAで一度読みだす。
+                    int idx = 0;
+                    for (int h = 0; h < 4; h++)
+                    {
+                        Debug.Assert(o_raster[h].isEqualBufferType(NyARBufferType.INT1D_X8R8G8B8_32));
+                        NyARRaster ra = o_raster[h];
+                        idx = readBlock(data, idx, ra.getWidth(), ra.getHeight(), (int[])ra.getBuffer());
+                    }
                 }
             }
             catch (Exception e)
@@ -81,7 +84,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * 出力先の{@link NyARCode}オブジェクトです。
          * @
          */
-        public static void loadFromARToolKitFormFile(StreamReader i_stream, NyARCode o_code)
+        public static void loadFromARToolKitFormFile(Stream i_stream, NyARCode o_code)
         {
             int width = o_code.getWidth();
             int height = o_code.getHeight();
@@ -89,16 +92,18 @@ namespace jp.nyatla.nyartoolkit.cs.core
             //4個の要素をラスタにセットする。
             try
             {
-                int[] buf = (int[])tmp_raster.getBuffer();
-                string[] data = i_stream.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
-                //GBRAで一度読みだす。
-                int idx = 0;
-                for (int h = 0; h < 4; h++)
-                {
-                    idx = readBlock(data, idx, width, height, buf);
-                    //ARCodeにセット(カラー)
-                    o_code.getColorData(h).setRaster(tmp_raster);
-                    o_code.getBlackWhiteData(h).setRaster(tmp_raster);
+                using (StreamReader sr = new StreamReader(i_stream)) {
+                    int[] buf = (int[])tmp_raster.getBuffer();
+                    string[] data = sr.ReadToEnd().Split(new Char[] { ' ', '\r', '\n' });
+                    //GBRAで一度読みだす。
+                    int idx = 0;
+                    for (int h = 0; h < 4; h++)
+                    {
+                        idx = readBlock(data, idx, width, height, buf);
+                        //ARCodeにセット(カラー)
+                        o_code.getColorData(h).setRaster(tmp_raster);
+                        o_code.getBlackWhiteData(h).setRaster(tmp_raster);
+                    }
                 }
             }
             catch (Exception e)
@@ -179,7 +184,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 	     * パターンの幅pixel数。データの内容と一致している必要があります。
 	     * @throws NyARException
 	     */
-        public static NyARCode loadFromARPattFile(StreamReader i_stream, int i_width, int i_height)
+        public static NyARCode loadFromARPattFile(Stream i_stream, int i_width, int i_height)
         {
             //ラスタにパターンをロードする。
             NyARCode ret = new NyARCode(i_width, i_height);
@@ -187,7 +192,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return ret;
         }
        [System.Obsolete("use loadFromARToolKitFormFile")]
-	    public static NyARCode createFromARPattFile(StreamReader i_stream,int i_width,int i_height)
+	    public static NyARCode createFromARPattFile(Stream i_stream,int i_width,int i_height)
 	    {
             return loadFromARPattFile(i_stream, i_width, i_height);    		
 	    }

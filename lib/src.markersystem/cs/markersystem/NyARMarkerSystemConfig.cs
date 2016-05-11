@@ -43,7 +43,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 	    /** ARToolkit v4に搭載されているICPを使った変換行列計算アルゴリズムを選択します。*/
     	public const int TM_ARTKICP=3;
         //
-        protected NyARParam _param;
+        readonly protected NyARSingleCameraView _cview;
     	private int _transmat_algo_type;
         /**
          * コンストラクタです。カメラパラメータにサンプル値(../Data/camera_para.dat)をロードして、コンフィギュレーションを生成します。
@@ -51,56 +51,60 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @param i_height
          * @
          */
-        public NyARMarkerSystemConfig(NyARParam i_param, int i_transmat_algo_type)
+        public NyARMarkerSystemConfig(NyARSingleCameraView i_view, int i_transmat_algo_type)
         {
             Debug.Assert(1 <= i_transmat_algo_type && i_transmat_algo_type <= 3);
-            this._param = i_param;
+            this._cview = i_view;
             this._transmat_algo_type = i_transmat_algo_type;
             return;
+        }
+        public NyARMarkerSystemConfig(NyARParam i_param, int i_transmat_algo_type)
+            : this(new NyARSingleCameraView(i_param), i_transmat_algo_type)
+        {
         }
         public NyARMarkerSystemConfig(NyARParam i_param)
             : this(i_param, TM_ARTKICP)
         {
         }
-        public NyARMarkerSystemConfig(StreamReader i_ar_param_stream, int i_width, int i_height)
-            : this(NyARParam.createFromARParamFile(i_ar_param_stream))
+        public NyARMarkerSystemConfig(Stream i_ar_param_stream, int i_width, int i_height)
+            : this(NyARParam.loadFromARParamFile(i_ar_param_stream, i_width, i_height))
         {
-            this._param.changeScreenSize(i_width, i_height);
         }
 
         public NyARMarkerSystemConfig(int i_width, int i_height)
-            : this(NyARParam.createDefaultParameter())
+            : this(NyARParam.loadDefaultParams(i_width, i_height))
         {
-            this._param.changeScreenSize(i_width, i_height);
         }
-        public virtual INyARTransMat createTransmatAlgorism()
-        {
-            switch (this._transmat_algo_type)
-            {
-                case TM_ARTKV2:
-                    return new NyARTransMat_ARToolKit(this._param);
-                case TM_NYARTK:
-                    return new NyARTransMat(this._param);
-                case TM_ARTKICP:
-                    return new NyARIcpTransMat(this._param, NyARIcpTransMat.AL_POINT_ROBUST);
-            }
-            throw new NyARException();
-        }
-        public virtual INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism()
-        {
-            return new NyARHistogramAnalyzer_SlidePTile(15);
-        }
-        public virtual NyARParam getNyARParam()
-        {
-            return this._param;
-        }
+
 	    /**
 	     * この値は、カメラパラメータのスクリーンサイズです。
 	     */
 	    public NyARIntSize getScreenSize()
 	    {
-		    return this._param.getScreenSize();
+		    return this._cview.getARParam().getScreenSize();
 	    }
+	
+	    public NyARSingleCameraView getNyARSingleCameraView() {
+		    return this._cview;
+	    }
+        public virtual INyARTransMat createTransmatAlgorism()
+        {
+            NyARParam params_=this._cview.getARParam();
+            switch (this._transmat_algo_type)
+            {
+                case TM_ARTKV2:
+                    return new NyARTransMat_ARToolKit(params_);
+                case TM_NYARTK:
+                    return new NyARTransMat(params_);
+                case TM_ARTKICP:
+                    return new NyARIcpTransMat(params_, NyARIcpTransMat.AL_POINT_ROBUST);
+            }
+            throw new NyARRuntimeException();
+        }
+        public virtual INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism()
+        {
+            return new NyARHistogramAnalyzer_SlidePTile(15);
+        }
 
     }
 }

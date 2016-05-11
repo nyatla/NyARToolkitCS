@@ -35,21 +35,15 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 {
     public class NyARSingleCameraSystem
     {
-	    /** 定数値。視錐台のFARパラメータの初期値[mm]です。*/
-	    public const double FRUSTUM_DEFAULT_FAR_CLIP=10000;
-	    /** 定数値。視錐台のNEARパラメータの初期値[mm]です。*/
-	    public const double FRUSTUM_DEFAULT_NEAR_CLIP=10;
-    	
-	    protected NyARParam _ref_param;
-	    protected NyARFrustum _frustum;	
-	    protected NyARSingleCameraSystem(NyARParam i_ref_cparam)
+        protected NyARSingleCameraSystem(NyARSingleCameraView i_ref_view)
 	    {
-		    this._observer=new ObserverList(3);
-		    this._ref_param=i_ref_cparam;
-		    this._frustum=new NyARFrustum();
-		    this.setProjectionMatrixClipping(FRUSTUM_DEFAULT_NEAR_CLIP, FRUSTUM_DEFAULT_FAR_CLIP);
+            this._view = i_ref_view;
+            this._view.setClipping(
+                NyARSingleCameraView.FRUSTUM_DEFAULT_NEAR_CLIP,
+                NyARSingleCameraView.FRUSTUM_DEFAULT_FAR_CLIP);
     		
 	    }
+        readonly protected NyARSingleCameraView _view;
 	    /**
 	     * [readonly]
 	     * 現在のフラスタムオブジェクトを返します。
@@ -57,7 +51,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 	     */
 	    public NyARFrustum getFrustum()
 	    {
-		    return this._frustum;
+            return this._view.getFrustum();
 	    }
         /**
          * [readonly]
@@ -66,7 +60,11 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          */
         public NyARParam getARParam()
         {
-            return this._ref_param;
+            return this._view.getARParam();
+        }
+        public NyARSingleCameraView getSingleView()
+        {
+            return this._view;
         }
 	    /**
 	     * 視錐台パラメータを設定します。
@@ -78,41 +76,8 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
 	     */
 	    public virtual void setProjectionMatrixClipping(double i_near,double i_far)
 	    {
-		    NyARIntSize s=this._ref_param.getScreenSize();
-		    this._frustum.setValue(this._ref_param.getPerspectiveProjectionMatrix(),s.w,s.h,i_near,i_far);
-		    //イベントの通知
-		    this._observer.notifyOnUpdateCameraParametor(this._ref_param,i_near,i_far);
+            this._view.setClipping(i_near, i_far);
 	    }	
-    	
-    	
-	    //
-	    //	イベント通知系
-	    //
-	    protected class ObserverList : NyARPointerStack<INyARSingleCameraSystemObserver>
-	    {
-            public ObserverList(int i_length)
-                : base(i_length)
-            {
-            }
-		    public void notifyOnUpdateCameraParametor(NyARParam i_param,double i_near,double i_far)
-		    {
-			    for(int i=0;i<this._length;i++){
-				    this._items[i].onUpdateCameraParametor(i_param,i_near,i_far);
-			    }
-		    }
-	    }
-	    protected ObserverList _observer;
-	    /**
-	     * {@link NyARSingleCameraSystem}のイベント通知リストへオブザーバを追加します。
-	     * この関数は、オブザーバが起動時に使用します。ユーザが使用することは余りありません。
-	     * @param i_observer
-	     * 通知先のオブザーバオブジェクト
-	     */
-	    public void addObserver(INyARSingleCameraSystemObserver i_observer)
-	    {
-		    this._observer.pushAssert(i_observer);
-		    NyARFrustum.FrustumParam f=this.getFrustum().getFrustumParam(new NyARFrustum.FrustumParam());
-		    i_observer.onUpdateCameraParametor(this._ref_param, f.near, f.far);		
-	    }
+
     }
 }

@@ -103,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         };
         readonly public NyAR2FeaturePoints[] list;
 
-        public static NyARNftFsetFile loadFromFsetFile(StreamReader i_src)
+        public static NyARNftFsetFile loadFromFsetFile(Stream i_src)
         {
             return loadFromFsetFile(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_src));
         }

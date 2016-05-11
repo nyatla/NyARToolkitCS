@@ -103,7 +103,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         public NyARLinkList(int i_num_of_item)
         {
             this._num_of_item = 0;
-            reserv(1);
+            this.reserv(1);
         }
 
         /**

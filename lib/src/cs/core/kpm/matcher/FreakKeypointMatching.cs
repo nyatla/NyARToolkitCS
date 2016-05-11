@@ -48,7 +48,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
 
         private const double kLaplacianThreshold = 3;
         private const double kEdgeThreshold = 4;
-        private const int kMaxNumFeatures = 500;//オリジナルでは500だけど・・・Debugするときは300で。
+        private const int kMaxNumFeatures = 300;//オリジナルでは500だけど・・・Debugするときは300で。
         private const int kMinCoarseSize = 8;
 
         readonly private DogFeaturePointStack _dog_feature_points = new DogFeaturePointStack(kMaxNumFeatures);

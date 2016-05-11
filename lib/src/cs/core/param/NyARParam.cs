@@ -108,14 +108,14 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @return
          * @throws NyARRuntimeException
          */
-        public static NyARParam loadFromARParamFile(StreamReader i_stream, int i_screen_width, int i_screen_height, int i_dist_map_type)
+        public static NyARParam loadFromARParamFile(Stream i_stream, int i_screen_width, int i_screen_height, int i_dist_map_type)
         {
             ParamLoader pm = new ParamLoader(i_stream, i_screen_width, i_screen_height);
             return new NyARParam(
                 pm.size, pm.pmat,
                 makeDistFactor(pm.size, pm.dist_factor, i_dist_map_type));
         }
-        public static NyARParam loadFromARParamFile(StreamReader i_stream, int i_screen_width, int i_screen_height)
+        public static NyARParam loadFromARParamFile(Stream i_stream, int i_screen_width, int i_screen_height)
         {
             return loadFromARParamFile(i_stream, i_screen_width, i_screen_height, DISTFACTOR_LT_ARTK5);
         }
@@ -349,7 +349,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * @param i_stream
          * @throws NyARRuntimeException
          */
-        public ParamLoader(StreamReader i_stream, int i_screen_width, int i_screen_height)
+        public ParamLoader(Stream i_stream, int i_screen_width, int i_screen_height)
         {
             //読み出し
             byte[] data = jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream);

@@ -15,22 +15,26 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
         readonly private byte[] _data;
         private int _pos;
         private int _order;
-        public static byte[] toArray(StreamReader i_stream)
+        public static byte[] toArray(Stream i_stream)
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(i_stream.BaseStream);
-            using (MemoryStream ms = new MemoryStream())
+            using (System.IO.BinaryReader br = new System.IO.BinaryReader(i_stream))
             {
-                byte[] tmp = new byte[1024];
-                int size = 0;
-                while ((size = br.Read(tmp, size, tmp.Length)) != 1)
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    ms.Write(tmp, 0, size);
+                    byte[] tmp = new byte[1024];
+                    int p = 0;
+                    int r;
+                    do
+                    {
+                        r = br.Read(tmp, p, tmp.Length);
+                        ms.Write(tmp, 0, r);
+                    } while (r == tmp.Length);
+                    ms.Flush();
+                    return ms.ToArray();
                 }
-                ms.Flush();
-                return ms.ToArray();
             }
         }
-        public BinaryReader(StreamReader i_stream, int i_order)
+        public BinaryReader(Stream i_stream, int i_order)
             : this(toArray(i_stream), i_order)
         {
         }
@@ -89,7 +93,7 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
         public byte[] getByteArray(byte[] buf)
         {
             Debug.Assert(this._pos < this._data.Length);
-            Array.Copy(this._data, buf, buf.Length);
+            Array.Copy(this._data,this._pos,buf,0,buf.Length);
             this._pos += buf.Length;
             return buf;
         }

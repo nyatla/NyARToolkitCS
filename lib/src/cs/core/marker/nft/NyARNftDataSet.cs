@@ -99,7 +99,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
          * NFTターゲット画像の横幅をmmで指定します。スケーリングが不要な場合はNaNを指定します。
          * @return
          */
-        public static NyARNftDataSet loadFromNftFiles(StreamReader i_iset_stream, StreamReader i_fset_stream, StreamReader i_fset3_stream, int i_freak_fset_page_id, double i_width_in_msec)
+        public static NyARNftDataSet loadFromNftFiles(Stream i_iset_stream, Stream i_fset_stream, Stream i_fset3_stream, int i_freak_fset_page_id, double i_width_in_msec)
         {
             NyARNftIsetFile iset = NyARNftIsetFile.loadFromIsetFile(i_iset_stream);
             NyARNftFsetFile fset = NyARNftFsetFile.loadFromFsetFile(i_fset_stream);
@@ -123,9 +123,9 @@ namespace jp.nyatla.nyartoolkit.cs.core
             try
             {
                 return loadFromNftFiles(
-                    new StreamReader(i_fname_prefix + ".iset"),
-                    new StreamReader(i_fname_prefix + ".fset"),
-                    new StreamReader(i_fname_prefix + ".fset3"), i_freak_fset_page_id, i_width_in_msec);
+                    File.OpenRead(i_fname_prefix + ".iset"),
+                    File.OpenRead(i_fname_prefix + ".fset"),
+                    File.OpenRead(i_fname_prefix + ".fset3"), i_freak_fset_page_id, i_width_in_msec);
             }
             catch (FileNotFoundException e)
             {

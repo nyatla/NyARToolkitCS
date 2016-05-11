@@ -102,11 +102,13 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 // ASSERT(assignment[i] < num_indices, "Assignment out of range");
                 // ASSERT(indices[assignment[i]] < num_features, "Assignment out of range");
 
-                List<int> li = cluster_map[i_indices[assignment[i]]];
-                if (li == null)
+                List<int> li;
+                if(!cluster_map.ContainsKey(i_indices[assignment[i]]))
                 {
                     li = new List<int>();
                     cluster_map.Add(i_indices[assignment[i]], li);
+                }else{
+                    li = cluster_map[i_indices[assignment[i]]];
                 }
                 li.Add(i_indices[i]);
             }

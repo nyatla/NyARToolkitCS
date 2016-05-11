@@ -49,7 +49,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             this.iset = i_iset;
             this.fset = i_fset;
         }
-        public static NyARSurfaceDataSet loadFromSurfaceFiles(StreamReader i_iset_stream, StreamReader i_fset_stream)
+        public static NyARSurfaceDataSet loadFromSurfaceFiles(Stream i_iset_stream, Stream i_fset_stream)
         {
             NyARNftIsetFile iset = NyARNftIsetFile.loadFromIsetFile(i_iset_stream);
             NyARNftFsetFile fset = NyARNftFsetFile.loadFromFsetFile(i_fset_stream);

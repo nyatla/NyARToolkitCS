@@ -1,15 +1,9 @@
-﻿/* 
- * PROJECT: NyARToolkitCS
+/* 
+ * PROJECT: NyARToolkit(Extension)
  * --------------------------------------------------------------------------------
  *
- * The NyARToolkitCS is C# edition NyARToolKit class library.
+ * The NyARToolkit is Java edition ARToolKit class library.
  * Copyright (C)2008-2012 Ryo Iizuka
- *
- * This work is based on the ARToolKit developed by
- *   Hirokazu Kato
- *   Mark Billinghurst
- *   HITLab, University of Washington, Seattle
- * http://www.hitl.washington.edu/artoolkit/
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as publishe
@@ -32,33 +26,23 @@
 using jp.nyatla.nyartoolkit.cs.core;
 namespace jp.nyatla.nyartoolkit.cs.markersystem
 {
-
-
     /**
-     * このインタフェイスは、NyARMarkerSystemのコンフィギュレーションインタフェイスを定義します。
-     *
+     * このインタフェイスは、NyARNftSystemのコンフィギュレーションオブジェクトに使用します。
+     * {@link NyARMarkerSystem}は、このインタフェイスを継承したクラスから、動作に必要なオブジェクトや定数を取得します。
      */
-    public interface INyARMarkerSystemConfig
+    public interface INyARNftSystemConfig
     {
         /**
-         * 姿勢変換アルゴリズムクラスのオブジェクトを生成して返します。
+         * このコンフィギュレーションのスクリーンサイズを返します。
          * @return
-         * @
+         * [readonly]
+         * 参照値です。
          */
-        INyARTransMat createTransmatAlgorism();
+        NyARIntSize getScreenSize();
         /**
-         * 敷居値決定クラスを生成して返します。
+         * このコンフィギュレーションのビューを返します。
          * @return
-         * @
          */
-        INyARHistogramAnalyzer_Threshold createAutoThresholdArgorism();
-		/**
-		 * このコンフィギュレーションのスクリーンサイズを返します。
-		 * @return
-		 * [readonly]
-		 * 参照値です。
-		 */
-		NyARIntSize getScreenSize();
         NyARSingleCameraView getNyARSingleCameraView();
     }
 }

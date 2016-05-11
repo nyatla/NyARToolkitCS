@@ -100,7 +100,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
             return;
         }
 
-        public static NyARNftFreakFsetFile loadFromfset3File(StreamReader i_stream)
+        public static NyARNftFreakFsetFile loadFromfset3File(Stream i_stream)
         {
             return loadFromfset3File(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream));
         }

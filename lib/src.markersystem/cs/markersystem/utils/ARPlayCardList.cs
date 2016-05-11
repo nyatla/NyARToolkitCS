@@ -79,7 +79,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
 	    }
 	    public bool update(INyARGrayscaleRaster i_raster,SquareStack.Item i_sq)
 	    {
-		    if(!this._pickup.getARPlayCardId(i_raster.getGsPixelDriver(),i_sq.ob_vertex,this._id_param))
+		    if(!this._pickup.getARPlayCardId(i_raster,i_sq.ob_vertex,this._id_param))
 		    {
 			    return false;
 		    }

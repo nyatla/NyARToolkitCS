@@ -49,11 +49,11 @@ namespace jp.nyatla.nyartoolkit.cs.core
     {
         public const int FILE_FORMAT_ARTK_V5 = 1;
         public const int FILE_FORMAT_ARTK_V4 = 2;
-        public static NyARNftIsetFile loadFromIsetFile(StreamReader i_stream, int i_file_format)
+        public static NyARNftIsetFile loadFromIsetFile(Stream i_stream, int i_file_format)
         {
             return loadFromIsetFile(jp.nyatla.nyartoolkit.cs.cs4.BinaryReader.toArray(i_stream), i_file_format);
         }
-        public static NyARNftIsetFile loadFromIsetFile(StreamReader i_stream)
+        public static NyARNftIsetFile loadFromIsetFile(Stream i_stream)
         {
             return loadFromIsetFile(i_stream, FILE_FORMAT_ARTK_V5);
         }

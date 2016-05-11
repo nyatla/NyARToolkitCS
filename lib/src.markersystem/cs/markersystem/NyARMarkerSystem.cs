@@ -77,7 +77,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	 * @throws NyARException
 	 */
     public NyARMarkerSystem(INyARMarkerSystemConfig i_config)
-        : base(i_config.getNyARParam())
+        : base(i_config.getNyARSingleCameraView())
 	{
 		this.initInstance(i_config);
 		
@@ -87,7 +87,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		this._tracking_list=new TrackingList();
 		this._transmat=i_config.createTransmatAlgorism();
 		//同時に判定待ちにできる矩形の数
-        this._on_sq_handler = new OnSquareDetect(i_config, this._armk_list, this._idmk_list, this._psmk_list, this._tracking_list, INITIAL_MARKER_STACK_SIZE);
+        this._on_sq_handler = new OnSquareDetect(this._view.getARParam(), this._armk_list, this._idmk_list, this._psmk_list, this._tracking_list, INITIAL_MARKER_STACK_SIZE);
     }
 	protected virtual void initInstance(INyARMarkerSystemConfig i_ref_config)
 	{
@@ -204,9 +204,9 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	 * マーカID（ハンドル）値。
 	 * @throws NyARException
 	 */
-	public int addARMarker(StreamReader i_stream,int i_patt_resolution,int i_patt_edge_percentage,double i_marker_size)
+	public int addARMarker(Stream i_stream,int i_patt_resolution,int i_patt_edge_percentage,double i_marker_size)
 	{
-		NyARCode c=NyARCode.createFromARPattFile(i_stream,i_patt_resolution,i_patt_resolution);
+		NyARCode c=NyARCode.loadFromARPattFile(i_stream,i_patt_resolution,i_patt_resolution);
 		return this.addARMarker(c, i_patt_edge_percentage, i_marker_size);
 	}
 	/**
@@ -224,10 +224,10 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	public int addARMarker(String i_file_name,int i_patt_resolution,int i_patt_edge_percentage,double i_marker_size)
 	{
 		try{
-			NyARCode c=NyARCode.createFromARPattFile(new StreamReader(i_file_name),i_patt_resolution,i_patt_resolution);
+			NyARCode c=NyARCode.loadFromARPattFile(File.OpenRead(i_file_name),i_patt_resolution,i_patt_resolution);
 			return this.addARMarker(c,i_patt_edge_percentage, i_marker_size);
 		}catch(Exception e){
-			throw new NyARException(e);
+			throw new NyARRuntimeException(e);
 		}
 	}
 	/**
@@ -253,7 +253,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		NyARIntSize s=i_raster.getSize();
 		//ラスタからマーカパターンを切り出す。
 		INyARPerspectiveCopy pc=(INyARPerspectiveCopy)i_raster.createInterface(typeof(INyARPerspectiveCopy));
-		NyARRgbRaster tr=new NyARRgbRaster(i_patt_resolution,i_patt_resolution);
+		INyARRgbRaster tr=NyARRgbRaster.createInstance(i_patt_resolution,i_patt_resolution);
 		pc.copyPatt(0,0,s.w,0,s.w,s.h,0,s.h,i_patt_edge_percentage, i_patt_edge_percentage,4, tr);
 		//切り出したパターンをセット
 		c.setRaster(tr);
@@ -288,7 +288,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 			return this._armk_list[i_id &MASK_IDNUM].cf;
 		}
 		//Idマーカ？
-		throw new NyARException();
+		throw new NyARRuntimeException();
 	}
 	/**
 	 * この関数は、NyIdマーカのID値を返します。
@@ -306,7 +306,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 			return this._idmk_list[i_id &MASK_IDNUM].nyid;
 		}
 		//ARマーカ？
-		throw new NyARException();
+        throw new NyARRuntimeException();
 	}
 	/**
 	 * この関数は、現在の２値化敷居値を返します。
@@ -337,7 +337,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		case IDTYPE_PSID:
             return this._psmk_list[i_id & MASK_IDNUM].life;
 		default:
-			throw new NyARException();
+            throw new NyARRuntimeException();
 		}
     }
 	/**
@@ -359,7 +359,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		case IDTYPE_PSID:
             return this._psmk_list[i_id & MASK_IDNUM].lost_count;
 		default:
-			throw new NyARException();
+            throw new NyARRuntimeException();
 
 		}
 	}
@@ -379,7 +379,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	 */
 	public NyARDoublePoint3d getMarkerPlanePos(int i_id,int i_x,int i_y,NyARDoublePoint3d i_out)
 	{
-		this._frustum.unProjectOnMatrix(i_x, i_y,this.getMarkerMatrix(i_id),i_out);
+		this._view.getFrustum().unProjectOnMatrix(i_x, i_y,this.getMarkerMatrix(i_id),i_out);
 		return i_out;
 	}
 	private NyARDoublePoint3d _wk_3dpos=new NyARDoublePoint3d();
@@ -403,7 +403,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 	{
 		NyARDoublePoint3d _wk_3dpos=this._wk_3dpos;
 		this.getMarkerMatrix(i_id).transform3d(i_x, i_y, i_z,_wk_3dpos);
-		this._frustum.project(_wk_3dpos,i_out);
+        this._view.getFrustum().project(_wk_3dpos, i_out);
 		return i_out;
 	}	
 	private NyARDoublePoint3d[] __pos3d=NyARDoublePoint3d.createArray(4);
@@ -456,7 +456,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		tmat.transform3d(i_x3, i_y3,0,	pos[3]);
 		tmat.transform3d(i_x4, i_y4,0,	pos[2]);
 		for(int i=3;i>=0;i--){
-			this._frustum.project(pos[i],pos2[i]);
+            this._view.getFrustum().project(pos[i], pos2[i]);
 		}
 		return i_sensor.getPerspectiveImage(pos2[0].x, pos2[0].y,pos2[1].x, pos2[1].y,pos2[2].x, pos2[2].y,pos2[3].x, pos2[3].y,i_raster);
 	}
@@ -508,7 +508,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		case IDTYPE_PSID:
             return this._psmk_list[i_id & MASK_IDNUM].tmat;
 		default:
-			throw new NyARException();
+            throw new NyARRuntimeException();
 		}		
 	}
 	/**
@@ -529,7 +529,7 @@ public class NyARMarkerSystem : NyARSingleCameraSystem
 		case IDTYPE_PSID:
             return this._psmk_list[i_id & MASK_IDNUM].tl_vertex;
 		default:
-			throw new NyARException();
+            throw new NyARRuntimeException();
 		}		
 	}
 	/**
@@ -679,11 +679,11 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
 	
 	private NyARCoord2Linear _coordline;
     public OnSquareDetect(
-        INyARMarkerSystemConfig i_config,
+        NyARParam i_params,
         ARMarkerList i_armk_list, NyIdList i_idmk_list, ARPlayCardList i_psmk_list,
 		TrackingList i_tracking_list,int i_initial_stack_size)
     {
-		this._coordline=new NyARCoord2Linear(i_config.getNyARParam().getScreenSize(),i_config.getNyARParam().getDistortionFactor());
+        this._coordline = new NyARCoord2Linear(i_params.getScreenSize(), i_params.getDistortionFactor());
 		this._ref_armk_list=i_armk_list;
 		this._ref_idmk_list=i_idmk_list;
 		this._ref_psmk_list=i_psmk_list;
@@ -784,7 +784,7 @@ class OnSquareDetect : NyARSquareContourDetector.CbHandler
 			for (int i2 = 0; i2 < 4; i2++) {
 				//直線同士の交点計算
 				if(!sq_tmp.line[i2].crossPos(sq_tmp.line[(i2 + 3) % 4],sq_tmp.sqvertex[i2])){
-					throw new NyARException();//まずない。ありえない。
+                    throw new NyARRuntimeException();//まずない。ありえない。
 				}
 			}
 		}else{

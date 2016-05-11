@@ -54,7 +54,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem.utils
                 {
                     r *= 2;
                 }
-                this._patt = new NyARRgbRaster(i_patt_w, i_patt_h, NyARBufferType.INT1D_X8R8G8B8_32, true);
+                this._patt = NyARRgbRaster.createInstance(i_patt_w, i_patt_h, NyARBufferType.INT1D_X8R8G8B8_32, true);
                 this._patt_d = new NyARMatchPattDeviationColorData(i_patt_w, i_patt_h);
                 this._patt_edge = i_edge_percentage;
                 this._patt_resolution = r;
