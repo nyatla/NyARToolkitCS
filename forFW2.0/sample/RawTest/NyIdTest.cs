@@ -101,14 +101,13 @@ namespace ConsoleApplication1
         public void Test()
         {
             //AR用カメラパラメタファイルをロード
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(camera_file));
-            ap.changeScreenSize(320, 240);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(camera_file),320,240);
 
             //試験イメージの読み出し(320x240 RGBのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
             BinaryReader bs = new BinaryReader(sr.BaseStream);
             byte[] raw = bs.ReadBytes(320 * 240 * 3);
-            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_R8G8B8_24,false);
+            INyARRgbRaster ra = NyARRgbRaster.createInstance(320, 240,NyARBufferType.BYTE1D_R8G8B8_24,false);
             ra.wrapBuffer(raw);
 
             MarkerProcessor pr = new MarkerProcessor(ap, ra.getBufferType());

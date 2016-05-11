@@ -43,7 +43,7 @@ namespace ConsoleApplication1
     {
         private const String code_file = "../../../../../data/patt.hiro";
         private const String data_file = "../../../../../data/320x240ABGR.raw";
-        private const String camera_file = "../../../../../data/camera_para.dat";
+        private const String camera_file = "../../../../../data/camera_para4.dat";
         public RawFileTest()
         {
 //            NyMath.initialize();
@@ -51,11 +51,10 @@ namespace ConsoleApplication1
         public void Test()
         {
             //AR用カメラパラメタファイルをロード
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(camera_file));
-            ap.changeScreenSize(320, 240);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(camera_file),320,240);
 
             //AR用のパターンコードを読み出し	
-            NyARCode code = NyARCode.createFromARPattFile(new StreamReader(code_file), 16, 16);
+            NyARCode code = NyARCode.loadFromARPattFile(File.OpenRead(code_file), 16, 16);
 
             //試験イメージの読み出し(320x240 BGRAのRAWデータ)
             StreamReader sr = new StreamReader(data_file);
@@ -67,7 +66,7 @@ namespace ConsoleApplication1
 //            g.DrawImage(new Bitmap("../../../../../data/320x240ABGR.png"), 0, 0);
             
 
-            NyARRgbRaster ra = new NyARRgbRaster(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
+            INyARRgbRaster ra = NyARRgbRaster.createInstance(320, 240,NyARBufferType.BYTE1D_B8G8R8X8_32,false);
             ra.wrapBuffer(raw);
 
             //１パターンのみを追跡するクラスを作成

@@ -44,11 +44,6 @@ namespace ConsoleApplication1
                 rf = new NyIdTest();
                 rf.Test();
             }
-            {
-                RpfTest rp;
-                rp = new RpfTest();
-                rp.Test();
-            }
             return;
         }
     }
