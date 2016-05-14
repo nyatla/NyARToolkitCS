@@ -36,6 +36,7 @@ using Microsoft.WindowsMobile.DirectX;
 #else
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.VisualC;
 #endif
 
 namespace NyARToolkitCSUtils.Direct3d

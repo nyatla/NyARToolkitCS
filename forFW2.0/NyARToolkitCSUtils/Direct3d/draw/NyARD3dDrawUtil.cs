@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkitCSUtils NyARToolkit for C# 支援ライブラリ
  * --------------------------------------------------------------------------------
  * The MIT License

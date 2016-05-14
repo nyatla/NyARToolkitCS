@@ -58,8 +58,8 @@ namespace NyARToolkitCSUtils.Capture
                 {
                     //上下反転させる
                     int w = this._size.w * 4;
-                    int st = (int)i_buf + w * (this._size.h - 1);
-                    int et = (int)bm.Scan0;
+                    long st = (long)i_buf + w * (this._size.h - 1);
+                    long et = (long)bm.Scan0;
                     for (int i = this._size.h - 1; i >= 0; i--)
                     {
                         CopyMemory((IntPtr)et, (IntPtr)st, w);
