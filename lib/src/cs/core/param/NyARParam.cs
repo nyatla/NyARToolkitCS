@@ -337,8 +337,8 @@ namespace jp.nyatla.nyartoolkit.cs.core
 						0.0,0.0,0.0,1.0};
 		double x_scale = (double) i_screen_width / (double) (640);// scale = (double)xsize / (double)(source->xsize);
         double y_scale = (double)i_screen_height / (double)(480);// scale = (double)ysize / (double)(source->ysize);
-		
-		this.size=new NyARIntSize(640,480);
+
+        this.size = new NyARIntSize(i_screen_width, i_screen_height);
 		this.pmat=new NyARPerspectiveProjectionMatrix();
 		this.pmat.setValue(pj);
 		this.pmat.changeScale(x_scale, y_scale);

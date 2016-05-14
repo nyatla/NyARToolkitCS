@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Diagnostics;
 using System;
 namespace jp.nyatla.nyartoolkit.cs.cs4

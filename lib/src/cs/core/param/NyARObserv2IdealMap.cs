@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * PROJECT: NyARToolkit
  * --------------------------------------------------------------------------------
  * This work is based on the ARToolKit developed by

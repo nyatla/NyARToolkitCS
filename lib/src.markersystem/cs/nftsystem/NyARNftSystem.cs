@@ -1,4 +1,4 @@
-using jp.nyatla.nyartoolkit.cs.core;
+﻿using jp.nyatla.nyartoolkit.cs.core;
 using System.Collections.Generic;
 using System;
 using System.Threading;
