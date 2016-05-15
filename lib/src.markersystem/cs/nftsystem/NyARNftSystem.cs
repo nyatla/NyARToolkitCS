@@ -175,7 +175,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         public int addNftTarget(NyARNftDataSet i_dataset)
         {
             //KPMスレッドが待機中になるまで待つ
-            while (this._kpm_thread.ThreadState != ThreadState.Running)
+            while (this._kpm_thread.ThreadState == ThreadState.Running)
             {
                 Thread.Yield();
             }
@@ -204,15 +204,13 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @return
          * 
          */
-        public bool isExistTarget(int i_id)
+        public bool isExist(int i_id)
         {
             return this._nftdatalist[i_id].stage > NftTarget.ST_KPM_FOUND;
         }
 
-        private static void threadProc()
-        {
 
-        }
+
         /**
          * Key point Matching Thread
          */
@@ -239,7 +237,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
                 {
                     ThreadState st = this._th.ThreadState;
                     //スレッドが無期限待機中でなければなにもしない。
-                    if (st != ThreadState.Suspended)
+                    if (st != ThreadState.WaitSleepJoin)
                     {
                         return false;
                     }
@@ -265,7 +263,7 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             }
             public void run(object i_arg)
             {
-                Thread th = (Thread)i_arg;
+                this._th = (Thread)i_arg;
                 try
                 {
                     for (; ; )
@@ -432,11 +430,25 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @return
          * 結果を格納したi_outに設定したオブジェクト
          */
-        public NyARDoublePoint3d getMarkerPlanePos(int i_id, int i_x, int i_y, NyARDoublePoint3d i_out)
+        public NyARDoublePoint3d getPlanePos(int i_id, int i_x, int i_y, NyARDoublePoint3d i_out)
         {
             this.getFrustum().unProjectOnMatrix(i_x, i_y, this.getTransformMatrix(i_id), i_out);
             return i_out;
         }
+
+
+        [System.Obsolete("use isTarget")]
+        public bool isExistTarget(int i_id)
+        {
+            return this.isExist(i_id);
+        }
+
+        [System.Obsolete("use getPlanePos")]
+        public NyARDoublePoint3d getMarkerPlanePos(int i_id, int i_x, int i_y, NyARDoublePoint3d i_out)
+        {
+            return this.getPlanePos(i_id, i_x, i_y, i_out);
+        }
+
 
     }
 }

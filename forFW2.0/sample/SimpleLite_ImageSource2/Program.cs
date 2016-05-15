@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.cs4;
 using jp.nyatla.nyartoolkit.cs.markersystem;
 using NyARToolkitCSUtils;
 using NyARToolkitCSUtils.Direct3d;
@@ -44,7 +45,13 @@ namespace SimpleLite
             this._rs.loadARViewPort(d3d);
             //setD3dProjectionMatrix
             this._rs.loadARProjectionMatrix(d3d);
-            this._ss.update( new NyARBitmapRaster(new Bitmap(TEST_IMAGE)));
+            Bitmap src = new Bitmap(TEST_IMAGE);
+            Bitmap input = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            using (Graphics g = Graphics.FromImage(input))
+            {
+                g.DrawImage(src,0,0);
+            }
+            this._ss.update(new NyARBitmapRaster(input));
         }
 
         public override void loop(Device i_d3d)
@@ -55,12 +62,12 @@ namespace SimpleLite
                 this._rs.drawBackground(i_d3d, this._ss.getSourceImage());
                 i_d3d.BeginScene();
                 i_d3d.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
-                if (this._ms.isExistMarker(this.mid))
+                if (this._ms.isExist(this.mid))
                 {
                     //move cube to +20mm on Marker
                     Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
                     //transform
-                    transform_mat2 *= this._ms.getD3dMarkerMatrix(this.mid);
+                    transform_mat2 *= this._ms.getD3dTransformMatrix(this.mid);
                     //convert matrix
                     i_d3d.SetTransform(TransformType.World, transform_mat2);
                     //rendering

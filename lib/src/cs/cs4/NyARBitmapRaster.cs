@@ -118,7 +118,6 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
 
         public override object createInterface(Type iIid)
         {
-            Debug.Assert(!this._is_disposed);
             if (iIid == typeof(INyARPerspectiveCopy))
             {
                 return new PerspectiveCopy_CSBitmap(this);
@@ -217,7 +216,6 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
         private BitmapData _bm_cache;
         public BitmapData lockBitmap()
         {
-            Debug.Assert(!this._is_disposed);
 
             if(this.number_of_lock==0){
                 Bitmap bm=(Bitmap)this._buf;
@@ -230,7 +228,6 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
         }
         public void unlockBitmap()
         {
-            Debug.Assert(!this._is_disposed);
 
             if (this.number_of_lock>1)
             {
@@ -372,8 +369,8 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
             int pix_count = i_w;
             int pix_mod_part = pix_count - (pix_count % 8);
             //左上から1行づつ走査していく
-            int pt_dst = (i_t * s.w + i_l);
-            int pt_src = pt_dst * 4+(int)bm.Scan0;
+            long pt_dst = (i_t * s.w + i_l);
+            long pt_src = pt_dst * 4 + (long)bm.Scan0;
             for (int y = i_h - 1; y >= 0; y -= 1)
             {
                 int x;

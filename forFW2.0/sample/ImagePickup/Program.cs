@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
 using jp.nyatla.nyartoolkit.cs.core;
+using jp.nyatla.nyartoolkit.cs.cs4;
 using jp.nyatla.nyartoolkit.cs.markersystem;
 using NyARToolkitCSUtils;
 using NyARToolkitCSUtils.Direct3d;
@@ -45,7 +46,7 @@ namespace ImagePickup
             this._rs.loadARProjectionMatrix(d3d);
             this._ss.start();
             //should be NyARBufferType.BYTE1D_B8G8R8X8_32 or NyARBufferType.CS_BITMAP
-            this._raster = new NyARBitmapRaster(64, 64, NyARBufferType.OBJECT_CS_Bitmap);
+            this._raster = new NyARBitmapRaster(64, 64);
         }
         private INyARRgbRaster _raster;
         public override void loop(Device i_d3d)
@@ -56,9 +57,9 @@ namespace ImagePickup
                 this._rs.drawBackground(i_d3d, this._ss.getSourceImage());
                 i_d3d.BeginScene();
                 i_d3d.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
-                if (this._ms.isExistMarker(this.mid))
+                if (this._ms.isExist(this.mid))
                 {                    
-                    this._ms.getMarkerPlaneImage(this.mid, this._ss, -40, -40, 80, 80, this._raster);
+                    this._ms.getPlaneImage(this.mid, this._ss, -40, -40, 80, 80, this._raster);
                     this._rs.drawImage2d(i_d3d,0,0,this._raster);
                     // レンダリング（描画）
                     this._rs.colorCube(i_d3d, 40);

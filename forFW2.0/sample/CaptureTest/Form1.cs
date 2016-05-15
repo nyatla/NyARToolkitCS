@@ -27,11 +27,10 @@ namespace CaptureTest
             InitializeComponent();
             //ARの設定
             //AR用カメラパラメタファイルをロード
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
-            ap.changeScreenSize(320, 240);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(AR_CAMERA_FILE),320,240);
 
             //AR用のパターンコードを読み出し	
-            NyARCode code = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE),16, 16);
+            NyARCode code = NyARCode.loadFromARPattFile(File.OpenRead(AR_CODE_FILE),16, 16);
 
             NyARDoubleMatrix44 result_mat = new NyARDoubleMatrix44();
             //計算モードの設定
@@ -49,7 +48,7 @@ namespace CaptureTest
             cap.PrepareCapture(320, 240,30);
             this.m_cap = cap;
             //ラスタを作る。
-            this.m_raster = new DsRgbRaster(cap.video_width, cap.video_height,NyARBufferType.OBJECT_CS_Bitmap);
+            this.m_raster = new DsRgbRaster(cap.video_width, cap.video_height);
             //１パターンのみを追跡するクラスを作成
             this.m_ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0);
             this.m_ar.setContinueMode(false);

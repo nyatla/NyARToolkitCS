@@ -164,19 +164,18 @@ namespace SingleARMarker
             this._cap = i_cap_device;
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
+            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height);
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
-            ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(AR_CAMERA_FILE),SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //Direct3d用のユーティリティ準備
 
             //プロセッサの準備
             this._processor = new MarkerProcessor(ap, this._raster.getBufferType());
             NyARCode[] codes = new NyARCode[2];
-            codes[0] = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE1),16, 16);
-            codes[1] = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE2),16, 16);
+            codes[0] = NyARCode.loadFromARPattFile(File.OpenRead(AR_CODE_FILE1),16, 16);
+            codes[1] = NyARCode.loadFromARPattFile(File.OpenRead(AR_CODE_FILE2),16, 16);
             this._processor.setARCodeTable(codes,16,80.0);
 
 
