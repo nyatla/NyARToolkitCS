@@ -56,7 +56,7 @@ namespace MarkerPlane
                 this._rs.drawBackground(i_d3d, this._ss.getSourceImage());
                 i_d3d.BeginScene();
                 i_d3d.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
-                if (this._ms.isExistMarker(this.mid))
+                if (this._ms.isExist(this.mid))
                 {
                     //get marker plane pos from Mouse X,Y
                     Point p=this.form.PointToClient(Cursor.Position);
@@ -66,7 +66,7 @@ namespace MarkerPlane
                     //立方体の平面状の位置を計算
                     Matrix transform_mat2 = Matrix.Translation(mp);
                     //変換行列を掛ける
-                    transform_mat2 *= this._ms.getD3dMarkerMatrix(this.mid);
+                    transform_mat2 *= this._ms.getD3dTransformMatrix(this.mid);
                     // 計算したマトリックスで座標変換
                     i_d3d.SetTransform(TransformType.World, transform_mat2);
                     // レンダリング（描画）

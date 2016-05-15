@@ -196,11 +196,10 @@ namespace SingleNyIdMarkerDirect3d
             this._cap = i_cap_device;
 
             //ARラスタを作る(DirectShowキャプチャ仕様)。
-            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height,NyARBufferType.BYTE1D_B8G8R8X8_32);
+            this._raster = new DsRgbRaster(i_cap_device.video_width, i_cap_device.video_height);
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
-            ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(AR_CAMERA_FILE),SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
             //プロセッサの準備

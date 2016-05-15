@@ -37,7 +37,7 @@ using Microsoft.DirectX.Direct3D;
 using NyARToolkitCSUtils.Capture;
 using NyARToolkitCSUtils.Direct3d;
 using NyARToolkitCSUtils;
-using jp.nyatla.nyartoolkit.cs;
+using jp.nyatla.nyartoolkit.cs.cs4;
 using jp.nyatla.nyartoolkit.cs.core;
 using jp.nyatla.nyartoolkit.cs.detector;
 
@@ -104,11 +104,10 @@ namespace SimpleLite_ImageSource
             
 
             //AR用カメラパラメタファイルをロードして設定
-            NyARParam ap = NyARParam.createFromARParamFile(new StreamReader(AR_CAMERA_FILE));
-            ap.changeScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            NyARParam ap = NyARParam.loadFromARParamFile(File.OpenRead(AR_CAMERA_FILE),SCREEN_WIDTH, SCREEN_HEIGHT);
 
             //AR用のパターンコードを読み出し	
-            NyARCode code = NyARCode.createFromARPattFile(new StreamReader(AR_CODE_FILE),16, 16);
+            NyARCode code = NyARCode.loadFromARPattFile(File.OpenRead(AR_CODE_FILE),16, 16);
 
             //１パターンのみを追跡するクラスを作成
             this._ar = NyARSingleDetectMarker.createInstance(ap, code, 80.0,NyARSingleDetectMarker.PF_NYARTOOLKIT);

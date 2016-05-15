@@ -58,23 +58,23 @@ namespace SimpleLiteM
                 this._rs.drawBackground(i_d3d, this._ss.getSourceImage());
                 i_d3d.BeginScene();
                 i_d3d.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
-                if (this._ms.isExistMarker(this.mid1))
+                if (this._ms.isExist(this.mid1))
                 {
                     //立方体を20mm上（マーカーの上）にずらしておく
                     Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
                     //変換行列を掛ける
-                    transform_mat2 *= this._ms.getD3dMarkerMatrix(this.mid1);
+                    transform_mat2 *= this._ms.getD3dTransformMatrix(this.mid1);
                     // 計算したマトリックスで座標変換
                     i_d3d.SetTransform(TransformType.World, transform_mat2);
                     // レンダリング（描画）
                     this._rs.colorCube(i_d3d, 40);
                 }
-                if (this._ms.isExistMarker(this.mid2))
+                if (this._ms.isExist(this.mid2))
                 {
                     //立方体を20mm上（マーカーの上）にずらしておく
                     Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
                     //変換行列を掛ける
-                    transform_mat2 *= this._ms.getD3dMarkerMatrix(this.mid2);
+                    transform_mat2 *= this._ms.getD3dTransformMatrix(this.mid2);
                     // 計算したマトリックスで座標変換
                     i_d3d.SetTransform(TransformType.World, transform_mat2);
                     // レンダリング（描画）

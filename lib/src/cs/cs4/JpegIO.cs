@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System;
 using System.Drawing;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -36,7 +36,20 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
             int xd = (int)im.HorizontalResolution;
             int yd = (int)im.VerticalResolution;
             int unit = 1;//インチ
-            return new JpegIO.DecodeResult(xd, yd, null, im.Width, im.Height, unit);
+            byte[] buf=new byte[im.Width*im.Height];
+            //Image ->byte[]変換
+            {
+                Bitmap b=new Bitmap(im);
+                for (int y = 0; y < im.Height; y++)
+                {
+                    for (int x = 0; x < im.Width; x++)
+                    {
+                        Color c = b.GetPixel(x, y);
+                        buf[y * im.Width + x] =(byte)((c.G + c.B + c.R) / 3);
+                    }
+                }
+            }
+            return new JpegIO.DecodeResult(xd, yd,buf , im.Width, im.Height, unit);
         }
         /**
          * http://stackoverflow.com/questions/233504/write-dpi-metadata-to-a-jpeg-image-in-java

@@ -111,12 +111,12 @@ namespace SimpleLiteForm
                 // 3Dオブジェクトの描画はここから
                 this._d3d.BeginScene();
                 this._d3d.Clear(ClearFlags.ZBuffer, Color.DarkBlue, 1.0f, 0);
-                if (this._ms.isExistMarker(0))
+                if (this._ms.isExist(0))
                 {
                     //立方体を20mm上（マーカーの上）にずらしておく
                     Matrix transform_mat2 = Matrix.Translation(0, 0, 20.0f);
                     //変換行列を掛ける
-                    transform_mat2 *= this._ms.getD3dMarkerMatrix(this.mid);
+                    transform_mat2 *= this._ms.getD3dTransformMatrix(this.mid);
                     // 計算したマトリックスで座標変換
                     this._d3d.SetTransform(TransformType.World, transform_mat2);
                     // レンダリング（描画）
