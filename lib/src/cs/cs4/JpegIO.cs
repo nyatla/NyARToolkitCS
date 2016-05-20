@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#define NYARTKCS_DOTNET_FW
+#if NYARTKCS_DOTNET_FW
+using System.IO;
 using System;
 using System.Drawing;
 using jp.nyatla.nyartoolkit.cs.core;
@@ -99,3 +101,5 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
         }
     }
 }
+
+#endif

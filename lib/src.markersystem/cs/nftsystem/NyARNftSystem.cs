@@ -143,8 +143,10 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
         /**
          * NFTファイルセットのプレフィックスを指定して、NFTターゲットをインスタンスに登録します。
          * 登録される画像のサイズはNFTターゲットファイルの値です。
-         * @param i_fileset_prefix
-         * NFTターゲットのファイルパスのプレフィクス。ファイル名+.iset,.fset,.fset3をセットにして登録します。
+         * @param i_filepath
+         * NFTターゲットを指定します。
+         * 拡張子が.nftdatasetの場合は、nftdataset形式のファイルを登録します。
+         * それ以外の場合は、ファイルパスに.iset,.fset,.fset3を加えたファイルをセットにして登録します。
          * @return
          * 特徴点セットのID値
          */
@@ -161,9 +163,16 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
          * @return
          * 特徴点セットのID値
          */
-        public int addNftTarget(String i_fileset_prefix, double i_width_in_msec)
+        public int addNftTarget(String i_filepath, double i_width_in_msec)
         {
-            return this.addNftTarget(NyARNftDataSet.loadFromNftFiles(i_fileset_prefix, i_width_in_msec));
+            if (System.Text.RegularExpressions.Regex.IsMatch(i_filepath,".*\\.nftdataset$"))
+            {
+                return this.addNftTarget(NyARNftDataSet.loadFromNftDataSet(i_filepath, i_width_in_msec));
+            }
+            else
+            {
+                return this.addNftTarget(NyARNftDataSet.loadFromNftFiles(i_filepath, i_width_in_msec));
+            }
         }
         /**
          * 生成済みのNFTの特徴点データセットをインスタンスに登録します。

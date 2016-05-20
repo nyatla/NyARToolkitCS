@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define NYARTKCS_DOTNET_FW
+#if NYARTKCS_DOTNET_FW
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -676,3 +678,4 @@ namespace jp.nyatla.nyartoolkit.cs.cs4
     }
     #endregion
 }
+#endif
