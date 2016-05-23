@@ -1,7 +1,6 @@
 # NyARToolkitCS
 
 version 5.0.8
-
 Copyright (C)2008-2016 Ryo Iizuka
 
 http://nyatla.jp/nyartoolkit/  
@@ -11,8 +10,7 @@ wm(at)nyatla.jp
 
 ## NyARToolkit
 
-* NyARToolkitCSは、NyARToolKit 5.0.8をC#で書き直したARアプリケーション向けのクラスライブラリです。
-* ARマーカ、IDマーカ(NyIDマーカ)、NFTターゲットを扱うことができます。
+* NyARToolkitCSは、NyARToolKit 5.0.8をC#で書き直したARアプリケーション向けのクラスライブラリです。* ARマーカ、IDマーカ(NyIDマーカ)、NFTターゲットを扱うことができます。
 * .Net Framework 2.0以上に対応しています。
 * キャプチャライブラリにはDirectShowLibNET,レンダリングシステムにはManaged Direct3Dを使うことができます。
 * System.Drawing.Bitmapと互換性のあるAPIがあり、.NETフレームワークと相互に運用ができます。
