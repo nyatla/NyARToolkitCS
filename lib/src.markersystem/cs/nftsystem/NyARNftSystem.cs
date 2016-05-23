@@ -1,6 +1,7 @@
 ﻿using jp.nyatla.nyartoolkit.cs.core;
 using System.Collections.Generic;
 using System;
+using System.IO;
 using System.Threading;
 namespace jp.nyatla.nyartoolkit.cs.markersystem
 {
@@ -191,6 +192,16 @@ namespace jp.nyatla.nyartoolkit.cs.markersystem
             //追加
             this._nftdatalist.Add(new NftTarget(i_dataset));
             return this._nftdatalist.Count - 1;
+        }
+        /**
+         * InputStreamから.nftdatasetを読みだして登録します。
+         * @param i_stream
+         * @param i_width_in_msec
+         * @return
+         */
+        public int addNftTarget(Stream i_stream, double i_width_in_msec)
+        {
+            return this.addNftTarget(NyARNftDataSet.loadFromNftDataSet(i_stream, i_width_in_msec));
         }
 
         /**

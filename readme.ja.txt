@@ -1,9 +1,9 @@
 ======================================================================
 NyARToolkitCS
- version 4.2.0
+ version 5.0.8
 ======================================================================
 
-Copyright (C)2008-2012 Ryo Iizuka
+Copyright (C)2008-2016 Ryo Iizuka
 
 http://nyatla.jp/nyartoolkit/
 airmail(at)ebony.plala.or.jp
@@ -13,37 +13,20 @@ wm(at)nyatla.jp
 ----------------------------------------------------------------------
  About NyARToolkit
 ----------------------------------------------------------------------
- * NyARToolkitCSは、NyARToolKit 4.2.0のAPIを基盤としたARアプリケーション向けの
-   クラスライブラリです。
+ * NyARToolkitCSは、NyARToolKit 5.0.8をC#で書き直したARアプリケーション
+   向けのクラスライブラリです。
+ * ARマーカ、IDマーカ(NyIDマーカ)、NFTターゲットを扱うことができます。
  * .Net Framework 2.0以上に対応しています。
- * ライブラリの構成は、ARToolKitの基本機能と、NyARToolKitオリジナルの拡張機能、
-   アプリケーション向けのフレームワークです。
- * ライブラリは、NyARTookitを純粋に移植したNyARToolkitCS、NyARToolkitの
-   RPF(Reality Platform)クラスのあるNyARToolkitCS.rpf,C#向けの拡張クラスのある、
-   NyARToolkitCSUtils,サンプルで構成されています。
- * このSDKが提供する3Dレンダラアダプタは、Managed Direct3Dのみです。他の3Dレンダラ
-   アダプタに対応するときの参考にして下さい。
- * sampleモジュールは、いくつかの動作チェックプログラムと、RPFを使ったサンプルアプ
-   リケーションがあります。
-
+ * キャプチャライブラリにはDirectShowLibNET,レンダリングシステムには
+   Managed Direct3Dを使うことができます。
+ * System.Drawing.Bitmapと互換性のあるAPIがあり、.NETフレームワークと
+   相互に運用ができます。
+ * ManagedDirect3d向けの簡易なスケッチシステムがあります。
+ 
  ARToolKitについては、下記のURLをご覧ください。
  http://www.hitl.washington.edu/artoolkit/
 
 
-----------------------------------------------------------------------
-NyARToolkitCSの特徴
-----------------------------------------------------------------------
-NyARToolkitCSの特徴を紹介します。
-
- * System.Drawing.Bitmapから、NyARToolkit内部形式への変換をサポートしています。
- * ロジックレベルでは、ARToolKitよりも高速です。
- * 次の項目について、高速な機能が利用できます。(ラべリング、姿勢最適化、
-   画像処理、行列計算、方程式計算)
- * NyId規格のIDマーカが使用できます。
- * 複数のAR/NyIdマーカを容易に利用する為のMarkerSystemクラスがあります。
- * ManagedDirect3d向けの簡易なスケッチシステムがあります。
- * Bitmapと互換性のあるAPIがあります。PNG画像をそのままマーカイメージ
-   にしたり、撮影画像の一部を切り出す機能があります。
 
 
 ----------------------------------------------------------------------
@@ -66,18 +49,37 @@ LGPLv3を承諾された場合には、商用、非商用にかかわらず、�
    商用ライセンスについては、ARToolWorks社に管理を委託しております。
    http://www.artoolworks.com/Home.html
 
+
 ----------------------------------------------------------------------
- インストール
+ ディレクトリ
 ----------------------------------------------------------------------
-開発環境は、それぞれ、以下のものが必要です。
+ * data
+   プログラム以外のマーカファイル、サンプルカメラパラメータファイル、
+   画像データがあります。サンプルプログラムが使うデータファイルはすべて
+   このディレクトリの中にあります。
+ * extlib
+   外部ライブラリやツールプログラムがあります。
+   NFTのマーカファイルジェネレータはここにあります。
+
+ * forFW2.0
+   .NetFramework用のソリューションファイル・プロジェクトファイルがあります。
+
+ * forWM5
+   .NetCompactFramework用のソリューションファイルの残骸です。
+   
+ * lib
+   NyARToolKitCSのソースファイルがここにあります。
+
+----------------------------------------------------------------------
+ セットアップ
+----------------------------------------------------------------------
+Visual Stadioのソリューションファイルがありますので開いてください。
+
+開発環境は以下のものが必要です。
  * .Net Framefork
-	Visual Stadio 2008 Express以上
- * .Net Compact Framefork
-	Visual Stadio 2008 Professional以上
-	(注)Express Editionで、Compact Frameworkで開発すればコンパイル自体は出来ます。
+	Visual Stadio 2013 Express以上
 
-
-それぞれの環境で使用できるソリューションファイルが以下の場所にあります。
+各環境向けのソリューションファイルは、以下の場所にあります。
  * .Net Framefork
     forFW2.0
  * .Net Framefork
@@ -90,26 +92,21 @@ LGPLv3を承諾された場合には、商用、非商用にかかわらず、�
  を、x86にすることで解決します。
 
 ----------------------------------------------------------------------
- 外部ライブラリ
+ 外部ライブラリとツール
 ----------------------------------------------------------------------
 
 *DirectShowLibNET
 
+ パッケージに含まれています。場所はextlib/DirectShowLibV2フォルダです。
  NyARToolkitCSの.Net Framework版では、カメラ映像の取得にDirectShowLibNET
- （ライセンスはLGPL）を使用します。このライブラリはextlib/DirectShowLibV2
- フォルダにあります。
+ （ライセンスはLGPL）を使用します。
 
  DirectShowLibNETは、こちらのURLからダウンロードできます。
  http://sourceforge.net/projects/directshownet/
 
-*NyWMCapture
-
- NyARToolkitCSの.Net Compact Framework版では、カメラ映像の取得にNyWMCapture
- （ライセンスはMIT）を使用します。このライブラリはextlib/NyWMCapture
- フォルダにあります。
-
- このモジュールをモバイルデバイスにインストールする方法は、NyWMCaptureの
- readme.ja.txtを参照してください。
+*tools
+  NftFileGenerator - 画像ファイルからNFTターゲットデータを作るツールです。
+  実行にはJavaが必要です。
 
 ----------------------------------------------------------------------
  プロジェクトの概要
@@ -124,13 +121,9 @@ forFW2.0
    コードです。依存する外部ライブラリはありません。 
    
  * NyARToolkitCS.markersystem
-   NyARToolkit/4.0で追加したNyARToolkitライブラリのmarkerSystemモジュールです。
+   NyARToolkitライブラリのMarkerSystemに相当するモジュールです。
    依存する外部ライブラリはありません。 
-   
- * NyARToolkitCS.rpf
-   NyARToolkitライブラリのRPFモジュールです。NyARToolkit/3.0で追加した
-   RPFモジュールのコードです。依存する外部ライブラリはありません。 
-   
+
  * NyARToolkitCSUtils
   .NetFrameworkに依存するコードをまとめたプロジェクトです。
   ManagedDirectX向けのコードと、DirectShow向けのクラスがあります。
@@ -147,7 +140,7 @@ forFW2.0
     ライブラリの動作チェックプログラムがあります。サンプルとしては役に立ちません。
 
    1.Sample/CaptureTest
-     カメラキャプチャの実験プログラムです。DirectShowNetに依存します。
+     DirectShowNetの動作チェックプログラムです。
  
    2.Sample/RawTest
      NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出
@@ -155,47 +148,26 @@ forFW2.0
 
 
   ** old
-    NyARToolkit3.0.0以前のサンプルがあります。
+    スケッチシステムを使わない、NyARToolkit3.0.0以前のサンプルがあります。
 
    1. SimpleLite_ImageSource
      静止画からマーカ検出をするサンプルプログラムです。
-     NyARSingleDetectMarkerのサンプルプログラムでもあります。
- 
+
    2. SimpleLiteDirect3d
-     ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示する
-     プログラムです。
-     NyARSingleDetectMarkerのサンプルプログラムでもあります。
+     ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示するプログラムです。
  
    3. SingleARMarkerDirect3d
-     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
-     に、マーカ番号を表示するプログラムです。
-     SingleARMarkerProcesserのサンプルプログラムでもあります。
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、マーカ番号を
+     表示するプログラムです。
  
    4. SingleNyIdMarkerDirect3d
-     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカの
-     に、Idマーカ番号を表示するプログラムです。
-     SingleNyIdMarkerProcesserのサンプルプログラムでもあります。
-
-
-
-  ** rpf
-   NyARToolkit3.0.0の、RPFモジュールを使ったサンプルがあります。特にこだわりがなければ、
-   MarkerSystemのほうが使いやすいので、そちらを使ってください。
-
-   1. Test_NyARRealityD3d_ARMarker
-     RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
-     NyARRealityD3dと、ARTKMarkerTableのサンプルプログラムでもあります。
- 
-   2. Test_NyARRealityD3d_IdMarker
-     RPFを使ったARマーカ認識プログラムです。最大２個のマーカを同時に認識します。
-     NyARRealityD3dと、RawbitSerialIdTableのサンプルプログラムでもあります。
-
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、Idマーカ番号
+     を表示するプログラムです。
 
 
    
   ** sketch
-   NyARToolkit4.0.0から追加した、簡易スケッチシステムを使ったサンプルです。
-   他のサンプルよりもコードが短縮されています。
+   簡易スケッチシステムを使ったサンプルです。
 
    1. SimpleLite
      SimpleLiteDirect3dを、MarkerSystemモジュールを使って書き直したものです。
@@ -205,28 +177,18 @@ forFW2.0
      マーカ表面の座標を得るサンプルです。
    4. SimpleLiteM
      ２つのマーカを同時に認識するサンプルです。
+   5. SimpleNft
+     NFTのサンプルです。マーカの代わりに、自然特徴点画像を認識します。
+     画像には、Data/infiniticat.pdfを使ってください。
 
   **SimpleLiteForm
    スケッチシステムを使わないMarkerSystemのサンプルです。 SimpleLiteと同じです。 
- 
-
-
 
 forWM5
 
 現在サポートしていません。
 
-  
-----------------------------------------------------------------------
- 既知の不具合
-----------------------------------------------------------------------
- 1.RPFの姿勢フィードバックが未実装。
- 2.RPFの輪郭線抽出系のノイズ処理が最小二乗法の為、遅延が大きい。
- 3.RPFの輪郭線抽出系のアルゴリズム不備で輪郭線のドリフトが発生し、トラッキング
-   性能が低下する。
- 4.RPFの二次元系追跡機能の性能が低い。
- 5.RPFのエッジ抽出が、ブラーに弱い。
- 6.RPFの初期検出性能が、旧NyARToolkit系と比較して、低い。
+
 
 ----------------------------------------------------------------------
  Special thanks
@@ -236,3 +198,7 @@ forWM5
 
 Prof. Mark Billinghurst
  http://www.hitlabnz.org/
+
+DAQRI LCC
+ http://daqri.com/
+ DAQRI LCC is a sponsor of NyARToolKit Project.

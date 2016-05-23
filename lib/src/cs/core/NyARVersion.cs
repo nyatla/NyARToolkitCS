@@ -44,7 +44,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
         /**マイナバージョン*/
         public const int VERSION_MINOR = 0;
         /**タグ*/
-        public const int VERSION_TAG = 6;
+        public const int VERSION_TAG = 8;
         /**バージョン文字列*/
         public readonly static string VERSION_STRING = MODULE_NAME + "/" + VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_TAG;
     }

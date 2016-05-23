@@ -51,7 +51,7 @@ namespace jp.nyatla.nyartoolkit.cs.core
                 {
                     byte[] d = new byte[i];
                     System.Array.Copy(i_bytes, d, i);
-                    System.Text.Encoding.UTF8.GetString(d);
+                    return System.Text.Encoding.UTF8.GetString(d);
                 }
             }
             return "";
