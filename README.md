@@ -80,16 +80,15 @@ NftFileGenerator - 画像ファイルからNFTターゲットデータを作る�
 ### forFW2.0
 
 #### NyARToolkitCS
-NyARToolkitライブラリの本体です。基本的は.Net Framework 2.0規格のコードです。依存する外部ライブラリはありません。 
-   
+     NyARToolkitライブラリの本体です。基本的は.Net Framework 2.0規格のコードです。依存する外部ライブラリはありません。 
 #### NyARToolkitCS.markersystem
-NyARToolkitライブラリのMarkerSystemに相当するモジュールです。依存する外部ライブラリはありません。 
+     NyARToolkitライブラリのMarkerSystemに相当するモジュールです。依存する外部ライブラリはありません。 
 
 #### NyARToolkitCSUtils
-.NetFrameworkに依存するコードをまとめたプロジェクトです。ManagedDirectX向けのコードと、DirectShow向けのクラスがあります。ManagedDirectXと、DirectShowNetに依存します。
+     .NetFrameworkに依存するコードをまとめたプロジェクトです。ManagedDirectX向けのコードと、DirectShow向けのクラスがあります。ManagedDirectXと、DirectShowNetに依存します。
 
 #### NyARToolkitCS.sandbox
-実験的なコードをまとめたプロジェクトです。このプロジェクトはコンパイルできないかもしれません。
+     実験的なコードをまとめたプロジェクトです。このプロジェクトはコンパイルできないかもしれません。
  
 #### Sample
 サンプルプログラムです。
@@ -98,32 +97,30 @@ NyARToolkitライブラリのMarkerSystemに相当するモジュールです。
 ライブラリの動作チェックプログラムがあります。サンプルとしては役に立ちません。
 
 ###### Sample/CaptureTest
-DirectShowNetの動作チェックプログラムです。
+ DirectShowNetの動作チェックプログラムです。
  
 ###### Sample/RawTest
-NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出処理をして、処理時間を計測します。
+ NyARToolkitのベンチマークプログラムです。静止画に1000回マーカ検出処理をして、処理時間を計測します。
 
 
 ##### old
 スケッチシステムを使わない、NyARToolkit3.0.0以前のサンプルがあります。
 
 ###### SimpleLite_ImageSource
-静止画からマーカ検出をするサンプルプログラムです。
+     静止画からマーカ検出をするサンプルプログラムです。
 
 ###### SimpleLiteDirect3d
-ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示するプログラムです。
+     ManagedDirect3Dを出力先とする、カメラ画像の上に立方体を表示するプログラムです。
  
 ###### SingleARMarkerDirect3d
-ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、マーカ番号を表示するプログラムです。
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、マーカ番号を表示するプログラムです。
  
 ###### SingleNyIdMarkerDirect3d
-ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、Idマーカ番号を表示するプログラムです。
+     ManagedDirect3Dを出力先とする、カメラ画像のの認識したマーカのに、Idマーカ番号を表示するプログラムです。
 
 
-   
 ##### sketch
-   簡易スケッチシステムを使ったサンプルです。
-
+     簡易スケッチシステムを使ったサンプルです。
 ###### SimpleLite
      SimpleLiteDirect3dを、MarkerSystemモジュールを使って書き直したものです。
 ###### ImagePickup
@@ -133,11 +130,10 @@ ManagedDirect3Dを出力先とする、カメラ画像のの認識したマー�
 ###### SimpleLiteM
      ２つのマーカを同時に認識するサンプルです。
 ###### SimpleNft
-     NFTのサンプルです。マーカの代わりに、自然特徴点画像を認識します。
-     画像には、Data/infiniticat.pdfを使ってください。
+     NFTのサンプルです。マーカの代わりに、自然特徴点画像を認識します。画像には、Data/infiniticat.pdfを使ってください。
 
 ##### SimpleLiteForm
-   スケッチシステムを使わないMarkerSystemのサンプルです。 SimpleLiteと同じです。 
+     スケッチシステムを使わないMarkerSystemのサンプルです。 SimpleLiteと同じです。 
 
 
 
